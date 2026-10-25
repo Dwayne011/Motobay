@@ -216,7 +216,7 @@ struct ExploreView: View {
 
     private func goToMyLocation() async {
         if location.isDenied {
-            show("Location is off for MotoBay. You can turn it on in Settings.")
+            show("Location is off for MotoBays. You can turn it on in Settings.")
             return
         }
         guard let here = await location.locate() else {

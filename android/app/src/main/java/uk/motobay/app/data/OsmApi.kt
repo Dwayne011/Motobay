@@ -33,7 +33,7 @@ class OsmApi(
         .addInterceptor { chain ->
             chain.proceed(
                 chain.request().newBuilder()
-                    .header("User-Agent", "MotoBay/${BuildConfig.VERSION_NAME} (Android)")
+                    .header("User-Agent", "MotoBays/${BuildConfig.VERSION_NAME} (Android)")
                     .build(),
             )
         }

@@ -197,7 +197,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = MotoBay;
+				INFOPLIST_KEY_CFBundleDisplayName = MotoBays;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Take a photo of a parking bay to share with other riders.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Show motorcycle parking near you. Your location isn't stored or shared.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -210,7 +210,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = uk.motobay.app;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.motobays.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -227,7 +227,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = MotoBay;
+				INFOPLIST_KEY_CFBundleDisplayName = MotoBays;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Take a photo of a parking bay to share with other riders.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Show motorcycle parking near you. Your location isn't stored or shared.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -240,7 +240,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = uk.motobay.app;
+				PRODUCT_BUNDLE_IDENTIFIER = uk.motobays.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

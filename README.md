@@ -1,4 +1,4 @@
-# MotoBay (working name)
+# MotoBays
 
 Find motorcycle parking across the UK, get directions, and share photos and
 comments. Everything riders submit is held for moderator review first.
@@ -66,6 +66,6 @@ Google Maps or Waze.
 
 ## Before publishing
 
-- Replace the placeholder app name, icons and bundle id / application id (`uk.motobay.app`).
-- Choose a backend for accounts, photo storage and moderation.
+- Replace the placeholder icons. The app id is `uk.motobays.app` on both platforms.
+- Connect Firebase for accounts (Google and Apple sign-in), photo storage and moderation.
 - Move off the public OpenStreetMap servers.

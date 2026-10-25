@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         // Change to your own reverse-domain id before publishing to Google Play.
-        applicationId = "uk.motobay.app"
+        applicationId = "uk.motobays.app"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

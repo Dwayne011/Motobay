@@ -12,7 +12,7 @@ struct OSMService {
         config.timeoutIntervalForRequest = 30
         // Nominatim and Overpass ask apps to identify themselves.
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
-        config.httpAdditionalHeaders = ["User-Agent": "MotoBay/\(version) (iOS)"]
+        config.httpAdditionalHeaders = ["User-Agent": "MotoBays/\(version) (iOS)"]
         return URLSession(configuration: config)
     }()
 
