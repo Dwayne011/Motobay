@@ -1,0 +1,134 @@
+package uk.motobay.app.ui
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.RateReview
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.RateReview
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import kotlinx.serialization.Serializable
+import uk.motobay.app.MotoBayApplication
+import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.ui.bay.BayDetailRoute
+import uk.motobay.app.ui.explore.ExploreScreen
+import uk.motobay.app.ui.review.ReviewScreen
+import uk.motobay.app.ui.saved.SavedScreen
+import uk.motobay.app.ui.settings.SettingsScreen
+import kotlin.reflect.KClass
+
+@Serializable object ExploreDest
+@Serializable object SavedDest
+@Serializable object ReviewDest
+@Serializable object SettingsDest
+@Serializable data class BayDest(val id: String)
+
+val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
+val LocalSnackbar = staticCompositionLocalOf<SnackbarHostState> { error("No snackbar host") }
+
+private data class TopLevel(
+    val route: Any,
+    val routeClass: KClass<*>,
+    val label: String,
+    val icon: ImageVector,
+    val selectedIcon: ImageVector,
+)
+
+/**
+ * App frame. NavigationSuiteScaffold applies the M3 adaptive navigation rule:
+ * a Navigation bar on compact windows and a Navigation rail on medium and
+ * expanded windows (tablets, foldables, landscape).
+ */
+@Composable
+fun MotoBayApp(app: MotoBayApplication) {
+    val nav = rememberNavController()
+    val snackbar = remember { SnackbarHostState() }
+    val settings by app.user.settings.collectAsStateWithLifecycle()
+    val community by app.community.data.collectAsStateWithLifecycle()
+    val pending = community.photos.count { it.status == ModerationStatus.Pending } +
+        community.comments.count { it.status == ModerationStatus.Pending }
+
+    val destinations = buildList {
+        add(TopLevel(ExploreDest, ExploreDest::class, "Explore", Icons.Outlined.Explore, Icons.Filled.Explore))
+        add(TopLevel(SavedDest, SavedDest::class, "Saved", Icons.Outlined.StarBorder, Icons.Filled.Star))
+        if (settings.moderator) add(TopLevel(ReviewDest, ReviewDest::class, "Review", Icons.Outlined.RateReview, Icons.Filled.RateReview))
+        add(TopLevel(SettingsDest, SettingsDest::class, "Settings", Icons.Outlined.Settings, Icons.Filled.Settings))
+    }
+    val backStack by nav.currentBackStackEntryAsState()
+    val current = backStack?.destination
+
+    CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar) {
+        NavigationSuiteScaffold(
+            navigationSuiteItems = {
+                destinations.forEach { d ->
+                    val selected = current?.hierarchy?.any { it.hasRoute(d.routeClass) } == true ||
+                        (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true)
+                    item(
+                        selected = selected,
+                        onClick = {
+                            nav.navigate(d.route) {
+                                popUpTo(nav.graph.findStartDestination().id) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = {
+                            val icon = if (selected) d.selectedIcon else d.icon
+                            if (d.route == ReviewDest && pending > 0) {
+                                BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null) }
+                            } else {
+                                Icon(icon, contentDescription = null)
+                            }
+                        },
+                        label = { Text(d.label) },
+                    )
+                }
+            },
+        ) {
+            Box(Modifier.fillMaxSize()) {
+            NavHost(nav, startDestination = ExploreDest) {
+                composable<ExploreDest> {
+                    ExploreScreen(onOpenBay = { nav.navigate(BayDest(it)) })
+                }
+                composable<BayDest> { entry ->
+                    BayDetailRoute(id = entry.toRoute<BayDest>().id, onBack = { nav.popBackStack() })
+                }
+                composable<SavedDest> { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
+                composable<ReviewDest> { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
+                composable<SettingsDest> { SettingsScreen() }
+            }
+            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+            }
+        }
+    }
+}
