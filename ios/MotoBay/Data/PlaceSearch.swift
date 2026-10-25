@@ -27,7 +27,10 @@ final class PlaceSearch: NSObject, MKLocalSearchCompleterDelegate {
         let q = query.trimmingCharacters(in: .whitespaces)
         if q.count < 2 {
             suggestions = []
+            failed = false
             completer.cancel()
+            // Reset, so typing the same text again triggers a fresh lookup.
+            completer.queryFragment = ""
         } else {
             completer.queryFragment = q
         }
@@ -44,15 +47,19 @@ final class PlaceSearch: NSObject, MKLocalSearchCompleterDelegate {
         return response.boundingRegion
     }
 
+    // MapKit calls these on the main thread.
     nonisolated func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        let results = completer.results
-        Task { @MainActor in
-            self.failed = false
-            self.suggestions = results
+        MainActor.assumeIsolated {
+            failed = false
+            suggestions = completer.results
         }
     }
 
+    /// Also called when nothing matches, so clear old suggestions too.
     nonisolated func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        Task { @MainActor in self.failed = true }
+        MainActor.assumeIsolated {
+            suggestions = []
+            failed = (error as? MKError)?.code != .placemarkNotFound
+        }
     }
 }
