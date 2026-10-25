@@ -29,62 +29,46 @@ struct JSONFile<T: Codable> {
 
 // MARK: - Bays
 
-/// Loads bays on demand for whatever part of the UK is on screen. Results are
-/// cached in 0.05° tiles (roughly 5 km) so panning back doesn't refetch.
+/// Every UK motorcycle bay, from one data file that's downloaded once and
+/// kept on the device. Later launches show the saved copy straight away and
+/// only download again when the file has changed.
 @MainActor
 @Observable
 final class BayStore {
     private(set) var bays: [String: Bay] = [:]
     private(set) var isLoading = false
+    /// Set when there's nothing to show because the download failed.
+    private(set) var errorMessage: String?
 
-    private let service: OSMService
+    private let service: BayDataService
     private let useSampleData: Bool
-    private var loadedTiles = Set<String>()
-    private static let tile = 0.05
 
-    init(service: OSMService, useSampleData: Bool) {
+    init(service: BayDataService, useSampleData: Bool) {
         self.service = service
         self.useSampleData = useSampleData
     }
 
-    /// Loads every bay in the box. Throws if the server can't be reached.
-    func ensureLoaded(_ box: BBox) async throws {
-        let missing = tiles(for: box).filter { !loadedTiles.contains($0) }
-        guard !missing.isEmpty else { return }
-        missing.forEach { loadedTiles.insert($0) }
-        let area = bbox(of: missing)
+    /// Shows the saved copy, then checks for a newer file. Safe to call again to retry.
+    func load() async {
+        if useSampleData {
+            bays = Dictionary(uniqueKeysWithValues: SampleBays.all.map { ($0.id, $0) })
+            return
+        }
+        guard !isLoading else { return }
+        if bays.isEmpty, let cached = service.cached() { publish(cached) }
         isLoading = true
+        errorMessage = nil
         defer { isLoading = false }
         do {
-            let list = useSampleData ? SampleBays.all.filter(area.contains) : try await service.bays(in: area)
-            for bay in list { bays[bay.id] = bay }
+            if let fresh = try await service.download() { publish(fresh) }
         } catch {
-            missing.forEach { loadedTiles.remove($0) }
-            throw error
+            // A saved copy is still usable, so only report failure when there's nothing to show.
+            if bays.isEmpty { errorMessage = "Couldn't load bays: \(friendlyMessage(error))" }
         }
     }
 
-    /// One bay from cache or the server.
-    func bay(id: String) async throws -> Bay? {
-        if let cached = bays[id] { return cached }
-        let bay = useSampleData ? SampleBays.all.first { $0.id == id } : try await service.bay(id: id)
-        if let bay { bays[bay.id] = bay }
-        return bay
-    }
-
-    private func tiles(for b: BBox) -> [String] {
-        let t = Self.tile
-        let ys = Int(floor(b.south / t))...Int(floor(b.north / t))
-        let xs = Int(floor(b.west / t))...Int(floor(b.east / t))
-        return ys.flatMap { y in xs.map { x in "\(y):\(x)" } }
-    }
-
-    private func bbox(of keys: [String]) -> BBox {
-        let pairs = keys.map { $0.split(separator: ":").compactMap { Int($0) } }
-        let ys = pairs.map { $0[0] }, xs = pairs.map { $0[1] }
-        let t = Self.tile
-        return BBox(south: Double(ys.min()!) * t, west: Double(xs.min()!) * t,
-                    north: Double(ys.max()! + 1) * t, east: Double(xs.max()! + 1) * t)
+    private func publish(_ list: [Bay]) {
+        bays = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
     }
 }
 

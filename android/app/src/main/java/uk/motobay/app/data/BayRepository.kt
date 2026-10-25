@@ -1,63 +1,93 @@
 package uk.motobay.app.data
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.math.floor
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+
+/** The bay data file built weekly by .github/workflows/update-bay-data.yml. */
+@Serializable
+data class BayDataset(val generated: String = "", val count: Int = 0, val bays: List<Bay> = emptyList())
+
+sealed interface BayLoadState {
+    data object Loading : BayLoadState
+    data object Ready : BayLoadState
+    data class Failed(val message: String) : BayLoadState
+}
 
 /**
- * Loads bays on demand for whatever part of the UK is on screen. Results are
- * cached in 0.05° tiles (roughly 5 km) so panning back doesn't refetch.
+ * Every UK motorcycle bay, from one data file that's downloaded once and kept
+ * on the device. Later launches show the saved copy straight away and only
+ * download again when the file has changed.
  */
-class BayRepository(private val api: OsmApi, private val useSampleData: Boolean) {
+class BayRepository(
+    private val dir: File,
+    private val url: String,
+    private val useSampleData: Boolean,
+    private val client: OkHttpClient = httpClient,
+) {
     private val _bays = MutableStateFlow<Map<String, Bay>>(emptyMap())
     val bays: StateFlow<Map<String, Bay>> = _bays.asStateFlow()
 
-    private val loadedTiles = mutableSetOf<Pair<Int, Int>>()
+    private val _state = MutableStateFlow<BayLoadState>(BayLoadState.Loading)
+    val state: StateFlow<BayLoadState> = _state.asStateFlow()
+
+    private val json = Json { ignoreUnknownKeys = true }
+    private val cacheFile = File(dir, "uk-bays.json")
+    private val etagFile = File(dir, "uk-bays.etag")
     private val mutex = Mutex()
 
-    /** Loads every bay in the box. Throws if the server can't be reached. */
-    suspend fun ensureLoaded(box: BBox) {
-        val missing = mutex.withLock {
-            tilesFor(box).filter { it !in loadedTiles }.also { loadedTiles.addAll(it) }
+    /** Shows the saved copy, then checks for a newer file. Safe to call again to retry. */
+    suspend fun load() = mutex.withLock {
+        if (useSampleData) {
+            _bays.value = SampleBays.all.associateBy { it.id }
+            _state.value = BayLoadState.Ready
+            return@withLock
         }
-        if (missing.isEmpty()) return
-        val area = bboxOf(missing)
-        val result = runCatching {
-            if (useSampleData) SampleBays.all.filter { it in area } else api.baysIn(area)
-        }
-        result.onSuccess { list -> _bays.update { current -> current + list.associateBy { it.id } } }
-        result.onFailure {
-            mutex.withLock { loadedTiles.removeAll(missing.toSet()) }
-            throw it
+        withContext(Dispatchers.IO) {
+            if (_bays.value.isEmpty() && cacheFile.exists()) {
+                runCatching { publish(cacheFile.readText()) }
+            }
+            if (_bays.value.isEmpty()) _state.value = BayLoadState.Loading
+            runCatching { download() }
+                .onSuccess { _state.value = BayLoadState.Ready }
+                .onFailure { e ->
+                    // A saved copy is still usable, so only report failure when there's nothing to show.
+                    _state.value = if (_bays.value.isNotEmpty()) BayLoadState.Ready
+                    else BayLoadState.Failed("Couldn't load bays: ${e.friendlyMessage()}")
+                }
         }
     }
 
-    /** One bay from cache or the server, for shared links and saved bays. */
     suspend fun bay(id: String): Bay? {
-        _bays.value[id]?.let { return it }
-        val bay = if (useSampleData) SampleBays.all.firstOrNull { it.id == id } else api.bay(id)
-        bay?.let { b -> _bays.update { it + (b.id to b) } }
-        return bay
+        if (_bays.value.isEmpty()) load()
+        return _bays.value[id]
     }
 
-    private fun tilesFor(b: BBox): List<Pair<Int, Int>> {
-        val ys = floor(b.south / TILE).toInt()..floor(b.north / TILE).toInt()
-        val xs = floor(b.west / TILE).toInt()..floor(b.east / TILE).toInt()
-        return ys.flatMap { y -> xs.map { x -> y to x } }
+    private fun download() {
+        val request = Request.Builder().url(url).apply {
+            if (cacheFile.exists() && etagFile.exists()) header("If-None-Match", etagFile.readText())
+        }.build()
+        client.newCall(request).execute().use { res ->
+            if (res.code == 304) return
+            if (!res.isSuccessful) throw HttpException(res.code)
+            val body = res.body?.string() ?: return
+            publish(body)
+            cacheFile.writeText(body)
+            res.header("ETag")?.let { etagFile.writeText(it) }
+        }
     }
 
-    private fun bboxOf(tiles: List<Pair<Int, Int>>) = BBox(
-        south = tiles.minOf { it.first } * TILE,
-        north = (tiles.maxOf { it.first } + 1) * TILE,
-        west = tiles.minOf { it.second } * TILE,
-        east = (tiles.maxOf { it.second } + 1) * TILE,
-    )
-
-    private companion object {
-        const val TILE = 0.05
+    private fun publish(body: String) {
+        val dataset = json.decodeFromString(BayDataset.serializer(), body)
+        _bays.value = dataset.bays.associateBy { it.id }
     }
 }

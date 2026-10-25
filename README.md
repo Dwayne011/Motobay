@@ -15,13 +15,18 @@ Two fully native apps:
 
 ## Where the data comes from
 
-- **Bays:** OpenStreetMap, queried live through the Overpass API
-  (`amenity=motorcycle_parking`, plus car parks tagged `motorcycle=designated`).
-  Bays load for whatever is on screen once you're zoomed in, anywhere in the UK.
-- **Place search:** Nominatim, limited to the UK.
+- **Bays:** OpenStreetMap. A GitHub Action (`.github/workflows/update-bay-data.yml`)
+  runs `scripts/fetch_uk_bays.py` every Monday and publishes every UK
+  motorcycle bay to `data/uk-bays.json` (about 50 KB compressed). The apps
+  download that one file, keep it on the device and only re-download it when
+  it changes, so phones never query the shared Overpass servers.
+  Run the job by hand from the repo's Actions tab ("Update bay data" > Run workflow).
+- **Coverage:** only as good as OpenStreetMap. London is well mapped (about
+  1,400 bays); many other cities have few or none yet.
+- **Place search (suggestions as you type):** Android uses Photon (OpenStreetMap)
+  plus postcodes.io for postcodes; iOS uses Apple's own MapKit search completer.
+  Photon and postcodes.io are free public services with fair-use limits.
 - "© OpenStreetMap contributors" attribution is required and shown in both apps.
-- The public Overpass and Nominatim servers are for light use only. Before
-  launch, switch to a self-hosted or paid instance (`OsmApi.kt` / `OSMService.swift`).
 
 ## Community content and moderation
 
@@ -68,4 +73,4 @@ Google Maps or Waze.
 
 - Replace the placeholder icons. The app id is `uk.motobays.app` on both platforms.
 - Connect Firebase for accounts (Google and Apple sign-in), photo storage and moderation.
-- Move off the public OpenStreetMap servers.
+- Self-host or replace the public Photon search service if traffic grows.

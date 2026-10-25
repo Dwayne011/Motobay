@@ -30,8 +30,11 @@ import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import org.maplibre.android.style.expressions.Expression.get
+import org.maplibre.android.style.expressions.Expression.has
 import org.maplibre.android.style.expressions.Expression.literal
-import org.maplibre.android.style.expressions.Expression.switchCase
+import org.maplibre.android.style.expressions.Expression.not
+import org.maplibre.android.style.expressions.Expression.step
+import org.maplibre.android.style.expressions.Expression.stop
 import org.maplibre.android.style.expressions.Expression.toColor
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.PropertyFactory.circleColor
@@ -45,6 +48,7 @@ import org.maplibre.android.style.layers.PropertyFactory.textFont
 import org.maplibre.android.style.layers.PropertyFactory.textIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.textSize
 import org.maplibre.android.style.layers.SymbolLayer
+import org.maplibre.android.style.sources.GeoJsonOptions
 import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
@@ -63,19 +67,25 @@ sealed interface MapCommand {
 
 data class MapViewport(val box: BBox, val zoom: Double, val center: LatLon)
 
-/** Pin colours, taken from the current M3 colour scheme. */
+/** Pin and cluster colours, taken from the current M3 colour scheme. */
 data class PinColors(
     val free: Color, val onFree: Color,
     val paid: Color, val onPaid: Color,
     val unknown: Color, val onUnknown: Color,
     val selected: Color, val onSelected: Color,
+    val cluster: Color, val onCluster: Color,
     val stroke: Color,
     val user: Color,
 )
 
 private const val BAY_SOURCE = "bays"
-private const val BAY_CIRCLES = "bays-circles"
-private const val BAY_LABELS = "bays-labels"
+private const val CLUSTERS = "bay-clusters"
+private const val CLUSTER_COUNT = "bay-cluster-count"
+private const val BAY_CIRCLES = "bay-circles"
+private const val BAY_LABELS = "bay-labels"
+private const val SELECTED_SOURCE = "selected"
+private const val SELECTED_CIRCLE = "selected-circle"
+private const val SELECTED_LABEL = "selected-label"
 private const val USER_SOURCE = "user"
 private const val USER_LAYER = "user-dot"
 
@@ -83,14 +93,16 @@ private const val USER_LAYER = "user-dot"
 private fun styleUrl(dark: Boolean) =
     if (dark) "https://tiles.openfreemap.org/styles/dark" else "https://tiles.openfreemap.org/styles/liberty"
 
+private fun Bay.glyph() = when (fee) { Fee.Free -> "P"; Fee.Paid -> "£"; Fee.Unknown -> "?" }
+
 /**
- * MapLibre map showing bays as pins coloured by price. Uses the native
- * MapLibre SDK inside Compose.
+ * MapLibre map of every bay. Nearby bays are grouped into numbered clusters
+ * when zoomed out; tapping a cluster zooms in to it.
  */
 @Composable
 fun BayMap(
     bays: List<Bay>,
-    selectedId: String?,
+    selected: Bay?,
     userPosition: LatLon?,
     command: MapCommand?,
     colors: PinColors,
@@ -141,7 +153,7 @@ fun BayMap(
             m.uiSettings.isRotateGesturesEnabled = false
             m.uiSettings.isTiltGesturesEnabled = false
             m.uiSettings.isCompassEnabled = false
-            val start = initialCamera ?: CameraSnapshot(54.5, -3.0, 5.0)
+            val start = initialCamera ?: CameraSnapshot(54.5, -3.0, 4.5)
             m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
             m.addOnCameraIdleListener {
                 val b = m.projection.visibleRegion.latLngBounds
@@ -156,8 +168,18 @@ fun BayMap(
             }
             m.addOnMapClickListener { point ->
                 val screen: PointF = m.projection.toScreenLocation(point)
-                val hit = m.queryRenderedFeatures(screen, BAY_CIRCLES, BAY_LABELS).firstOrNull()
-                hit?.getStringProperty("id")?.let { latestBayClick(it); true } ?: false
+                val hit = m.queryRenderedFeatures(screen, SELECTED_CIRCLE, BAY_CIRCLES, BAY_LABELS, CLUSTERS, CLUSTER_COUNT).firstOrNull()
+                    ?: return@addOnMapClickListener false
+                if (hit.hasProperty("point_count")) {
+                    // Zoom in until the cluster splits.
+                    val source = m.style?.getSourceAs<GeoJsonSource>(BAY_SOURCE)
+                    val zoom = source?.getClusterExpansionZoom(hit)?.toDouble() ?: (m.cameraPosition.zoom + 2)
+                    val p = hit.geometry() as? Point
+                    if (p != null) m.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(p.latitude(), p.longitude()), zoom), 500)
+                } else {
+                    hit.getStringProperty("id")?.let(latestBayClick)
+                }
+                true
             }
             map = m
         }
@@ -168,26 +190,38 @@ fun BayMap(
         val m = map ?: return@LaunchedEffect
         style = null
         m.setStyle(Style.Builder().fromUri(styleUrl(dark))) { loaded ->
-            loaded.addSource(GeoJsonSource(BAY_SOURCE))
+            loaded.addSource(
+                GeoJsonSource(
+                    BAY_SOURCE,
+                    GeoJsonOptions().withCluster(true).withClusterMaxZoom(13).withClusterRadius(48),
+                ),
+            )
+            loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
+
             loaded.addLayer(
-                CircleLayer(USER_LAYER, USER_SOURCE).withProperties(
-                    circleRadius(8f),
-                    circleColor(colors.user.toArgb()),
-                    circleStrokeColor(colors.stroke.toArgb()),
-                    circleStrokeWidth(3f),
+                CircleLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
+                    circleRadius(step(get("point_count"), literal(16f), stop(10, 20f), stop(100, 26f), stop(1000, 32f))),
                 ),
             )
             loaded.addLayer(
-                CircleLayer(BAY_CIRCLES, BAY_SOURCE).withProperties(
-                    circleRadius(switchCase(get("selected"), literal(18f), literal(14f))),
+                SymbolLayer(CLUSTER_COUNT, BAY_SOURCE).withFilter(has("point_count")).withProperties(
+                    textField(get("point_count_abbreviated")),
+                    textFont(arrayOf("Noto Sans Bold")),
+                    textSize(13f),
+                    textAllowOverlap(true),
+                    textIgnorePlacement(true),
+                ),
+            )
+            loaded.addLayer(
+                CircleLayer(BAY_CIRCLES, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
+                    circleRadius(14f),
                     circleColor(toColor(get("fill"))),
-                    circleStrokeColor(colors.stroke.toArgb()),
                     circleStrokeWidth(2f),
                 ),
             )
             loaded.addLayer(
-                SymbolLayer(BAY_LABELS, BAY_SOURCE).withProperties(
+                SymbolLayer(BAY_LABELS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     textField(get("glyph")),
                     textFont(arrayOf("Noto Sans Bold")),
                     textSize(14f),
@@ -196,41 +230,69 @@ fun BayMap(
                     textIgnorePlacement(true),
                 ),
             )
+            loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
+            loaded.addLayer(CircleLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(circleRadius(19f), circleStrokeWidth(3f)))
+            loaded.addLayer(
+                SymbolLayer(SELECTED_LABEL, SELECTED_SOURCE).withProperties(
+                    textField(get("glyph")),
+                    textFont(arrayOf("Noto Sans Bold")),
+                    textSize(16f),
+                    textAllowOverlap(true),
+                    textIgnorePlacement(true),
+                ),
+            )
             style = loaded
         }
     }
 
-    // Push bay data whenever it, the selection or the colours change.
-    LaunchedEffect(style, bays, selectedId, colors) {
+    // Theme colours for clusters, the selected pin and the user's dot.
+    LaunchedEffect(style, colors) {
+        val s = style ?: return@LaunchedEffect
+        s.getLayerAs<CircleLayer>(CLUSTERS)?.setProperties(
+            circleColor(colors.cluster.toArgb()), circleStrokeColor(colors.stroke.toArgb()), circleStrokeWidth(2f),
+        )
+        s.getLayerAs<SymbolLayer>(CLUSTER_COUNT)?.setProperties(textColor(colors.onCluster.toArgb()))
+        s.getLayerAs<CircleLayer>(BAY_CIRCLES)?.setProperties(circleStrokeColor(colors.stroke.toArgb()))
+        s.getLayerAs<CircleLayer>(SELECTED_CIRCLE)?.setProperties(
+            circleColor(colors.selected.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
+        )
+        s.getLayerAs<SymbolLayer>(SELECTED_LABEL)?.setProperties(textColor(colors.onSelected.toArgb()))
+        s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
+            circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
+        )
+    }
+
+    LaunchedEffect(style, bays, colors) {
         val s = style ?: return@LaunchedEffect
         val features = bays.map { bay ->
-            val selected = bay.id == selectedId
-            val (fill, ink) = when {
-                selected -> colors.selected to colors.onSelected
-                bay.fee == Fee.Free -> colors.free to colors.onFree
-                bay.fee == Fee.Paid -> colors.paid to colors.onPaid
-                else -> colors.unknown to colors.onUnknown
+            val (fill, ink) = when (bay.fee) {
+                Fee.Free -> colors.free to colors.onFree
+                Fee.Paid -> colors.paid to colors.onPaid
+                Fee.Unknown -> colors.unknown to colors.onUnknown
             }
             Feature.fromGeometry(Point.fromLngLat(bay.lon, bay.lat)).apply {
                 addStringProperty("id", bay.id)
-                addBooleanProperty("selected", selected)
                 addStringProperty("fill", fill.toHex())
                 addStringProperty("ink", ink.toHex())
-                addStringProperty("glyph", when (bay.fee) { Fee.Free -> "P"; Fee.Paid -> "£"; Fee.Unknown -> "?" })
+                addStringProperty("glyph", bay.glyph())
             }
         }
-        // Draw the selected pin last so it sits on top.
-        val ordered = features.sortedBy { it.getBooleanProperty("selected") }
-        s.getSourceAs<GeoJsonSource>(BAY_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(ordered))
+        s.getSourceAs<GeoJsonSource>(BAY_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }
 
-    LaunchedEffect(style, userPosition, colors) {
+    LaunchedEffect(style, selected) {
         val s = style ?: return@LaunchedEffect
-        s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
-            circleColor(colors.user.toArgb()),
-            circleStrokeColor(colors.stroke.toArgb()),
-        )
-        s.getLayerAs<CircleLayer>(BAY_CIRCLES)?.setProperties(circleStrokeColor(colors.stroke.toArgb()))
+        val features = selected?.let {
+            listOf(Feature.fromGeometry(Point.fromLngLat(it.lon, it.lat)).apply {
+                addStringProperty("id", it.id)
+                addStringProperty("glyph", it.glyph())
+            })
+        }.orEmpty()
+        s.getSourceAs<GeoJsonSource>(SELECTED_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
+    }
+
+    LaunchedEffect(style, userPosition) {
+        val s = style ?: return@LaunchedEffect
         val features = userPosition?.let { listOf(Feature.fromGeometry(Point.fromLngLat(it.lon, it.lat))) }.orEmpty()
         s.getSourceAs<GeoJsonSource>(USER_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }

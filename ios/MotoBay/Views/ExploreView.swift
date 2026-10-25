@@ -10,9 +10,11 @@ enum PriceFilter: String, CaseIterable, Identifiable {
 /// - iPhone: map with a search field and filter bar; a toolbar button switches to a list.
 /// - iPad: split view with the list in the sidebar and the map beside it.
 /// Bay details open in an inspector: a sheet on iPhone, a side panel on iPad.
+/// Typing in the search field shows place suggestions that narrow as you type.
 struct ExploreView: View {
     @Environment(BayStore.self) private var store
     @Environment(LocationProvider.self) private var location
+    @Environment(PlaceSearch.self) private var placeSearch
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     @State private var position: MapCameraPosition = .region(LastRegion.load())
@@ -22,14 +24,13 @@ struct ExploreView: View {
     @State private var coveredOnly = false
     @State private var showList = false
     @State private var query = ""
-    @State private var searching = false
+    @State private var searchActive = false
     @State private var banner: String?
 
-    /// Bays only load when zoomed in about this far, to keep queries small.
-    private let maxLoadSpan = 0.08
+    /// SwiftUI's Map has no clustering, so at most this many markers are drawn (nearest first).
+    private let maxMarkers = 300
 
-    private var zoomedOut: Bool { (region?.span.latitudeDelta ?? 99) > maxLoadSpan }
-
+    /// Bays in view that match the filters, nearest first.
     private var visible: [Bay] {
         guard let region else { return [] }
         let box = region.bbox
@@ -44,30 +45,32 @@ struct ExploreView: View {
     private var selectedBay: Bay? { selectedId.flatMap { store.bays[$0] } }
 
     var body: some View {
+        let bays = visible
         Group {
             if sizeClass == .regular {
                 NavigationSplitView {
-                    bayList
+                    bayList(bays)
                         .navigationTitle("Explore")
                         .safeAreaInset(edge: .top) { filterBar }
                 } detail: {
-                    map
+                    map(bays)
                 }
-                .searchable(text: $query, placement: .sidebar, prompt: "Town or postcode")
-                .onSubmit(of: .search) { Task { await search() } }
+                .searchable(text: $query, isPresented: $searchActive, placement: .sidebar, prompt: "Town, street or postcode")
+                .searchSuggestions { suggestions }
             } else {
                 NavigationStack {
                     ZStack {
-                        map
+                        map(bays)
                         if showList {
-                            bayList.background(Color(.systemBackground))
+                            bayList(bays).background(Color(.systemBackground))
                         }
                     }
                     .safeAreaInset(edge: .top) { filterBar }
                     .navigationTitle("Explore")
                     .navigationBarTitleDisplayMode(.inline)
-                    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "Town or postcode")
-                    .onSubmit(of: .search) { Task { await search() } }
+                    .searchable(text: $query, isPresented: $searchActive,
+                                placement: .navigationBarDrawer(displayMode: .always), prompt: "Town, street or postcode")
+                    .searchSuggestions { suggestions }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(showList ? "Map" : "List", systemImage: showList ? "map" : "list.bullet") {
@@ -77,6 +80,10 @@ struct ExploreView: View {
                     }
                 }
             }
+        }
+        .onChange(of: query) { _, new in placeSearch.update(query: new) }
+        .onSubmit(of: .search) {
+            if let first = placeSearch.suggestions.first { Task { await go(to: first) } }
         }
         .inspector(isPresented: Binding(get: { selectedBay != nil }, set: { if !$0 { selectedId = nil } })) {
             if let bay = selectedBay {
@@ -94,11 +101,45 @@ struct ExploreView: View {
         }
     }
 
+    // MARK: Search
+
+    @ViewBuilder private var suggestions: some View {
+        if placeSearch.failed {
+            Text("Search is unavailable right now").foregroundStyle(.secondary)
+        }
+        ForEach(placeSearch.suggestions, id: \.self) { completion in
+            Button {
+                Task { await go(to: completion) }
+            } label: {
+                Label {
+                    VStack(alignment: .leading) {
+                        Text(completion.title).foregroundStyle(.primary)
+                        if !completion.subtitle.isEmpty {
+                            Text(completion.subtitle).font(.subheadline).foregroundStyle(.secondary)
+                        }
+                    }
+                } icon: {
+                    Image(systemName: "mappin.circle.fill").foregroundStyle(.red)
+                }
+            }
+        }
+    }
+
+    private func go(to completion: MKLocalSearchCompletion) async {
+        query = completion.title
+        searchActive = false
+        guard let target = await placeSearch.region(for: completion) else {
+            show("Couldn't find that place")
+            return
+        }
+        withAnimation { position = .region(target) }
+    }
+
     // MARK: Map
 
-    private var map: some View {
+    private func map(_ bays: [Bay]) -> some View {
         Map(position: $position, selection: $selectedId) {
-            ForEach(visible) { bay in
+            ForEach(bays.prefix(maxMarkers)) { bay in
                 Marker(bay.name, systemImage: "motorcycle", coordinate: bay.coordinate)
                     .tint(bay.fee.tint)
                     .tag(bay.id)
@@ -112,7 +153,6 @@ struct ExploreView: View {
         .onMapCameraChange(frequency: .onEnd) { context in
             region = context.region
             LastRegion.save(context.region)
-            Task { await loadBays(in: context.region) }
         }
         .overlay(alignment: .bottomTrailing) {
             Button {
@@ -130,9 +170,19 @@ struct ExploreView: View {
         }
         .overlay(alignment: .top) {
             VStack(spacing: 8) {
-                if store.isLoading || searching { ProgressView().padding(8).background(.regularMaterial, in: .capsule) }
-                if zoomedOut && !showList {
-                    Text("Zoom in to see motorcycle bays")
+                if store.isLoading && store.bays.isEmpty {
+                    ProgressView("Loading bays…").padding(8).background(.regularMaterial, in: .capsule)
+                }
+                if let error = store.errorMessage {
+                    HStack {
+                        Text(error).font(.footnote)
+                        Button("Retry") { Task { await store.load() } }.font(.footnote.bold())
+                    }
+                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .background(.regularMaterial, in: .capsule)
+                }
+                if bays.count > maxMarkers && !showList {
+                    Text("Showing the nearest \(maxMarkers) bays. Zoom in to see more.")
                         .font(.footnote)
                         .padding(.horizontal, 12).padding(.vertical, 6)
                         .background(.regularMaterial, in: .capsule)
@@ -151,16 +201,13 @@ struct ExploreView: View {
 
     // MARK: List and filters
 
-    private var bayList: some View {
+    private func bayList(_ bays: [Bay]) -> some View {
         List(selection: sizeClass == .regular ? $selectedId : .constant(nil)) {
-            if zoomedOut {
-                ContentUnavailableView("Zoom In", systemImage: "map",
-                                       description: Text("Zoom in on the map or search for a place to see motorcycle bays."))
-            } else if visible.isEmpty && !store.isLoading {
+            if bays.isEmpty && !store.isLoading {
                 ContentUnavailableView("No Bays Here", systemImage: "motorcycle",
-                                       description: Text("Try another area or change the filters."))
+                                       description: Text("Zoom out, move the map or change the filters."))
             } else {
-                ForEach(visible) { bay in
+                ForEach(bays.prefix(maxMarkers)) { bay in
                     Button { selectedId = bay.id } label: {
                         BayRow(bay: bay, distance: location.location.map { bay.location.distance(from: $0) })
                     }
@@ -188,31 +235,6 @@ struct ExploreView: View {
     }
 
     // MARK: Actions
-
-    private func loadBays(in region: MKCoordinateRegion) async {
-        guard region.span.latitudeDelta <= maxLoadSpan else { return }
-        do {
-            try await store.ensureLoaded(region.bbox)
-        } catch {
-            show("Couldn't load bays. Check your connection.")
-        }
-    }
-
-    private func search() async {
-        let q = query.trimmingCharacters(in: .whitespaces)
-        guard !q.isEmpty else { return }
-        searching = true
-        defer { searching = false }
-        do {
-            if let place = try await OSMService().searchPlace(q) {
-                withAnimation { position = .region(place.bbox.region) }
-            } else {
-                show("No UK place found for “\(q)”")
-            }
-        } catch {
-            show("Search is unavailable right now")
-        }
-    }
 
     private func goToMyLocation() async {
         if location.isDenied {
@@ -279,15 +301,6 @@ extension MKCoordinateRegion {
     var bbox: BBox {
         BBox(south: center.latitude - span.latitudeDelta / 2, west: center.longitude - span.longitudeDelta / 2,
              north: center.latitude + span.latitudeDelta / 2, east: center.longitude + span.longitudeDelta / 2)
-    }
-}
-
-extension BBox {
-    var region: MKCoordinateRegion {
-        MKCoordinateRegion(
-            center: .init(latitude: (north + south) / 2, longitude: (east + west) / 2),
-            span: .init(latitudeDelta: max(north - south, 0.005) * 1.1, longitudeDelta: max(east - west, 0.005) * 1.1)
-        )
     }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -25,6 +26,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.SampleBays
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
@@ -83,6 +85,26 @@ class ScreenshotTest {
         assertEquals(ModerationStatus.Approved, app.community.data.value.comments.first().status)
         compose.onNodeWithText("Settings").performClick()
         shot("phone-settings")
+    }
+
+    /** Uses a recorded Photon response, so it runs offline. */
+    @OptIn(androidx.compose.ui.test.ExperimentalTestApi::class)
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_search_shows_suggestions_while_typing() {
+        val photon = javaClass.classLoader!!.getResource("photon-camden.json").readText()
+        app.placeSearch = PlaceSearch(fetch = { photon })
+        setApp()
+        compose.onNodeWithText("Search a town, street or postcode").performClick()
+        compose.waitForIdle()
+        shot("phone-search-empty")
+        compose.onNodeWithText("Search a town, street or postcode").performTextInput("camden")
+        // Robolectric's clock only moves when told to, so step it past the typing debounce.
+        compose.waitUntil(timeoutMillis = 15_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper(300, java.util.concurrent.TimeUnit.MILLISECONDS)
+            compose.onAllNodesWithText("Camden Town").fetchSemanticsNodes().isNotEmpty()
+        }
+        compose.waitForIdle()
+        shot("phone-search-camden")
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")

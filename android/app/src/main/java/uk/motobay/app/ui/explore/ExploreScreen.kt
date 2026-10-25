@@ -1,12 +1,16 @@
 package uk.motobay.app.ui.explore
 
 import android.Manifest
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -27,10 +31,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.EditRoad
+import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MarkunreadMailbox
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -38,6 +47,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -46,23 +57,26 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import uk.motobay.app.data.BayLoadState
+import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.bay.BayDetailContent
@@ -73,11 +87,11 @@ import uk.motobay.app.util.formatDistance
 
 /**
  * Map and list of bays. Layout follows M3 window size classes:
- * - Compact and medium (under 840dp): full-bleed map with floating search
- *   and filters; a Map/List segmented button switches views; opening a bay
- *   navigates to its own screen.
- * - Expanded (840dp and up): list-detail canonical layout, with the list or
- *   bay detail in a side pane next to the map.
+ * - Compact and medium (under 840dp): full-bleed map with a floating search
+ *   bar that expands to a full-screen suggestions view; a Map/List segmented
+ *   button switches views; opening a bay navigates to its own screen.
+ * - Expanded (840dp and up): list-detail canonical layout, with a docked
+ *   search bar and the list or bay detail in a side pane next to the map.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,10 +101,10 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val snackbar = LocalSnackbar.current
 
     val visible by vm.visible.collectAsStateWithLifecycle()
-    val viewport by vm.viewport.collectAsStateWithLifecycle()
+    val mapBays by vm.mapBays.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
-    val loading by vm.loading.collectAsStateWithLifecycle()
-    val searching by vm.searching.collectAsStateWithLifecycle()
+    val loadState by vm.loadState.collectAsStateWithLifecycle()
+    val search by vm.search.collectAsStateWithLifecycle()
     val locating by vm.locating.collectAsStateWithLifecycle()
     val command by vm.command.collectAsStateWithLifecycle()
     val compactView by vm.compactView.collectAsStateWithLifecycle()
@@ -100,6 +114,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val settings by app.user.settings.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { vm.messages.collect { snackbar.showSnackbar(it) } }
+    BackHandler(enabled = search.expanded) { vm.onSearchExpandedChange(false) }
 
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
         if (granted.values.any { it }) vm.locate()
@@ -109,7 +124,6 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
         else permission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 
-    val zoomedOut = (viewport?.zoom ?: 0.0) < MIN_BAY_ZOOM
     val scheme = MaterialTheme.colorScheme
     val ext = MotoBayColors.extended
     val pinColors = PinColors(
@@ -117,38 +131,40 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
         paid = scheme.secondary, onPaid = scheme.onSecondary,
         unknown = scheme.outline, onUnknown = scheme.surface,
         selected = scheme.primary, onSelected = scheme.onPrimary,
+        cluster = scheme.primaryContainer, onCluster = scheme.onPrimaryContainer,
         stroke = scheme.surface, user = scheme.primary,
     )
+    val countLabel = if (visible.size >= 200) "200+" else "${visible.size}"
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val expanded = maxWidth >= 840.dp
-        val mapBays = visible.map { it.bay }.let { list ->
-            val sel = selectedId?.let { allBays[it] }
-            if (expanded && sel != null && list.none { it.id == sel.id }) list + sel else list
-        }
 
         val map: @Composable (Modifier) -> Unit = { modifier ->
             Box(modifier) {
                 BayMap(
                     bays = mapBays,
-                    selectedId = if (expanded) selectedId else null,
+                    selected = if (expanded) selectedId?.let { allBays[it] } else null,
                     userPosition = userPosition,
                     command = command,
                     colors = pinColors,
                     dark = isAppInDarkTheme(settings.themeMode),
                     initialCamera = settings.lastMap,
-                    onBayClick = { id ->
-                        if (expanded) allBays[id]?.let(vm::select) else onOpenBay(id)
-                    },
+                    onBayClick = { id -> if (expanded) allBays[id]?.let(vm::select) else onOpenBay(id) },
                     onViewportChange = vm::onViewportChange,
                     onCommandHandled = { vm.command.value = null },
                     modifier = Modifier.fillMaxSize(),
                 )
-                if (loading) LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
-                FloatingActionButton(
-                    onClick = onLocate,
-                    modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
-                ) {
+                if (loadState == BayLoadState.Loading) {
+                    LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
+                }
+                (loadState as? BayLoadState.Failed)?.let { failed ->
+                    LoadErrorBanner(
+                        failed.message,
+                        onRetry = vm::retryLoad,
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(start = 16.dp, end = 88.dp, bottom = 88.dp),
+                    )
+                }
+                FloatingActionButton(onClick = onLocate, modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
                     if (locating) CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
                     else Icon(Icons.Filled.MyLocation, contentDescription = "Show my location")
                 }
@@ -157,9 +173,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
 
         val list: @Composable (Modifier) -> Unit = { modifier ->
             when {
-                zoomedOut -> Hint("Zoom in or search for a place to see motorcycle bays.", modifier)
-                visible.isEmpty() && !loading -> Hint("No bays match here. Try another area or clear the filters.", modifier)
-                else -> LazyColumn(modifier) {
+                visible.isNotEmpty() -> LazyColumn(modifier) {
                     items(visible, key = { it.bay.id }) { item ->
                         BayListItem(
                             bay = item.bay,
@@ -169,7 +183,14 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         )
                     }
                 }
+                loadState == BayLoadState.Loading -> Hint("Loading bays…", modifier)
+                loadState is BayLoadState.Failed -> Hint((loadState as BayLoadState.Failed).message, modifier)
+                else -> Hint("No bays here. Zoom out, move the map or change the filters.", modifier)
             }
+        }
+
+        val suggestions: @Composable ColumnScope.() -> Unit = {
+            SuggestionsContent(search, onLocate = { onLocate() }, onPick = vm::onSuggestionClick)
         }
 
         if (expanded) {
@@ -201,16 +222,24 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                     } else {
                         Column(Modifier.fillMaxSize()) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                PlaceSearch(searching, vm::search)
-                                Filters(filters, vm::setPrice, vm::toggleCovered)
-                                Text(
-                                    if (zoomedOut) "Nearby bays" else "${visible.size} ${if (visible.size == 1) "bay" else "bays"} in view",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                                DockedSearchBar(
+                                    inputField = { SearchField(search, vm) },
+                                    expanded = search.expanded,
+                                    onExpandedChange = vm::onSearchExpandedChange,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    content = suggestions,
                                 )
+                                if (!search.expanded) {
+                                    Filters(filters, vm::setPrice, vm::toggleCovered)
+                                    Text(
+                                        "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                                    )
+                                }
                             }
-                            list(Modifier.fillMaxSize())
+                            if (!search.expanded) list(Modifier.fillMaxSize())
                         }
                     }
                 }
@@ -227,74 +256,148 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         list(Modifier.fillMaxSize().statusBarsPadding().padding(top = 136.dp, bottom = 72.dp))
                     }
                 }
-                Column(
-                    Modifier.statusBarsPadding().padding(16.dp).widthIn(max = 560.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    PlaceSearch(searching, vm::search)
-                    Filters(filters, vm::setPrice, vm::toggleCovered)
-                }
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    tonalElevation = 3.dp,
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
-                ) {
-                    SingleChoiceSegmentedButtonRow {
-                        val count = if (zoomedOut) "" else " (${visible.size})"
-                        listOf(CompactView.Map to "Map", CompactView.List to "List$count").forEachIndexed { i, (view, label) ->
-                            SegmentedButton(
-                                selected = compactView == view,
-                                onClick = { vm.compactView.value = view },
-                                shape = SegmentedButtonDefaults.itemShape(i, 2),
-                                icon = {
-                                    SegmentedButtonDefaults.Icon(active = compactView == view) {
-                                        Icon(
-                                            if (view == CompactView.Map) Icons.Filled.Map else Icons.AutoMirrored.Filled.List,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
-                                        )
-                                    }
-                                },
-                                label = { Text(label) },
-                            )
+                if (!search.expanded) {
+                    Box(Modifier.statusBarsPadding().padding(start = 16.dp, end = 16.dp, top = 72.dp).widthIn(max = 560.dp)) {
+                        Filters(filters, vm::setPrice, vm::toggleCovered)
+                    }
+                    Surface(
+                        shape = MaterialTheme.shapes.extraLarge,
+                        tonalElevation = 3.dp,
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
+                    ) {
+                        SingleChoiceSegmentedButtonRow {
+                            listOf(CompactView.Map to "Map", CompactView.List to "List ($countLabel)").forEachIndexed { i, (view, label) ->
+                                SegmentedButton(
+                                    selected = compactView == view,
+                                    onClick = { vm.compactView.value = view },
+                                    shape = SegmentedButtonDefaults.itemShape(i, 2),
+                                    icon = {
+                                        SegmentedButtonDefaults.Icon(active = compactView == view) {
+                                            Icon(
+                                                if (view == CompactView.Map) Icons.Filled.Map else Icons.AutoMirrored.Filled.List,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
+                                            )
+                                        }
+                                    },
+                                    label = { Text(label) },
+                                )
+                            }
                         }
                     }
                 }
+                // M3 search bar: tapping it expands to a full-screen view of suggestions.
+                val sidePadding by animateDpAsState(if (search.expanded) 0.dp else 16.dp, label = "searchPadding")
+                SearchBar(
+                    inputField = { SearchField(search, vm) },
+                    expanded = search.expanded,
+                    onExpandedChange = vm::onSearchExpandedChange,
+                    modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth()
+                        .padding(horizontal = sidePadding).padding(top = if (search.expanded) 0.dp else 8.dp),
+                    content = suggestions,
+                )
             }
         }
     }
 }
 
-/** M3 search bar, used here for entering a place (no suggestions view). */
+/** The text field inside the search bar, shared by the full-screen and docked versions. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PlaceSearch(searching: Boolean, onSearch: (String) -> Unit) {
-    var query by rememberSaveable { mutableStateOf("") }
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = query,
-                onQueryChange = { query = it },
-                onSearch = onSearch,
-                expanded = false,
-                onExpandedChange = {},
-                placeholder = { Text("Search a UK town or postcode") },
-                leadingIcon = {
-                    if (searching) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
-                    else Icon(Icons.Filled.Search, contentDescription = null)
-                },
-                trailingIcon = {
-                    if (query.isNotEmpty()) {
-                        IconButton(onClick = { query = "" }) { Icon(Icons.Filled.Close, contentDescription = "Clear search") }
-                    }
-                },
-            )
+private fun SearchField(search: SearchUiState, vm: ExploreViewModel) {
+    SearchBarDefaults.InputField(
+        query = search.query,
+        onQueryChange = vm::onQueryChange,
+        onSearch = { vm.onSearchSubmit() },
+        expanded = search.expanded,
+        onExpandedChange = vm::onSearchExpandedChange,
+        placeholder = { Text("Search a town, street or postcode") },
+        leadingIcon = {
+            if (search.expanded) {
+                IconButton(onClick = { vm.onSearchExpandedChange(false) }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Close search")
+                }
+            } else {
+                Icon(Icons.Filled.Search, contentDescription = null)
+            }
         },
-        expanded = false,
-        onExpandedChange = {},
-        windowInsets = WindowInsets(0),
-        modifier = Modifier.fillMaxWidth(),
-    ) {}
+        trailingIcon = {
+            if (search.query.isNotEmpty()) {
+                IconButton(onClick = { vm.onQueryChange("") }) { Icon(Icons.Filled.Close, contentDescription = "Clear search") }
+            }
+        },
+    )
+}
+
+/** Suggestions shown while the search bar is expanded; narrows as the rider types. */
+@Composable
+private fun SuggestionsContent(search: SearchUiState, onLocate: () -> Unit, onPick: (PlaceSuggestion) -> Unit) {
+    val transparent = ListItemDefaults.colors(containerColor = Color.Transparent)
+    if (search.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
+    LazyColumn {
+        if (search.query.trim().length < 2) {
+            item {
+                ListItem(
+                    headlineContent = { Text("Your location") },
+                    leadingContent = { Icon(Icons.Filled.MyLocation, contentDescription = null) },
+                    colors = transparent,
+                    modifier = Modifier.clickable(onClick = onLocate),
+                )
+            }
+            item {
+                Text(
+                    "Start typing a town, street or postcode",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+            return@LazyColumn
+        }
+        search.error?.let { item { Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(16.dp)) } }
+        if (!search.loading && search.error == null && search.suggestions.isEmpty()) {
+            item {
+                Text(
+                    "No UK places match \"${search.query.trim()}\"",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+        }
+        items(search.suggestions, key = { "${it.title}|${it.subtitle}|${it.point}" }) { s ->
+            ListItem(
+                headlineContent = { Text(s.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                supportingContent = s.subtitle.takeIf { it.isNotEmpty() }?.let { { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) } },
+                leadingContent = { Icon(s.kind.icon, contentDescription = null) },
+                colors = transparent,
+                modifier = Modifier.clickable { onPick(s) },
+            )
+        }
+    }
+}
+
+private val PlaceSuggestion.Kind.icon: ImageVector
+    get() = when (this) {
+        PlaceSuggestion.Kind.Town -> Icons.Filled.LocationCity
+        PlaceSuggestion.Kind.Street -> Icons.Filled.EditRoad
+        PlaceSuggestion.Kind.Postcode -> Icons.Filled.MarkunreadMailbox
+        PlaceSuggestion.Kind.Place -> Icons.Filled.Place
+    }
+
+@Composable
+private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier,
+    ) {
+        Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(message, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f, fill = false))
+            TextButton(onClick = onRetry) { Text("Retry") }
+        }
+    }
 }
 
 /** Price as a segmented button (quick single choice), covered as a filter chip. */

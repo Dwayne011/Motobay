@@ -3,12 +3,13 @@ import SwiftUI
 @main
 struct MotoBayApp: App {
     @State private var bays = BayStore(
-        service: OSMService(),
+        service: BayDataService(),
         useSampleData: ProcessInfo.processInfo.environment["MOTOBAY_SAMPLE_DATA"] == "1"
     )
     @State private var user = UserStore()
     @State private var community = CommunityStore()
     @State private var location = LocationProvider()
+    @State private var placeSearch = PlaceSearch()
 
     var body: some Scene {
         WindowGroup {
@@ -17,6 +18,8 @@ struct MotoBayApp: App {
                 .environment(user)
                 .environment(community)
                 .environment(location)
+                .environment(placeSearch)
+                .task { await bays.load() }
         }
     }
 }
