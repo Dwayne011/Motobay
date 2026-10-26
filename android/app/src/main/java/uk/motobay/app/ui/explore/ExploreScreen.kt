@@ -108,7 +108,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayLoadState
-import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
 import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.data.RecentPlace
@@ -747,16 +746,13 @@ private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onC
                         shape = SegmentedButtonDefaults.itemShape(i, PriceFilter.entries.size),
                         label = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                val dot = when (p) {
-                                    PriceFilter.Free -> pinColors(Fee.Free).first
-                                    PriceFilter.Paid -> pinColors(Fee.Paid).first
-                                    PriceFilter.All -> null
-                                }
+                                // Dot in the pin colour, so the bar doubles as the map legend.
+                                val dot = p.fee?.let { pinColors(it).first }
                                 if (dot != null && filters.price != p) {
                                     Box(Modifier.size(10.dp).background(dot, CircleShape))
                                     Spacer(Modifier.width(6.dp))
                                 }
-                                Text(p.name, maxLines = 1)
+                                Text(p.label, maxLines = 1, softWrap = false)
                             }
                         },
                     )

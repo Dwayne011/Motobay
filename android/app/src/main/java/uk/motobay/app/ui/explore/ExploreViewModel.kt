@@ -27,7 +27,7 @@ import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.data.friendlyMessage
 import uk.motobay.app.util.distanceMetres
 
-enum class PriceFilter { All, Free, Paid }
+enum class PriceFilter(val label: String) { All("All"), Free("Free"), Paid("Paid"), Unknown("Unknown") }
 enum class CompactView { Map, List }
 
 data class BayWithDistance(val bay: Bay, val distanceMetres: Double?)
@@ -44,6 +44,15 @@ data class SearchUiState(
     val suggestions: List<PlaceSuggestion> = emptyList(),
     val error: String? = null,
 )
+
+/** The pin colour (fee) a filter segment shows; null for All. */
+val PriceFilter.fee: Fee?
+    get() = when (this) {
+        PriceFilter.All -> null
+        PriceFilter.Free -> Fee.Free
+        PriceFilter.Paid -> Fee.Paid
+        PriceFilter.Unknown -> Fee.Unknown
+    }
 
 /** The list shows at most this many of the nearest bays in view. */
 private const val LIST_LIMIT = 200
@@ -79,7 +88,7 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     /** Every bay matching the filters. The map clusters them, so it shows the whole UK. */
     val mapBays: StateFlow<List<Bay>> = combine(allBays, filters) { all, f ->
         all.values.filter { bay ->
-            (f.price == PriceFilter.All || (f.price == PriceFilter.Free && bay.fee == Fee.Free) || (f.price == PriceFilter.Paid && bay.fee == Fee.Paid)) &&
+            (f.price == PriceFilter.All || bay.fee == f.price.fee) &&
                 (!f.coveredOnly || bay.covered == true)
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
