@@ -43,7 +43,12 @@ import org.maplibre.android.style.layers.PropertyFactory.circleColor
 import org.maplibre.android.style.layers.PropertyFactory.circleRadius
 import org.maplibre.android.style.layers.PropertyFactory.circleStrokeColor
 import org.maplibre.android.style.layers.PropertyFactory.circleStrokeWidth
+import org.maplibre.android.style.layers.Property
 import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
+import org.maplibre.android.style.layers.PropertyFactory.iconAnchor
+import org.maplibre.android.style.layers.PropertyFactory.iconHaloColor
+import org.maplibre.android.style.layers.PropertyFactory.iconHaloWidth
+import org.maplibre.android.style.layers.PropertyFactory.iconOffset
 import org.maplibre.android.style.layers.PropertyFactory.iconColor
 import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.iconImage
@@ -111,6 +116,18 @@ private fun styleUrl(dark: Boolean) =
 private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/dark"
 
 private const val MOTORCYCLE_ICON = "motorcycle"
+private const val PIN_ICON = "pin"
+/** Pin image height in px at scale 1; the icon is drawn with its tip on the coordinate. */
+private const val PIN_PX = 72
+/** The pin head centre sits 15/24 of the shape's height above its tip. */
+private const val PIN_HEAD_FROM_TIP = 15f / 24f
+
+/**
+ * icon-offset for the glyph layer so it lands in the pin head. MapLibre scales
+ * the offset by the glyph layer's own icon-size, so divide that back out.
+ */
+private fun glyphOffset(pinSize: Float, glyphSize: Float): Array<Float> =
+    arrayOf(0f, -(PIN_PX * pinSize * PIN_HEAD_FROM_TIP) / glyphSize)
 
 /**
  * MapLibre map of every bay. Nearby bays are grouped into numbered clusters
@@ -230,9 +247,12 @@ fun BayMap(
             )
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
-            // Tintable (SDF) motorcycle icon for the pins.
+            // Tintable (SDF) images: the teardrop pin and the motorcycle glyph on it.
             ContextCompat.getDrawable(context, R.drawable.ic_motorcycle)?.let {
                 loaded.addImage(MOTORCYCLE_ICON, it.toBitmap(48, 48), true)
+            }
+            ContextCompat.getDrawable(context, R.drawable.ic_pin)?.let {
+                loaded.addImage(PIN_ICON, it.toBitmap(PIN_PX, PIN_PX), true)
             }
 
             loaded.addLayer(
@@ -249,34 +269,46 @@ fun BayMap(
                     textIgnorePlacement(true),
                 ),
             )
+            // Teardrop pin with its tip on the bay, then the motorcycle in the pin head.
             loaded.addLayer(
-                CircleLayer(BAY_CIRCLES, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
-                    circleRadius(14f),
-                    circleColor(toColor(get("fill"))),
-                    circleStrokeWidth(2f),
+                SymbolLayer(BAY_CIRCLES, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
+                    iconImage(PIN_ICON),
+                    iconSize(0.6f),
+                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
+                    iconColor(toColor(get("fill"))),
+                    iconHaloWidth(1.5f),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(
                 SymbolLayer(BAY_LABELS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     iconImage(MOTORCYCLE_ICON),
-                    iconSize(0.75f),
+                    iconSize(0.45f),
+                    iconOffset(glyphOffset(pinSize = 0.6f, glyphSize = 0.45f)),
                     iconColor(toColor(get("ink"))),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
+            // Selected bay: the same pin, larger, with a bright halo.
             loaded.addLayer(
-                CircleLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(
-                    circleRadius(19f),
-                    circleColor(toColor(get("fill"))),
-                    circleStrokeWidth(4f),
+                SymbolLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(
+                    iconImage(PIN_ICON),
+                    iconSize(0.85f),
+                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
+                    iconColor(toColor(get("fill"))),
+                    iconHaloWidth(3f),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(
                 SymbolLayer(SELECTED_LABEL, SELECTED_SOURCE).withProperties(
                     iconImage(MOTORCYCLE_ICON),
-                    iconSize(1f),
+                    iconSize(0.64f),
+                    iconOffset(glyphOffset(pinSize = 0.85f, glyphSize = 0.64f)),
                     iconColor(toColor(get("ink"))),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
@@ -293,8 +325,8 @@ fun BayMap(
             circleColor(colors.cluster.toArgb()), circleStrokeColor(colors.stroke.toArgb()), circleStrokeWidth(2f),
         )
         s.getLayerAs<SymbolLayer>(CLUSTER_COUNT)?.setProperties(textColor(colors.onCluster.toArgb()))
-        s.getLayerAs<CircleLayer>(BAY_CIRCLES)?.setProperties(circleStrokeColor(colors.stroke.toArgb()))
-        s.getLayerAs<CircleLayer>(SELECTED_CIRCLE)?.setProperties(circleStrokeColor(colors.selectedRing.toArgb()))
+        s.getLayerAs<SymbolLayer>(BAY_CIRCLES)?.setProperties(iconHaloColor(colors.stroke.toArgb()))
+        s.getLayerAs<SymbolLayer>(SELECTED_CIRCLE)?.setProperties(iconHaloColor(colors.selectedRing.toArgb()))
         s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
             circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
         )

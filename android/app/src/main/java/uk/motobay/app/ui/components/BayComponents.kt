@@ -50,10 +50,12 @@ fun feeColors(fee: Fee): Pair<Color, Color> = when (fee) {
 
 /** Strong pin colours, matching the map: brand colour when the price isn't known. */
 @Composable
-fun pinColors(fee: Fee): Pair<Color, Color> = when (fee) {
-    Fee.Free -> MotoBayColors.extended.success to MotoBayColors.extended.onSuccess
-    Fee.Paid -> MotoBayColors.extended.warning to MotoBayColors.extended.onWarning
-    Fee.Unknown -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
+fun pinColors(fee: Fee): Pair<Color, Color> = with(MotoBayColors.extended) {
+    when (fee) {
+        Fee.Free -> pinFree to onPinFree
+        Fee.Paid -> pinPaid to onPinPaid
+        Fee.Unknown -> pinUnknown to onPinUnknown
+    }
 }
 
 /** The map pin, for lists and legends. */

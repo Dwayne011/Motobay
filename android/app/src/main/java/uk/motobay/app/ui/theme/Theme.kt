@@ -35,6 +35,13 @@ data class ExtendedColors(
     val onWarning: Color = Color.Unspecified,
     val warningContainer: Color = Color.Unspecified,
     val onWarningContainer: Color = Color.Unspecified,
+    /** Map pin fills. Deliberately saturated, the same in light and dark, so bays stand out from place icons. */
+    val pinFree: Color = Color.Unspecified,
+    val onPinFree: Color = Color.Unspecified,
+    val pinPaid: Color = Color.Unspecified,
+    val onPinPaid: Color = Color.Unspecified,
+    val pinUnknown: Color = Color.Unspecified,
+    val onPinUnknown: Color = Color.Unspecified,
 )
 
 val LocalExtendedColors = staticCompositionLocalOf { ExtendedColors() }
@@ -78,7 +85,7 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
         }
     }
 
-    val extended = remember(scheme.primary, dark) {
+    val extended = remember(scheme.primary, dark, settings.sourceColor) {
         fun custom(seed: Color) = dynamicColorScheme(
             seedColor = seed.harmonize(scheme.primary),
             isDark = dark,
@@ -86,9 +93,18 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
         )
         val success = custom(SuccessSeed)
         val warning = custom(WarningSeed)
+        // Light-scheme primaries are the saturated mid tones (tone 40); the amber pin uses
+        // the light tone (80) with dark ink, since dark amber reads as brown.
+        fun strong(seed: Color, lightTone: Boolean) = dynamicColorScheme(
+            seedColor = seed.harmonize(scheme.primary), isDark = lightTone, style = PaletteStyle.TonalSpot,
+        ).primary
+        val brandStrong = dynamicColorScheme(seedColor = Color(settings.sourceColor), isDark = false, style = PaletteStyle.TonalSpot).primary
         ExtendedColors(
             success.primary, success.onPrimary, success.primaryContainer, success.onPrimaryContainer,
             warning.primary, warning.onPrimary, warning.primaryContainer, warning.onPrimaryContainer,
+            pinFree = strong(SuccessSeed, lightTone = false), onPinFree = Color.White,
+            pinPaid = strong(WarningSeed, lightTone = true), onPinPaid = Color(0xFF3A2A00),
+            pinUnknown = brandStrong, onPinUnknown = Color.White,
         )
     }
 

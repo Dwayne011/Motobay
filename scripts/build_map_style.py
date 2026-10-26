@@ -74,7 +74,11 @@ def add_pois(style, liberty, c):
         paint["text-halo-color"] = c["halo"]
         paint["text-halo-width"] = 1.2
         if "icon-image" in sym.get("layout", {}):
-            sym["layout"]["icon-size"] = 1.15
+            # Transit badges are blue like the brand, so keep them a touch smaller
+            # and softer than other places; bay pins must win.
+            sym["layout"]["icon-size"] = 0.95 if transit else 1.15
+            if transit:
+                paint["icon-opacity"] = 0.85
         style["layers"].append(sym)
     return style
 
