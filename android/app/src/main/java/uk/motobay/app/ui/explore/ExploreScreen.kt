@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -49,7 +51,7 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Train
-import androidx.compose.material3.AssistChip
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
@@ -65,6 +67,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -74,12 +77,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -123,7 +129,8 @@ import uk.motobay.app.util.formatDistance
  * Map and list of bays. Layout follows M3 window size classes:
  * - Compact and medium (under 840dp): full-bleed map with a floating search
  *   bar that expands to a full-screen suggestions view; a Map/List segmented
- *   button switches views; opening a bay navigates to its own screen.
+ *   button switches views; tapping a bay opens a bottom sheet over the map
+ *   that swipes up to full height.
  * - Expanded (840dp and up): list-detail canonical layout, with a docked
  *   search bar and the list or bay detail in a side pane next to the map.
  */
@@ -183,17 +190,17 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val expanded = maxWidth >= 840.dp
 
-        val map: @Composable (Modifier) -> Unit = { modifier ->
+        val mapWith: @Composable ((Bay) -> Unit, Modifier) -> Unit = { onPick, modifier ->
             Box(modifier) {
                 BayMap(
                     bays = mapBays,
-                    selected = if (expanded) selectedId?.let { allBays[it] } else null,
+                    selected = selectedId?.let { allBays[it] ?: favourites[it] },
                     userPosition = userPosition,
                     command = command,
                     colors = mapColors,
                     dark = isAppInDarkTheme(settings.themeMode),
                     initialCamera = settings.lastMap,
-                    onBayClick = { id -> if (expanded) allBays[id]?.let(vm::select) else onOpenBay(id) },
+                    onBayClick = { id -> allBays[id]?.let(onPick) },
                     onViewportChange = vm::onViewportChange,
                     onCommandHandled = { vm.command.value = null },
                     onLongPress = { vm.startAddingBay(it) },
@@ -217,6 +224,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
+                        if (!expanded && selectedId != null) return@Column
                         SmallFloatingActionButton(
                             onClick = onLocate,
                             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -233,15 +241,15 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
             }
         }
 
-        val list: @Composable (Modifier) -> Unit = { modifier ->
+        val listWith: @Composable ((Bay) -> Unit, Modifier) -> Unit = { onPick, modifier ->
             when {
                 visible.isNotEmpty() -> LazyColumn(modifier) {
                     items(visible, key = { it.bay.id }) { item ->
                         BayListItem(
                             bay = item.bay,
                             distance = item.distanceMetres?.let(::formatDistance),
-                            selected = expanded && item.bay.id == selectedId,
-                            onClick = { if (expanded) vm.select(item.bay) else onOpenBay(item.bay.id) },
+                            selected = item.bay.id == selectedId,
+                            onClick = { onPick(item.bay) },
                         )
                     }
                 }
@@ -262,9 +270,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                 onFill = vm::onQueryChange,
                 onRecent = vm::onRecentClick,
                 onClearRecents = vm::clearRecents,
-                onSavedBay = { bay ->
-                    if (expanded) vm.onSavedBayClick(bay) else { vm.onSearchExpandedChange(false); onOpenBay(bay.id) }
-                },
+                onSavedBay = { bay -> vm.onSearchExpandedChange(false); vm.select(bay, bottomPaddingPx = if (expanded) 0 else 300) },
             )
         }
 
@@ -279,7 +285,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                     shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier.widthIn(max = 400.dp).fillMaxHeight().weight(0.4f, fill = false),
                 ) {
-                    val selectedBay = selectedId?.let { allBays[it] }
+                    val selectedBay = selectedId?.let { allBays[it] ?: favourites[it] }
                     if (selectedBay != null) {
                         Column {
                             TopAppBar(
@@ -314,70 +320,106 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                                     )
                                 }
                             }
-                            if (!search.expanded) list(Modifier.fillMaxSize())
+                            if (!search.expanded) listWith(vm::select, Modifier.fillMaxSize())
                         }
                     }
                 }
                 Surface(shape = MaterialTheme.shapes.extraLarge, modifier = Modifier.weight(1f).fillMaxHeight()) {
-                    map(Modifier.fillMaxSize())
+                    mapWith(vm::select, Modifier.fillMaxSize())
                 }
             }
         } else {
             var headerHeight by remember { mutableIntStateOf(0) }
-            val headerDp = with(LocalDensity.current) { headerHeight.toDp() }
-            Box(Modifier.fillMaxSize()) {
-                // The map stays alive under the list so switching back keeps its state.
-                map(Modifier.fillMaxSize())
-                if (compactView == CompactView.List && !addingBay) {
-                    Surface(Modifier.fillMaxSize()) {
-                        list(Modifier.fillMaxSize().padding(top = headerDp + 8.dp, bottom = 88.dp))
-                    }
-                }
-                if (!addingBay) {
-                    // Search bar and filters stack in one column, so they never overlap
-                    // whatever the phone's text size. The bar expands to full screen.
-                    val side by animateDpAsState(if (search.expanded) 0.dp else 16.dp, label = "searchSidePadding")
-                    Column(
-                        Modifier.onSizeChanged { if (!search.expanded) headerHeight = it.height },
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        SearchBar(
-                            inputField = { SearchField(search, vm) },
-                            expanded = search.expanded,
-                            onExpandedChange = vm::onSearchExpandedChange,
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = side)
-                                .padding(top = if (search.expanded) 0.dp else 8.dp),
-                            content = suggestions,
-                        )
-                        if (!search.expanded) {
-                            Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                Filters(filters, vm::setPrice, vm::toggleCovered)
-                            }
+            val density = LocalDensity.current
+            val headerDp = with(density) { headerHeight.toDp() }
+            val selectedBay = selectedId?.let { allBays[it] ?: favourites[it] }
+            val sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
+            val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+            val scope = rememberCoroutineScope()
+            val peekDp = 300.dp
+            val peekPx = with(density) { peekDp.roundToPx() }
+
+            // Open the sheet part-way when a bay is picked; clear the pick when it's swiped away.
+            LaunchedEffect(selectedBay?.id) {
+                if (selectedBay != null) sheetState.partialExpand() else sheetState.hide()
+            }
+            LaunchedEffect(sheetState.currentValue) {
+                if (sheetState.currentValue == SheetValue.Hidden && selectedId != null) vm.clearSelection()
+            }
+            BackHandler(enabled = selectedBay != null) { vm.clearSelection() }
+
+            val pick: (Bay) -> Unit = { bay -> vm.select(bay, bottomPaddingPx = peekPx) }
+
+            BottomSheetScaffold(
+                scaffoldState = scaffoldState,
+                sheetPeekHeight = if (selectedBay != null) peekDp else 0.dp,
+                sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                sheetContent = {
+                    selectedBay?.let { bay ->
+                        Box(Modifier.fillMaxSize()) {
+                            BayDetailContent(bay)
+                            IconButton(
+                                onClick = vm::clearSelection,
+                                modifier = Modifier.align(Alignment.TopEnd).padding(horizontal = 8.dp),
+                            ) { Icon(Icons.Filled.Close, contentDescription = "Close") }
                         }
                     }
-                    if (!search.expanded) {
-                        Surface(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            tonalElevation = 3.dp,
-                            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
+                },
+            ) {
+                Box(Modifier.fillMaxSize()) {
+                    // The map stays alive under the list so switching back keeps its state.
+                    mapWith(pick, Modifier.fillMaxSize())
+                    if (compactView == CompactView.List && !addingBay) {
+                        Surface(Modifier.fillMaxSize()) {
+                            listWith(pick, Modifier.fillMaxSize().padding(top = headerDp + 8.dp, bottom = 88.dp))
+                        }
+                    }
+                    if (!addingBay) {
+                        // Search bar and filters stack in one column, so they never overlap
+                        // whatever the phone's text size. The bar expands to full screen.
+                        val side by animateDpAsState(if (search.expanded) 0.dp else 16.dp, label = "searchSidePadding")
+                        Column(
+                            Modifier.onSizeChanged { if (!search.expanded) headerHeight = it.height },
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            SingleChoiceSegmentedButtonRow {
-                                listOf(CompactView.Map to "Map", CompactView.List to "List $countLabel").forEachIndexed { i, (view, label) ->
-                                    SegmentedButton(
-                                        selected = compactView == view,
-                                        onClick = { vm.compactView.value = view },
-                                        shape = SegmentedButtonDefaults.itemShape(i, 2),
-                                        icon = {
-                                            SegmentedButtonDefaults.Icon(active = compactView == view) {
-                                                Icon(
-                                                    if (view == CompactView.Map) Icons.Filled.Map else Icons.AutoMirrored.Filled.List,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
-                                                )
-                                            }
-                                        },
-                                        label = { Text(label, maxLines = 1, softWrap = false) },
-                                    )
+                            SearchBar(
+                                inputField = { SearchField(search, vm) },
+                                expanded = search.expanded,
+                                onExpandedChange = vm::onSearchExpandedChange,
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = side)
+                                    .padding(top = if (search.expanded) 0.dp else 8.dp),
+                                content = suggestions,
+                            )
+                            if (!search.expanded) {
+                                Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
+                                    Filters(filters, vm::setPrice, vm::toggleCovered)
+                                }
+                            }
+                        }
+                        if (!search.expanded && selectedBay == null) {
+                            Surface(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                tonalElevation = 3.dp,
+                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
+                            ) {
+                                SingleChoiceSegmentedButtonRow {
+                                    listOf(CompactView.Map to "Map", CompactView.List to "List $countLabel").forEachIndexed { i, (view, label) ->
+                                        SegmentedButton(
+                                            selected = compactView == view,
+                                            onClick = { vm.compactView.value = view },
+                                            shape = SegmentedButtonDefaults.itemShape(i, 2),
+                                            icon = {
+                                                SegmentedButtonDefaults.Icon(active = compactView == view) {
+                                                    Icon(
+                                                        if (view == CompactView.Map) Icons.Filled.Map else Icons.AutoMirrored.Filled.List,
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
+                                                    )
+                                                }
+                                            },
+                                            label = { Text(label, maxLines = 1, softWrap = false) },
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -489,25 +531,27 @@ private fun SuggestionsContent(
     LazyColumn {
         if (search.query.trim().length < 2) {
             item {
+                // One row that scrolls sideways, so labels never wrap at large text sizes.
                 Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    AssistChip(
+                    FilterChip(
+                        selected = false,
                         onClick = onLocate,
-                        label = { Text("Your location") },
+                        label = { Text("Your location", maxLines = 1, softWrap = false) },
                         leadingIcon = { Icon(Icons.Filled.MyLocation, contentDescription = null, Modifier.size(18.dp)) },
                     )
                     FilterChip(
                         selected = tab == EmptyTab.Recent,
                         onClick = { tab = EmptyTab.Recent },
-                        label = { Text("Recent") },
+                        label = { Text("Recent", maxLines = 1, softWrap = false) },
                         leadingIcon = { Icon(Icons.Filled.History, contentDescription = null, Modifier.size(18.dp)) },
                     )
                     FilterChip(
                         selected = tab == EmptyTab.Saved,
                         onClick = { tab = EmptyTab.Saved },
-                        label = { Text("Saved") },
+                        label = { Text("Saved", maxLines = 1, softWrap = false) },
                         leadingIcon = { Icon(Icons.Filled.Star, contentDescription = null, Modifier.size(18.dp)) },
                     )
                 }

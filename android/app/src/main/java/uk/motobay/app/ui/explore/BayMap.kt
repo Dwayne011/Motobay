@@ -70,7 +70,8 @@ import uk.motobay.app.data.LatLon
 
 /** Camera moves requested by the screen (search result, my location, opening a bay). */
 sealed interface MapCommand {
-    data class Fly(val lat: Double, val lon: Double, val zoom: Double? = null) : MapCommand
+    /** [bottomPaddingPx] keeps the target above an overlay such as the bay sheet. */
+    data class Fly(val lat: Double, val lon: Double, val zoom: Double? = null, val bottomPaddingPx: Int = 0) : MapCommand
     data class Fit(val box: BBox) : MapCommand
 }
 
@@ -322,7 +323,12 @@ fun BayMap(
         when (val c = command ?: return@LaunchedEffect) {
             is MapCommand.Fly -> {
                 val zoom = c.zoom ?: maxOf(m.cameraPosition.zoom, 16.0)
-                m.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(c.lat, c.lon), zoom), 800)
+                val position = CameraPosition.Builder()
+                    .target(LatLng(c.lat, c.lon))
+                    .zoom(zoom)
+                    .padding(0.0, 0.0, 0.0, c.bottomPaddingPx.toDouble())
+                    .build()
+                m.animateCamera(CameraUpdateFactory.newCameraPosition(position), 800)
             }
             is MapCommand.Fit -> {
                 val bounds = LatLngBounds.from(c.box.north, c.box.east, c.box.south, c.box.west)

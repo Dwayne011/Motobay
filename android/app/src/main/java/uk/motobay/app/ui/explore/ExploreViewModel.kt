@@ -199,9 +199,14 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         }
     }
 
-    fun select(bay: Bay) {
+    /** Shows a bay. [bottomPaddingPx] is the height of the sheet that will cover the map. */
+    fun select(bay: Bay, bottomPaddingPx: Int = 0) {
         selectedId.value = bay.id
-        command.value = MapCommand.Fly(bay.lat, bay.lon)
+        command.value = MapCommand.Fly(bay.lat, bay.lon, bottomPaddingPx = bottomPaddingPx)
+    }
+
+    fun clearSelection() {
+        selectedId.value = null
     }
 
     fun setPrice(p: PriceFilter) = filters.update { it.copy(price = p) }

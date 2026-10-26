@@ -14,8 +14,8 @@ android {
         applicationId = "uk.motobays.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 5
+        versionName = "0.5.0"
         val sampleData = (project.findProperty("motobay.sampleData") as String?)?.toBoolean() ?: false
         buildConfigField("boolean", "SAMPLE_DATA", sampleData.toString())
         // Built weekly from OpenStreetMap by .github/workflows/update-bay-data.yml.

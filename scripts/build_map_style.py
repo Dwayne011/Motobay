@@ -11,13 +11,17 @@ import json
 import urllib.request
 
 SOURCE = "https://tiles.openfreemap.org/styles/dark"
+# Liberty has the shop/landmark/transit layers that Dark leaves out.
+POI_SOURCE = "https://tiles.openfreemap.org/styles/liberty"
 OUT = "data/map/graphite.json"
 
 COLORS = dict(
     bg="#141414", water="#1b252d", park="#17211a", res="#171717", building="#202020",
     minor="#3c3c3c", casing="#141414", major="#5a5a5a", motorway="#7c7c7c", rail="#2e2e2e",
     label="#d4d4d4", halo="#141414",
+    poi_label="#c8c8c8", transit_label="#9ec1e8",
 )
+POI_LAYERS = ("poi_r1", "poi_r7", "poi_r20", "poi_transit", "airport")
 
 
 def recolor(style, c):
@@ -55,10 +59,34 @@ def recolor(style, c):
     return s
 
 
-if __name__ == "__main__":
-    request = urllib.request.Request(SOURCE, headers={"User-Agent": "MotoBays style builder"})
+def add_pois(style, liberty, c):
+    """Copies Liberty's POI layers (shops, landmarks, stations) into the dark
+    style. The sprite icons carry their own white discs, so only the label
+    colours need changing; icons are drawn a little larger for the dark map."""
+    by_id = {l["id"]: l for l in liberty["layers"]}
+    for pid in POI_LAYERS:
+        if pid not in by_id:
+            continue
+        sym = copy.deepcopy(by_id[pid])
+        transit = pid == "poi_transit"
+        paint = sym.setdefault("paint", {})
+        paint["text-color"] = c["transit_label" if transit else "poi_label"]
+        paint["text-halo-color"] = c["halo"]
+        paint["text-halo-width"] = 1.2
+        if "icon-image" in sym.get("layout", {}):
+            sym["layout"]["icon-size"] = 1.15
+        style["layers"].append(sym)
+    return style
+
+
+def fetch(url):
+    request = urllib.request.Request(url, headers={"User-Agent": "MotoBays style builder"})
     with urllib.request.urlopen(request, timeout=60) as res:
-        base = json.load(res)
+        return json.load(res)
+
+
+if __name__ == "__main__":
+    style = add_pois(recolor(fetch(SOURCE), COLORS), fetch(POI_SOURCE), COLORS)
     with open(OUT, "w", encoding="utf-8") as f:
-        json.dump(recolor(base, COLORS), f, separators=(",", ":"))
-    print(f"Wrote {OUT}")
+        json.dump(style, f, separators=(",", ":"))
+    print(f"Wrote {OUT} with {len(style['layers'])} layers")
