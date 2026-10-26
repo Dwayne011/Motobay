@@ -6,29 +6,35 @@ import android.graphics.PointF
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import android.view.animation.PathInterpolator
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.lerp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -39,10 +45,7 @@ import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import org.maplibre.android.style.expressions.Expression.get
 import org.maplibre.android.style.expressions.Expression.has
-import org.maplibre.android.style.expressions.Expression.literal
 import org.maplibre.android.style.expressions.Expression.not
-import org.maplibre.android.style.expressions.Expression.step
-import org.maplibre.android.style.expressions.Expression.stop
 import org.maplibre.android.style.expressions.Expression.toColor
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.Property
@@ -54,33 +57,24 @@ import org.maplibre.android.style.layers.PropertyFactory.circleStrokeColor
 import org.maplibre.android.style.layers.PropertyFactory.circleStrokeWidth
 import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
 import org.maplibre.android.style.layers.PropertyFactory.iconAnchor
-import org.maplibre.android.style.layers.PropertyFactory.iconColor
-import org.maplibre.android.style.layers.PropertyFactory.iconHaloColor
-import org.maplibre.android.style.layers.PropertyFactory.iconHaloWidth
 import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.iconImage
 import org.maplibre.android.style.layers.PropertyFactory.iconOffset
+import org.maplibre.android.style.layers.PropertyFactory.iconOpacity
 import org.maplibre.android.style.layers.PropertyFactory.iconSize
-import org.maplibre.android.style.layers.PropertyFactory.textAllowOverlap
-import org.maplibre.android.style.layers.PropertyFactory.textColor
-import org.maplibre.android.style.layers.PropertyFactory.textField
-import org.maplibre.android.style.layers.PropertyFactory.textFont
-import org.maplibre.android.style.layers.PropertyFactory.textIgnorePlacement
-import org.maplibre.android.style.layers.PropertyFactory.textSize
 import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.Point
 import uk.motobay.app.BuildConfig
-import uk.motobay.app.R
 import uk.motobay.app.data.BBox
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.CameraSnapshot
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
+import kotlin.coroutines.resume
 import kotlin.math.floor
-import kotlin.math.roundToInt
 
 /** Camera moves requested by the screen (search result, my location, opening a bay). */
 sealed interface MapCommand {
@@ -105,13 +99,10 @@ data class PinColors(
 
 private const val BAY_SOURCE = "bays"
 private const val CLUSTERS = "bay-clusters"
-private const val CLUSTER_COUNT = "bay-cluster-count"
 private const val BAY_PINS = "bay-pins"
-private const val BAY_GLYPHS = "bay-glyphs"
 private const val SELECTED_SOURCE = "selected"
 private const val SELECTED_PULSE = "selected-pulse"
 private const val SELECTED_PIN = "selected-pin"
-private const val SELECTED_GLYPH = "selected-glyph"
 private const val USER_SOURCE = "user"
 private const val USER_LAYER = "user-dot"
 
@@ -125,26 +116,27 @@ private fun styleUrl(dark: Boolean) =
 /** Used if the Graphite style can't be fetched. */
 private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/dark"
 
-private const val MOTORCYCLE_ICON = "motorcycle"
-private const val PIN_ICON = "pin"
-/** Pin image height in dp at icon-size 1; the icon is drawn with its tip on the coordinate. */
-private const val PIN_PX = 72
-private const val GLYPH_PX = 48
-private const val PIN_SIZE = 0.6f
-private const val GLYPH_SIZE = 0.45f
-private const val SELECTED_PIN_SIZE = 0.85f
-private const val SELECTED_GLYPH_SIZE = 0.64f
-
 /** M3 "emphasized decelerate" easing, for things entering the screen. */
 private val EMPHASIZED_DECELERATE = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
 /** M3 "standard" easing, for things moving within the screen. */
 private val STANDARD = PathInterpolator(0.2f, 0f, 0f, 1f)
 
 /** How long pins take to fly out of a cluster / gather back into one. */
-private const val SPLIT_MS = 380L
-private const val GATHER_MS = 320L
+private const val SPLIT_MS = 400L
+private const val GATHER_MS = 340L
 
-/** Runs [onFrame] with 0→1 (eased) for [durationMs]; cancelled with the coroutine. */
+/** Drives [onFrame] with eased 0→1 progress from the display's frame clock, so it runs at the screen's refresh rate. */
+private suspend fun animateFrames(durationMs: Long, interpolator: TimeInterpolator, onFrame: (Float) -> Unit) {
+    val start = withFrameNanos { it }
+    while (true) {
+        val now = withFrameNanos { it }
+        val raw = ((now - start) / 1_000_000.0 / durationMs).coerceAtMost(1.0).toFloat()
+        onFrame(interpolator.getInterpolation(raw))
+        if (raw >= 1f) return
+    }
+}
+
+/** Runs [onFrame] with 0→1 (eased) for [durationMs] via a ValueAnimator; cancelled with the coroutine. */
 private suspend fun animate(durationMs: Long, interpolator: TimeInterpolator, onFrame: (Float) -> Unit) {
     val animator = ValueAnimator.ofFloat(0f, 1f).apply {
         duration = durationMs
@@ -159,55 +151,44 @@ private suspend fun animate(durationMs: Long, interpolator: TimeInterpolator, on
     }
 }
 
-/**
- * Animates a pin layer pair (teardrop + glyph) from [from] × target size to
- * full size. Scaling both by the same factor keeps the glyph in the pin head,
- * because icon-offset is expressed in the glyph's own size units.
- */
-private suspend fun animatePinScale(
-    style: Style,
-    pinLayer: String,
-    glyphLayer: String,
-    pinSize: Float,
-    glyphSize: Float,
-    from: Float,
-    durationMs: Long,
-    interpolator: TimeInterpolator,
-) {
-    val pin = style.getLayerAs<SymbolLayer>(pinLayer) ?: return
-    val glyph = style.getLayerAs<SymbolLayer>(glyphLayer) ?: return
-    try {
-        animate(durationMs, interpolator) { t ->
-            val k = from + (1f - from) * t
-            pin.setProperties(iconSize(pinSize * k))
-            glyph.setProperties(iconSize(glyphSize * k))
-        }
-    } finally {
-        // Cancelled (new selection, style reload) or finished: land on the exact size.
-        runCatching {
-            pin.setProperties(iconSize(pinSize))
-            glyph.setProperties(iconSize(glyphSize))
+/** Suspends until MapLibre reports a fully rendered frame (all sources loaded), or [timeoutMs] passes. */
+private suspend fun MapView.awaitFullyRendered(timeoutMs: Long) {
+    withTimeoutOrNull(timeoutMs) {
+        suspendCancellableCoroutine { cont ->
+            val listener = object : MapView.OnDidFinishRenderingFrameListener {
+                override fun onDidFinishRenderingFrame(fully: Boolean, frameEncodingTime: Double, frameRenderingTime: Double) {
+                    if (fully && cont.isActive) {
+                        removeOnDidFinishRenderingFrameListener(this)
+                        cont.resume(Unit)
+                    }
+                }
+            }
+            addOnDidFinishRenderingFrameListener(listener)
+            cont.invokeOnCancellation { removeOnDidFinishRenderingFrameListener(listener) }
         }
     }
 }
 
-/** The pin head centre sits 15/24 of the shape's height above its tip. */
-private const val PIN_HEAD_FROM_TIP = 15f / 24f
-
-/**
- * icon-offset for the glyph layer so it lands in the pin head. MapLibre scales
- * the offset by the glyph layer's own icon-size, so divide that back out.
- */
-private fun glyphOffset(pinSize: Float, glyphSize: Float): Array<Float> =
-    arrayOf(0f, -(PIN_PX * pinSize * PIN_HEAD_FROM_TIP) / glyphSize)
-
 /** What the bay source currently shows, so the next zoom can animate from it. */
 private class Displayed(val zoom: Int, val nodes: List<MapNode>)
+
+private enum class Fade { None, In, Out }
+
+/** One marker moving across the screen during a zoom transition, in view pixels. */
+private class Sprite(val image: MarkerImage, val start: Offset, val end: Offset, val fade: Fade)
+
+private class Transition(val sprites: List<Sprite>, val t: Float)
 
 /**
  * MapLibre map of every bay. Nearby bays are grouped into numbered clusters
  * when zoomed out. Zooming in makes the pins fly out of their cluster, and
  * zooming out gathers them back; tapping a cluster zooms in until it splits.
+ *
+ * The zoom transitions are drawn on a Compose canvas over the map rather than
+ * by moving GeoJSON features: rewriting a source every frame makes MapLibre
+ * re-tile and re-lay out the symbols, which stutters. The map's own pins are
+ * hidden for the duration and the exact same bitmaps are blitted, so the
+ * hand-over is seamless.
  */
 @Composable
 fun BayMap(
@@ -238,7 +219,11 @@ fun BayMap(
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
     var style by remember { mutableStateOf<Style?>(null) }
     var viewport by remember { mutableStateOf<MapViewport?>(null) }
+    /** Bumped whenever the camera starts moving, which cancels any zoom transition in flight. */
+    var moveGen by remember { mutableIntStateOf(0) }
+    var transition by remember { mutableStateOf<Transition?>(null) }
     val displayed = remember { mutableStateOf<Displayed?>(null) }
+    val images = remember(context, colors) { PinImages(context, colors) }
     val latestBays by rememberUpdatedState(bays)
     val latestBayClick by rememberUpdatedState(onBayClick)
     val latestViewport by rememberUpdatedState(onViewportChange)
@@ -280,6 +265,7 @@ fun BayMap(
                     LatLon(c.latitude, c.longitude),
                 )
             }
+            m.addOnCameraMoveStartedListener { moveGen++ }
             m.addOnCameraIdleListener {
                 val vp = readViewport() ?: return@addOnCameraIdleListener
                 viewport = vp
@@ -287,7 +273,7 @@ fun BayMap(
             }
             m.addOnMapClickListener { point ->
                 val screen: PointF = m.projection.toScreenLocation(point)
-                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, BAY_GLYPHS, CLUSTERS, CLUSTER_COUNT).firstOrNull()
+                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, CLUSTERS).firstOrNull()
                     ?: return@addOnMapClickListener false
                 val id = hit.getStringProperty("id") ?: return@addOnMapClickListener false
                 val node = displayed.value?.nodes?.firstOrNull { it.id == id }
@@ -332,54 +318,27 @@ fun BayMap(
             loaded.addSource(GeoJsonSource(BAY_SOURCE))
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
-            // Tintable (SDF) images: the teardrop pin and the motorcycle glyph on it.
-            // MapLibre reads the bitmap's density as its pixel ratio, so render each at
-            // density × logical size to get a sharp image that measures PIN_PX in dp.
-            val density = context.resources.displayMetrics.density
-            fun image(id: Int, logicalPx: Int) = ContextCompat.getDrawable(context, id)!!
-                .toBitmap((logicalPx * density).roundToInt(), (logicalPx * density).roundToInt())
-                .apply { this.density = context.resources.displayMetrics.densityDpi }
-            loaded.addImage(MOTORCYCLE_ICON, image(R.drawable.ic_motorcycle, GLYPH_PX), true)
-            loaded.addImage(PIN_ICON, image(R.drawable.ic_pin, PIN_PX), true)
-
+            // Every marker is a pre-rendered bitmap (see PinImages), chosen per feature by its "icon" key.
             loaded.addLayer(
-                CircleLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
-                    circleRadius(step(get("point_count"), literal(16f), stop(10, 20f), stop(100, 26f), stop(1000, 32f))),
-                ),
-            )
-            loaded.addLayer(
-                SymbolLayer(CLUSTER_COUNT, BAY_SOURCE).withFilter(has("point_count")).withProperties(
-                    textField(get("point_count_abbreviated")),
-                    textFont(arrayOf("Noto Sans Bold")),
-                    textSize(13f),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
-                ),
-            )
-            // Teardrop pin with its tip on the bay, then the motorcycle in the pin head.
-            loaded.addLayer(
-                SymbolLayer(BAY_PINS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
-                    iconImage(PIN_ICON),
-                    iconSize(PIN_SIZE),
-                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconColor(toColor(get("fill"))),
-                    iconHaloWidth(1.5f),
+                SymbolLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
+                    iconImage(get("icon")),
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
+            // Teardrop with its tip on the bay; the tip sits one outline-width above the bitmap's bottom edge.
             loaded.addLayer(
-                SymbolLayer(BAY_GLYPHS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
-                    iconImage(MOTORCYCLE_ICON),
-                    iconSize(GLYPH_SIZE),
-                    iconOffset(glyphOffset(pinSize = PIN_SIZE, glyphSize = GLYPH_SIZE)),
-                    iconColor(toColor(get("ink"))),
+                SymbolLayer(BAY_PINS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
+                    iconImage(get("icon")),
+                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
+                    iconOffset(arrayOf(0f, PIN_STROKE_DP)),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
-            // Selected bay: a soft ripple on the ground, then the same pin, larger, with a bright halo.
+            // Selected bay: a soft ripple on the ground, then the same pin, larger, with a bright ring.
             loaded.addLayer(
                 CircleLayer(SELECTED_PULSE, SELECTED_SOURCE).withProperties(
                     circleColor(toColor(get("fill"))),
@@ -390,21 +349,9 @@ fun BayMap(
             )
             loaded.addLayer(
                 SymbolLayer(SELECTED_PIN, SELECTED_SOURCE).withProperties(
-                    iconImage(PIN_ICON),
-                    iconSize(SELECTED_PIN_SIZE),
+                    iconImage(get("icon")),
                     iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconColor(toColor(get("fill"))),
-                    iconHaloWidth(3f),
-                    iconAllowOverlap(true),
-                    iconIgnorePlacement(true),
-                ),
-            )
-            loaded.addLayer(
-                SymbolLayer(SELECTED_GLYPH, SELECTED_SOURCE).withProperties(
-                    iconImage(MOTORCYCLE_ICON),
-                    iconSize(SELECTED_GLYPH_SIZE),
-                    iconOffset(glyphOffset(pinSize = SELECTED_PIN_SIZE, glyphSize = SELECTED_GLYPH_SIZE)),
-                    iconColor(toColor(get("ink"))),
+                    iconOffset(arrayOf(0f, SELECTED_PIN_STROKE_DP)),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
@@ -414,15 +361,8 @@ fun BayMap(
         }
     }
 
-    // Theme colours for clusters, the selected pin and the user's dot.
     LaunchedEffect(style, colors) {
         val s = style ?: return@LaunchedEffect
-        s.getLayerAs<CircleLayer>(CLUSTERS)?.setProperties(
-            circleColor(colors.cluster.toArgb()), circleStrokeColor(colors.stroke.toArgb()), circleStrokeWidth(2f),
-        )
-        s.getLayerAs<SymbolLayer>(CLUSTER_COUNT)?.setProperties(textColor(colors.onCluster.toArgb()))
-        s.getLayerAs<SymbolLayer>(BAY_PINS)?.setProperties(iconHaloColor(colors.stroke.toArgb()))
-        s.getLayerAs<SymbolLayer>(SELECTED_PIN)?.setProperties(iconHaloColor(colors.selectedRing.toArgb()))
         s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
             circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
         )
@@ -431,8 +371,9 @@ fun BayMap(
     // Cluster the bays for the current zoom and animate between zoom levels.
     var pinsShown by remember { mutableStateOf(false) }
     LaunchedEffect(style) { pinsShown = false }
-    LaunchedEffect(style, bays, viewport, colors) {
+    LaunchedEffect(style, bays, viewport, colors, moveGen) {
         val s = style ?: return@LaunchedEffect
+        val m = map ?: return@LaunchedEffect
         val vp = viewport ?: return@LaunchedEffect
         val source = s.getSourceAs<GeoJsonSource>(BAY_SOURCE) ?: return@LaunchedEffect
         val zoom = floor(vp.zoom).toInt().coerceAtMost(CLUSTER_MAX_ZOOM)
@@ -441,57 +382,82 @@ fun BayMap(
         val previous = displayed.value
         displayed.value = Displayed(zoom, target)
 
-        fun show(nodes: List<MapNode>, at: Map<String, LatLon>? = null) {
-            source.setGeoJson(FeatureCollection.fromFeatures(nodes.map { it.toFeature(colors, at?.get(it.id)) }))
+        fun show(nodes: List<MapNode>) {
+            images.install(s, nodes.map(images::key))
+            source.setGeoJson(FeatureCollection.fromFeatures(nodes.map { it.toFeature(images) }))
         }
-        try {
-            when {
-                previous == null || previous.zoom == zoom || previous.nodes.isEmpty() || target.isEmpty() -> show(target)
-                zoom > previous.zoom -> {
-                    // Zoomed in: each new pin or cluster flies out of the cluster it was in.
-                    val origin = HashMap<String, LatLon>()
-                    previous.nodes.forEach { n -> n.members.forEach { origin[it] = LatLon(n.lat, n.lon) } }
-                    val starts = target.associate { it.id to (origin[it.members.first()] ?: LatLon(it.lat, it.lon)) }
-                    animate(SPLIT_MS, EMPHASIZED_DECELERATE) { t ->
-                        show(target, target.associate { it.id to starts.getValue(it.id).lerp(LatLon(it.lat, it.lon), t) })
-                    }
-                }
-                else -> {
-                    // Zoomed out: the pins on screen slide into the cluster they now belong to.
-                    val dest = HashMap<String, LatLon>()
-                    target.forEach { n -> n.members.forEach { dest[it] = LatLon(n.lat, n.lon) } }
-                    val ends = previous.nodes.associate { it.id to (dest[it.members.first()] ?: LatLon(it.lat, it.lon)) }
-                    animate(GATHER_MS, STANDARD) { t ->
-                        show(previous.nodes, previous.nodes.associate { it.id to LatLon(it.lat, it.lon).lerp(ends.getValue(it.id), t) })
-                    }
-                }
+        val animated = previous != null && previous.zoom != zoom && previous.nodes.isNotEmpty() && target.isNotEmpty()
+        if (!animated) {
+            transition = null
+            show(target)
+        } else {
+            val proj = m.projection
+            fun screen(lat: Double, lon: Double) = proj.toScreenLocation(LatLng(lat, lon)).let { Offset(it.x, it.y) }
+            fun at(n: MapNode) = screen(n.lat, n.lon)
+            val sprites = ArrayList<Sprite>()
+            val duration: Long
+            val easing: TimeInterpolator
+            if (zoom > previous!!.zoom) {
+                // Zoomed in: each new pin or cluster flies out of the cluster it was in, which fades away.
+                duration = SPLIT_MS; easing = EMPHASIZED_DECELERATE
+                val origin = HashMap<String, Offset>()
+                previous.nodes.forEach { n -> val p = at(n); n.members.forEach { origin[it] = p } }
+                previous.nodes.filter { it.isCluster }.forEach { sprites += Sprite(images[images.key(it)], at(it), at(it), Fade.Out) }
+                target.forEach { n -> val end = at(n); sprites += Sprite(images[images.key(n)], origin[n.members.first()] ?: end, end, Fade.None) }
+            } else {
+                // Zoomed out: the pins on screen slide into the cluster they now belong to, which fades in.
+                duration = GATHER_MS; easing = STANDARD
+                val dest = HashMap<String, Offset>()
+                target.forEach { n -> val p = at(n); n.members.forEach { dest[it] = p } }
+                target.filter { it.isCluster }.forEach { sprites += Sprite(images[images.key(it)], at(it), at(it), Fade.In) }
+                previous.nodes.forEach { n -> val start = at(n); sprites += Sprite(images[images.key(n)], start, dest[n.members.first()] ?: start, Fade.None) }
             }
-        } finally {
-            // Whether finished or interrupted by the next camera move, land on the real layout.
-            runCatching { show(target) }
+            try {
+                // Take over drawing: hide the map's markers and animate the same bitmaps on the canvas.
+                transition = Transition(sprites, 0f)
+                source.setGeoJson(FeatureCollection.fromFeatures(emptyList()))
+                animateFrames(duration, easing) { t -> transition = Transition(sprites, t) }
+                // Hand back: load the real layout and keep the finished frame up until the map has drawn it.
+                show(target)
+                delay(32)
+                mapView.awaitFullyRendered(timeoutMs = 400)
+            } finally {
+                transition = null
+                runCatching { show(target) }
+            }
         }
         if (target.isNotEmpty() && !pinsShown) {
-            // Pins scale in the first time they appear on a freshly loaded style.
+            // Markers fade in the first time they appear on a freshly loaded style.
             pinsShown = true
-            animatePinScale(s, BAY_PINS, BAY_GLYPHS, PIN_SIZE, GLYPH_SIZE, from = 0f, durationMs = 450, interpolator = EMPHASIZED_DECELERATE)
+            val pins = s.getLayerAs<SymbolLayer>(BAY_PINS)
+            val clusters = s.getLayerAs<SymbolLayer>(CLUSTERS)
+            try {
+                animate(350, EMPHASIZED_DECELERATE) { t ->
+                    pins?.setProperties(iconOpacity(t)); clusters?.setProperties(iconOpacity(t))
+                }
+            } finally {
+                runCatching { pins?.setProperties(iconOpacity(1f)); clusters?.setProperties(iconOpacity(1f)) }
+            }
         }
     }
 
     LaunchedEffect(style, selected, colors) {
         val s = style ?: return@LaunchedEffect
-        val features = selected?.let { listOf(it.toNode().toFeature(colors)) }.orEmpty()
-        s.getSourceAs<GeoJsonSource>(SELECTED_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
         val pulse = s.getLayerAs<CircleLayer>(SELECTED_PULSE)
+        val pin = s.getLayerAs<SymbolLayer>(SELECTED_PIN)
+        val source = s.getSourceAs<GeoJsonSource>(SELECTED_SOURCE)
         if (selected == null) {
+            source?.setGeoJson(FeatureCollection.fromFeatures(emptyList()))
             pulse?.setProperties(circleRadius(0f), circleOpacity(0f))
             return@LaunchedEffect
         }
+        val key = images.pinKey(selected.fee, selected = true)
+        images.install(s, listOf(key))
+        source?.setGeoJson(selected.toNode().toFeature(images, iconKey = key))
         try {
             // Drops in with a bounce, like an M3 FAB appearing...
-            animatePinScale(
-                s, SELECTED_PIN, SELECTED_GLYPH, SELECTED_PIN_SIZE, SELECTED_GLYPH_SIZE,
-                from = 0.2f, durationMs = 420, interpolator = OvershootInterpolator(2f),
-            )
+            animate(420, OvershootInterpolator(2f)) { t -> pin?.setProperties(iconSize(0.2f + 0.8f * t)) }
+            pin?.setProperties(iconSize(1f))
             // ...then a ripple spreads from the tip while the bay stays selected.
             while (true) {
                 animate(1600, LinearInterpolator()) { t ->
@@ -500,7 +466,10 @@ fun BayMap(
                 delay(400)
             }
         } finally {
-            runCatching { pulse?.setProperties(circleRadius(0f), circleOpacity(0f)) }
+            runCatching {
+                pin?.setProperties(iconSize(1f))
+                pulse?.setProperties(circleRadius(0f), circleOpacity(0f))
+            }
         }
     }
 
@@ -531,13 +500,26 @@ fun BayMap(
         onCommandHandled()
     }
 
-    AndroidView(factory = { mapView }, modifier = modifier)
+    Box(modifier) {
+        AndroidView(factory = { mapView }, modifier = Modifier.fillMaxSize())
+        // Zoom transition overlay; draws nothing (and takes no touches) when idle.
+        Canvas(Modifier.fillMaxSize()) {
+            val tr = transition ?: return@Canvas
+            for (sp in tr.sprites) {
+                val alpha = when (sp.fade) {
+                    Fade.None -> 1f
+                    Fade.Out -> (1f - tr.t / 0.4f).coerceIn(0f, 1f)
+                    Fade.In -> ((tr.t - 0.6f) / 0.4f).coerceIn(0f, 1f)
+                }
+                if (alpha <= 0f) continue
+                val p = lerp(sp.start, sp.end, tr.t)
+                drawImage(sp.image.image, topLeft = Offset(p.x - sp.image.anchorX, p.y - sp.image.anchorY), alpha = alpha)
+            }
+        }
+    }
 }
 
 private fun Bay.toNode() = MapNode(id, lat, lon, listOf(id), this)
-
-private fun LatLon.lerp(to: LatLon, t: Float): LatLon =
-    LatLon(lat + (to.lat - lat) * t, lon + (to.lon - lon) * t)
 
 /** The box grown by [fraction] of its size on every side. */
 private fun BBox.expanded(fraction: Double): BBox {
@@ -546,27 +528,19 @@ private fun BBox.expanded(fraction: Double): BBox {
     return BBox(south - dLat, west - dLon, north + dLat, east + dLon)
 }
 
-private fun abbreviate(n: Int): String = if (n >= 1_000) "${n / 1_000}k" else n.toString()
-
-/** GeoJSON for a node, optionally drawn at an interpolated position [at] mid-animation. */
-private fun MapNode.toFeature(colors: PinColors, at: LatLon? = null): Feature {
-    val p = at ?: LatLon(lat, lon)
-    return Feature.fromGeometry(Point.fromLngLat(p.lon, p.lat)).apply {
+private fun MapNode.toFeature(images: PinImages, iconKey: String = images.key(this)): Feature =
+    Feature.fromGeometry(Point.fromLngLat(lon, lat)).apply {
         addStringProperty("id", id)
+        addStringProperty("icon", iconKey)
         val b = bay
         if (b == null) {
             addNumberProperty("point_count", count)
-            addStringProperty("point_count_abbreviated", abbreviate(count))
         } else {
-            val (fill, ink) = when (b.fee) {
-                Fee.Free -> colors.free to colors.onFree
-                Fee.Paid -> colors.paid to colors.onPaid
-                Fee.Unknown -> colors.unknown to colors.onUnknown
-            }
-            addStringProperty("fill", fill.toHex())
-            addStringProperty("ink", ink.toHex())
+            // The selected-pin ripple takes the pin's colour from here.
+            addStringProperty("fill", b.fee.fillHex(images))
         }
     }
-}
+
+private fun Fee.fillHex(images: PinImages): String = images.fillColor(this).toHex()
 
 private fun Color.toHex(): String = String.format("#%06X", 0xFFFFFF and toArgb())
