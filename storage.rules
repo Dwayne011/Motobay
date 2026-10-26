@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Riders upload photos into their own folder. Photos reach other people only
+// through the download URL stored on a Firestore photo document, and
+// firestore.rules only shows that document once the admin has approved it.
+// Keep the admin emails in sync with Moderators.kt.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email in [
+          'dwayne.edwards89@googlemail.com',
+          'dwayne.edwards89@gmail.com'
+        ];
+    }
+
+    match /photos/{uid}/{file} {
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType == 'image/jpeg';
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

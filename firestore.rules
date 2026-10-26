@@ -1,0 +1,115 @@
+rules_version = '2';
+
+// Riders submit photos, comments and bay additions/corrections. Everything
+// starts as 'Pending'; only the admin can approve or reject. Approved items
+// are public. A rider can also read their own pending and rejected items.
+//
+// Keep the admin emails in sync with Moderators.kt (a unit test checks this).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email in [
+          'dwayne.edwards89@googlemail.com',
+          'dwayne.edwards89@gmail.com'
+        ];
+    }
+
+    function isAuthor() {
+      return signedIn() && resource.data.authorUid == request.auth.uid;
+    }
+
+    function canRead() {
+      return resource.data.status == 'Approved' || isAuthor() || isAdmin();
+    }
+
+    // Riders create Pending items. The admin may also create Approved ones
+    // (their own bay additions skip the queue).
+    function validStatusOnCreate() {
+      return request.resource.data.status == 'Pending'
+        || (isAdmin() && request.resource.data.status == 'Approved');
+    }
+
+    function onlyStatusChanges() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['Pending', 'Approved', 'Rejected'];
+    }
+
+    function isText(field, maxLen) {
+      return field is string && field.size() <= maxLen;
+    }
+
+    function commonFieldsOk() {
+      let d = request.resource.data;
+      return d.authorUid == request.auth.uid
+        && isText(d.author, 40) && d.author.size() > 0
+        && d.createdAt == request.time
+        && validStatusOnCreate();
+    }
+
+    match /photos/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['bayId', 'bayName', 'url', 'storagePath', 'caption', 'author', 'authorUid', 'createdAt', 'status'])
+        && commonFieldsOk()
+        && isText(request.resource.data.bayId, 100)
+        && isText(request.resource.data.bayName, 200)
+        && isText(request.resource.data.caption, 140)
+        && request.resource.data.url is string
+        && request.resource.data.url.matches('https://firebasestorage.googleapis.com/.*')
+        && request.resource.data.storagePath == 'photos/' + request.auth.uid + '/' + id + '.jpg';
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin();
+    }
+
+    match /comments/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['bayId', 'bayName', 'text', 'author', 'authorUid', 'createdAt', 'status'])
+        && commonFieldsOk()
+        && isText(request.resource.data.bayId, 100)
+        && isText(request.resource.data.bayName, 200)
+        && isText(request.resource.data.text, 500)
+        && request.resource.data.text.size() > 0;
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin();
+    }
+
+    // New bays and corrections to existing ones.
+    match /bays/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['editOf', 'lat', 'lon', 'name', 'fee', 'capacity', 'covered', 'notes', 'author', 'authorUid', 'createdAt', 'status'])
+        && request.resource.data.keys().hasAll(['lat', 'lon', 'name', 'fee', 'notes'])
+        && commonFieldsOk()
+        && request.resource.data.lat is number
+        && request.resource.data.lat >= -90 && request.resource.data.lat <= 90
+        && request.resource.data.lon is number
+        && request.resource.data.lon >= -180 && request.resource.data.lon <= 180
+        && isText(request.resource.data.name, 100)
+        && request.resource.data.fee in ['Free', 'Paid', 'Unknown']
+        && isText(request.resource.data.notes, 500)
+        && (!('editOf' in request.resource.data) || isText(request.resource.data.editOf, 100))
+        && (!('capacity' in request.resource.data)
+            || (request.resource.data.capacity is int
+                && request.resource.data.capacity >= 0 && request.resource.data.capacity <= 500))
+        && (!('covered' in request.resource.data) || request.resource.data.covered is bool);
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
