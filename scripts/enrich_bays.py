@@ -11,6 +11,7 @@ Usage: python3 scripts/enrich_bays.py data/uk-bays.json [data/geocode-cache.json
 """
 import json
 import re
+import subprocess
 import sys
 import time
 import urllib.parse
@@ -135,6 +136,19 @@ def main():
         # Save progress even if interrupted, so a rerun picks up where it left off.
         with open(cache_path, "w", encoding="utf-8") as f:
             json.dump(cache, f, ensure_ascii=False, sort_keys=True, indent=0)
+    # fetch_uk_bays.py compares raw OSM bays against the enriched committed file,
+    # so it always sees a change. Compare the enriched result against what is
+    # committed instead, and keep the old timestamp when the bays are the same,
+    # so a quiet week doesn't commit a timestamp-only change.
+    try:
+        committed = json.loads(subprocess.run(
+            ["git", "show", f"HEAD:{data_path}"], capture_output=True, check=True, text=True,
+        ).stdout)
+        if committed.get("bays") == data["bays"]:
+            data["generated"] = committed["generated"]
+            print("Bays unchanged since the last commit.")
+    except (subprocess.CalledProcessError, ValueError, KeyError, OSError):
+        pass
     with open(data_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     done = sum(1 for b in data["bays"] if b.get("street"))
