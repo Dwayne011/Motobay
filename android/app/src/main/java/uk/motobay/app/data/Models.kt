@@ -76,12 +76,14 @@ data class BayPhoto(
     val id: String,
     val bayId: String,
     val bayName: String,
-    /** Local file path in the mock backend. A real backend would return a URL. */
-    val path: String,
+    /** Download URL in Firebase Storage. */
+    val url: String,
     val caption: String,
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    /** Firebase uid of the rider who submitted it. */
+    val authorUid: String = "",
 )
 
 @Serializable
@@ -93,6 +95,7 @@ data class BayComment(
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    val authorUid: String = "",
 )
 
 /**
@@ -113,4 +116,5 @@ data class BaySubmission(
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    val authorUid: String = "",
 )

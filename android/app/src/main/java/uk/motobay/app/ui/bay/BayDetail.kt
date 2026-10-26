@@ -79,6 +79,7 @@ import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
 import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.ui.LocalApp
+import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.components.BayFacts
 import uk.motobay.app.util.distanceMetres
@@ -140,6 +141,7 @@ fun BayDetailContent(bay: Bay) {
     val saved = bay.id in favourites
     var editing by rememberSaveable { mutableStateOf(false) }
     val settings by app.user.settings.collectAsStateWithLifecycle()
+    val requireSignIn = LocalRequireSignIn.current
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
@@ -162,7 +164,7 @@ fun BayDetailContent(bay: Bay) {
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
-                    TextButton(onClick = { editing = true }) { Text("Tell us") }
+                    TextButton(onClick = { requireSignIn { editing = true } }) { Text("Tell us") }
                 }
             }
         }
@@ -210,7 +212,7 @@ fun BayDetailContent(bay: Bay) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedButton(onClick = { editing = true }) {
+            OutlinedButton(onClick = { requireSignIn { editing = true } }) {
                 Icon(Icons.Filled.Edit, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
                 Text("Suggest an edit", Modifier.padding(start = ButtonDefaults.IconSpacing))
             }
@@ -233,12 +235,21 @@ fun BayDetailContent(bay: Bay) {
             onDismiss = { editing = false },
             onSubmit = { submission ->
                 editing = false
-                app.community.submitBay(
-                    submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }),
-                    autoApprove = settings.moderator,
-                )
+                val moderator = app.auth.user.value?.isModerator == true
                 scope.launch {
-                    snackbar.showSnackbar(if (settings.moderator) "Bay updated" else "Thanks! Your correction will be checked before it's published.")
+                    val ok = runCatching {
+                        app.community.submitBay(
+                            submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }),
+                            autoApprove = moderator,
+                        )
+                    }.isSuccess
+                    snackbar.showSnackbar(
+                        when {
+                            !ok -> "Couldn't send that. Check you're signed in and online."
+                            moderator -> "Bay updated"
+                            else -> "Thanks! Your correction will be checked before it's published."
+                        },
+                    )
                 }
             },
         )
@@ -257,6 +268,7 @@ private fun PhotosSection(bay: Bay) {
     val approved = community.photos.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved }
     val pending = community.photos.count { it.bayId == bay.id && it.status == ModerationStatus.Pending }
 
+    val requireSignIn = LocalRequireSignIn.current
     var chooser by remember { mutableStateOf(false) }
     var draft by rememberSaveable { mutableStateOf<Uri?>(null) }
     var cameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
@@ -269,7 +281,7 @@ private fun PhotosSection(bay: Bay) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Photos", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-            OutlinedButton(onClick = { chooser = true }) {
+            OutlinedButton(onClick = { requireSignIn { chooser = true } }) {
                 Icon(Icons.Filled.AddAPhoto, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
                 Text("Add photo", Modifier.padding(start = ButtonDefaults.IconSpacing))
             }
@@ -280,10 +292,10 @@ private fun PhotosSection(bay: Bay) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(approved, key = { it.id }) { p ->
                     AsyncImage(
-                        model = File(p.path),
+                        model = p.url,
                         contentDescription = p.caption.ifEmpty { "Photo of ${bay.name} by ${p.author}" },
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(120.dp).clip(MaterialTheme.shapes.small).clickable { viewing = p.path },
+                        modifier = Modifier.size(120.dp).clip(MaterialTheme.shapes.small).clickable { viewing = p.url },
                     )
                 }
             }
@@ -364,10 +376,10 @@ private fun PhotosSection(bay: Bay) {
         )
     }
 
-    viewing?.let { path ->
+    viewing?.let { url ->
         AlertDialog(
             onDismissRequest = { viewing = null },
-            text = { AsyncImage(model = File(path), contentDescription = null, modifier = Modifier.fillMaxWidth()) },
+            text = { AsyncImage(model = url, contentDescription = null, modifier = Modifier.fillMaxWidth()) },
             confirmButton = { TextButton(onClick = { viewing = null }) { Text("Close") } },
         )
     }
@@ -378,6 +390,7 @@ private fun CommentsSection(bay: Bay) {
     val app = LocalApp.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
+    val requireSignIn = LocalRequireSignIn.current
     val community by app.community.data.collectAsStateWithLifecycle()
     val settings by app.user.settings.collectAsStateWithLifecycle()
     val approved = community.comments.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved }
@@ -424,9 +437,16 @@ private fun CommentsSection(bay: Bay) {
         )
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Button(enabled = text.isNotBlank(), onClick = {
-                app.community.submitComment(bay, text.trim(), settings.displayName.ifBlank { "Anonymous rider" })
-                text = ""
-                scope.launch { snackbar.showSnackbar("Thanks! Your comment will appear once it's been reviewed.") }
+                requireSignIn {
+                    val body = text.trim()
+                    scope.launch {
+                        val ok = runCatching {
+                            app.community.submitComment(bay, body, settings.displayName.ifBlank { "Anonymous rider" })
+                        }.isSuccess
+                        if (ok) text = ""
+                        snackbar.showSnackbar(if (ok) "Thanks! Your comment will appear once it's been reviewed." else "Couldn't post that. Check you're signed in and online.")
+                    }
+                }
             }) { Text("Post") }
         }
     }

@@ -48,7 +48,6 @@ import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.components.label
-import java.io.File
 import java.text.DateFormat
 import java.util.Date
 
@@ -71,19 +70,22 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
 
     fun decide(kind: Kind, id: String, status: ModerationStatus) {
-        val apply = { s: ModerationStatus ->
+        suspend fun apply(s: ModerationStatus) {
             when (kind) {
                 Kind.Photos -> app.community.moderatePhoto(id, s)
                 Kind.Comments -> app.community.moderateComment(id, s)
                 Kind.Bays -> app.community.moderateBay(id, s)
             }
         }
-        apply(status)
         scope.launch {
             val noun = when (kind) { Kind.Photos -> "Photo"; Kind.Comments -> "Comment"; Kind.Bays -> "Bay" }
+            if (runCatching { apply(status) }.isFailure) {
+                snackbar.showSnackbar("Couldn't update that ${noun.lowercase()}. Check you're online.")
+                return@launch
+            }
             val verb = if (status == ModerationStatus.Approved) "approved" else "rejected"
             if (snackbar.showSnackbar("$noun $verb", actionLabel = "Undo") == SnackbarResult.ActionPerformed) {
-                apply(ModerationStatus.Pending)
+                runCatching { apply(ModerationStatus.Pending) }
             }
         }
     }
@@ -133,7 +135,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         author = p.author, date = dateFormat.format(Date(p.createdAt)), bayName = p.bayName,
                         onOpenBay = { onOpenBay(p.bayId) },
                         body = p.caption.ifEmpty { "No caption" },
-                        imagePath = p.path,
+                        imagePath = p.url,
                         onApprove = { decide(Kind.Photos, p.id, ModerationStatus.Approved) },
                         onReject = { decide(Kind.Photos, p.id, ModerationStatus.Rejected) },
                     )
@@ -193,7 +195,7 @@ private fun ReviewCard(
     OutlinedCard(Modifier.fillMaxWidth()) {
         imagePath?.let {
             AsyncImage(
-                model = File(it),
+                model = it,
                 contentDescription = "Submitted photo",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxWidth().heightIn(max = 320.dp),

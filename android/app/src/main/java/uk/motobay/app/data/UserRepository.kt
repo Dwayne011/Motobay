@@ -16,11 +16,6 @@ data class Settings(
     /** Android 12+: take colours from the wallpaper instead of the seed. */
     val wallpaperColors: Boolean = false,
     val displayName: String = "",
-    /**
-     * Shows the Review queue. A local demo switch only. In production,
-     * moderator access must come from the backend (a role on your account).
-     */
-    val moderator: Boolean = false,
     /** Last map position, so the app reopens where the rider left it. */
     val lastMap: CameraSnapshot? = null,
     /** Places picked from search, newest first. */

@@ -34,6 +34,7 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -56,6 +57,7 @@ import uk.motobay.app.R
 import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
+import uk.motobay.app.ui.account.SignInButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,14 +130,24 @@ fun SettingsScreen() {
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             )
 
-            SectionHeader("Moderation")
-            ListItem(
-                headlineContent = { Text("Moderator mode") },
-                supportingContent = { Text("Demo only. Shows the review queue. Real moderator access will come from your account.") },
-                trailingContent = {
-                    Switch(checked = settings.moderator, onCheckedChange = { on -> update { it.copy(moderator = on) } })
-                },
-            )
+            SectionHeader("Account")
+            val account by app.auth.user.collectAsStateWithLifecycle()
+            val signedIn = account
+            if (signedIn == null) {
+                Text(
+                    "Sign in to add photos, comments and bays. Browsing needs no account.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
+                SignInButtons(Modifier.padding(horizontal = 16.dp))
+            } else {
+                ListItem(
+                    headlineContent = { Text(signedIn.email ?: "Signed in") },
+                    supportingContent = { Text(if (signedIn.isModerator) "Moderator: you can review submissions" else "Your submissions are reviewed before they're published") },
+                    trailingContent = { TextButton(onClick = app.auth::signOut) { Text("Sign out") } },
+                )
+            }
 
             SectionHeader("About")
             ListItem(

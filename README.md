@@ -30,11 +30,28 @@ Two fully native apps:
 
 ## Community content and moderation
 
-Both apps store photos and comments **on the device** for now
-(`CommunityRepository.kt`, `CommunityStore` in `Stores.swift`). These classes
-mirror the backend calls the apps need: submit photo, submit comment, list, and
-approve/reject. Replace their bodies with real API calls once a backend is
-chosen. "Moderator mode" in Settings is a demo stand-in for real admin accounts.
+Riders sign in (Google or Apple), then submit photos, comments, new bays and
+bay corrections. Everything starts as *Pending*; only the admin can approve or
+reject it, and only approved items are public. Riders also see their own
+pending items.
+
+- **Android** uses Firebase Auth, Cloud Firestore (`europe-west2`) and Cloud
+  Storage (`FirestoreCommunityRepository.kt`, `FirebaseAuthRepository`). The
+  Review tab appears only for the admin account (`Moderators.kt`).
+- **iOS** still keeps photos and comments on the device (`CommunityStore` in
+  `Stores.swift`) and has its `GoogleService-Info.plist` ready for when it is
+  switched over.
+- **Rules** are in `firestore.rules` and `storage.rules`. The admin's email is
+  listed in both and in `Moderators.kt`; a unit test checks they agree.
+  Deploy them with `firebase deploy --only firestore:rules,storage` (project
+  `motobays-3405f`, set in `.firebaserc`).
+- **Rules tests** run against the Firebase emulators:
+  `cd rules-tests && npm install && npm test` (needs Java).
+- Photos reach other riders through a download URL stored on the Firestore
+  photo document, which is only readable once the photo is approved. The files
+  of rejected photos are not deleted automatically.
+- Apple sign-in on Android needs the Apple provider enabled in the Firebase
+  console (Authentication > Sign-in method).
 
 ## Android
 
@@ -72,5 +89,5 @@ Google Maps or Waze.
 ## Before publishing
 
 - Replace the placeholder icons. The app id is `uk.motobays.app` on both platforms.
-- Connect Firebase for accounts (Google and Apple sign-in), photo storage and moderation.
+- Finish the Firebase setup: enable the Apple provider, deploy the rules, move iOS onto Firebase, and add a release signing key's SHA-1 to the Android app.
 - Self-host or replace the public Photon search service if traffic grows.

@@ -117,6 +117,7 @@ import uk.motobay.app.data.RecentPlace
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.bay.BayDetailContent
+import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.bay.BayFormSheet
 import uk.motobay.app.ui.components.BayListItem
 import uk.motobay.app.ui.components.BayPin
@@ -157,6 +158,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val recents by vm.recentPlaces.collectAsStateWithLifecycle()
     val favourites by vm.favourites.collectAsStateWithLifecycle()
     val addingBay by vm.addingBay.collectAsStateWithLifecycle()
+    val requireSignIn = LocalRequireSignIn.current
     val newBayAt by vm.newBayAt.collectAsStateWithLifecycle()
     val settings by app.user.settings.collectAsStateWithLifecycle()
 
@@ -210,7 +212,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                     onBayClick = { id -> allBays[id]?.let(onPick) },
                     onViewportChange = vm::onViewportChange,
                     onCommandHandled = { vm.command.value = null },
-                    onLongPress = { vm.startAddingBay(it) },
+                    onLongPress = { requireSignIn { vm.startAddingBay(it) } },
                     modifier = Modifier.fillMaxSize(),
                 )
                 if (loadState == BayLoadState.Loading) {
@@ -240,7 +242,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             if (locating) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                             else Icon(Icons.Filled.MyLocation, contentDescription = "Show my location")
                         }
-                        FloatingActionButton(onClick = { vm.startAddingBay() }) {
+                        FloatingActionButton(onClick = { requireSignIn { vm.startAddingBay() } }) {
                             Icon(Icons.Filled.AddLocationAlt, contentDescription = "Add a bay")
                         }
                     }

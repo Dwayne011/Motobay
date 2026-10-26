@@ -22,6 +22,8 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -40,6 +42,7 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import uk.motobay.app.MotoBayApplication
 import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.ui.account.SignInDialog
 import uk.motobay.app.ui.bay.BayDetailRoute
 import uk.motobay.app.ui.explore.ExploreScreen
 import uk.motobay.app.ui.review.ReviewScreen
@@ -55,6 +58,12 @@ import kotlin.reflect.KClass
 
 val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
 val LocalSnackbar = staticCompositionLocalOf<SnackbarHostState> { error("No snackbar host") }
+
+/**
+ * Runs the action if a rider is signed in; otherwise asks them to sign in first.
+ * Photos, comments and bay changes all go through this.
+ */
+val LocalRequireSignIn = staticCompositionLocalOf<(() -> Unit) -> Unit> { { it() } }
 
 private data class TopLevel(
     val route: Any,
@@ -73,21 +82,24 @@ private data class TopLevel(
 fun MotoBayApp(app: MotoBayApplication) {
     val nav = rememberNavController()
     val snackbar = remember { SnackbarHostState() }
-    val settings by app.user.settings.collectAsStateWithLifecycle()
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    var askToSignIn by remember { mutableStateOf(false) }
+    val requireSignIn: (() -> Unit) -> Unit = { action -> if (account != null) action() else askToSignIn = true }
     val community by app.community.data.collectAsStateWithLifecycle()
     val pending = community.photos.count { it.status == ModerationStatus.Pending } +
-        community.comments.count { it.status == ModerationStatus.Pending }
+        community.comments.count { it.status == ModerationStatus.Pending } +
+        community.bays.count { it.status == ModerationStatus.Pending }
 
     val destinations = buildList {
         add(TopLevel(ExploreDest, ExploreDest::class, "Explore", Icons.Outlined.Explore, Icons.Filled.Explore))
         add(TopLevel(SavedDest, SavedDest::class, "Saved", Icons.Outlined.StarBorder, Icons.Filled.Star))
-        if (settings.moderator) add(TopLevel(ReviewDest, ReviewDest::class, "Review", Icons.Outlined.RateReview, Icons.Filled.RateReview))
+        if (account?.isModerator == true) add(TopLevel(ReviewDest, ReviewDest::class, "Review", Icons.Outlined.RateReview, Icons.Filled.RateReview))
         add(TopLevel(SettingsDest, SettingsDest::class, "Settings", Icons.Outlined.Settings, Icons.Filled.Settings))
     }
     val backStack by nav.currentBackStackEntryAsState()
     val current = backStack?.destination
 
-    CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar) {
+    CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar, LocalRequireSignIn provides requireSignIn) {
         NavigationSuiteScaffold(
             navigationSuiteItems = {
                 destinations.forEach { d ->
@@ -130,5 +142,6 @@ fun MotoBayApp(app: MotoBayApplication) {
             SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
             }
         }
+        if (askToSignIn) SignInDialog(onDismiss = { askToSignIn = false })
     }
 }

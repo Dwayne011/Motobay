@@ -20,6 +20,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.core.app.ApplicationProvider
 import com.github.takahirom.roborazzi.captureRoboImage
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -46,7 +47,7 @@ import uk.motobay.app.ui.theme.MotoBayTheme
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35])
+@Config(sdk = [35], application = TestMotoBayApplication::class)
 class ScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
@@ -54,10 +55,14 @@ class ScreenshotTest {
 
     @Before
     fun seed() {
-        app.user.updateSettings { it.copy(moderator = true, displayName = "Dwayne", themeMode = ThemeMode.Light) }
-        app.community.submitComment(SampleBays.all[0], "Usually has space before 9am.", "Sam")
-        app.community.moderateComment(app.community.data.value.comments.first().id, ModerationStatus.Approved)
-        app.community.submitComment(SampleBays.all[1], "Pay by app only.", "Alex")
+        app.user.updateSettings { it.copy(displayName = "Dwayne", themeMode = ThemeMode.Light) }
+        // Signed in as the admin, so the Review tab shows.
+        (app.auth as FakeAuthRepository).set(FakeAuthRepository.ADMIN)
+        runBlocking {
+            app.community.submitComment(SampleBays.all[0], "Usually has space before 9am.", "Sam")
+            app.community.moderateComment(app.community.data.value.comments.first().id, ModerationStatus.Approved)
+            app.community.submitComment(SampleBays.all[1], "Pay by app only.", "Alex")
+        }
         app.user.toggleFavourite(SampleBays.all[0])
     }
 
@@ -212,7 +217,7 @@ class ScreenshotTest {
 /** The Map / List switch on its own, at the tester's font size, with the widest count it can show. */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi")
+@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = TestMotoBayApplication::class)
 class ViewToggleScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
