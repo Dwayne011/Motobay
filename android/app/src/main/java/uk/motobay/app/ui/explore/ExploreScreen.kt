@@ -104,6 +104,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.motobay.app.data.Bay
@@ -737,18 +739,19 @@ private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onC
         verticalArrangement = Arrangement.spacedBy(8.dp),
         itemVerticalAlignment = Alignment.CenterVertically,
     ) {
-        // Scrolls sideways rather than clipping "Unknown" at large text sizes.
+        // Fills the width; labels shrink a little at large text sizes rather than clipping.
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            SingleChoiceSegmentedButtonRow {
+            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                 PriceFilter.entries.forEachIndexed { i, p ->
                     SegmentedButton(
                         selected = filters.price == p,
                         onClick = { onPrice(p) },
                         shape = SegmentedButtonDefaults.itemShape(i, PriceFilter.entries.size),
+                        modifier = Modifier.weight(1f),
                         label = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 // Dot in the pin colour, so the bar doubles as the map legend.
@@ -757,7 +760,12 @@ private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onC
                                     Box(Modifier.size(10.dp).background(dot, CircleShape))
                                     Spacer(Modifier.width(6.dp))
                                 }
-                                Text(p.label, maxLines = 1, softWrap = false)
+                                Text(
+                                    p.label,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 14.sp, stepSize = 1.sp),
+                                )
                             }
                         },
                     )
