@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -32,7 +33,7 @@ class FirestoreCommunityRepository(
     private val context: Context,
     private val auth: AuthRepository,
     scope: CoroutineScope,
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(FirebaseApp.getInstance(), DATABASE_ID),
     private val storage: FirebaseStorage = FirebaseStorage.getInstance(),
 ) : CommunityRepository {
 
@@ -135,8 +136,10 @@ class FirestoreCommunityRepository(
         withTimeoutOrNull(WRITE_WAIT_MS) { await() }
     }
 
-    private companion object {
-        const val TAG = "Community"
-        const val WRITE_WAIT_MS = 15_000L
+    companion object {
+        /** The project's Firestore database is named, not "(default)". Keep in sync with firebase.json. */
+        const val DATABASE_ID = "motobays"
+        private const val TAG = "Community"
+        private const val WRITE_WAIT_MS = 15_000L
     }
 }

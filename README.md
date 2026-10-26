@@ -35,8 +35,8 @@ bay corrections. Everything starts as *Pending*; only the admin can approve or
 reject it, and only approved items are public. Riders also see their own
 pending items.
 
-- **Android** uses Firebase Auth, Cloud Firestore (`europe-west2`) and Cloud
-  Storage (`FirestoreCommunityRepository.kt`, `FirebaseAuthRepository`). The
+- **Android** uses Firebase Auth, Cloud Firestore (the database named
+  `motobays`, in `eur3`) and Cloud Storage (`FirestoreCommunityRepository.kt`, `FirebaseAuthRepository`). The
   Review tab appears only for the admin account (`Moderators.kt`).
 - **iOS** still keeps photos and comments on the device (`CommunityStore` in
   `Stores.swift`) and has its `GoogleService-Info.plist` ready for when it is
