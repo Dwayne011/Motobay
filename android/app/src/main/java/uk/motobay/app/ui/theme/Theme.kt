@@ -48,6 +48,7 @@ val LocalExtendedColors = staticCompositionLocalOf { ExtendedColors() }
 
 private val SuccessSeed = Color(0xFF2E7D32)
 private val WarningSeed = Color(0xFFF9A825)
+private val PinRaspberry = Color(0xFFD81B60)
 
 @Composable
 fun isAppInDarkTheme(mode: ThemeMode): Boolean = when (mode) {
@@ -85,7 +86,7 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
         }
     }
 
-    val extended = remember(scheme.primary, dark, settings.sourceColor) {
+    val extended = remember(scheme.primary, dark) {
         fun custom(seed: Color) = dynamicColorScheme(
             seedColor = seed.harmonize(scheme.primary),
             isDark = dark,
@@ -98,13 +99,14 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
         fun strong(seed: Color, lightTone: Boolean) = dynamicColorScheme(
             seedColor = seed.harmonize(scheme.primary), isDark = lightTone, style = PaletteStyle.TonalSpot,
         ).primary
-        val brandStrong = dynamicColorScheme(seedColor = Color(settings.sourceColor), isDark = false, style = PaletteStyle.TonalSpot).primary
         ExtendedColors(
             success.primary, success.onPrimary, success.primaryContainer, success.onPrimaryContainer,
             warning.primary, warning.onPrimary, warning.primaryContainer, warning.onPrimaryContainer,
             pinFree = strong(SuccessSeed, lightTone = false), onPinFree = Color.White,
             pinPaid = strong(WarningSeed, lightTone = true), onPinPaid = Color(0xFF3A2A00),
-            pinUnknown = brandStrong, onPinUnknown = Color.White,
+            // Not derived from the brand on purpose: the map provider colours transit and
+            // EV-charger icons blue, so a blue pin blends in whatever the brand colour is.
+            pinUnknown = PinRaspberry, onPinUnknown = Color.White,
         )
     }
 

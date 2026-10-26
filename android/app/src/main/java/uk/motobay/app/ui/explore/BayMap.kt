@@ -1,6 +1,10 @@
 package uk.motobay.app.ui.explore
 
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.graphics.PointF
+import android.view.animation.OvershootInterpolator
+import android.view.animation.PathInterpolator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +27,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.delay
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -121,6 +126,53 @@ private const val PIN_ICON = "pin"
 /** Pin image height in dp at icon-size 1; the icon is drawn with its tip on the coordinate. */
 private const val PIN_PX = 72
 private const val GLYPH_PX = 48
+private const val PIN_SIZE = 0.6f
+private const val GLYPH_SIZE = 0.45f
+private const val SELECTED_PIN_SIZE = 0.85f
+private const val SELECTED_GLYPH_SIZE = 0.64f
+
+/** M3 "emphasized decelerate" easing, for things entering the screen. */
+private val EMPHASIZED_DECELERATE = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
+
+/**
+ * Animates a pin layer pair (teardrop + glyph) from [from] × target size to
+ * full size. Scaling both by the same factor keeps the glyph in the pin head,
+ * because icon-offset is expressed in the glyph's own size units.
+ */
+private suspend fun animatePinScale(
+    style: Style,
+    pinLayer: String,
+    glyphLayer: String,
+    pinSize: Float,
+    glyphSize: Float,
+    from: Float,
+    durationMs: Long,
+    interpolator: TimeInterpolator,
+) {
+    val pin = style.getLayerAs<SymbolLayer>(pinLayer) ?: return
+    val glyph = style.getLayerAs<SymbolLayer>(glyphLayer) ?: return
+    val animator = ValueAnimator.ofFloat(from, 1f).apply {
+        duration = durationMs
+        this.interpolator = interpolator
+        addUpdateListener { a ->
+            val k = a.animatedValue as Float
+            pin.setProperties(iconSize(pinSize * k))
+            glyph.setProperties(iconSize(glyphSize * k))
+        }
+    }
+    try {
+        animator.start()
+        delay(durationMs)
+    } finally {
+        // Cancelled (new selection, style reload) or finished: land on the exact size.
+        animator.cancel()
+        runCatching {
+            pin.setProperties(iconSize(pinSize))
+            glyph.setProperties(iconSize(glyphSize))
+        }
+    }
+}
+
 /** The pin head centre sits 15/24 of the shape's height above its tip. */
 private const val PIN_HEAD_FROM_TIP = 15f / 24f
 
@@ -277,7 +329,7 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(BAY_CIRCLES, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     iconImage(PIN_ICON),
-                    iconSize(0.6f),
+                    iconSize(PIN_SIZE),
                     iconAnchor(Property.ICON_ANCHOR_BOTTOM),
                     iconColor(toColor(get("fill"))),
                     iconHaloWidth(1.5f),
@@ -288,8 +340,8 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(BAY_LABELS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     iconImage(MOTORCYCLE_ICON),
-                    iconSize(0.45f),
-                    iconOffset(glyphOffset(pinSize = 0.6f, glyphSize = 0.45f)),
+                    iconSize(GLYPH_SIZE),
+                    iconOffset(glyphOffset(pinSize = PIN_SIZE, glyphSize = GLYPH_SIZE)),
                     iconColor(toColor(get("ink"))),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
@@ -300,7 +352,7 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(
                     iconImage(PIN_ICON),
-                    iconSize(0.85f),
+                    iconSize(SELECTED_PIN_SIZE),
                     iconAnchor(Property.ICON_ANCHOR_BOTTOM),
                     iconColor(toColor(get("fill"))),
                     iconHaloWidth(3f),
@@ -311,8 +363,8 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(SELECTED_LABEL, SELECTED_SOURCE).withProperties(
                     iconImage(MOTORCYCLE_ICON),
-                    iconSize(0.64f),
-                    iconOffset(glyphOffset(pinSize = 0.85f, glyphSize = 0.64f)),
+                    iconSize(SELECTED_GLYPH_SIZE),
+                    iconOffset(glyphOffset(pinSize = SELECTED_PIN_SIZE, glyphSize = SELECTED_GLYPH_SIZE)),
                     iconColor(toColor(get("ink"))),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
@@ -336,16 +388,30 @@ fun BayMap(
         )
     }
 
+    // Pins scale in the first time they appear on a freshly loaded style.
+    var pinsShown by remember { mutableStateOf(false) }
+    LaunchedEffect(style) { pinsShown = false }
     LaunchedEffect(style, bays, colors) {
         val s = style ?: return@LaunchedEffect
         val features = bays.map { it.toFeature(colors) }
         s.getSourceAs<GeoJsonSource>(BAY_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
+        if (bays.isNotEmpty() && !pinsShown) {
+            pinsShown = true
+            animatePinScale(s, BAY_CIRCLES, BAY_LABELS, PIN_SIZE, GLYPH_SIZE, from = 0f, durationMs = 450, interpolator = EMPHASIZED_DECELERATE)
+        }
     }
 
     LaunchedEffect(style, selected, colors) {
         val s = style ?: return@LaunchedEffect
         val features = selected?.let { listOf(it.toFeature(colors)) }.orEmpty()
         s.getSourceAs<GeoJsonSource>(SELECTED_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
+        if (selected != null) {
+            // Grows from the normal pin size with a small overshoot, like an M3 FAB appearing.
+            animatePinScale(
+                s, SELECTED_CIRCLE, SELECTED_LABEL, SELECTED_PIN_SIZE, SELECTED_GLYPH_SIZE,
+                from = PIN_SIZE / SELECTED_PIN_SIZE, durationMs = 350, interpolator = OvershootInterpolator(1.6f),
+            )
+        }
     }
 
     LaunchedEffect(style, userPosition) {
