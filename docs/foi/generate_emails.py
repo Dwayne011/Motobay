@@ -22,11 +22,12 @@ BODY = BODY.split("\n", 1)[1].strip()
 
 FOLLOW_UP_COORDS = """Dear Information Officer,
 
-In 2026 the council kindly supplied its list of designated motorcycle parking
-bays, but without coordinates. Under the Freedom of Information Act 2000 and
-the Environmental Information Regulations 2004, please now supply the
-coordinates (WGS84 latitude/longitude or British National Grid) for each bay
-on that list, as CSV or GeoJSON.
+Earlier in 2026, in response to a Freedom of Information request, the council
+released its list of designated motorcycle parking bays by street name, but
+without coordinates. Under the Freedom of Information Act 2000 and the
+Environmental Information Regulations 2004, please supply the council's current
+list of designated motorcycle parking bays with the coordinates of each bay
+(WGS84 latitude/longitude or British National Grid), as CSV or GeoJSON.
 
 Point locations of council-designated bays are the council's own records, not
 Ordnance Survey mapping, and the Public Sector Geospatial Agreement lets
