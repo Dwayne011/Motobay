@@ -14,3 +14,7 @@ ios/**/xcuserdata/
 ios/*.xcodeproj/project.xcworkspace/xcuserdata/
 
 .DS_Store
+
+# Build outputs copied out for sharing
+*.apk
+*.aab
