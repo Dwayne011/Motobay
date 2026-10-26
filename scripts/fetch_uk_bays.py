@@ -7,6 +7,7 @@ apps download one file instead of every phone querying the shared Overpass
 servers. Usage: python3 scripts/fetch_uk_bays.py data/uk-bays.json
 """
 import json
+import math
 import sys
 import time
 import urllib.parse
@@ -25,6 +26,8 @@ area["ISO3166-1"="GB"][admin_level=2]->.uk;
 (
   nwr["amenity"="motorcycle_parking"](area.uk);
   nwr["amenity"="parking"]["motorcycle"="designated"](area.uk);
+  nwr["amenity"="parking_space"]["parking_space"="motorcycle"](area.uk);
+  nwr["amenity"="parking_space"]["motorcycle"="designated"](area.uk);
 );
 out center tags;
 """
@@ -91,8 +94,51 @@ def fetch():
     raise SystemExit("All Overpass servers failed:\n" + "\n".join(errors))
 
 
+def metres(a, b):
+    """Approximate distance in metres; fine for the short distances used here."""
+    dlat = (a["lat"] - b["lat"]) * 111_320
+    dlon = (a["lon"] - b["lon"]) * 111_320 * math.cos(math.radians(a["lat"]))
+    return math.hypot(dlat, dlon)
+
+
+SPACE_MERGE_METRES = 25
+
+
+def merge_spaces(bays, spaces):
+    """Individual marked spaces become one bay per group of neighbouring spaces,
+    with the group size as its capacity. Groups next to an existing bay are dropped
+    as duplicates of it."""
+    groups = []
+    for space in spaces:
+        for group in groups:
+            if any(metres(space, other) <= SPACE_MERGE_METRES for other in group):
+                group.append(space)
+                break
+        else:
+            groups.append([space])
+    merged = []
+    for group in groups:
+        lat = sum(s["lat"] for s in group) / len(group)
+        lon = sum(s["lon"] for s in group) / len(group)
+        centre = {"lat": lat, "lon": lon}
+        if any(metres(centre, b) <= SPACE_MERGE_METRES for b in bays):
+            continue
+        first = dict(group[0])
+        first["lat"], first["lon"] = round(lat, 6), round(lon, 6)
+        first["capacity"] = sum(s.get("capacity", 1) for s in group)
+        merged.append(first)
+    return merged
+
+
 def build(response):
-    bays = [b for b in (to_bay(el) for el in response.get("elements", [])) if b]
+    bays, spaces = [], []
+    for el in response.get("elements", []):
+        bay = to_bay(el)
+        if not bay:
+            continue
+        is_space = (el.get("tags") or {}).get("amenity") == "parking_space"
+        (spaces if is_space else bays).append(bay)
+    bays += merge_spaces(bays, spaces)
     bays.sort(key=lambda b: b["id"])
     return {
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

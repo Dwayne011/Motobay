@@ -43,6 +43,22 @@ class ToBayTest(unittest.TestCase):
         self.assertEqual(data["count"], 2)
         self.assertEqual([b["id"] for b in data["bays"]], ["node/1", "node/2"])
 
+    def test_neighbouring_spaces_merge_into_one_bay(self):
+        space = lambda i, lat: {"type": "way", "id": i, "center": {"lat": lat, "lon": -0.1},
+                                "tags": {"amenity": "parking_space", "parking_space": "motorcycle"}}
+        data = build({"elements": [space(1, 51.50000), space(2, 51.50005), space(3, 51.50010),
+                                   space(4, 51.51000)]})
+        self.assertEqual(data["count"], 2)
+        self.assertEqual(sorted(b["capacity"] for b in data["bays"]), [1, 3])
+
+    def test_space_next_to_existing_bay_is_dropped(self):
+        data = build({"elements": [
+            {"type": "node", "id": 1, "lat": 51.5, "lon": -0.1, "tags": {"amenity": "motorcycle_parking"}},
+            {"type": "way", "id": 2, "center": {"lat": 51.50005, "lon": -0.1},
+             "tags": {"amenity": "parking_space", "parking_space": "motorcycle"}},
+        ]})
+        self.assertEqual([b["id"] for b in data["bays"]], ["node/1"])
+
 
 if __name__ == "__main__":
     unittest.main()
