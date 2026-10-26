@@ -27,6 +27,10 @@ struct Bay: Codable, Identifiable, Hashable {
     let maxStay: String?
     let `operator`: String?
     let street: String?
+    /// Neighbourhood, town and outward postcode from reverse geocoding (optional in the file).
+    var area: String?
+    var city: String?
+    var postcode: String?
 
     var coordinate: CLLocationCoordinate2D { .init(latitude: lat, longitude: lon) }
     var location: CLLocation { .init(latitude: lat, longitude: lon) }

@@ -405,20 +405,28 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             ) {
                                 SingleChoiceSegmentedButtonRow {
                                     listOf(CompactView.Map to "Map", CompactView.List to "List $countLabel").forEachIndexed { i, (view, label) ->
+                                        // Icon and label laid out together so they share one centre line
+                                        // and the label never wraps, whatever the font size.
                                         SegmentedButton(
                                             selected = compactView == view,
                                             onClick = { vm.compactView.value = view },
                                             shape = SegmentedButtonDefaults.itemShape(i, 2),
-                                            icon = {
-                                                SegmentedButtonDefaults.Icon(active = compactView == view) {
+                                            icon = {},
+                                            label = {
+                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                                     Icon(
-                                                        if (view == CompactView.Map) Icons.Filled.Map else Icons.AutoMirrored.Filled.List,
+                                                        when {
+                                                            compactView == view -> Icons.Filled.Check
+                                                            view == CompactView.Map -> Icons.Filled.Map
+                                                            else -> Icons.AutoMirrored.Filled.List
+                                                        },
                                                         contentDescription = null,
                                                         modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
                                                     )
+                                                    Text(label, maxLines = 1, softWrap = false)
                                                 }
                                             },
-                                            label = { Text(label, maxLines = 1, softWrap = false) },
+                                            modifier = Modifier.widthIn(min = 128.dp),
                                         )
                                     }
                                 }
@@ -622,8 +630,12 @@ private fun LazyListScope.savedItems(saved: List<Bay>, position: LatLon?, onSave
             }
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(bay.name, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(bay.fee.label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(bay.title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    listOfNotNull(bay.locality, bay.fee.label).joinToString(" · "),
+                    style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis,
+                )
             }
         }
         HorizontalDivider(Modifier.padding(start = 84.dp))

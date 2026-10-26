@@ -146,8 +146,8 @@ fun BayDetailContent(bay: Bay) {
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         Column {
-            Text(bay.name, style = MaterialTheme.typography.headlineSmall)
-            val subtitle = listOfNotNull(bay.operator, position?.let { "${formatDistance(distanceMetres(it, bay))} away" })
+            Text(bay.title, style = MaterialTheme.typography.headlineSmall)
+            val subtitle = listOfNotNull(bay.locality, bay.operator, position?.let { "${formatDistance(distanceMetres(it, bay))} away" })
                 .joinToString(" · ").ifEmpty { "Motorcycle parking" }
             Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }

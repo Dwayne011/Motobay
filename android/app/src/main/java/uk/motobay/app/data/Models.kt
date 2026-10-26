@@ -26,12 +26,41 @@ data class Bay(
     val maxStay: String? = null,
     val operator: String? = null,
     val street: String? = null,
+    /** Neighbourhood or town from reverse geocoding, e.g. "Spitalfields". */
+    val area: String? = null,
+    /** The town when it differs from [area], e.g. "London". */
+    val city: String? = null,
+    /** Outward postcode, e.g. "E1". */
+    val postcode: String? = null,
     /** Set for bays added by riders (not from OpenStreetMap). */
     val addedBy: String? = null,
 ) {
     val isSample: Boolean get() = id.startsWith("sample/")
     val isRiderAdded: Boolean get() = id.startsWith("rider/")
+
+    /** True when the mapper gave the bay no real name, just what it is. */
+    val hasGenericName: Boolean get() = name.trim().lowercase() in GENERIC_NAMES
+
+    /** What to call the bay: its name, or failing that its street. */
+    val title: String get() = if (hasGenericName) street ?: name else name
+
+    /**
+     * Where it is, for the line under the title: street (unless it is the title),
+     * then area, town and outward postcode, e.g. "Spitalfields, London E1".
+     */
+    val locality: String?
+        get() {
+            val place = listOfNotNull(area, city?.takeIf { it != area }).joinToString(", ")
+            val placeWithPostcode = listOfNotNull(place.ifEmpty { null }, postcode).joinToString(" ")
+            val streetPart = street?.takeIf { it != title }
+            return listOfNotNull(streetPart, placeWithPostcode.ifEmpty { null }).joinToString(", ").ifEmpty { null }
+        }
 }
+
+/** Names OpenStreetMap mappers give bays that say what they are, not where. */
+private val GENERIC_NAMES = setOf(
+    "motorcycle parking", "motorcycle bay", "motorcycle bays", "solo m/c bay", "solo motorcycle bay", "motorbike parking",
+)
 
 data class BBox(val south: Double, val west: Double, val north: Double, val east: Double) {
     operator fun contains(b: Bay) = b.lat in south..north && b.lon in west..east

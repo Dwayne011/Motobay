@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - scripts/fetch_uk_bays.py
+      - scripts/enrich_bays.py
       - .github/workflows/update-bay-data.yml
 
 permissions:
@@ -22,7 +23,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,20 +31,22 @@ jobs:
           python-version: "3.12"
       - name: Test the parser
         working-directory: scripts
-        run: python -m unittest test_fetch_uk_bays.py
+        run: python -m unittest test_fetch_uk_bays.py test_enrich_bays.py
       - name: Fetch UK bays from OpenStreetMap
         run: |
           mkdir -p data
           python scripts/fetch_uk_bays.py data/uk-bays.json
+      - name: Add streets and areas (Photon reverse geocoding, cached)
+        run: python scripts/enrich_bays.py data/uk-bays.json data/geocode-cache.json
       - name: Commit if changed
         run: |
-          if [ -z "$(git status --porcelain -- data/uk-bays.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json)" ]; then
             echo "No changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/uk-bays.json
+          git add data/uk-bays.json data/geocode-cache.json
           git commit -m "Update UK bay data"
           git pull --rebase origin main
           git push origin HEAD:main

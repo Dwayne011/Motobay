@@ -37,7 +37,7 @@ fun SavedScreen(onOpenBay: (String) -> Unit) {
     val position by app.location.position.collectAsStateWithLifecycle()
     val items = favourites.values
         .map { bay -> bay to position?.let { distanceMetres(it, bay) } }
-        .sortedWith(compareBy({ it.second ?: 0.0 }, { it.first.name }))
+        .sortedWith(compareBy({ it.second ?: 0.0 }, { it.first.title }))
     val scroll = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(

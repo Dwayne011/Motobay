@@ -6,6 +6,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayDataset
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.PlaceSearch
@@ -53,5 +54,34 @@ class DataParsingTest {
         assertTrue(results.any { it.title == "Camden Lock Market" && it.bbox != null })
         // House numbers aren't glued onto named places.
         assertTrue(results.none { it.title.first().isDigit() })
+    }
+}
+
+class BayTitleTest {
+    private fun bay(name: String, street: String? = null, area: String? = null, city: String? = null, postcode: String? = null) =
+        Bay("node/1", 51.5, -0.1, name, street = street, area = area, city = city, postcode = postcode)
+
+    @Test fun genericNameFallsBackToTheStreet() {
+        val b = bay("Motorcycle parking", street = "Wentworth Street", area = "Spitalfields", city = "London", postcode = "E1")
+        assertEquals("Wentworth Street", b.title)
+        assertEquals("Spitalfields, London E1", b.locality)
+    }
+
+    @Test fun realNameKeepsTheStreetInTheLocality() {
+        val b = bay("Soho Bike Bay", street = "Wardour Street", area = "Soho", city = "London", postcode = "W1")
+        assertEquals("Soho Bike Bay", b.title)
+        assertEquals("Wardour Street, Soho, London W1", b.locality)
+    }
+
+    @Test fun townIsNotRepeatedWhenItIsTheArea() {
+        val b = bay("Solo M/C Bay", street = "Deansgate", area = "Manchester", city = "Manchester", postcode = "M3")
+        assertEquals("Deansgate", b.title)
+        assertEquals("Manchester M3", b.locality)
+    }
+
+    @Test fun nothingKnownGivesNoLocality() {
+        val b = bay("Motorcycle parking")
+        assertEquals("Motorcycle parking", b.title)
+        assertNull(b.locality)
     }
 }

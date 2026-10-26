@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import uk.motobay.app.data.Bay
@@ -121,11 +123,19 @@ fun BayListItem(bay: Bay, distance: String?, selected: Boolean = false, onClick:
             ListItemDefaults.colors(containerColor = Color.Transparent)
         },
         leadingContent = { BayPin(bay.fee) },
-        headlineContent = { Text(bay.name) },
+        headlineContent = { Text(bay.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supportingContent = {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                FeeLabel(bay.fee)
-                bay.capacity?.let { Text("$it spaces") }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                bay.locality?.let { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    FeeLabel(bay.fee)
+                    val facts = listOfNotNull(
+                        bay.capacity?.let { "$it spaces" },
+                        bay.covered?.takeIf { it }?.let { "Covered" },
+                        bay.maxStay?.let { "Max $it" },
+                    )
+                    if (facts.isNotEmpty()) Text(facts.joinToString(" · "), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
         },
         trailingContent = distance?.let { { Text(it, style = MaterialTheme.typography.labelSmall) } },
