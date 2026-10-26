@@ -2,12 +2,15 @@ package uk.motobay.app
 
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -203,5 +206,36 @@ class ScreenshotTest {
         CompositionLocalProvider(LocalInspectionMode provides true, LocalApp provides app, LocalSnackbar provides SnackbarHostState()) {
             MotoBayTheme(settings) { Surface { BayDetailContent(SampleBays.all[0]) } }
         }
+    }
+}
+
+/** The Map / List switch on its own, at the tester's font size, with the widest count it can show. */
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi")
+class ViewToggleScreenshotTest {
+    @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    @Test fun view_toggle_large_text() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        val app = ApplicationProvider.getApplicationContext<MotoBayApplication>()
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Dark) }
+        compose.setContent {
+            val settings by app.user.settings.collectAsStateWithLifecycle()
+            MotoBayTheme(settings) {
+                Surface {
+                    androidx.compose.foundation.layout.Column(androidx.compose.ui.Modifier.padding(16.dp), verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)) {
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.Map, "5", {})
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.List, "200+", {})
+                    }
+                }
+            }
+        }
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/view-toggle-large-text.png")
+        // The segments share one width, so the toggle must grow for the wider count rather than clip it.
+        val narrow = compose.onAllNodesWithTag("view-toggle")[0].fetchSemanticsNode().boundsInRoot
+        val wide = compose.onAllNodesWithTag("view-toggle")[1].fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithText("List\u00A0200+").assertExists()
+        assertTrue("toggle must widen for a 3-digit count ($narrow vs $wide)", wide.width > narrow.width + 40f)
     }
 }

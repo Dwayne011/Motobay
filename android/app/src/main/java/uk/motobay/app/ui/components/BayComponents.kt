@@ -138,6 +138,6 @@ fun BayListItem(bay: Bay, distance: String?, selected: Boolean = false, onClick:
                 }
             }
         },
-        trailingContent = distance?.let { { Text(it, style = MaterialTheme.typography.labelSmall) } },
+        trailingContent = distance?.let { { Text(it, style = MaterialTheme.typography.bodyMedium) } },
     )
 }

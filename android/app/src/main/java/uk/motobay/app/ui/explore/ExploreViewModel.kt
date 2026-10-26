@@ -128,6 +128,12 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         viewModelScope.launch { app.bays.load() }
     }
 
+    /** Each time the screen is shown: check for newer bay data and refresh the position if permission is already granted. */
+    fun refresh() {
+        retryLoad()
+        if (app.location.hasPermission()) viewModelScope.launch { app.location.locate() }
+    }
+
     fun onViewportChange(vp: MapViewport) {
         viewport.value = vp
         app.user.updateSettings { it.copy(lastMap = CameraSnapshot(vp.center.lat, vp.center.lon, vp.zoom)) }

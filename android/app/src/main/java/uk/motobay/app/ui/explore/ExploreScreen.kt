@@ -106,6 +106,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.motobay.app.data.Bay
@@ -160,6 +161,11 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val settings by app.user.settings.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { vm.messages.collect { snackbar.showSnackbar(it) } }
+    // Coming (back) to the screen: pick up new bay data and, if allowed, a fresh position for distances.
+    LifecycleResumeEffect(Unit) {
+        vm.refresh()
+        onPauseOrDispose { }
+    }
     BackHandler(enabled = search.expanded) { vm.onSearchExpandedChange(false) }
     BackHandler(enabled = addingBay) { vm.cancelAddingBay() }
     // Distances in the suggestions need a recent position; refresh it quietly if allowed.
@@ -245,6 +251,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
         val listWith: @Composable ((Bay) -> Unit, Modifier) -> Unit = { onPick, modifier ->
             when {
                 visible.isNotEmpty() -> LazyColumn(modifier) {
+                    if (userPosition == null) item(key = "location-nudge") { LocationNudge(onLocate) }
                     items(visible, key = { it.bay.id }) { item ->
                         BayListItem(
                             bay = item.bay,
@@ -398,39 +405,12 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             }
                         }
                         if (!search.expanded && selectedBay == null) {
-                            Surface(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                tonalElevation = 3.dp,
+                            ViewToggle(
+                                view = compactView,
+                                countLabel = countLabel,
+                                onSelect = { vm.compactView.value = it },
                                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
-                            ) {
-                                SingleChoiceSegmentedButtonRow {
-                                    listOf(CompactView.Map to "Map", CompactView.List to "List $countLabel").forEachIndexed { i, (view, label) ->
-                                        // Icon and label laid out together so they share one centre line
-                                        // and the label never wraps, whatever the font size.
-                                        SegmentedButton(
-                                            selected = compactView == view,
-                                            onClick = { vm.compactView.value = view },
-                                            shape = SegmentedButtonDefaults.itemShape(i, 2),
-                                            icon = {},
-                                            label = {
-                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                    Icon(
-                                                        when {
-                                                            compactView == view -> Icons.Filled.Check
-                                                            view == CompactView.Map -> Icons.Filled.Map
-                                                            else -> Icons.AutoMirrored.Filled.List
-                                                        },
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(SegmentedButtonDefaults.IconSize),
-                                                    )
-                                                    Text(label, maxLines = 1, softWrap = false)
-                                                }
-                                            },
-                                            modifier = Modifier.widthIn(min = 128.dp),
-                                        )
-                                    }
-                                }
-                            }
+                            )
                         }
                     }
                 }
@@ -639,6 +619,25 @@ private fun LazyListScope.savedItems(saved: List<Bay>, position: LatLon?, onSave
             }
         }
         HorizontalDivider(Modifier.padding(start = 84.dp))
+    }
+}
+
+/** Shown at the top of the list until we have a position to measure distances from. */
+@Composable
+private fun LocationNudge(onLocate: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(Icons.Filled.MyLocation, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "Turn on location to see how far away each bay is",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
+        TextButton(onClick = onLocate) { Text("Allow") }
     }
 }
 
