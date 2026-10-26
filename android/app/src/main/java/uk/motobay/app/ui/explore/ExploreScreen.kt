@@ -737,7 +737,12 @@ private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onC
         verticalArrangement = Arrangement.spacedBy(8.dp),
         itemVerticalAlignment = Alignment.CenterVertically,
     ) {
-        Surface(shape = MaterialTheme.shapes.extraLarge, color = MaterialTheme.colorScheme.surface) {
+        // Scrolls sideways rather than clipping "Unknown" at large text sizes.
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+        ) {
             SingleChoiceSegmentedButtonRow {
                 PriceFilter.entries.forEachIndexed { i, p ->
                     SegmentedButton(
