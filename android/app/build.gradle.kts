@@ -24,6 +24,18 @@ android {
         buildConfigField("String", "DARK_MAP_STYLE_URL", "\"https://raw.githubusercontent.com/Dwayne011/Motobay/main/data/map/graphite.json\"")
     }
 
+    // One debug certificate shared by every machine and cloud session, so its
+    // SHA-1 can be registered once in Firebase for Google sign-in. Debug only;
+    // the release key is never committed.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
