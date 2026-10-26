@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -41,6 +43,11 @@ import org.maplibre.android.style.layers.PropertyFactory.circleColor
 import org.maplibre.android.style.layers.PropertyFactory.circleRadius
 import org.maplibre.android.style.layers.PropertyFactory.circleStrokeColor
 import org.maplibre.android.style.layers.PropertyFactory.circleStrokeWidth
+import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
+import org.maplibre.android.style.layers.PropertyFactory.iconColor
+import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
+import org.maplibre.android.style.layers.PropertyFactory.iconImage
+import org.maplibre.android.style.layers.PropertyFactory.iconSize
 import org.maplibre.android.style.layers.PropertyFactory.textAllowOverlap
 import org.maplibre.android.style.layers.PropertyFactory.textColor
 import org.maplibre.android.style.layers.PropertyFactory.textField
@@ -53,6 +60,7 @@ import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.Point
+import uk.motobay.app.R
 import uk.motobay.app.data.BBox
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.CameraSnapshot
@@ -72,7 +80,8 @@ data class PinColors(
     val free: Color, val onFree: Color,
     val paid: Color, val onPaid: Color,
     val unknown: Color, val onUnknown: Color,
-    val selected: Color, val onSelected: Color,
+    /** Ring drawn round the selected pin. */
+    val selectedRing: Color,
     val cluster: Color, val onCluster: Color,
     val stroke: Color,
     val user: Color,
@@ -93,7 +102,7 @@ private const val USER_LAYER = "user-dot"
 private fun styleUrl(dark: Boolean) =
     if (dark) "https://tiles.openfreemap.org/styles/dark" else "https://tiles.openfreemap.org/styles/liberty"
 
-private fun Bay.glyph() = when (fee) { Fee.Free -> "P"; Fee.Paid -> "£"; Fee.Unknown -> "?" }
+private const val MOTORCYCLE_ICON = "motorcycle"
 
 /**
  * MapLibre map of every bay. Nearby bays are grouped into numbered clusters
@@ -111,6 +120,7 @@ fun BayMap(
     onBayClick: (String) -> Unit,
     onViewportChange: (MapViewport) -> Unit,
     onCommandHandled: () -> Unit,
+    onLongPress: (LatLon) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Previews and JVM screenshot tests can't load MapLibre's native code.
@@ -128,6 +138,7 @@ fun BayMap(
     var style by remember { mutableStateOf<Style?>(null) }
     val latestBayClick by rememberUpdatedState(onBayClick)
     val latestViewport by rememberUpdatedState(onViewportChange)
+    val latestLongPress by rememberUpdatedState(onLongPress)
 
     DisposableEffect(lifecycle, mapView) {
         val observer = LifecycleEventObserver { _, event ->
@@ -181,6 +192,10 @@ fun BayMap(
                 }
                 true
             }
+            m.addOnMapLongClickListener { point ->
+                latestLongPress(LatLon(point.latitude, point.longitude))
+                true
+            }
             map = m
         }
     }
@@ -198,6 +213,10 @@ fun BayMap(
             )
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
+            // Tintable (SDF) motorcycle icon for the pins.
+            ContextCompat.getDrawable(context, R.drawable.ic_motorcycle)?.let {
+                loaded.addImage(MOTORCYCLE_ICON, it.toBitmap(48, 48), true)
+            }
 
             loaded.addLayer(
                 CircleLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
@@ -222,23 +241,28 @@ fun BayMap(
             )
             loaded.addLayer(
                 SymbolLayer(BAY_LABELS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
-                    textField(get("glyph")),
-                    textFont(arrayOf("Noto Sans Bold")),
-                    textSize(14f),
-                    textColor(toColor(get("ink"))),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
+                    iconImage(MOTORCYCLE_ICON),
+                    iconSize(0.75f),
+                    iconColor(toColor(get("ink"))),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
-            loaded.addLayer(CircleLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(circleRadius(19f), circleStrokeWidth(3f)))
+            loaded.addLayer(
+                CircleLayer(SELECTED_CIRCLE, SELECTED_SOURCE).withProperties(
+                    circleRadius(19f),
+                    circleColor(toColor(get("fill"))),
+                    circleStrokeWidth(4f),
+                ),
+            )
             loaded.addLayer(
                 SymbolLayer(SELECTED_LABEL, SELECTED_SOURCE).withProperties(
-                    textField(get("glyph")),
-                    textFont(arrayOf("Noto Sans Bold")),
-                    textSize(16f),
-                    textAllowOverlap(true),
-                    textIgnorePlacement(true),
+                    iconImage(MOTORCYCLE_ICON),
+                    iconSize(1f),
+                    iconColor(toColor(get("ink"))),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
                 ),
             )
             style = loaded
@@ -253,10 +277,7 @@ fun BayMap(
         )
         s.getLayerAs<SymbolLayer>(CLUSTER_COUNT)?.setProperties(textColor(colors.onCluster.toArgb()))
         s.getLayerAs<CircleLayer>(BAY_CIRCLES)?.setProperties(circleStrokeColor(colors.stroke.toArgb()))
-        s.getLayerAs<CircleLayer>(SELECTED_CIRCLE)?.setProperties(
-            circleColor(colors.selected.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
-        )
-        s.getLayerAs<SymbolLayer>(SELECTED_LABEL)?.setProperties(textColor(colors.onSelected.toArgb()))
+        s.getLayerAs<CircleLayer>(SELECTED_CIRCLE)?.setProperties(circleStrokeColor(colors.selectedRing.toArgb()))
         s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
             circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
         )
@@ -264,30 +285,13 @@ fun BayMap(
 
     LaunchedEffect(style, bays, colors) {
         val s = style ?: return@LaunchedEffect
-        val features = bays.map { bay ->
-            val (fill, ink) = when (bay.fee) {
-                Fee.Free -> colors.free to colors.onFree
-                Fee.Paid -> colors.paid to colors.onPaid
-                Fee.Unknown -> colors.unknown to colors.onUnknown
-            }
-            Feature.fromGeometry(Point.fromLngLat(bay.lon, bay.lat)).apply {
-                addStringProperty("id", bay.id)
-                addStringProperty("fill", fill.toHex())
-                addStringProperty("ink", ink.toHex())
-                addStringProperty("glyph", bay.glyph())
-            }
-        }
+        val features = bays.map { it.toFeature(colors) }
         s.getSourceAs<GeoJsonSource>(BAY_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }
 
-    LaunchedEffect(style, selected) {
+    LaunchedEffect(style, selected, colors) {
         val s = style ?: return@LaunchedEffect
-        val features = selected?.let {
-            listOf(Feature.fromGeometry(Point.fromLngLat(it.lon, it.lat)).apply {
-                addStringProperty("id", it.id)
-                addStringProperty("glyph", it.glyph())
-            })
-        }.orEmpty()
+        val features = selected?.let { listOf(it.toFeature(colors)) }.orEmpty()
         s.getSourceAs<GeoJsonSource>(SELECTED_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }
 
@@ -314,6 +318,19 @@ fun BayMap(
     }
 
     AndroidView(factory = { mapView }, modifier = modifier)
+}
+
+private fun Bay.toFeature(colors: PinColors): Feature {
+    val (fill, ink) = when (fee) {
+        Fee.Free -> colors.free to colors.onFree
+        Fee.Paid -> colors.paid to colors.onPaid
+        Fee.Unknown -> colors.unknown to colors.onUnknown
+    }
+    return Feature.fromGeometry(Point.fromLngLat(lon, lat)).apply {
+        addStringProperty("id", id)
+        addStringProperty("fill", fill.toHex())
+        addStringProperty("ink", ink.toHex())
+    }
 }
 
 private fun Color.toHex(): String = String.format("#%06X", 0xFFFFFF and toArgb())

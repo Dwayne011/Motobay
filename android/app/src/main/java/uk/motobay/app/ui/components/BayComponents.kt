@@ -4,9 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.HourglassBottom
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.Fee
@@ -41,8 +44,27 @@ val Fee.label: String
 @Composable
 fun feeColors(fee: Fee): Pair<Color, Color> = when (fee) {
     Fee.Free -> MotoBayColors.extended.successContainer to MotoBayColors.extended.onSuccessContainer
-    Fee.Paid -> MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
+    Fee.Paid -> MotoBayColors.extended.warningContainer to MotoBayColors.extended.onWarningContainer
     Fee.Unknown -> MaterialTheme.colorScheme.surfaceContainerHighest to MaterialTheme.colorScheme.onSurfaceVariant
+}
+
+/** Strong pin colours, matching the map: brand colour when the price isn't known. */
+@Composable
+fun pinColors(fee: Fee): Pair<Color, Color> = when (fee) {
+    Fee.Free -> MotoBayColors.extended.success to MotoBayColors.extended.onSuccess
+    Fee.Paid -> MotoBayColors.extended.warning to MotoBayColors.extended.onWarning
+    Fee.Unknown -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
+}
+
+/** The map pin, for lists and legends. */
+@Composable
+fun BayPin(fee: Fee, size: Dp = 32.dp) {
+    val (container, content) = pinColors(fee)
+    Surface(color = container, contentColor = content, shape = CircleShape, modifier = Modifier.size(size)) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(Icons.Filled.TwoWheeler, contentDescription = null, Modifier.size(size * 0.6f))
+        }
+    }
 }
 
 /** Small tonal label showing the price. */
@@ -96,7 +118,7 @@ fun BayListItem(bay: Bay, distance: String?, selected: Boolean = false, onClick:
         } else {
             ListItemDefaults.colors(containerColor = Color.Transparent)
         },
-        leadingContent = { Icon(Icons.Filled.TwoWheeler, contentDescription = null) },
+        leadingContent = { BayPin(bay.fee) },
         headlineContent = { Text(bay.name) },
         supportingContent = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {

@@ -16,11 +16,16 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 @Serializable
-data class CommunityData(val photos: List<BayPhoto> = emptyList(), val comments: List<BayComment> = emptyList())
+data class CommunityData(
+    val photos: List<BayPhoto> = emptyList(),
+    val comments: List<BayComment> = emptyList(),
+    val bays: List<BaySubmission> = emptyList(),
+)
 
 /**
- * Photos and comments that riders submit. Everything starts as Pending and is
- * only shown publicly after a moderator approves it.
+ * Photos, comments, new bays and bay corrections that riders submit.
+ * Everything starts as Pending and is only shown publicly after a moderator
+ * approves it.
  *
  * This is a local, on-device mock of the backend so the app can be built and
  * tested now. Replace the bodies of these functions with API calls once a
@@ -45,6 +50,22 @@ class CommunityRepository(private val context: Context, scope: CoroutineScope) {
         val comment = BayComment(UUID.randomUUID().toString(), bay.id, bay.name, text, author, System.currentTimeMillis(), ModerationStatus.Pending)
         store.update { it.copy(comments = listOf(comment) + it.comments) }
     }
+
+    /**
+     * A new bay, or a correction when [editOf] is set. Moderators' own submissions
+     * are approved straight away.
+     */
+    fun submitBay(submission: BaySubmission, autoApprove: Boolean) {
+        val s = submission.copy(
+            id = UUID.randomUUID().toString(),
+            createdAt = System.currentTimeMillis(),
+            status = if (autoApprove) ModerationStatus.Approved else ModerationStatus.Pending,
+        )
+        store.update { it.copy(bays = listOf(s) + it.bays) }
+    }
+
+    fun moderateBay(id: String, status: ModerationStatus) =
+        store.update { d -> d.copy(bays = d.bays.map { if (it.id == id) it.copy(status = status) else it }) }
 
     fun moderatePhoto(id: String, status: ModerationStatus) =
         store.update { d -> d.copy(photos = d.photos.map { if (it.id == id) it.copy(status = status) else it }) }

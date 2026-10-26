@@ -21,23 +21,26 @@ import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 
 /**
- * M3 "custom colour" roles the standard ColorScheme doesn't have. Used for
- * free bays. The green is harmonised towards the primary colour, as M3
- * recommends, so it sits well with any source colour.
+ * M3 "custom colour" roles the standard ColorScheme doesn't have: green for
+ * free bays and amber for paid ones. Both are harmonised towards the primary
+ * colour, as M3 recommends, so they sit well with any source colour.
  */
 @Immutable
 data class ExtendedColors(
-    val success: Color,
-    val onSuccess: Color,
-    val successContainer: Color,
-    val onSuccessContainer: Color,
+    val success: Color = Color.Unspecified,
+    val onSuccess: Color = Color.Unspecified,
+    val successContainer: Color = Color.Unspecified,
+    val onSuccessContainer: Color = Color.Unspecified,
+    val warning: Color = Color.Unspecified,
+    val onWarning: Color = Color.Unspecified,
+    val warningContainer: Color = Color.Unspecified,
+    val onWarningContainer: Color = Color.Unspecified,
 )
 
-val LocalExtendedColors = staticCompositionLocalOf {
-    ExtendedColors(Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified)
-}
+val LocalExtendedColors = staticCompositionLocalOf { ExtendedColors() }
 
 private val SuccessSeed = Color(0xFF2E7D32)
+private val WarningSeed = Color(0xFFF9A825)
 
 @Composable
 fun isAppInDarkTheme(mode: ThemeMode): Boolean = when (mode) {
@@ -76,12 +79,17 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
     }
 
     val extended = remember(scheme.primary, dark) {
-        val success = dynamicColorScheme(
-            seedColor = SuccessSeed.harmonize(scheme.primary),
+        fun custom(seed: Color) = dynamicColorScheme(
+            seedColor = seed.harmonize(scheme.primary),
             isDark = dark,
             style = PaletteStyle.TonalSpot,
         )
-        ExtendedColors(success.primary, success.onPrimary, success.primaryContainer, success.onPrimaryContainer)
+        val success = custom(SuccessSeed)
+        val warning = custom(WarningSeed)
+        ExtendedColors(
+            success.primary, success.onPrimary, success.primaryContainer, success.onPrimaryContainer,
+            warning.primary, warning.onPrimary, warning.primaryContainer, warning.onPrimaryContainer,
+        )
     }
 
     CompositionLocalProvider(LocalExtendedColors provides extended) {

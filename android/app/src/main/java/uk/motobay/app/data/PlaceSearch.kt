@@ -24,7 +24,7 @@ data class PlaceSuggestion(
     val point: LatLon?,
     val bbox: BBox?,
 ) {
-    enum class Kind { Town, Street, Postcode, Place }
+    enum class Kind { Town, Street, Postcode, Station, Place }
 }
 
 /**
@@ -101,6 +101,7 @@ class PlaceSearch(
                 ?: return@mapNotNull null
             val kind = when {
                 FULL_POSTCODE.matches(title) -> PlaceSuggestion.Kind.Postcode
+                props.str("osm_key") == "railway" || props.str("osm_value") in STATION_VALUES -> PlaceSuggestion.Kind.Station
                 type in setOf("city", "town", "village", "district", "locality", "county", "state") -> PlaceSuggestion.Kind.Town
                 type == "street" -> PlaceSuggestion.Kind.Street
                 else -> PlaceSuggestion.Kind.Place
@@ -126,6 +127,8 @@ class PlaceSearch(
 
         /** Looks like the start of a UK postcode, e.g. "SW1", "M1 1", "EH12 9". */
         val POSTCODE_START = Regex("^[A-Za-z]{1,2}\\d[A-Za-z\\d]?(\\s*\\d[A-Za-z]{0,2})?$")
+
+        val STATION_VALUES = setOf("station", "halt", "subway_entrance", "tram_stop", "bus_station")
 
         val FULL_POSTCODE = Regex("^[A-Za-z]{1,2}\\d[A-Za-z\\d]?\\s*\\d[A-Za-z]{2}$")
     }

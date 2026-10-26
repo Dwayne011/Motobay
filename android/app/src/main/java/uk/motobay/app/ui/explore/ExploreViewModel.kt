@@ -19,7 +19,10 @@ import kotlinx.coroutines.launch
 import uk.motobay.app.MotoBayApplication
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.CameraSnapshot
+import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.Fee
+import uk.motobay.app.data.LatLon
+import uk.motobay.app.data.RecentPlace
 import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.data.friendlyMessage
 import uk.motobay.app.util.distanceMetres
@@ -62,7 +65,16 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     val userPosition = app.location.position
     val loadState = app.bays.state
-    val allBays = app.bays.bays
+    /** OpenStreetMap bays plus approved rider additions and corrections. */
+    val allBays = app.allBays
+    val recentPlaces = app.user.settings.map { it.recentPlaces }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val favourites = app.user.favourites
+
+    /** True while the rider is placing a new bay; the map centre marks the spot. */
+    val addingBay = MutableStateFlow(false)
+
+    /** Where the new bay will go, once the rider confirms the spot. */
+    val newBayAt = MutableStateFlow<LatLon?>(null)
 
     /** Every bay matching the filters. The map clusters them, so it shows the whole UK. */
     val mapBays: StateFlow<List<Bay>> = combine(allBays, filters) { all, f ->
@@ -120,11 +132,53 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         search.update { it.copy(query = s.title, expanded = false, suggestions = emptyList()) }
         viewModelScope.launch {
             val point = s.point ?: runCatching { app.placeSearch.resolvePostcode(s.title) }.getOrNull()
+            point?.let { app.user.addRecentPlace(RecentPlace(s.title, s.subtitle, it.lat, it.lon)) }
             when {
                 s.bbox != null -> command.value = MapCommand.Fit(s.bbox)
                 point != null -> command.value = MapCommand.Fly(point.lat, point.lon, zoom = if (s.kind == PlaceSuggestion.Kind.Town) 13.0 else 16.0)
                 else -> _messages.send("Couldn't find that place")
             }
+        }
+    }
+
+    fun onRecentClick(place: RecentPlace) {
+        search.update { it.copy(query = place.title, expanded = false) }
+        app.user.addRecentPlace(place)
+        command.value = MapCommand.Fly(place.lat, place.lon, zoom = 15.0)
+    }
+
+    fun onSavedBayClick(bay: Bay) {
+        search.update { it.copy(expanded = false) }
+        select(bay)
+    }
+
+    fun clearRecents() = app.user.clearRecentPlaces()
+
+    /** Starts placing a new bay, optionally at a long-pressed point. */
+    fun startAddingBay(at: LatLon? = null) {
+        search.update { it.copy(expanded = false) }
+        compactView.value = CompactView.Map
+        if (at != null) command.value = MapCommand.Fly(at.lat, at.lon, zoom = maxOf(viewport.value?.zoom ?: 0.0, 17.0))
+        addingBay.value = true
+    }
+
+    fun cancelAddingBay() {
+        addingBay.value = false
+        newBayAt.value = null
+    }
+
+    /** The rider has lined the pin up with the bay; show the details form. */
+    fun confirmBayLocation() {
+        newBayAt.value = viewport.value?.center
+            ?: app.user.settings.value.lastMap?.let { LatLon(it.lat, it.lon) }
+    }
+
+    fun submitNewBay(submission: BaySubmission) {
+        val moderator = app.user.settings.value.moderator
+        app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { "Anonymous rider" }), autoApprove = moderator)
+        cancelAddingBay()
+        viewModelScope.launch {
+            _messages.send(if (moderator) "Bay added" else "Thanks! Your bay will appear once it's been reviewed.")
         }
     }
 

@@ -3,7 +3,10 @@ package uk.motobay.app
 import android.app.Application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.StateFlow
+import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
+import uk.motobay.app.data.combinedBays
 import uk.motobay.app.data.CommunityRepository
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.UserRepository
@@ -21,6 +24,9 @@ class MotoBayApplication : Application() {
         private set
     lateinit var location: LocationProvider
         private set
+    /** OpenStreetMap bays plus approved rider additions and corrections. */
+    lateinit var allBays: StateFlow<Map<String, Bay>>
+        private set
     /** Replaced with recorded responses in tests. */
     var placeSearch = PlaceSearch()
 
@@ -30,5 +36,6 @@ class MotoBayApplication : Application() {
         community = CommunityRepository(this, appScope)
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
+        allBays = combinedBays(bays.bays, community.data, appScope)
     }
 }

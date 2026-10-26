@@ -26,8 +26,11 @@ data class Bay(
     val maxStay: String? = null,
     val operator: String? = null,
     val street: String? = null,
+    /** Set for bays added by riders (not from OpenStreetMap). */
+    val addedBy: String? = null,
 ) {
     val isSample: Boolean get() = id.startsWith("sample/")
+    val isRiderAdded: Boolean get() = id.startsWith("rider/")
 }
 
 data class BBox(val south: Double, val west: Double, val north: Double, val east: Double) {
@@ -58,6 +61,26 @@ data class BayComment(
     val bayId: String,
     val bayName: String,
     val text: String,
+    val author: String,
+    val createdAt: Long,
+    val status: ModerationStatus,
+)
+
+/**
+ * A rider's new bay, or a correction to an existing one ([editOf] is the bay's
+ * id). Held for review like photos and comments; once approved it shows on the map.
+ */
+@Serializable
+data class BaySubmission(
+    val id: String,
+    val editOf: String? = null,
+    val lat: Double,
+    val lon: Double,
+    val name: String,
+    val fee: Fee,
+    val capacity: Int?,
+    val covered: Boolean?,
+    val notes: String,
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditLocationAlt
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -47,6 +48,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -56,7 +58,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -73,6 +74,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import uk.motobay.app.data.Bay
+import uk.motobay.app.data.BayLoadState
+import uk.motobay.app.data.Fee
+import uk.motobay.app.data.LatLon
 import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
@@ -91,7 +95,9 @@ import java.util.Date
 @Composable
 fun BayDetailRoute(id: String, onBack: () -> Unit) {
     val app = LocalApp.current
-    val result by produceState<Result<Bay?>?>(null, id) { value = runCatching { app.bays.bay(id) } }
+    val allBays by app.allBays.collectAsStateWithLifecycle()
+    val loadState by app.bays.state.collectAsStateWithLifecycle()
+    LaunchedEffect(id) { if (allBays[id] == null) app.bays.load() }
     // M3 small top app bar: changes to surfaceContainer when content scrolls under it.
     val scroll = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -108,10 +114,10 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
         },
     ) { padding ->
         Box(Modifier.padding(padding).fillMaxSize()) {
-            val bay = result?.getOrNull()
+            val bay = allBays[id]
             when {
-                result == null -> CircularProgressIndicator(Modifier.align(Alignment.Center))
                 bay != null -> BayDetailContent(bay)
+                loadState == BayLoadState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
                 else -> Text(
                     "This bay couldn't be found. It may have been removed from the map.",
                     Modifier.padding(24.dp),
@@ -132,6 +138,8 @@ fun BayDetailContent(bay: Bay) {
     val favourites by app.user.favourites.collectAsStateWithLifecycle()
     val position by app.location.position.collectAsStateWithLifecycle()
     val saved = bay.id in favourites
+    var editing by rememberSaveable { mutableStateOf(false) }
+    val settings by app.user.settings.collectAsStateWithLifecycle()
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
@@ -145,6 +153,19 @@ fun BayDetailContent(bay: Bay) {
         }
 
         BayFacts(bay)
+
+        if (bay.fee == Fee.Unknown) {
+            Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.medium) {
+                Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Do you know if this bay is free or paid?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(onClick = { editing = true }) { Text("Tell us") }
+                }
+            }
+        }
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             var menu by remember { mutableStateOf(false) }
@@ -181,12 +202,19 @@ fun BayDetailContent(bay: Bay) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("Data", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(
-                if (bay.isSample) "This is a development sample, not a real bay."
-                else "Bay data © OpenStreetMap contributors, under the Open Database Licence. Something wrong? You can fix it on OpenStreetMap.",
+                when {
+                    bay.isSample -> "This is a development sample, not a real bay."
+                    bay.isRiderAdded -> "Added by ${bay.addedBy ?: "a rider"}."
+                    else -> "Bay data © OpenStreetMap contributors, under the Open Database Licence."
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            if (!bay.isSample) {
+            OutlinedButton(onClick = { editing = true }) {
+                Icon(Icons.Filled.Edit, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
+                Text("Suggest an edit", Modifier.padding(start = ButtonDefaults.IconSpacing))
+            }
+            if (!bay.isSample && !bay.isRiderAdded) {
                 TextButton(onClick = {
                     val (type, num) = bay.id.split("/")
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.openstreetmap.org/edit?$type=$num")))
@@ -196,6 +224,24 @@ fun BayDetailContent(bay: Bay) {
                 }
             }
         }
+    }
+
+    if (editing) {
+        BayFormSheet(
+            at = LatLon(bay.lat, bay.lon),
+            editing = bay,
+            onDismiss = { editing = false },
+            onSubmit = { submission ->
+                editing = false
+                app.community.submitBay(
+                    submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }),
+                    autoApprove = settings.moderator,
+                )
+                scope.launch {
+                    snackbar.showSnackbar(if (settings.moderator) "Bay updated" else "Thanks! Your correction will be checked before it's published.")
+                }
+            },
+        )
     }
 }
 

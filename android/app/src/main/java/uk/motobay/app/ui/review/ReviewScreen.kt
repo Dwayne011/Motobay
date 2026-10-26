@@ -1,5 +1,7 @@
 package uk.motobay.app.ui.review
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -44,11 +47,12 @@ import kotlinx.coroutines.launch
 import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
+import uk.motobay.app.ui.components.label
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
 
-private enum class Kind(val label: String) { Photos("Photos"), Comments("Comments") }
+private enum class Kind(val label: String) { Photos("Photos"), Comments("Comments"), Bays("Bays") }
 
 /** Moderation queue: nothing riders submit is public until it's approved here. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,16 +64,23 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val data by app.community.data.collectAsStateWithLifecycle()
     val photos = data.photos.filter { it.status == ModerationStatus.Pending }
     val comments = data.comments.filter { it.status == ModerationStatus.Pending }
+    val baySubmissions = data.bays.filter { it.status == ModerationStatus.Pending }
+    val allBays by app.allBays.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     var kind by rememberSaveable { mutableStateOf(Kind.Photos) }
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
 
-    fun decide(isPhoto: Boolean, id: String, status: ModerationStatus) {
+    fun decide(kind: Kind, id: String, status: ModerationStatus) {
         val apply = { s: ModerationStatus ->
-            if (isPhoto) app.community.moderatePhoto(id, s) else app.community.moderateComment(id, s)
+            when (kind) {
+                Kind.Photos -> app.community.moderatePhoto(id, s)
+                Kind.Comments -> app.community.moderateComment(id, s)
+                Kind.Bays -> app.community.moderateBay(id, s)
+            }
         }
         apply(status)
         scope.launch {
-            val noun = if (isPhoto) "Photo" else "Comment"
+            val noun = when (kind) { Kind.Photos -> "Photo"; Kind.Comments -> "Comment"; Kind.Bays -> "Bay" }
             val verb = if (status == ModerationStatus.Approved) "approved" else "rejected"
             if (snackbar.showSnackbar("$noun $verb", actionLabel = "Undo") == SnackbarResult.ActionPerformed) {
                 apply(ModerationStatus.Pending)
@@ -88,18 +99,18 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             item {
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     Kind.entries.forEachIndexed { i, k ->
-                        val count = if (k == Kind.Photos) photos.size else comments.size
+                        val count = when (k) { Kind.Photos -> photos.size; Kind.Comments -> comments.size; Kind.Bays -> baySubmissions.size }
                         SegmentedButton(
                             selected = kind == k,
                             onClick = { kind = k },
                             shape = SegmentedButtonDefaults.itemShape(i, Kind.entries.size),
-                            label = { Text("${k.label} ($count)") },
+                            label = { Text("${k.label} ($count)", maxLines = 1) },
                         )
                     }
                 }
             }
-            val isPhoto = kind == Kind.Photos
-            if ((isPhoto && photos.isEmpty()) || (!isPhoto && comments.isEmpty())) {
+            val empty = when (kind) { Kind.Photos -> photos.isEmpty(); Kind.Comments -> comments.isEmpty(); Kind.Bays -> baySubmissions.isEmpty() }
+            if (empty) {
                 item {
                     Column(
                         Modifier.fillMaxWidth().padding(vertical = 64.dp),
@@ -116,26 +127,51 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                     }
                 }
             }
-            if (isPhoto) {
+            if (kind == Kind.Photos) {
                 items(photos, key = { it.id }) { p ->
                     ReviewCard(
                         author = p.author, date = dateFormat.format(Date(p.createdAt)), bayName = p.bayName,
                         onOpenBay = { onOpenBay(p.bayId) },
                         body = p.caption.ifEmpty { "No caption" },
                         imagePath = p.path,
-                        onApprove = { decide(true, p.id, ModerationStatus.Approved) },
-                        onReject = { decide(true, p.id, ModerationStatus.Rejected) },
+                        onApprove = { decide(Kind.Photos, p.id, ModerationStatus.Approved) },
+                        onReject = { decide(Kind.Photos, p.id, ModerationStatus.Rejected) },
                     )
                 }
-            } else {
+            } else if (kind == Kind.Comments) {
                 items(comments, key = { it.id }) { c ->
                     ReviewCard(
                         author = c.author, date = dateFormat.format(Date(c.createdAt)), bayName = c.bayName,
                         onOpenBay = { onOpenBay(c.bayId) },
                         body = c.text,
                         imagePath = null,
-                        onApprove = { decide(false, c.id, ModerationStatus.Approved) },
-                        onReject = { decide(false, c.id, ModerationStatus.Rejected) },
+                        onApprove = { decide(Kind.Comments, c.id, ModerationStatus.Approved) },
+                        onReject = { decide(Kind.Comments, c.id, ModerationStatus.Rejected) },
+                    )
+                }
+            } else {
+                items(baySubmissions, key = { it.id }) { b ->
+                    val original = b.editOf?.let { allBays[it] }
+                    val facts = listOfNotNull(
+                        b.name.takeIf { it.isNotBlank() }?.let { "Name: $it" },
+                        "Price: ${b.fee.label}",
+                        b.capacity?.let { "Spaces: $it" },
+                        b.covered?.let { "Covered: ${if (it) "yes" else "no"}" },
+                        b.notes.takeIf { it.isNotBlank() }?.let { "Notes: $it" },
+                    )
+                    ReviewCard(
+                        author = b.author, date = dateFormat.format(Date(b.createdAt)),
+                        bayName = if (b.editOf != null) "Edit: ${original?.name ?: "bay"}" else "New bay",
+                        onOpenBay = {
+                            if (b.editOf != null) onOpenBay(b.editOf)
+                            else context.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse("geo:${b.lat},${b.lon}?q=${b.lat},${b.lon}(New bay)")),
+                            )
+                        },
+                        body = facts.joinToString("\n"),
+                        imagePath = null,
+                        onApprove = { decide(Kind.Bays, b.id, ModerationStatus.Approved) },
+                        onReject = { decide(Kind.Bays, b.id, ModerationStatus.Rejected) },
                     )
                 }
             }

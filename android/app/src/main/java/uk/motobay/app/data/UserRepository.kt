@@ -23,6 +23,8 @@ data class Settings(
     val moderator: Boolean = false,
     /** Last map position, so the app reopens where the rider left it. */
     val lastMap: CameraSnapshot? = null,
+    /** Places picked from search, newest first. */
+    val recentPlaces: List<RecentPlace> = emptyList(),
 ) {
     companion object {
         const val DEFAULT_SOURCE_COLOR = 0xFF0B6E99
@@ -32,6 +34,9 @@ data class Settings(
 
 @Serializable
 data class CameraSnapshot(val lat: Double, val lon: Double, val zoom: Double)
+
+@Serializable
+data class RecentPlace(val title: String, val subtitle: String, val lat: Double, val lon: Double)
 
 /** Saved bays and app settings, stored on the device. */
 class UserRepository(dir: File, scope: CoroutineScope) {
@@ -49,7 +54,16 @@ class UserRepository(dir: File, scope: CoroutineScope) {
 
     fun updateSettings(transform: (Settings) -> Settings) = settingsStore.update(transform)
 
+    fun addRecentPlace(place: RecentPlace) = settingsStore.update { st ->
+        val rest = st.recentPlaces.filterNot { it.title == place.title && it.subtitle == place.subtitle }
+        st.copy(recentPlaces = (listOf(place) + rest).take(MAX_RECENTS))
+    }
+
+    fun clearRecentPlaces() = settingsStore.update { it.copy(recentPlaces = emptyList()) }
+
     fun toggleFavourite(bay: Bay) = favouritesStore.update { f ->
         if (bay.id in f) f - bay.id else f + (bay.id to bay)
     }
 }
+
+private const val MAX_RECENTS = 8

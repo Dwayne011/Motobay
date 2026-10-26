@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -105,6 +106,38 @@ class ScreenshotTest {
         }
         compose.waitForIdle()
         shot("phone-search-camden")
+    }
+
+    /** Large text (like the tester's phone) must not push the filters under the search bar. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_explore_large_text_dark() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        setApp(dark = true)
+        shot("phone-explore-large-text-dark")
+        val bar = compose.onNodeWithText("Search a town, street or postcode").fetchSemanticsNode().boundsInRoot
+        val chip = compose.onNodeWithText("Covered").fetchSemanticsNode().boundsInRoot
+        assertTrue("filters overlap the search bar", chip.top >= bar.bottom)
+    }
+
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_search_empty_state_and_add_bay() {
+        // The map is a placeholder in tests, so give it a position to add the bay at.
+        app.user.updateSettings { it.copy(lastMap = uk.motobay.app.data.CameraSnapshot(51.5277, -0.0815, 16.0)) }
+        app.user.addRecentPlace(uk.motobay.app.data.RecentPlace("Hoxton Square", "London", 51.5277, -0.0815))
+        setApp(dark = true)
+        compose.onNodeWithText("Search a town, street or postcode").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Hoxton Square").assertExists()
+        shot("phone-dark-search-recent")
+        // The "Saved" chip (the navigation bar also has a "Saved" tab).
+        compose.onAllNodesWithText("Saved")[0].performClick()
+        compose.onNodeWithText("Sample bay 1").assertExists()
+        compose.onNodeWithContentDescription("Close search").performClick()
+        compose.onNodeWithContentDescription("Add a bay").performClick()
+        compose.onNodeWithText("Next").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Free").assertExists()
+        shot("phone-dark-add-bay-form")
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
