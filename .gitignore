@@ -18,3 +18,7 @@ ios/*.xcodeproj/project.xcworkspace/xcuserdata/
 # Build outputs copied out for sharing
 *.apk
 *.aab
+
+# Python
+__pycache__/
+*.pyc

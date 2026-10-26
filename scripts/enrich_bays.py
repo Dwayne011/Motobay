@@ -10,6 +10,7 @@ so the weekly job only looks up bays that are new or have moved.
 Usage: python3 scripts/enrich_bays.py data/uk-bays.json [data/geocode-cache.json]
 """
 import json
+import re
 import sys
 import time
 import urllib.parse
@@ -59,10 +60,42 @@ def lookup(lat, lon):
     return None
 
 
+LONDON_BOROUGH = re.compile(r"^(?:London Borough of|Royal Borough of|City of) (.+)$")
+LONDON_POSTCODE = re.compile(r"^(?:E|EC|N|NW|SE|SW|W|WC)\d")
+
+
+def tidy_place(place):
+    """Normalises London places: "London Borough of Lambeth" becomes the area
+    "Lambeth" in the city "London", and the town is dropped when it just repeats
+    the area. Applied after the cache, so old entries are tidied too."""
+    place = dict(place)
+    london = False
+    m = LONDON_BOROUGH.match(place.get("area") or "")
+    if m:
+        london = True
+        place["area"] = m.group(1)
+    if LONDON_BOROUGH.match(place.get("city") or ""):
+        london = True
+        place["city"] = "London"
+    if LONDON_POSTCODE.match(place.get("postcode") or ""):
+        london = True
+    if london and not place.get("city"):
+        place["city"] = "London"
+    if place.get("city") and place["city"] == place.get("area"):
+        del place["city"]
+    return place
+
+
 def apply(bay, place):
-    """Merges a geocoded place into a bay, never overwriting what OSM says."""
-    for field in ("street", "area", "postcode", "city"):
-        if place.get(field) and not bay.get(field):
+    """Merges a geocoded place into a bay. The street never overrides what OSM
+    says; area, town and postcode only ever come from geocoding, so they are
+    refreshed every run."""
+    place = tidy_place(place)
+    if place.get("street") and not bay.get("street"):
+        bay["street"] = place["street"]
+    for field in ("area", "city", "postcode"):
+        bay.pop(field, None)
+        if place.get(field):
             bay[field] = place[field]
     return bay
 
