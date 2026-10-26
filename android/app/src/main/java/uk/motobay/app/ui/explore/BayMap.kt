@@ -60,6 +60,7 @@ import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.Point
+import uk.motobay.app.BuildConfig
 import uk.motobay.app.R
 import uk.motobay.app.data.BBox
 import uk.motobay.app.data.Bay
@@ -98,9 +99,15 @@ private const val SELECTED_LABEL = "selected-label"
 private const val USER_SOURCE = "user"
 private const val USER_LAYER = "user-dot"
 
-/** OpenFreeMap vector styles: free, no API key, OpenStreetMap data. */
+/**
+ * Map styles (OpenStreetMap data, no API key). Light uses OpenFreeMap's
+ * Liberty; dark uses our Graphite style, a lightened copy of their dark style.
+ */
 private fun styleUrl(dark: Boolean) =
-    if (dark) "https://tiles.openfreemap.org/styles/dark" else "https://tiles.openfreemap.org/styles/liberty"
+    if (dark) BuildConfig.DARK_MAP_STYLE_URL else "https://tiles.openfreemap.org/styles/liberty"
+
+/** Used if the Graphite style can't be fetched. */
+private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/dark"
 
 private const val MOTORCYCLE_ICON = "motorcycle"
 
@@ -139,6 +146,7 @@ fun BayMap(
     val latestBayClick by rememberUpdatedState(onBayClick)
     val latestViewport by rememberUpdatedState(onViewportChange)
     val latestLongPress by rememberUpdatedState(onLongPress)
+    val latestDark by rememberUpdatedState(dark)
 
     DisposableEffect(lifecycle, mapView) {
         val observer = LifecycleEventObserver { _, event ->
@@ -191,6 +199,14 @@ fun BayMap(
                     hit.getStringProperty("id")?.let(latestBayClick)
                 }
                 true
+            }
+            // If the Graphite style can't be fetched, fall back to OpenFreeMap's dark style once.
+            var triedFallback = false
+            mapView.addOnDidFailLoadingMapListener { _: String ->
+                if (latestDark && !triedFallback) {
+                    triedFallback = true
+                    m.setStyle(Style.Builder().fromUri(FALLBACK_DARK_STYLE))
+                }
             }
             m.addOnMapLongClickListener { point ->
                 latestLongPress(LatLon(point.latitude, point.longitude))

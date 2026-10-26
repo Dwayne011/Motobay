@@ -14,12 +14,14 @@ android {
         applicationId = "uk.motobays.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.4.0"
         val sampleData = (project.findProperty("motobay.sampleData") as String?)?.toBoolean() ?: false
         buildConfigField("boolean", "SAMPLE_DATA", sampleData.toString())
         // Built weekly from OpenStreetMap by .github/workflows/update-bay-data.yml.
         buildConfigField("String", "BAY_DATA_URL", "\"https://raw.githubusercontent.com/Dwayne011/Motobay/main/data/uk-bays.json\"")
+        // Dark map style, built by scripts/build_map_style.py from OpenFreeMap's dark style.
+        buildConfigField("String", "DARK_MAP_STYLE_URL", "\"https://raw.githubusercontent.com/Dwayne011/Motobay/main/data/map/graphite.json\"")
     }
 
     buildTypes {
