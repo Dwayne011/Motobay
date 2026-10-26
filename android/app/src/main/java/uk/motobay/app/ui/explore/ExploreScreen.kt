@@ -102,10 +102,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.motobay.app.data.Bay
@@ -734,57 +734,73 @@ private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modi
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onCovered: () -> Unit) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        itemVerticalAlignment = Alignment.CenterVertically,
-    ) {
-        // Fills the width; labels shrink a little at large text sizes rather than clipping.
-        Surface(
-            shape = MaterialTheme.shapes.extraLarge,
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.fillMaxWidth(),
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // One text size for every filter label: the largest (up to the M3 label size) at
+        // which the longest label still fits its segment at the current text scale.
+        val measurer = rememberTextMeasurer()
+        val base = MaterialTheme.typography.labelLarge
+        val density = LocalDensity.current
+        val segmentWidth = maxWidth / PriceFilter.entries.size
+        val labelSpace = with(density) { (segmentWidth - SEGMENT_PADDING - SEGMENT_ICON_SPACE).toPx() }
+        val fontSize = remember(labelSpace, density.fontScale, density.density) {
+            (14 downTo 9).map { it.sp }.firstOrNull { size ->
+                PriceFilter.entries.all { p ->
+                    measurer.measure(p.label, base.copy(fontSize = size), maxLines = 1, softWrap = false).size.width <= labelSpace
+                }
+            } ?: 9.sp
+        }
+        val labelStyle = base.copy(fontSize = fontSize)
+
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
         ) {
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                PriceFilter.entries.forEachIndexed { i, p ->
-                    SegmentedButton(
-                        selected = filters.price == p,
-                        onClick = { onPrice(p) },
-                        shape = SegmentedButtonDefaults.itemShape(i, PriceFilter.entries.size),
-                        modifier = Modifier.weight(1f),
-                        label = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                // Dot in the pin colour, so the bar doubles as the map legend.
-                                val dot = p.fee?.let { pinColors(it).first }
-                                if (dot != null && filters.price != p) {
-                                    Box(Modifier.size(10.dp).background(dot, CircleShape))
-                                    Spacer(Modifier.width(6.dp))
+            Surface(
+                shape = MaterialTheme.shapes.extraLarge,
+                color = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                    PriceFilter.entries.forEachIndexed { i, p ->
+                        SegmentedButton(
+                            selected = filters.price == p,
+                            onClick = { onPrice(p) },
+                            shape = SegmentedButtonDefaults.itemShape(i, PriceFilter.entries.size),
+                            modifier = Modifier.weight(1f),
+                            label = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    // Dot in the pin colour, so the bar doubles as the map legend.
+                                    val dot = p.fee?.let { pinColors(it).first }
+                                    if (dot != null && filters.price != p) {
+                                        Box(Modifier.size(10.dp).background(dot, CircleShape))
+                                        Spacer(Modifier.width(6.dp))
+                                    }
+                                    Text(p.label, style = labelStyle, maxLines = 1, softWrap = false)
                                 }
-                                Text(
-                                    p.label,
-                                    maxLines = 1,
-                                    softWrap = false,
-                                    autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 14.sp, stepSize = 1.sp),
-                                )
-                            }
-                        },
-                    )
+                            },
+                        )
+                    }
                 }
             }
+            FilterChip(
+                selected = filters.coveredOnly,
+                onClick = onCovered,
+                label = { Text("Covered", style = labelStyle) },
+                leadingIcon = if (filters.coveredOnly) {
+                    { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize)) }
+                } else {
+                    null
+                },
+                colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
+            )
         }
-        FilterChip(
-            selected = filters.coveredOnly,
-            onClick = onCovered,
-            label = { Text("Covered") },
-            leadingIcon = if (filters.coveredOnly) {
-                { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize)) }
-            } else {
-                null
-            },
-            colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
-        )
     }
 }
+
+/** Horizontal padding inside a segment, and the room its check icon or legend dot takes. */
+private val SEGMENT_PADDING = 24.dp
+private val SEGMENT_ICON_SPACE = 26.dp
 
 @Composable
 private fun Hint(text: String, modifier: Modifier = Modifier) {
