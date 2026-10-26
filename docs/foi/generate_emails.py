@@ -23,42 +23,36 @@ BODY = BODY.split("\n", 1)[1].strip()
 FOLLOW_UP_COORDS = """Dear Information Officer,
 
 Earlier in 2026, in response to a Freedom of Information request, the council
-released its list of designated motorcycle parking bays by street name, but
-without coordinates. Under the Freedom of Information Act 2000 and the
-Environmental Information Regulations 2004, please supply the council's current
-list of designated motorcycle parking bays with the coordinates of each bay
-(WGS84 latitude/longitude or British National Grid), as CSV or GeoJSON.
+released its list of designated motorcycle parking bays by street name only.
+Under the Freedom of Information Act 2000, please send the current list with
+the coordinates of each bay, as CSV or GeoJSON, released under the Open
+Government Licence v3.0.
 
-Point locations of council-designated bays are the council's own records, not
-Ordnance Survey mapping, and the Public Sector Geospatial Agreement lets
-councils release derived point data under the Open Government Licence v3.0.
-Please release them under that licence and confirm this in your reply. If the
-council still considers the coordinates exempt, please say which exemption
-applies and carry out the public interest test.
+Bay locations are the council's own records rather than Ordnance Survey
+mapping, and the Public Sector Geospatial Agreement allows councils to release
+such point data under the OGL. If you still consider the coordinates exempt,
+please say which exemption applies.
 
-The data will be published in MotoBays, a free app helping riders find legal
-motorcycle parking, and contributed to OpenStreetMap.
+The data will be published in MotoBays, a free app that helps riders find
+legal motorcycle parking.
 
 Yours faithfully,
 
 {name}
-{address}
-MotoBays, https://github.com/Dwayne011/Motobay"""
+{address}"""
 
 UPDATE_REQUEST = """Dear Information Officer,
 
-The council already publishes its designated motorcycle parking bays as open
-data, for which many thanks. Under the Freedom of Information Act 2000, please
-send me the current fee status for each bay (free, paid or permit only), the
-tariff and payment method where paid, and any time restrictions, as CSV or
-XLSX, since these changed after the published extract. Please confirm the data
-is released under the Open Government Licence v3.0.
+The council already publishes its motorcycle parking bays as open data, for
+which many thanks. Under the Freedom of Information Act 2000, please send the
+current fee status for each bay (free, paid or permit-only), the tariff where
+paid, and any time restrictions, as CSV or XLSX under the Open Government
+Licence v3.0, since these changed after the published extract.
 
 Yours faithfully,
 
 {name}
-{address}
-MotoBays, https://github.com/Dwayne011/Motobay"""
+{address}"""
 
 
 def main():
@@ -76,10 +70,10 @@ def main():
         status = row["data_status"]
         if status.startswith("partly supplied"):
             body = FOLLOW_UP_COORDS
-            subject = "FOI request: coordinates for the motorcycle bay list supplied in 2026"
+            subject = "FOI request: motorcycle parking bay coordinates"
         elif council.startswith("London Borough of Camden"):
             body = UPDATE_REQUEST
-            subject = "FOI request: current fees for designated motorcycle parking bays"
+            subject = "FOI request: current motorcycle bay fees"
         elif status.startswith("already supplied"):
             continue  # RBKC: nothing to ask for yet
         else:

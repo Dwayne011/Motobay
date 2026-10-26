@@ -1,61 +1,37 @@
 # FOI request template: motorcycle parking bays
 
-Fill in the parts in `{curly braces}`. Keep it short: councils answer narrow,
-clearly scoped requests fastest. The wording follows the request that four
-London boroughs (Camden, Lambeth, Tower Hamlets, RBKC) answered in 2026, with
-two additions: a request for the data's licence to be confirmed in writing, and
-a note that an Environmental Information Regulations (EIR) request is being
-made at the same time, which some councils prefer for highways data.
+Fill in the parts in `{curly braces}`. It is deliberately short: councils
+answer narrow, clearly scoped requests fastest. It asks for the same core
+fields four London boroughs supplied in 2026, plus written confirmation of the
+Open Government Licence so the data can be re-used.
 
 ---
 
-**Subject:** Freedom of Information request: designated motorcycle parking bays
+**Subject:** Freedom of Information request: motorcycle parking bays
 
 Dear Information Officer,
 
-I am writing to make a request under the Freedom of Information Act 2000 and,
-to the extent it applies, the Environmental Information Regulations 2004.
+Under the Freedom of Information Act 2000 (and the Environmental Information
+Regulations 2004, if you consider them to apply), please send me the council's
+current list of designated motorcycle parking bays in {Council name}.
 
-Please send me the council's current list of designated motorcycle parking
-bays (solo motorcycle bays and bays shared with mopeds, scooters or other
-vehicles) within {Council name}. For each bay, where the council holds it,
-please include:
+For each bay, please include whatever the council holds of:
 
-1. Location: coordinates (WGS84 latitude/longitude or British National Grid
-   easting/northing) and the street or site name
-2. Postcode
-3. Capacity (number of motorcycles)
-4. Bay type (solo motorcycle only, shared with mopeds/scooters, or shared
-   with another vehicle type)
-5. Restrictions (times of day, days of the week, or permit requirements)
-6. Fee status (free, paid or permit only) and, if paid, the tariff and
-   payment method
-7. Whether the bay is covered or has security anchors, if recorded
-8. The date the record was last updated
+- location (coordinates, plus street name and postcode)
+- number of spaces
+- whether it is free, paid or permit-only, and any time restrictions
 
-I am only asking for information the council already holds; I do not need it
-to be created or checked. Please supply it as data rather than a document:
-CSV (UTF-8) is ideal, otherwise GeoJSON, Excel (XLSX) or a zipped Shapefile
-with its .prj file. Please do not send PDFs or scanned images.
+Please send it as data (CSV, XLSX or GeoJSON) rather than a PDF, and confirm
+that it is released under the Open Government Licence v3.0. If any part would
+exceed the cost limit, please send the rest and tell me which part.
 
-Please release the data under the Open Government Licence v3.0, and confirm
-in your reply that it may be re-used under that licence. The purpose is to
-publish bay locations in MotoBays, a free app that helps riders find legal
-motorcycle parking, and to contribute them to OpenStreetMap. Accurate bay
-data reduces pavement parking and penalty notices, so I hope the council will
-see a shared benefit.
-
-If any part of this request would exceed the cost limit, please supply the
-parts that can be provided within it and tell me which part is the problem,
-so I can narrow the request.
-
-Please acknowledge receipt. I understand you have 20 working days to respond.
+The data will be published in MotoBays, a free app that helps riders find
+legal motorcycle parking.
 
 Yours faithfully,
 
 {Your full name}
 {Your postal or email address for correspondence}
-MotoBays, https://github.com/Dwayne011/Motobay
 
 ---
 
