@@ -72,6 +72,7 @@ import uk.motobay.app.data.Bay
 import uk.motobay.app.data.CameraSnapshot
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
+import kotlin.math.roundToInt
 
 /** Camera moves requested by the screen (search result, my location, opening a bay). */
 sealed interface MapCommand {
@@ -117,8 +118,9 @@ private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/da
 
 private const val MOTORCYCLE_ICON = "motorcycle"
 private const val PIN_ICON = "pin"
-/** Pin image height in px at scale 1; the icon is drawn with its tip on the coordinate. */
+/** Pin image height in dp at icon-size 1; the icon is drawn with its tip on the coordinate. */
 private const val PIN_PX = 72
+private const val GLYPH_PX = 48
 /** The pin head centre sits 15/24 of the shape's height above its tip. */
 private const val PIN_HEAD_FROM_TIP = 15f / 24f
 
@@ -248,12 +250,14 @@ fun BayMap(
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
             // Tintable (SDF) images: the teardrop pin and the motorcycle glyph on it.
-            ContextCompat.getDrawable(context, R.drawable.ic_motorcycle)?.let {
-                loaded.addImage(MOTORCYCLE_ICON, it.toBitmap(48, 48), true)
-            }
-            ContextCompat.getDrawable(context, R.drawable.ic_pin)?.let {
-                loaded.addImage(PIN_ICON, it.toBitmap(PIN_PX, PIN_PX), true)
-            }
+            // MapLibre reads the bitmap's density as its pixel ratio, so render each at
+            // density × logical size to get a sharp image that measures PIN_PX in dp.
+            val density = context.resources.displayMetrics.density
+            fun image(id: Int, logicalPx: Int) = ContextCompat.getDrawable(context, id)!!
+                .toBitmap((logicalPx * density).roundToInt(), (logicalPx * density).roundToInt())
+                .apply { this.density = context.resources.displayMetrics.densityDpi }
+            loaded.addImage(MOTORCYCLE_ICON, image(R.drawable.ic_motorcycle, GLYPH_PX), true)
+            loaded.addImage(PIN_ICON, image(R.drawable.ic_pin, PIN_PX), true)
 
             loaded.addLayer(
                 CircleLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(

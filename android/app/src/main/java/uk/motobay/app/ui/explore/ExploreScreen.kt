@@ -177,9 +177,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val scheme = MaterialTheme.colorScheme
     val ext = MotoBayColors.extended
     val mapColors = PinColors(
-        free = ext.success, onFree = ext.onSuccess,
-        paid = ext.warning, onPaid = ext.onWarning,
-        unknown = scheme.primary, onUnknown = scheme.onPrimary,
+        free = ext.pinFree, onFree = ext.onPinFree,
+        paid = ext.pinPaid, onPaid = ext.onPinPaid,
+        unknown = ext.pinUnknown, onUnknown = ext.onPinUnknown,
         selectedRing = scheme.onSurface,
         cluster = scheme.primaryContainer, onCluster = scheme.onPrimaryContainer,
         stroke = scheme.surface, user = scheme.tertiary,
