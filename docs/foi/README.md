@@ -67,6 +67,12 @@ council in Scotland, Wales and Northern Ireland. That's roughly 150 bodies
 rather than 300+, because English district councils don't manage on-street
 parking. Add rows to `councils.csv` and re-run the script.
 
+## Status
+
+- **2026-10-26:** batch request sent to the London councils via WhatDoTheyKnow Pro:
+  https://www.whatdotheyknow.com/info_request_batch/8600
+  Statutory deadline: **23 November 2026** (20 working days).
+
 ## Tracking
 
 Fill in `sent_on`, `reply_due` (sent date + 20 working days) and `outcome` in
