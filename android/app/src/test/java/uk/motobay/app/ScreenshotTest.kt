@@ -210,6 +210,12 @@ class ScreenshotTest {
         compose.setContent { DetailHost() }
         compose.onNodeWithText("Directions").assertExists()
         shot("phone-bay-detail")
+        // Signed in as the moderator, so approved comments can be deleted from here too.
+        compose.onNodeWithText("Usually has space before 9am.").assertExists()
+        compose.onNodeWithContentDescription("Delete comment").performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(app.community.data.value.comments.none { it.text == "Usually has space before 9am." })
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")

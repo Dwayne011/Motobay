@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -74,6 +75,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import uk.motobay.app.data.Bay
+import uk.motobay.app.data.BayComment
+import uk.motobay.app.data.BayPhoto
 import uk.motobay.app.data.BayLoadState
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
@@ -117,7 +120,7 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
         Box(Modifier.padding(padding).fillMaxSize()) {
             val bay = allBays[id]
             when {
-                bay != null -> BayDetailContent(bay)
+                bay != null -> BayDetailContent(bay, onDeleted = onBack)
                 loadState == BayLoadState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
                 else -> Text(
                     "This bay couldn't be found. It may have been removed from the map.",
@@ -129,13 +132,23 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
     }
 }
 
-/** Everything about one bay: facts, actions, community photos and comments. */
+/**
+ * Everything about one bay: facts, actions, community photos and comments.
+ * Moderators can also delete rider content from here, in case something was
+ * approved by mistake; [onDeleted] runs after the bay itself is deleted.
+ */
 @Composable
-fun BayDetailContent(bay: Bay) {
+fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
     val app = LocalApp.current
     val context = LocalContext.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    val moderator = account?.isModerator == true
+    val community by app.community.data.collectAsStateWithLifecycle()
+    // Approved corrections riders made to this bay, newest first.
+    val corrections = community.bays.filter { it.editOf == bay.id && it.status == ModerationStatus.Approved }
+    var confirm by remember { mutableStateOf<ModeratorDelete?>(null) }
     val favourites by app.user.favourites.collectAsStateWithLifecycle()
     val position by app.location.position.collectAsStateWithLifecycle()
     val saved = bay.id in favourites
@@ -196,9 +209,9 @@ fun BayDetailContent(bay: Bay) {
         }
 
         HorizontalDivider()
-        PhotosSection(bay)
+        PhotosSection(bay, moderator)
         HorizontalDivider()
-        CommentsSection(bay)
+        CommentsSection(bay, moderator)
         HorizontalDivider()
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -216,6 +229,27 @@ fun BayDetailContent(bay: Bay) {
                 Icon(Icons.Filled.Edit, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
                 Text("Suggest an edit", Modifier.padding(start = ButtonDefaults.IconSpacing))
             }
+            if (moderator && bay.isRiderAdded) {
+                OutlinedButton(
+                    onClick = { confirm = ModeratorDelete.Bay },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                ) {
+                    Icon(Icons.Outlined.Delete, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
+                    Text("Delete this bay", Modifier.padding(start = ButtonDefaults.IconSpacing))
+                }
+            }
+            if (moderator && corrections.isNotEmpty()) {
+                OutlinedButton(
+                    onClick = { confirm = ModeratorDelete.Corrections },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                ) {
+                    Icon(Icons.Outlined.Delete, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
+                    Text(
+                        if (corrections.size == 1) "Remove the rider correction" else "Remove ${corrections.size} rider corrections",
+                        Modifier.padding(start = ButtonDefaults.IconSpacing),
+                    )
+                }
+            }
             if (!bay.isSample && !bay.isRiderAdded) {
                 TextButton(onClick = {
                     val (type, num) = bay.id.split("/")
@@ -226,6 +260,40 @@ fun BayDetailContent(bay: Bay) {
                 }
             }
         }
+    }
+
+    confirm?.let { what ->
+        val (title, text) = when (what) {
+            ModeratorDelete.Bay -> "Delete this bay?" to "It will disappear from the map for everyone. This can't be undone."
+            ModeratorDelete.Corrections -> "Remove rider corrections?" to "The bay goes back to its OpenStreetMap details. This can't be undone."
+        }
+        AlertDialog(
+            onDismissRequest = { confirm = null },
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirm = null
+                    scope.launch {
+                        val ok = runCatching {
+                            when (what) {
+                                ModeratorDelete.Bay -> app.community.deleteBay(bay.id.removePrefix("rider/"))
+                                ModeratorDelete.Corrections -> corrections.forEach { app.community.deleteBay(it.id) }
+                            }
+                        }.isSuccess
+                        if (ok && what == ModeratorDelete.Bay) onDeleted?.invoke()
+                        snackbar.showSnackbar(
+                            when {
+                                !ok -> "Couldn't delete that. Check you're online."
+                                what == ModeratorDelete.Bay -> "Bay deleted"
+                                else -> "Corrections removed"
+                            },
+                        )
+                    }
+                }) { Text(if (what == ModeratorDelete.Bay) "Delete" else "Remove") }
+            },
+            dismissButton = { TextButton(onClick = { confirm = null }) { Text("Cancel") } },
+        )
     }
 
     if (editing) {
@@ -246,9 +314,11 @@ fun BayDetailContent(bay: Bay) {
     }
 }
 
+private enum class ModeratorDelete { Bay, Corrections }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PhotosSection(bay: Bay) {
+private fun PhotosSection(bay: Bay, moderator: Boolean) {
     val app = LocalApp.current
     val context = LocalContext.current
     val snackbar = LocalSnackbar.current
@@ -262,7 +332,8 @@ private fun PhotosSection(bay: Bay) {
     var chooser by remember { mutableStateOf(false) }
     var draft by rememberSaveable { mutableStateOf<Uri?>(null) }
     var cameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var viewing by remember { mutableStateOf<String?>(null) }
+    var viewing by remember { mutableStateOf<BayPhoto?>(null) }
+    var deleting by remember { mutableStateOf<BayPhoto?>(null) }
 
     // Android photo picker: no storage permission needed.
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri -> if (uri != null) draft = uri }
@@ -285,7 +356,7 @@ private fun PhotosSection(bay: Bay) {
                         model = p.url,
                         contentDescription = p.caption.ifEmpty { "Photo of ${bay.name} by ${p.author}" },
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(120.dp).clip(MaterialTheme.shapes.small).clickable { viewing = p.url },
+                        modifier = Modifier.size(120.dp).clip(MaterialTheme.shapes.small).clickable { viewing = p },
                     )
                 }
             }
@@ -366,17 +437,45 @@ private fun PhotosSection(bay: Bay) {
         )
     }
 
-    viewing?.let { url ->
+    viewing?.let { photo ->
         AlertDialog(
             onDismissRequest = { viewing = null },
-            text = { AsyncImage(model = url, contentDescription = null, modifier = Modifier.fillMaxWidth()) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AsyncImage(model = photo.url, contentDescription = null, modifier = Modifier.fillMaxWidth())
+                    Text("${photo.author} · ${photo.caption.ifEmpty { "No caption" }}", style = MaterialTheme.typography.bodySmall)
+                }
+            },
             confirmButton = { TextButton(onClick = { viewing = null }) { Text("Close") } },
+            dismissButton = if (moderator) ({
+                TextButton(onClick = { viewing = null; deleting = photo }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            }) else null,
+        )
+    }
+
+    deleting?.let { photo ->
+        AlertDialog(
+            onDismissRequest = { deleting = null },
+            title = { Text("Delete this photo?") },
+            text = { Text("It will be removed for everyone. This can't be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    deleting = null
+                    scope.launch {
+                        val ok = runCatching { app.community.deletePhoto(photo.id) }.isSuccess
+                        snackbar.showSnackbar(if (ok) "Photo deleted" else "Couldn't delete that photo. Check you're online.")
+                    }
+                }) { Text("Delete") }
+            },
+            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
         )
     }
 }
 
 @Composable
-private fun CommentsSection(bay: Bay) {
+private fun CommentsSection(bay: Bay, moderator: Boolean) {
     val app = LocalApp.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
@@ -386,6 +485,7 @@ private fun CommentsSection(bay: Bay) {
     val approved = community.comments.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved }
     val pending = community.comments.count { it.bayId == bay.id && it.status == ModerationStatus.Pending }
     var text by rememberSaveable { mutableStateOf("") }
+    var deleting by remember { mutableStateOf<BayComment?>(null) }
     val dateFormat = remember { DateFormat.getDateInstance(DateFormat.MEDIUM) }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -408,6 +508,11 @@ private fun CommentsSection(bay: Bay) {
                         }
                     }
                 },
+                trailingContent = if (moderator) ({
+                    IconButton(onClick = { deleting = c }) {
+                        Icon(Icons.Outlined.Delete, contentDescription = "Delete comment", tint = MaterialTheme.colorScheme.error)
+                    }
+                }) else null,
             )
         }
         if (pending > 0) {
@@ -439,5 +544,23 @@ private fun CommentsSection(bay: Bay) {
                 }
             }) { Text("Post") }
         }
+    }
+
+    deleting?.let { comment ->
+        AlertDialog(
+            onDismissRequest = { deleting = null },
+            title = { Text("Delete this comment?") },
+            text = { Text("\"${comment.text.take(80)}\" will be removed for everyone. This can't be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    deleting = null
+                    scope.launch {
+                        val ok = runCatching { app.community.deleteComment(comment.id) }.isSuccess
+                        snackbar.showSnackbar(if (ok) "Comment deleted" else "Couldn't delete that comment. Check you're online.")
+                    }
+                }) { Text("Delete") }
+            },
+            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
+        )
     }
 }
