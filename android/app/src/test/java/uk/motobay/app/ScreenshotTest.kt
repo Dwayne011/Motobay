@@ -31,6 +31,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import uk.motobay.app.data.BaySubmission
+import uk.motobay.app.data.Fee
 import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.SampleBays
@@ -102,6 +104,20 @@ class ScreenshotTest {
         assertTrue(app.community.data.value.comments.none { it.text == "Pay by app only." })
         compose.onNodeWithText("Settings").performClick()
         shot("phone-settings")
+    }
+
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_review_bays_tab() {
+        runBlocking {
+            app.community.submitBay(BaySubmission("", null, 51.52, -0.13, "Behind the station", Fee.Free, 6, true, "Next to the bins", "Sam", 0, ModerationStatus.Pending))
+            app.community.submitBay(BaySubmission("", SampleBays.all[0].id, 51.5136, -0.1365, "", Fee.Paid, null, null, "", "Alex", 0, ModerationStatus.Pending))
+        }
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        compose.onNodeWithContentDescription("Bays, 2 waiting").performClick()
+        compose.onNodeWithText("New bay").assertExists()
+        compose.onNodeWithText("Edit: Sample bay 1").assertExists()
+        shot("phone-review-bays")
     }
 
     /** The tab counts must stay inside their segments at the largest common font size. */

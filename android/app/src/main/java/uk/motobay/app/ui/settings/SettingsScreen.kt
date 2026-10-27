@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.SettingsBrightness
@@ -37,11 +38,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -152,6 +157,7 @@ fun SettingsScreen() {
                     Text("Bay locations © OpenStreetMap contributors, under the Open Database Licence. Map tiles by OpenFreeMap. Place search by Nominatim.")
                 },
             )
+            CrashReportRow()
         }
     }
 }
@@ -191,4 +197,24 @@ private fun SeedSwatches(selected: Long, onSelect: (Long) -> Unit) {
             }
         }
     }
+}
+
+/** Shown only after a crash: lets the tester send the stack trace on. */
+@Composable
+private fun CrashReportRow() {
+    val app = LocalApp.current
+    val context = LocalContext.current
+    var report by remember { mutableStateOf(app.crashLog.read()) }
+    val text = report ?: return
+    ListItem(
+        headlineContent = { Text("The app crashed last time") },
+        supportingContent = { Text(text.lineSequence().drop(3).firstOrNull { it.isNotBlank() } ?: "Crash report saved") },
+        leadingContent = { Icon(Icons.Outlined.BugReport, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+        trailingContent = {
+            Row {
+                TextButton(onClick = { context.startActivity(app.crashLog.shareIntent(text)) }) { Text("Share") }
+                TextButton(onClick = { app.crashLog.clear(); report = null }) { Text("Dismiss") }
+            }
+        },
+    )
 }

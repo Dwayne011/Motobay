@@ -14,6 +14,7 @@ import uk.motobay.app.data.FirestoreCommunityRepository
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.UserRepository
 import uk.motobay.app.location.LocationProvider
+import uk.motobay.app.util.CrashLog
 
 /** Holds the app's single instances (manual dependency injection). */
 open class MotoBayApplication : Application() {
@@ -29,6 +30,8 @@ open class MotoBayApplication : Application() {
         private set
     lateinit var location: LocationProvider
         private set
+    lateinit var crashLog: CrashLog
+        private set
     /** OpenStreetMap bays plus approved rider additions and corrections. */
     lateinit var allBays: StateFlow<Map<String, Bay>>
         private set
@@ -37,6 +40,7 @@ open class MotoBayApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install() }
         bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
         auth = createAuth()
         community = createCommunity(auth)
