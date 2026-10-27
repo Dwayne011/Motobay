@@ -42,6 +42,7 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import uk.motobay.app.MotoBayApplication
 import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.ui.account.MySubmissionsScreen
 import uk.motobay.app.ui.account.SignInDialog
 import uk.motobay.app.ui.bay.BayDetailRoute
 import uk.motobay.app.ui.explore.ExploreScreen
@@ -54,6 +55,7 @@ import kotlin.reflect.KClass
 @Serializable object SavedDest
 @Serializable object ReviewDest
 @Serializable object SettingsDest
+@Serializable object MySubmissionsDest
 @Serializable data class BayDest(val id: String)
 
 val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
@@ -137,7 +139,10 @@ fun MotoBayApp(app: MotoBayApplication) {
                 }
                 composable<SavedDest> { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
                 composable<ReviewDest> { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
-                composable<SettingsDest> { SettingsScreen() }
+                composable<SettingsDest> { SettingsScreen(onOpenSubmissions = { nav.navigate(MySubmissionsDest) }) }
+                composable<MySubmissionsDest> {
+                    MySubmissionsScreen(onBack = { nav.popBackStack() }, onOpenBay = { nav.navigate(BayDest(it)) })
+                }
             }
             SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
             }

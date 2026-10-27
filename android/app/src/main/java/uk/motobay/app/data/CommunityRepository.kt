@@ -31,10 +31,10 @@ interface CommunityRepository {
     /** A new bay, or a correction when [BaySubmission.editOf] is set. Held for review like everything else. */
     suspend fun submitBay(submission: BaySubmission)
 
-    /** Admin only: approve, reject, or put back in the queue. */
-    suspend fun moderateBay(id: String, status: ModerationStatus)
-    suspend fun moderatePhoto(id: String, status: ModerationStatus)
-    suspend fun moderateComment(id: String, status: ModerationStatus)
+    /** Admin only: approve, reject (optionally saying why), or put back in the queue. */
+    suspend fun moderateBay(id: String, status: ModerationStatus, reason: String? = null)
+    suspend fun moderatePhoto(id: String, status: ModerationStatus, reason: String? = null)
+    suspend fun moderateComment(id: String, status: ModerationStatus, reason: String? = null)
 
     /** Admin only: remove for good, whatever its status. */
     suspend fun deleteBay(id: String)

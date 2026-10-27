@@ -57,14 +57,16 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
         state.update { it.copy(bays = listOf(s) + it.bays) }
     }
 
-    override suspend fun moderateBay(id: String, status: ModerationStatus) =
-        state.update { d -> d.copy(bays = d.bays.map { if (it.id == id) it.copy(status = status) else it }) }
+    private fun why(status: ModerationStatus, reason: String?) = reason?.takeIf { status == ModerationStatus.Rejected && it.isNotBlank() }
 
-    override suspend fun moderatePhoto(id: String, status: ModerationStatus) =
-        state.update { d -> d.copy(photos = d.photos.map { if (it.id == id) it.copy(status = status) else it }) }
+    override suspend fun moderateBay(id: String, status: ModerationStatus, reason: String?) =
+        state.update { d -> d.copy(bays = d.bays.map { if (it.id == id) it.copy(status = status, reason = why(status, reason)) else it }) }
 
-    override suspend fun moderateComment(id: String, status: ModerationStatus) =
-        state.update { d -> d.copy(comments = d.comments.map { if (it.id == id) it.copy(status = status) else it }) }
+    override suspend fun moderatePhoto(id: String, status: ModerationStatus, reason: String?) =
+        state.update { d -> d.copy(photos = d.photos.map { if (it.id == id) it.copy(status = status, reason = why(status, reason)) else it }) }
+
+    override suspend fun moderateComment(id: String, status: ModerationStatus, reason: String?) =
+        state.update { d -> d.copy(comments = d.comments.map { if (it.id == id) it.copy(status = status, reason = why(status, reason)) else it }) }
 
     override suspend fun deleteBay(id: String) = state.update { d -> d.copy(bays = d.bays.filterNot { it.id == id }) }
     override suspend fun deletePhoto(id: String) = state.update { d -> d.copy(photos = d.photos.filterNot { it.id == id }) }

@@ -9,6 +9,9 @@ package uk.motobay.app.data
  * of the admin address are listed.
  */
 object Moderators {
+    /** Where crash reports and questions go. */
+    const val SUPPORT_EMAIL = "dwayne.edwards89@googlemail.com"
+
     val EMAILS = setOf(
         "dwayne.edwards89@googlemail.com",
         "dwayne.edwards89@gmail.com",

@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.DarkMode
@@ -56,6 +57,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uk.motobay.app.R
+import uk.motobay.app.data.Moderators
 import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
@@ -63,7 +65,7 @@ import uk.motobay.app.ui.account.SignInButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onOpenSubmissions: () -> Unit = {}) {
     val app = LocalApp.current
     val settings by app.user.settings.collectAsStateWithLifecycle()
     val update = app.user::updateSettings
@@ -148,6 +150,12 @@ fun SettingsScreen() {
                     supportingContent = { Text(if (signedIn.isModerator) "Moderator: you can review submissions" else "Your submissions are reviewed before they're published") },
                     trailingContent = { TextButton(onClick = app.auth::signOut) { Text("Sign out") } },
                 )
+                ListItem(
+                    headlineContent = { Text("My submissions") },
+                    supportingContent = { Text("Your photos, comments and bay changes, and whether they've been approved") },
+                    trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+                    modifier = Modifier.clickable(onClick = onOpenSubmissions),
+                )
             }
 
             SectionHeader("About")
@@ -208,11 +216,16 @@ private fun CrashReportRow() {
     val text = report ?: return
     ListItem(
         headlineContent = { Text("The app crashed last time") },
+        overlineContent = { Text("Send the report to ${Moderators.SUPPORT_EMAIL}") },
         supportingContent = { Text(text.lineSequence().drop(3).firstOrNull { it.isNotBlank() } ?: "Crash report saved") },
         leadingContent = { Icon(Icons.Outlined.BugReport, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
         trailingContent = {
             Row {
-                TextButton(onClick = { context.startActivity(app.crashLog.shareIntent(text)) }) { Text("Share") }
+                TextButton(onClick = {
+                    val email = app.crashLog.emailIntent(text)
+                    if (email.resolveActivity(context.packageManager) != null) context.startActivity(email)
+                    else context.startActivity(app.crashLog.shareIntent(text))
+                }) { Text("Send") }
                 TextButton(onClick = { app.crashLog.clear(); report = null }) { Text("Dismiss") }
             }
         },

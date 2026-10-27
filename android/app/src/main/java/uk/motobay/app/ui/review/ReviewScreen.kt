@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,8 +29,11 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -48,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -85,6 +91,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     var showing by rememberSaveable { mutableStateOf(ModerationStatus.Pending) }
     var viewing by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf<Pair<Kind, String>?>(null) }
+    var rejecting by remember { mutableStateOf<Pair<Kind, String>?>(null) }
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
 
     val photos = data.photos.filter { it.status == showing }
@@ -96,17 +103,17 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
         Kind.Bays -> data.bays.count { it.status == ModerationStatus.Pending }
     }
 
-    fun decide(kind: Kind, id: String, status: ModerationStatus) {
-        suspend fun apply(s: ModerationStatus) {
+    fun decide(kind: Kind, id: String, status: ModerationStatus, reason: String? = null) {
+        suspend fun apply(s: ModerationStatus, why: String? = null) {
             when (kind) {
-                Kind.Photos -> app.community.moderatePhoto(id, s)
-                Kind.Comments -> app.community.moderateComment(id, s)
-                Kind.Bays -> app.community.moderateBay(id, s)
+                Kind.Photos -> app.community.moderatePhoto(id, s, why)
+                Kind.Comments -> app.community.moderateComment(id, s, why)
+                Kind.Bays -> app.community.moderateBay(id, s, why)
             }
         }
         val before = showing
         scope.launch {
-            if (runCatching { apply(status) }.isFailure) {
+            if (runCatching { apply(status, reason) }.isFailure) {
                 snackbar.showSnackbar("Couldn't update that ${kind.noun.lowercase()}. Check you're online.")
                 return@launch
             }
@@ -201,7 +208,8 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         imageUrl = p.url,
                         onViewImage = { viewing = p.url },
                         status = p.status,
-                        onDecide = { decide(Kind.Photos, p.id, it) },
+                        reason = p.reason,
+                        onDecide = { if (it == ModerationStatus.Rejected) rejecting = Kind.Photos to p.id else decide(Kind.Photos, p.id, it) },
                         onDelete = { confirmDelete = Kind.Photos to p.id },
                     )
                 }
@@ -216,7 +224,8 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         onOpenMap = bay?.let { { openMap(context, it.lat, it.lon, it.title) } },
                         body = c.text,
                         status = c.status,
-                        onDecide = { decide(Kind.Comments, c.id, it) },
+                        reason = c.reason,
+                        onDecide = { if (it == ModerationStatus.Rejected) rejecting = Kind.Comments to c.id else decide(Kind.Comments, c.id, it) },
                         onDelete = { confirmDelete = Kind.Comments to c.id },
                     )
                 }
@@ -243,7 +252,8 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         onOpenMap = { openMap(context, b.lat, b.lon, if (b.editOf != null) original?.title ?: "Bay" else "New bay") },
                         body = facts.joinToString("\n"),
                         status = b.status,
-                        onDecide = { decide(Kind.Bays, b.id, it) },
+                        reason = b.reason,
+                        onDecide = { if (it == ModerationStatus.Rejected) rejecting = Kind.Bays to b.id else decide(Kind.Bays, b.id, it) },
                         onDelete = { confirmDelete = Kind.Bays to b.id },
                     )
                 }
@@ -259,6 +269,14 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
         )
     }
 
+    rejecting?.let { (k, id) ->
+        RejectSheet(
+            noun = k.noun.lowercase(),
+            onDismiss = { rejecting = null },
+            onReject = { why -> rejecting = null; decide(k, id, ModerationStatus.Rejected, why) },
+        )
+    }
+
     confirmDelete?.let { (k, id) ->
         AlertDialog(
             onDismissRequest = { confirmDelete = null },
@@ -267,6 +285,38 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             confirmButton = { TextButton(onClick = { confirmDelete = null; delete(k, id) }) { Text("Delete") } },
             dismissButton = { TextButton(onClick = { confirmDelete = null }) { Text("Cancel") } },
         )
+    }
+}
+
+/** Asks why, so the rider can fix the problem and resubmit. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RejectSheet(noun: String, onDismiss: () -> Unit, onReject: (String) -> Unit) {
+    var why by rememberSaveable { mutableStateOf("") }
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+        Column(
+            Modifier.padding(horizontal = 24.dp).padding(bottom = 24.dp).navigationBarsPadding().imePadding(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text("Reject this $noun?", style = MaterialTheme.typography.headlineSmall)
+            Text(
+                "The rider will see why, so they can fix it and try again.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            OutlinedTextField(
+                value = why,
+                onValueChange = { why = it.take(300) },
+                label = { Text("Reason (optional)") },
+                supportingText = { Text("For example: number plate visible, not a motorcycle bay · ${why.length}/300") },
+                minLines = 2,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+                TextButton(onClick = onDismiss) { Text("Cancel") }
+                Button(onClick = { onReject(why.trim()) }, modifier = Modifier.testTag("reject-confirm")) { Text("Reject") }
+            }
+        }
     }
 }
 
@@ -291,6 +341,7 @@ private fun ReviewCard(
     imageUrl: String? = null,
     onViewImage: (() -> Unit)? = null,
     status: ModerationStatus,
+    reason: String? = null,
     onDecide: (ModerationStatus) -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -314,6 +365,13 @@ private fun ReviewCard(
                 }
             }
             Text(body, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+            if (status == ModerationStatus.Rejected) {
+                Text(
+                    if (reason.isNullOrBlank()) "Rejected, no reason given" else "Rejected: $reason",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
             Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 onOpenBay?.let { TextButton(onClick = it) { Text("View bay") } }
                 onOpenMap?.let { TextButton(onClick = it) { Text("Open in maps") } }

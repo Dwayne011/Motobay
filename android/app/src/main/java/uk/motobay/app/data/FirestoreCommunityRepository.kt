@@ -116,12 +116,12 @@ class FirestoreCommunityRepository(
         db.collection(BAYS).document().set(baySubmissionToMap(submission, uid, ModerationStatus.Pending)).awaitQueued()
     }
 
-    override suspend fun moderateBay(id: String, status: ModerationStatus) = moderate(BAYS, id, status)
-    override suspend fun moderatePhoto(id: String, status: ModerationStatus) = moderate(PHOTOS, id, status)
-    override suspend fun moderateComment(id: String, status: ModerationStatus) = moderate(COMMENTS, id, status)
+    override suspend fun moderateBay(id: String, status: ModerationStatus, reason: String?) = moderate(BAYS, id, status, reason)
+    override suspend fun moderatePhoto(id: String, status: ModerationStatus, reason: String?) = moderate(PHOTOS, id, status, reason)
+    override suspend fun moderateComment(id: String, status: ModerationStatus, reason: String?) = moderate(COMMENTS, id, status, reason)
 
-    private suspend fun moderate(collection: String, id: String, status: ModerationStatus) {
-        db.collection(collection).document(id).update("status", status.name).awaitQueued()
+    private suspend fun moderate(collection: String, id: String, status: ModerationStatus, reason: String?) {
+        db.collection(collection).document(id).update(decisionToMap(status, reason)).awaitQueued()
     }
 
     override suspend fun deleteBay(id: String) = db.collection(BAYS).document(id).delete().awaitQueued()

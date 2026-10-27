@@ -169,11 +169,15 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
 
         BayFacts(bay)
 
-        if (bay.fee == Fee.Unknown) {
+        val unknowns = listOfNotNull(
+            "free or paid".takeIf { bay.fee == Fee.Unknown },
+            "covered".takeIf { bay.covered == null },
+        )
+        if (unknowns.isNotEmpty()) {
             Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.medium) {
                 Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        "Do you know if this bay is free or paid?",
+                        "Do you know if this bay is ${unknowns.joinToString(", or whether it's ")}?",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )

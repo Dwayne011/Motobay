@@ -86,6 +86,8 @@ data class BayPhoto(
     val authorUid: String = "",
     /** Where the file lives in Firebase Storage, so the admin can delete it with the document. */
     val storagePath: String = "",
+    /** Why the admin rejected it, shown to the rider so they can fix and resubmit. */
+    val reason: String? = null,
 )
 
 @Serializable
@@ -98,6 +100,7 @@ data class BayComment(
     val createdAt: Long,
     val status: ModerationStatus,
     val authorUid: String = "",
+    val reason: String? = null,
 )
 
 /**
@@ -119,4 +122,5 @@ data class BaySubmission(
     val createdAt: Long,
     val status: ModerationStatus,
     val authorUid: String = "",
+    val reason: String? = null,
 )

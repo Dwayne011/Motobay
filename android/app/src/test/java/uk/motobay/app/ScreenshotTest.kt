@@ -14,6 +14,7 @@ import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -118,6 +119,37 @@ class ScreenshotTest {
         compose.onNodeWithText("New bay").assertExists()
         compose.onNodeWithText("Edit: Sample bay 1").assertExists()
         shot("phone-review-bays")
+    }
+
+    /** A rejection with a reason reaches the rider on their My submissions page. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_reject_with_reason_shows_in_my_submissions() {
+        // A rider posts, then the admin rejects with a reason.
+        val auth = app.auth as FakeAuthRepository
+        auth.set(FakeAuthRepository.RIDER)
+        runBlocking { app.community.submitComment(SampleBays.all[0], "Cheap all day", "Rider") }
+        auth.set(FakeAuthRepository.ADMIN)
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        compose.onNodeWithContentDescription("Comments, 2 waiting").performClick()
+        compose.onNodeWithText("Cheap all day").assertExists()
+        // Newest first, so the rider's comment is the top card.
+        compose.onAllNodesWithText("Reject")[0].performClick()
+        compose.onNodeWithText("Reject this comment?").assertExists()
+        compose.onNodeWithText("Reason (optional)").performTextInput("Bay is paid after 9am")
+        compose.onNodeWithTag("reject-confirm").performClick()
+        compose.waitForIdle()
+        val comment = app.community.data.value.comments.first { it.text == "Cheap all day" }
+        assertEquals(ModerationStatus.Rejected, comment.status)
+        assertEquals("Bay is paid after 9am", comment.reason)
+
+        // The rider sees it, with the reason.
+        auth.set(FakeAuthRepository.RIDER)
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("My submissions").performClick()
+        compose.onNodeWithText("Not approved: Bay is paid after 9am").assertExists()
+        compose.onNodeWithText("Open bay and try again").assertExists()
+        shot("phone-my-submissions")
     }
 
     /** The tab counts must stay inside their segments at the largest common font size. */

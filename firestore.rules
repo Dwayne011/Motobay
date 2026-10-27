@@ -35,9 +35,12 @@ service cloud.firestore {
       return request.resource.data.status == 'Pending';
     }
 
+    // A decision may change the status and, when rejecting, add a reason the rider sees.
     function onlyStatusChanges() {
-      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && request.resource.data.status in ['Pending', 'Approved', 'Rejected'];
+      let d = request.resource.data;
+      return d.diff(resource.data).affectedKeys().hasOnly(['status', 'reason'])
+        && d.status in ['Pending', 'Approved', 'Rejected']
+        && (!('reason' in d) || (d.status == 'Rejected' && isText(d.reason, 300)));
     }
 
     function isText(field, maxLen) {

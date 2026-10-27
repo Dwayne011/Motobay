@@ -25,6 +25,7 @@ internal fun photoFrom(id: String, m: Map<String, Any?>): BayPhoto? {
         status = m.status() ?: return null,
         authorUid = m.str("authorUid").orEmpty(),
         storagePath = m.str("storagePath").orEmpty(),
+        reason = m.str("reason")?.takeIf { it.isNotBlank() },
     )
 }
 
@@ -38,6 +39,7 @@ internal fun commentFrom(id: String, m: Map<String, Any?>): BayComment? {
         createdAt = m.millis(),
         status = m.status() ?: return null,
         authorUid = m.str("authorUid").orEmpty(),
+        reason = m.str("reason")?.takeIf { it.isNotBlank() },
     )
 }
 
@@ -56,6 +58,7 @@ internal fun baySubmissionFrom(id: String, m: Map<String, Any?>): BaySubmission?
         createdAt = m.millis(),
         status = m.status() ?: return null,
         authorUid = m.str("authorUid").orEmpty(),
+        reason = m.str("reason")?.takeIf { it.isNotBlank() },
     )
 }
 
@@ -80,6 +83,14 @@ internal fun commentToMap(bay: Bay, text: String, author: String, uid: String) =
     "createdAt" to FieldValue.serverTimestamp(),
     "status" to ModerationStatus.Pending.name,
 )
+
+/** What the admin writes when deciding: the new status, plus a reason when rejecting. */
+internal fun decisionToMap(status: ModerationStatus, reason: String?): Map<String, Any> = mapOf(
+    "status" to status.name,
+    "reason" to (reason?.trim()?.takeIf { it.isNotEmpty() && status == ModerationStatus.Rejected }?.take(REASON_MAX) ?: FieldValue.delete()),
+)
+
+internal const val REASON_MAX = 300
 
 /** Optional fields are left out when empty, as the rules expect. */
 internal fun baySubmissionToMap(s: BaySubmission, uid: String, status: ModerationStatus): Map<String, Any> = buildMap {

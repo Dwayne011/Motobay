@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { after, before, beforeEach, describe, test } from 'node:test';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
-import { deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import assert from 'node:assert/strict';
+import { deleteDoc, deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getBytes, deleteObject } from 'firebase/storage';
 
 const ADMIN_EMAIL = 'dwayne.edwards89@googlemail.com';
@@ -146,6 +147,19 @@ describe('moderating', () => {
     const d = doc(admin().firestore(), 'comments/c1');
     await assertFails(updateDoc(d, { status: 'Approved', text: 'edited' }));
     await assertFails(updateDoc(d, { status: 'Maybe' }));
+  });
+  test('the admin can give a reason when rejecting, and it clears when re-queued', async () => {
+    const d = doc(admin().firestore(), 'comments/c1');
+    await assertSucceeds(updateDoc(d, { status: 'Rejected', reason: 'Not a motorcycle bay' }));
+    await assertFails(updateDoc(d, { status: 'Rejected', reason: 'x'.repeat(301) }));
+    await assertFails(updateDoc(d, { status: 'Approved', reason: 'reasons only go with rejections' }));
+    await assertSucceeds(updateDoc(d, { status: 'Pending', reason: deleteField() }));
+  });
+  test('the author can read the reason but not write one', async () => {
+    await updateDoc(doc(admin().firestore(), 'comments/c1'), { status: 'Rejected', reason: 'Blurry' });
+    const snap = await getDoc(doc(rider('rider1').firestore(), 'comments/c1'));
+    assert.equal(snap.data().reason, 'Blurry');
+    await assertFails(updateDoc(doc(rider('rider1').firestore(), 'comments/c1'), { reason: 'fine actually' }));
   });
   test('the author cannot approve their own item', async () => {
     await assertFails(updateDoc(doc(rider('rider1').firestore(), 'comments/c1'), { status: 'Approved' }));

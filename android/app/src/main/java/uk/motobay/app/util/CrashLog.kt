@@ -2,7 +2,9 @@ package uk.motobay.app.util
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import uk.motobay.app.data.Moderators
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -32,13 +34,22 @@ class CrashLog(context: Context, private val versionName: String) {
         file.delete()
     }
 
+    /** Opens the mail app with the report addressed to the maintainer. */
+    fun emailIntent(report: String): Intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:")).apply {
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(Moderators.SUPPORT_EMAIL))
+        putExtra(Intent.EXTRA_SUBJECT, "MotoBays crash report")
+        putExtra(Intent.EXTRA_TEXT, report)
+    }
+
+    /** Fallback when no mail app is installed. */
     fun shareIntent(report: String): Intent = Intent.createChooser(
         Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(Moderators.SUPPORT_EMAIL))
             putExtra(Intent.EXTRA_SUBJECT, "MotoBays crash report")
             putExtra(Intent.EXTRA_TEXT, report)
         },
-        "Share crash report",
+        "Send crash report",
     )
 
     private fun describe(thread: Thread, error: Throwable): String {
