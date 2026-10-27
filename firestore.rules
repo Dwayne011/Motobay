@@ -30,11 +30,9 @@ service cloud.firestore {
       return resource.data.status == 'Approved' || isAuthor() || isAdmin();
     }
 
-    // Riders create Pending items. The admin may also create Approved ones
-    // (their own bay additions skip the queue).
+    // Everything, the admin's own submissions included, starts in the queue.
     function validStatusOnCreate() {
-      return request.resource.data.status == 'Pending'
-        || (isAdmin() && request.resource.data.status == 'Approved');
+      return request.resource.data.status == 'Pending';
     }
 
     function onlyStatusChanges() {

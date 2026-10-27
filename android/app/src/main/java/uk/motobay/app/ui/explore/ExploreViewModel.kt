@@ -189,19 +189,12 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     }
 
     fun submitNewBay(submission: BaySubmission) {
-        val moderator = app.auth.user.value?.isModerator == true
         cancelAddingBay()
         viewModelScope.launch {
             val ok = runCatching {
-                app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { "Anonymous rider" }), autoApprove = moderator)
+                app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { "Anonymous rider" }))
             }.isSuccess
-            _messages.send(
-                when {
-                    !ok -> "Couldn't send that bay. Check you're signed in and online."
-                    moderator -> "Bay added"
-                    else -> "Thanks! Your bay will appear once it's been reviewed."
-                },
-            )
+            _messages.send(if (ok) "Thanks! Your bay will appear once it's been reviewed." else "Couldn't send that bay. Check you're signed in and online.")
         }
     }
 

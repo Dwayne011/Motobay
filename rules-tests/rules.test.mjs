@@ -93,12 +93,14 @@ describe('submitting', () => {
     await assertSucceeds(setDoc(doc(db, 'bays/f'), bay('rider1', { capacity: 6, covered: true, editOf: 'node/1' })));
   });
 
-  test('the admin can add a bay straight to approved', async () => {
-    await assertSucceeds(setDoc(doc(admin().firestore(), 'bays/a'), bay('admin1', { status: 'Approved' })));
+  test('even the admin cannot add a bay straight to approved; it goes through the queue', async () => {
+    await assertFails(setDoc(doc(admin().firestore(), 'bays/a'), bay('admin1', { status: 'Approved' })));
+    await assertSucceeds(setDoc(doc(admin().firestore(), 'bays/a'), bay('admin1')));
   });
 
   test('the admin can also sign in with the gmail.com form of the address', async () => {
-    await assertSucceeds(setDoc(doc(gmailAdmin().firestore(), 'bays/a'), bay('admin2', { status: 'Approved' })));
+    await seed('comments/g1', comment('rider1'));
+    await assertSucceeds(updateDoc(doc(gmailAdmin().firestore(), 'comments/g1'), { status: 'Approved' }));
   });
 });
 

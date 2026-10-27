@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -92,8 +93,29 @@ class ScreenshotTest {
         compose.onNodeWithText("Approve").performClick()
         compose.waitForIdle()
         assertEquals(ModerationStatus.Approved, app.community.data.value.comments.first().status)
+        // Approved items stay reachable so the moderator can delete them.
+        compose.onNodeWithText("Approved").performClick()
+        compose.onNodeWithText("Pay by app only.").assertExists()
+        compose.onAllNodesWithContentDescription("Delete")[0].performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(app.community.data.value.comments.none { it.text == "Pay by app only." })
         compose.onNodeWithText("Settings").performClick()
         shot("phone-settings")
+    }
+
+    /** The tab counts must stay inside their segments at the largest common font size. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_review_large_text() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        runBlocking { app.community.submitPhoto(SampleBays.all[0], android.net.Uri.parse("file:///none.jpg"), "", "Sam") }
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        shot("phone-review-large-text")
+        val row = compose.onNodeWithContentDescription("Comments, 1 waiting").fetchSemanticsNode().boundsInRoot
+        val badge = compose.onNodeWithContentDescription("Comments, 1 waiting").fetchSemanticsNode()
+            .let { node -> compose.onAllNodesWithText("1").fetchSemanticsNodes().first { it.boundsInRoot.left >= row.left - 1f && it.boundsInRoot.right <= row.right + 1f }.boundsInRoot }
+        assertTrue("badge $badge must sit inside its segment $row", badge.right <= row.right && badge.left >= row.left)
     }
 
     /** Uses a recorded Photon response, so it runs offline. */

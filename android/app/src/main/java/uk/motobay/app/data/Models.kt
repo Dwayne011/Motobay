@@ -84,6 +84,8 @@ data class BayPhoto(
     val status: ModerationStatus,
     /** Firebase uid of the rider who submitted it. */
     val authorUid: String = "",
+    /** Where the file lives in Firebase Storage, so the admin can delete it with the document. */
+    val storagePath: String = "",
 )
 
 @Serializable

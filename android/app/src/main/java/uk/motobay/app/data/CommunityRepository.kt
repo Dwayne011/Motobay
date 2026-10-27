@@ -28,14 +28,16 @@ interface CommunityRepository {
 
     suspend fun submitComment(bay: Bay, text: String, author: String)
 
-    /**
-     * A new bay, or a correction when [BaySubmission.editOf] is set. Only the
-     * admin's own submissions can be auto-approved.
-     */
-    suspend fun submitBay(submission: BaySubmission, autoApprove: Boolean)
+    /** A new bay, or a correction when [BaySubmission.editOf] is set. Held for review like everything else. */
+    suspend fun submitBay(submission: BaySubmission)
 
-    /** Admin only. */
+    /** Admin only: approve, reject, or put back in the queue. */
     suspend fun moderateBay(id: String, status: ModerationStatus)
     suspend fun moderatePhoto(id: String, status: ModerationStatus)
     suspend fun moderateComment(id: String, status: ModerationStatus)
+
+    /** Admin only: remove for good, whatever its status. */
+    suspend fun deleteBay(id: String)
+    suspend fun deletePhoto(id: String)
+    suspend fun deleteComment(id: String)
 }

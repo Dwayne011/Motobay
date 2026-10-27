@@ -52,11 +52,8 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
         state.update { it.copy(comments = listOf(comment) + it.comments) }
     }
 
-    override suspend fun submitBay(submission: BaySubmission, autoApprove: Boolean) {
-        val s = submission.copy(
-            id = UUID.randomUUID().toString(), createdAt = now(), authorUid = uid(),
-            status = if (autoApprove) ModerationStatus.Approved else ModerationStatus.Pending,
-        )
+    override suspend fun submitBay(submission: BaySubmission) {
+        val s = submission.copy(id = UUID.randomUUID().toString(), createdAt = now(), authorUid = uid(), status = ModerationStatus.Pending)
         state.update { it.copy(bays = listOf(s) + it.bays) }
     }
 
@@ -68,6 +65,10 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
 
     override suspend fun moderateComment(id: String, status: ModerationStatus) =
         state.update { d -> d.copy(comments = d.comments.map { if (it.id == id) it.copy(status = status) else it }) }
+
+    override suspend fun deleteBay(id: String) = state.update { d -> d.copy(bays = d.bays.filterNot { it.id == id }) }
+    override suspend fun deletePhoto(id: String) = state.update { d -> d.copy(photos = d.photos.filterNot { it.id == id }) }
+    override suspend fun deleteComment(id: String) = state.update { d -> d.copy(comments = d.comments.filterNot { it.id == id }) }
 }
 
 /** Runs the real screens against the fakes above, so tests never touch Firebase. */

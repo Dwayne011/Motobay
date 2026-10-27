@@ -24,6 +24,7 @@ internal fun photoFrom(id: String, m: Map<String, Any?>): BayPhoto? {
         createdAt = m.millis(),
         status = m.status() ?: return null,
         authorUid = m.str("authorUid").orEmpty(),
+        storagePath = m.str("storagePath").orEmpty(),
     )
 }
 

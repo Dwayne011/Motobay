@@ -31,9 +31,9 @@ Two fully native apps:
 ## Community content and moderation
 
 Riders sign in (Google or Apple), then submit photos, comments, new bays and
-bay corrections. Everything starts as *Pending*; only the admin can approve or
-reject it, and only approved items are public. Riders also see their own
-pending items.
+bay corrections. Everything starts as *Pending*, the admin's own submissions
+included; only the admin can approve, reject or delete it, and only approved
+items are public. Riders also see their own pending items.
 
 - **Android** uses Firebase Auth, Cloud Firestore (the database named
   `motobays`, in `eur3`) and Cloud Storage (`FirestoreCommunityRepository.kt`, `FirebaseAuthRepository`). The

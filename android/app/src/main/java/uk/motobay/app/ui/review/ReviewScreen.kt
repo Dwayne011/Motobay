@@ -8,21 +8,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TaskAlt
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
@@ -48,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
@@ -59,9 +63,15 @@ import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 
-private enum class Kind(val label: String) { Photos("Photos"), Comments("Comments"), Bays("Bays") }
+private enum class Kind(val label: String, val noun: String) { Photos("Photos", "Photo"), Comments("Comments", "Comment"), Bays("Bays", "Bay") }
 
-/** Moderation queue: nothing riders submit is public until it's approved here. */
+private val ModerationStatus.filterLabel: String
+    get() = when (this) { ModerationStatus.Pending -> "Waiting"; ModerationStatus.Approved -> "Approved"; ModerationStatus.Rejected -> "Rejected" }
+
+/**
+ * Moderation queue: nothing riders submit is public until it's approved here.
+ * Approved and rejected items can be revisited, re-decided or deleted for good.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewScreen(onOpenBay: (String) -> Unit) {
@@ -69,14 +79,22 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
     val data by app.community.data.collectAsStateWithLifecycle()
-    val photos = data.photos.filter { it.status == ModerationStatus.Pending }
-    val comments = data.comments.filter { it.status == ModerationStatus.Pending }
-    val baySubmissions = data.bays.filter { it.status == ModerationStatus.Pending }
     val allBays by app.allBays.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var kind by rememberSaveable { mutableStateOf(Kind.Photos) }
+    var showing by rememberSaveable { mutableStateOf(ModerationStatus.Pending) }
     var viewing by remember { mutableStateOf<String?>(null) }
+    var confirmDelete by remember { mutableStateOf<Pair<Kind, String>?>(null) }
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
+
+    val photos = data.photos.filter { it.status == showing }
+    val comments = data.comments.filter { it.status == showing }
+    val baySubmissions = data.bays.filter { it.status == showing }
+    fun waiting(k: Kind) = when (k) {
+        Kind.Photos -> data.photos.count { it.status == ModerationStatus.Pending }
+        Kind.Comments -> data.comments.count { it.status == ModerationStatus.Pending }
+        Kind.Bays -> data.bays.count { it.status == ModerationStatus.Pending }
+    }
 
     fun decide(kind: Kind, id: String, status: ModerationStatus) {
         suspend fun apply(s: ModerationStatus) {
@@ -86,16 +104,29 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                 Kind.Bays -> app.community.moderateBay(id, s)
             }
         }
+        val before = showing
         scope.launch {
-            val noun = when (kind) { Kind.Photos -> "Photo"; Kind.Comments -> "Comment"; Kind.Bays -> "Bay" }
             if (runCatching { apply(status) }.isFailure) {
-                snackbar.showSnackbar("Couldn't update that ${noun.lowercase()}. Check you're online.")
+                snackbar.showSnackbar("Couldn't update that ${kind.noun.lowercase()}. Check you're online.")
                 return@launch
             }
-            val verb = if (status == ModerationStatus.Approved) "approved" else "rejected"
-            if (snackbar.showSnackbar("$noun $verb", actionLabel = "Undo") == SnackbarResult.ActionPerformed) {
-                runCatching { apply(ModerationStatus.Pending) }
+            val verb = when (status) { ModerationStatus.Approved -> "approved"; ModerationStatus.Rejected -> "rejected"; ModerationStatus.Pending -> "back in the queue" }
+            if (snackbar.showSnackbar("${kind.noun} $verb", actionLabel = "Undo") == SnackbarResult.ActionPerformed) {
+                runCatching { apply(before) }
             }
+        }
+    }
+
+    fun delete(kind: Kind, id: String) {
+        scope.launch {
+            val ok = runCatching {
+                when (kind) {
+                    Kind.Photos -> app.community.deletePhoto(id)
+                    Kind.Comments -> app.community.deleteComment(id)
+                    Kind.Bays -> app.community.deleteBay(id)
+                }
+            }.isSuccess
+            snackbar.showSnackbar(if (ok) "${kind.noun} deleted" else "Couldn't delete that ${kind.noun.lowercase()}. Check you're online.")
         }
     }
 
@@ -110,21 +141,32 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             item {
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     Kind.entries.forEachIndexed { i, k ->
-                        val count = when (k) { Kind.Photos -> photos.size; Kind.Comments -> comments.size; Kind.Bays -> baySubmissions.size }
+                        val count = waiting(k)
                         SegmentedButton(
                             selected = kind == k,
                             onClick = { kind = k },
                             shape = SegmentedButtonDefaults.itemShape(i, Kind.entries.size),
                             icon = {},
                             label = {
-                                // A badge beside the word rather than "(n)" in it: it never gets clipped on narrow screens.
+                                // Badge beside the word, and the word shrinks rather than clips at large font sizes.
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(k.label, maxLines = 1, softWrap = false)
+                                    Text(
+                                        k.label, maxLines = 1, softWrap = false,
+                                        autoSize = TextAutoSize.StepBased(minFontSize = 9.sp, maxFontSize = 14.sp, stepSize = 0.5.sp),
+                                        modifier = Modifier.weight(1f, fill = false),
+                                    )
                                     if (count > 0) Badge(Modifier.padding(start = 4.dp)) { Text("$count") }
                                 }
                             },
                             modifier = Modifier.semantics { contentDescription = "${k.label}, $count waiting" },
                         )
+                    }
+                }
+            }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ModerationStatus.entries.forEach { s ->
+                        FilterChip(selected = showing == s, onClick = { showing = s }, label = { Text(s.filterLabel) })
                     }
                 }
             }
@@ -137,9 +179,9 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         Icon(Icons.Filled.TaskAlt, contentDescription = null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text("All caught up", style = MaterialTheme.typography.titleMedium)
+                        Text(if (showing == ModerationStatus.Pending) "All caught up" else "Nothing here", style = MaterialTheme.typography.titleMedium)
                         Text(
-                            "No ${kind.label.lowercase()} waiting for review.",
+                            "No ${showing.filterLabel.lowercase()} ${kind.label.lowercase()}.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -158,8 +200,9 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         body = p.caption.ifEmpty { "No caption" },
                         imageUrl = p.url,
                         onViewImage = { viewing = p.url },
-                        onApprove = { decide(Kind.Photos, p.id, ModerationStatus.Approved) },
-                        onReject = { decide(Kind.Photos, p.id, ModerationStatus.Rejected) },
+                        status = p.status,
+                        onDecide = { decide(Kind.Photos, p.id, it) },
+                        onDelete = { confirmDelete = Kind.Photos to p.id },
                     )
                 }
             } else if (kind == Kind.Comments) {
@@ -172,8 +215,9 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         onOpenBay = { onOpenBay(c.bayId) },
                         onOpenMap = bay?.let { { openMap(context, it.lat, it.lon, it.title) } },
                         body = c.text,
-                        onApprove = { decide(Kind.Comments, c.id, ModerationStatus.Approved) },
-                        onReject = { decide(Kind.Comments, c.id, ModerationStatus.Rejected) },
+                        status = c.status,
+                        onDecide = { decide(Kind.Comments, c.id, it) },
+                        onDelete = { confirmDelete = Kind.Comments to c.id },
                     )
                 }
             } else {
@@ -190,11 +234,17 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         author = b.author, date = dateFormat.format(Date(b.createdAt)),
                         bayName = if (b.editOf != null) "Edit: ${original?.title ?: "bay"}" else "New bay",
                         place = placeLine(original?.locality, b.lat, b.lon),
-                        onOpenBay = if (b.editOf != null) ({ onOpenBay(b.editOf) }) else null,
+                        // An approved new bay is on the map under its own id.
+                        onOpenBay = when {
+                            b.editOf != null -> ({ onOpenBay(b.editOf) })
+                            b.status == ModerationStatus.Approved -> ({ onOpenBay("rider/${b.id}") })
+                            else -> null
+                        },
                         onOpenMap = { openMap(context, b.lat, b.lon, if (b.editOf != null) original?.title ?: "Bay" else "New bay") },
                         body = facts.joinToString("\n"),
-                        onApprove = { decide(Kind.Bays, b.id, ModerationStatus.Approved) },
-                        onReject = { decide(Kind.Bays, b.id, ModerationStatus.Rejected) },
+                        status = b.status,
+                        onDecide = { decide(Kind.Bays, b.id, it) },
+                        onDelete = { confirmDelete = Kind.Bays to b.id },
                     )
                 }
             }
@@ -206,6 +256,16 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             onDismissRequest = { viewing = null },
             text = { AsyncImage(model = url, contentDescription = "Submitted photo", modifier = Modifier.fillMaxWidth()) },
             confirmButton = { TextButton(onClick = { viewing = null }) { Text("Close") } },
+        )
+    }
+
+    confirmDelete?.let { (k, id) ->
+        AlertDialog(
+            onDismissRequest = { confirmDelete = null },
+            title = { Text("Delete this ${k.noun.lowercase()}?") },
+            text = { Text("It will be removed for everyone. This can't be undone.") },
+            confirmButton = { TextButton(onClick = { confirmDelete = null; delete(k, id) }) { Text("Delete") } },
+            dismissButton = { TextButton(onClick = { confirmDelete = null }) { Text("Cancel") } },
         )
     }
 }
@@ -230,8 +290,9 @@ private fun ReviewCard(
     body: String,
     imageUrl: String? = null,
     onViewImage: (() -> Unit)? = null,
-    onApprove: () -> Unit,
-    onReject: () -> Unit,
+    status: ModerationStatus,
+    onDecide: (ModerationStatus) -> Unit,
+    onDelete: () -> Unit,
 ) {
     OutlinedCard(Modifier.fillMaxWidth()) {
         imageUrl?.let {
@@ -259,10 +320,18 @@ private fun ReviewCard(
             }
             Row(
                 Modifier.fillMaxWidth().padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                OutlinedButton(onClick = onReject) { Text("Reject") }
-                Button(onClick = onApprove) { Text("Approve") }
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Outlined.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                }
+                Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+                    // Whatever the item's status, offer the other two outcomes.
+                    if (status != ModerationStatus.Rejected) OutlinedButton(onClick = { onDecide(ModerationStatus.Rejected) }) { Text("Reject") }
+                    if (status != ModerationStatus.Approved) Button(onClick = { onDecide(ModerationStatus.Approved) }) { Text("Approve") }
+                    if (status != ModerationStatus.Pending) OutlinedButton(onClick = { onDecide(ModerationStatus.Pending) }) { Text("Re-queue") }
+                }
             }
         }
     }

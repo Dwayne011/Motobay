@@ -111,10 +111,9 @@ class FirestoreCommunityRepository(
         db.collection(COMMENTS).document().set(commentToMap(bay, text, author, uid)).awaitQueued()
     }
 
-    override suspend fun submitBay(submission: BaySubmission, autoApprove: Boolean) {
+    override suspend fun submitBay(submission: BaySubmission) {
         val uid = requireUid()
-        val status = if (autoApprove) ModerationStatus.Approved else ModerationStatus.Pending
-        db.collection(BAYS).document().set(baySubmissionToMap(submission, uid, status)).awaitQueued()
+        db.collection(BAYS).document().set(baySubmissionToMap(submission, uid, ModerationStatus.Pending)).awaitQueued()
     }
 
     override suspend fun moderateBay(id: String, status: ModerationStatus) = moderate(BAYS, id, status)
@@ -123,6 +122,17 @@ class FirestoreCommunityRepository(
 
     private suspend fun moderate(collection: String, id: String, status: ModerationStatus) {
         db.collection(collection).document(id).update("status", status.name).awaitQueued()
+    }
+
+    override suspend fun deleteBay(id: String) = db.collection(BAYS).document(id).delete().awaitQueued()
+    override suspend fun deleteComment(id: String) = db.collection(COMMENTS).document(id).delete().awaitQueued()
+
+    /** The document first (that is what hides the photo), then the file; a leftover file is harmless. */
+    override suspend fun deletePhoto(id: String) {
+        val path = data.value.photos.firstOrNull { it.id == id }?.storagePath
+        db.collection(PHOTOS).document(id).delete().awaitQueued()
+        if (!path.isNullOrEmpty()) runCatching { storage.reference.child(path).delete().await() }
+            .onFailure { Log.w(TAG, "Couldn't delete $path: ${it.message}") }
     }
 
     private fun requireUid(): String = auth.user.value?.uid ?: throw IllegalStateException("Sign in to contribute")

@@ -235,21 +235,11 @@ fun BayDetailContent(bay: Bay) {
             onDismiss = { editing = false },
             onSubmit = { submission ->
                 editing = false
-                val moderator = app.auth.user.value?.isModerator == true
                 scope.launch {
                     val ok = runCatching {
-                        app.community.submitBay(
-                            submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }),
-                            autoApprove = moderator,
-                        )
+                        app.community.submitBay(submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }))
                     }.isSuccess
-                    snackbar.showSnackbar(
-                        when {
-                            !ok -> "Couldn't send that. Check you're signed in and online."
-                            moderator -> "Bay updated"
-                            else -> "Thanks! Your correction will be checked before it's published."
-                        },
-                    )
+                    snackbar.showSnackbar(if (ok) "Thanks! Your correction will be checked before it's published." else "Couldn't send that. Check you're signed in and online.")
                 }
             },
         )
