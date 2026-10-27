@@ -25,6 +25,12 @@ interface DisplayNames {
     /** The name this rider claimed earlier, e.g. on another phone. */
     suspend fun current(): String?
 
+    /** True if [name] is free (or already the rider's own); null when it couldn't be checked, e.g. offline. */
+    suspend fun isAvailable(name: String): Boolean?
+
+    /** Gives up every name this rider holds (used when deleting the account). */
+    suspend fun release()
+
     companion object {
         const val ANONYMOUS = "Anonymous rider"
         const val MIN = 2
@@ -70,6 +76,20 @@ class FirestoreDisplayNames(
                 .forEach { runCatching { it.reference.delete().await() } }
             ClaimResult.Ok
         }.getOrElse { e -> if (e is NameTaken || e.cause is NameTaken) ClaimResult.Taken else ClaimResult.Failed }
+    }
+
+    override suspend fun isAvailable(name: String): Boolean? {
+        val uid = auth.user.value?.uid ?: return null
+        if (DisplayNames.problem(name) != null) return false
+        return runCatching {
+            val doc = names.document(DisplayNames.key(name)).get().await()
+            !doc.exists() || doc.getString("uid") == uid
+        }.getOrNull()
+    }
+
+    override suspend fun release() {
+        val uid = auth.user.value?.uid ?: return
+        names.whereEqualTo("uid", uid).get().await().documents.forEach { it.reference.delete().await() }
     }
 
     override suspend fun current(): String? {

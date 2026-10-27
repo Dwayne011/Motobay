@@ -88,6 +88,33 @@ Google Maps or Waze.
 
 ## Before publishing
 
+- Set `PRIVACY_POLICY_URL` in `android/app/src/main/java/uk/motobay/app/data/Legal.kt` to the hosted UK GDPR policy, and give
+  Play the same URL plus a web page for account-deletion requests (Play Console > App content > Data safety and Account deletion).
 - Replace the placeholder iOS icon (Android has its pin-and-motorcycle icon). The app id is `uk.motobays.app` on both platforms.
-- Finish the Firebase setup: enable the Apple provider, deploy the rules, move iOS onto Firebase, and add a release signing key's SHA-1 to the Android app.
+- Finish the Firebase setup: enable the Apple provider, move iOS onto Firebase, and add the upload key's SHA-1 to the Android app
+  (and to the Firebase API key's Android restriction in Google Cloud).
 - Self-host or replace the public Photon search service if traffic grows.
+
+## Releasing to Google Play
+
+Signing: create an upload keystore once and keep it out of git (`.gitignore` already covers it):
+
+```bash
+cd android
+keytool -genkeypair -v -keystore upload-keystore.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000
+printf 'storeFile=upload-keystore.jks\nstorePassword=...\nkeyAlias=upload\nkeyPassword=...\n' > keystore.properties
+keytool -list -v -keystore upload-keystore.jks -alias upload | grep SHA1   # register in Firebase + Google Cloud key restriction
+```
+
+Build and check:
+
+```bash
+./gradlew bundleRelease -Pmotobay.versionCode=17 -Pmotobay.versionName=1.0.1   # app/build/outputs/bundle/release/app-release.aab
+./gradlew testDebugUnitTest
+# Permissions in the final manifest must be INTERNET, ACCESS_NETWORK_STATE, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION only
+# (plus the app-private DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION that androidx adds):
+grep uses-permission app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml
+```
+
+`versionCode` must go up on every upload; without `-Pmotobay.versionCode` it uses the default in `app/build.gradle.kts`.
+Release builds are minified with R8 and only signed when `keystore.properties` exists.

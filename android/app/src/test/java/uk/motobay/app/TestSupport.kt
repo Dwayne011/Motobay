@@ -29,6 +29,8 @@ class FakeAuthRepository : AuthRepository {
     override suspend fun signInWithGoogle(activity: Activity) = set(RIDER)
     override suspend fun signInWithApple(activity: Activity) = set(RIDER)
     override fun signOut() = set(null)
+    var deleted = false
+    override suspend fun deleteAccount() { deleted = true; set(null) }
 
     companion object {
         val RIDER = AuthUser("rider1", "rider@example.com", isModerator = false)
@@ -73,6 +75,17 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
     override suspend fun deleteBay(id: String) = state.update { d -> d.copy(bays = d.bays.filterNot { it.id == id }) }
     override suspend fun deletePhoto(id: String) = state.update { d -> d.copy(photos = d.photos.filterNot { it.id == id }) }
     override suspend fun deleteComment(id: String) = state.update { d -> d.copy(comments = d.comments.filterNot { it.id == id }) }
+
+    override suspend fun deleteEverythingByMe() {
+        val me = uid()
+        state.update { d ->
+            d.copy(
+                photos = d.photos.filterNot { it.authorUid == me },
+                comments = d.comments.filterNot { it.authorUid == me },
+                bays = d.bays.filterNot { it.authorUid == me },
+            )
+        }
+    }
 }
 
 /** In-memory name registry: key is the lower-case name, value the uid that holds it. */
@@ -90,6 +103,17 @@ class FakeDisplayNames(private val auth: AuthRepository) : DisplayNames {
     }
 
     override suspend fun current(): String? = auth.user.value?.uid?.let { uid -> taken.values.firstOrNull { it.first == uid }?.second }
+
+    override suspend fun isAvailable(name: String): Boolean? {
+        val uid = auth.user.value?.uid ?: return null
+        if (DisplayNames.problem(name) != null) return false
+        return taken[DisplayNames.key(name)]?.first.let { it == null || it == uid }
+    }
+
+    override suspend fun release() {
+        val uid = auth.user.value?.uid ?: return
+        taken.entries.removeAll { it.value.first == uid }
+    }
 }
 
 /** Runs the real screens against the fakes above, so tests never touch Firebase. */

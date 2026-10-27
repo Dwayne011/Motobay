@@ -185,9 +185,12 @@ describe('moderating', () => {
     await assertFails(updateDoc(doc(rider('rider2').firestore(), 'comments/c1'), { status: 'Approved' }));
     await assertFails(updateDoc(doc(anon().firestore(), 'comments/c1'), { status: 'Approved' }));
   });
-  test('only the admin can delete', async () => {
-    await assertFails(deleteDoc(doc(rider('rider1').firestore(), 'comments/c1')));
-    await assertSucceeds(deleteDoc(doc(admin().firestore(), 'comments/c1')));
+  test('the author and the admin can delete; other riders cannot', async () => {
+    await assertFails(deleteDoc(doc(rider('rider2').firestore(), 'comments/c1')));
+    await assertFails(deleteDoc(doc(anon().firestore(), 'comments/c1')));
+    await assertSucceeds(deleteDoc(doc(rider('rider1').firestore(), 'comments/c1')));
+    await seed('comments/c2', comment('rider1'));
+    await assertSucceeds(deleteDoc(doc(admin().firestore(), 'comments/c2')));
   });
   test('the admin email only counts when verified and from Google sign-in', async () => {
     const d = (ctx) => doc(ctx.firestore(), 'comments/c1');
@@ -260,9 +263,11 @@ describe('storage', () => {
     await assertFails(getBytes(at(rider('rider2'), 'photos/rider1/p1.jpg')));
     await assertFails(getBytes(at(anon(), 'photos/rider1/p1.jpg')));
   });
-  test('only the admin can delete photos', async () => {
+  test('the owner and the admin can delete photos; other riders cannot', async () => {
     await uploadBytes(at(rider('rider1'), 'photos/rider1/p1.jpg'), jpeg(), meta);
-    await assertFails(deleteObject(at(rider('rider1'), 'photos/rider1/p1.jpg')));
-    await assertSucceeds(deleteObject(at(admin(), 'photos/rider1/p1.jpg')));
+    await assertFails(deleteObject(at(rider('rider2'), 'photos/rider1/p1.jpg')));
+    await assertSucceeds(deleteObject(at(rider('rider1'), 'photos/rider1/p1.jpg')));
+    await uploadBytes(at(rider('rider1'), 'photos/rider1/p2.jpg'), jpeg(), meta);
+    await assertSucceeds(deleteObject(at(admin(), 'photos/rider1/p2.jpg')));
   });
 });

@@ -76,7 +76,7 @@ service cloud.firestore {
         && request.resource.data.url.matches('https://firebasestorage.googleapis.com/.*')
         && request.resource.data.storagePath == 'photos/' + request.auth.uid + '/' + id + '.jpg';
       allow update: if isAdmin() && onlyStatusChanges();
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isAuthor();
     }
 
     match /comments/{id} {
@@ -90,7 +90,7 @@ service cloud.firestore {
         && isText(request.resource.data.text, 500)
         && request.resource.data.text.size() > 0;
       allow update: if isAdmin() && onlyStatusChanges();
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isAuthor();
     }
 
     // New bays and corrections to existing ones.
@@ -114,7 +114,7 @@ service cloud.firestore {
                 && request.resource.data.capacity >= 0 && request.resource.data.capacity <= 500))
         && (!('covered' in request.resource.data) || request.resource.data.covered is bool);
       allow update: if isAdmin() && onlyStatusChanges();
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isAuthor();
     }
 
     // One document per display name, keyed by its lower-case form, so names are unique.

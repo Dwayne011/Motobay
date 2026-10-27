@@ -16,6 +16,8 @@ data class Settings(
     /** Android 12+: take colours from the wallpaper instead of the seed. */
     val wallpaperColors: Boolean = false,
     val displayName: String = "",
+    /** The first-launch "guidance only, no PCN liability" notice has been read. */
+    val disclaimerAccepted: Boolean = false,
     /** Last map position, so the app reopens where the rider left it. */
     val lastMap: CameraSnapshot? = null,
     /** Places picked from search, newest first. */

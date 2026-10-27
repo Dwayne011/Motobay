@@ -9,6 +9,7 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuthWebException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -32,6 +33,9 @@ data class AuthUser(
 /** The rider cancelled the sign-in screen; not an error worth showing. */
 class SignInCancelledException : Exception()
 
+/** Firebase wants a fresh sign-in before something sensitive like deleting the account. */
+class RecentSignInRequiredException : Exception()
+
 interface AuthRepository {
     /** Null when signed out. */
     val user: StateFlow<AuthUser?>
@@ -39,6 +43,9 @@ interface AuthRepository {
     suspend fun signInWithGoogle(activity: Activity)
     suspend fun signInWithApple(activity: Activity)
     fun signOut()
+
+    /** Removes the Firebase user. Throws [RecentSignInRequiredException] if they must sign in again first. */
+    suspend fun deleteAccount()
 }
 
 class FirebaseAuthRepository(
@@ -81,6 +88,15 @@ class FirebaseAuthRepository(
     }
 
     override fun signOut() = auth.signOut()
+
+    override suspend fun deleteAccount() {
+        val user = auth.currentUser ?: return
+        try {
+            user.delete().await()
+        } catch (e: FirebaseAuthRecentLoginRequiredException) {
+            throw RecentSignInRequiredException()
+        }
+    }
 }
 
 private fun FirebaseUser.toAuthUser() = AuthUser(

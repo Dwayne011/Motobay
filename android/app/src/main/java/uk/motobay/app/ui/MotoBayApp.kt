@@ -48,6 +48,8 @@ import uk.motobay.app.ui.bay.BayDetailRoute
 import uk.motobay.app.ui.explore.ExploreScreen
 import uk.motobay.app.ui.review.ReviewScreen
 import uk.motobay.app.ui.saved.SavedScreen
+import uk.motobay.app.ui.settings.DisclaimerDialog
+import uk.motobay.app.ui.settings.LegalScreen
 import uk.motobay.app.ui.settings.SettingsScreen
 import kotlin.reflect.KClass
 
@@ -56,6 +58,7 @@ import kotlin.reflect.KClass
 @Serializable object ReviewDest
 @Serializable object SettingsDest
 @Serializable object MySubmissionsDest
+@Serializable object LegalDest
 @Serializable data class BayDest(val id: String)
 
 val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
@@ -84,6 +87,7 @@ private data class TopLevel(
 fun MotoBayApp(app: MotoBayApplication) {
     val nav = rememberNavController()
     val snackbar = remember { SnackbarHostState() }
+    val settings by app.user.settings.collectAsStateWithLifecycle()
     val account by app.auth.user.collectAsStateWithLifecycle()
     var askToSignIn by remember { mutableStateOf(false) }
     val requireSignIn: (() -> Unit) -> Unit = { action -> if (account != null) action() else askToSignIn = true }
@@ -139,7 +143,10 @@ fun MotoBayApp(app: MotoBayApplication) {
                 }
                 composable<SavedDest> { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
                 composable<ReviewDest> { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
-                composable<SettingsDest> { SettingsScreen(onOpenSubmissions = { nav.navigate(MySubmissionsDest) }) }
+                composable<SettingsDest> {
+                    SettingsScreen(onOpenSubmissions = { nav.navigate(MySubmissionsDest) }, onOpenLegal = { nav.navigate(LegalDest) })
+                }
+                composable<LegalDest> { LegalScreen(onBack = { nav.popBackStack() }) }
                 composable<MySubmissionsDest> {
                     MySubmissionsScreen(onBack = { nav.popBackStack() }, onOpenBay = { nav.navigate(BayDest(it)) })
                 }
@@ -148,5 +155,6 @@ fun MotoBayApp(app: MotoBayApplication) {
             }
         }
         if (askToSignIn) SignInDialog(onDismiss = { askToSignIn = false })
+        if (!settings.disclaimerAccepted) DisclaimerDialog(onAccept = { app.user.updateSettings { it.copy(disclaimerAccepted = true) } })
     }
 }

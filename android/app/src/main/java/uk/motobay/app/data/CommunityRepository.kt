@@ -40,4 +40,7 @@ interface CommunityRepository {
     suspend fun deleteBay(id: String)
     suspend fun deletePhoto(id: String)
     suspend fun deleteComment(id: String)
+
+    /** Every photo, comment and bay change the signed-in rider ever submitted, and the photo files. */
+    suspend fun deleteEverythingByMe()
 }

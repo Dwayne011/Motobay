@@ -135,6 +135,24 @@ class FirestoreCommunityRepository(
             .onFailure { Log.w(TAG, "Couldn't delete $path: ${it.message}") }
     }
 
+    override suspend fun deleteEverythingByMe() {
+        val uid = requireUid()
+        for (collection in listOf(PHOTOS, COMMENTS, BAYS)) {
+            val docs = db.collection(collection).whereEqualTo("authorUid", uid).get().await().documents
+            if (collection == PHOTOS) {
+                docs.mapNotNull { it.getString("storagePath") }.forEach { path ->
+                    runCatching { storage.reference.child(path).delete().await() }
+                        .onFailure { Log.w(TAG, "Couldn't delete $path: ${it.message}") }
+                }
+            }
+            docs.chunked(400).forEach { chunk ->
+                val batch = db.batch()
+                chunk.forEach { batch.delete(it.reference) }
+                batch.commit().await()
+            }
+        }
+    }
+
     private fun requireUid(): String = auth.user.value?.uid ?: throw IllegalStateException("Sign in to contribute")
 
     /**

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,17 +8,28 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+// Release signing comes from android/keystore.properties (git-ignored):
+//   storeFile=upload-keystore.jks
+//   storePassword=...
+//   keyAlias=upload
+//   keyPassword=...
+// Without it the release build is unsigned, which is fine for CI checks but not for Play.
+val keystoreProperties = Properties().apply {
+    rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
+}
+val hasReleaseKey = keystoreProperties.getProperty("storeFile") != null
+
 android {
     namespace = "uk.motobay.app"
     compileSdk = 36
 
     defaultConfig {
-        // Change to your own reverse-domain id before publishing to Google Play.
         applicationId = "uk.motobays.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 15
-        versionName = "0.8.3"
+        // Play needs versionCode to rise on every upload. CI can pass -Pmotobay.versionCode=N.
+        versionCode = (project.findProperty("motobay.versionCode") as String?)?.toInt() ?: 16
+        versionName = (project.findProperty("motobay.versionName") as String?) ?: "1.0.0"
         val sampleData = (project.findProperty("motobay.sampleData") as String?)?.toBoolean() ?: false
         buildConfigField("boolean", "SAMPLE_DATA", sampleData.toString())
         // Built weekly from OpenStreetMap by .github/workflows/update-bay-data.yml.
@@ -35,14 +48,31 @@ android {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (hasReleaseKey) signingConfig = signingConfigs.getByName("release")
         }
+    }
+
+    bundle {
+        // One upload, Play serves per-device splits.
+        language { enableSplit = true }
+        density { enableSplit = true }
+        abi { enableSplit = true }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -204,6 +204,11 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         search.value.suggestions.firstOrNull()?.let(::onSuggestionClick)
     }
 
+    /** The rider said no to location: say so once, searching still works. */
+    fun locationDenied() {
+        viewModelScope.launch { _messages.send("Location is off. Search for a town, street or postcode instead.") }
+    }
+
     /** Called after location permission is granted. */
     fun locate() {
         search.update { it.copy(expanded = false) }

@@ -175,8 +175,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
         if (search.expanded && app.location.hasPermission()) app.location.locate()
     }
 
+    // "Don't allow" just leaves the map where it is; approximate-only still works (coarse fixes are fine for finding bays).
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
-        if (granted.values.any { it }) vm.locate()
+        if (granted.values.any { it }) vm.locate() else vm.locationDenied()
     }
     val onLocate = {
         if (app.location.hasPermission()) vm.locate()

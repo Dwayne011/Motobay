@@ -254,7 +254,8 @@ fun BayMap(
             m.uiSettings.isRotateGesturesEnabled = false
             m.uiSettings.isTiltGesturesEnabled = false
             m.uiSettings.isCompassEnabled = false
-            val start = initialCamera ?: CameraSnapshot(54.5, -3.0, 4.5)
+            // First launch, or no saved position: central London, where most mapped bays are.
+            val start = initialCamera ?: DEFAULT_CAMERA
             m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
             fun readViewport(): MapViewport? {
                 val b = m.projection.visibleRegion.latLngBounds
@@ -544,3 +545,6 @@ private fun MapNode.toFeature(images: PinImages, iconKey: String = images.key(th
 private fun Fee.fillHex(images: PinImages): String = images.fillColor(this).toHex()
 
 private fun Color.toHex(): String = String.format("#%06X", 0xFFFFFF and toArgb())
+
+/** Where the map opens before the rider has moved it anywhere: central London. */
+val DEFAULT_CAMERA = CameraSnapshot(lat = 51.5074, lon = -0.1278, zoom = 12.0)

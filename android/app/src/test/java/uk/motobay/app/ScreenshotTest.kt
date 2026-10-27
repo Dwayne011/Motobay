@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
@@ -18,6 +19,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,7 +62,7 @@ class ScreenshotTest {
 
     @Before
     fun seed() {
-        app.user.updateSettings { it.copy(displayName = "Dwayne", themeMode = ThemeMode.Light) }
+        app.user.updateSettings { it.copy(displayName = "Dwayne", themeMode = ThemeMode.Light, disclaimerAccepted = true) }
         // Signed in as the admin, so the Review tab shows.
         (app.auth as FakeAuthRepository).set(FakeAuthRepository.ADMIN)
         runBlocking {
@@ -170,18 +172,75 @@ class ScreenshotTest {
         app.user.updateSettings { it.copy(displayName = "") }
         setApp()
         compose.onNodeWithText("Settings").performClick()
+        // Typing shows availability live, and a taken name can't be saved.
         compose.onNodeWithTag("display-name").performTextInput("RiderMike")
-        compose.onNodeWithText("Save").performClick()
+        compose.mainClock.advanceTimeBy(600)
         compose.waitForIdle()
         compose.onNodeWithText("Someone already has that name").assertExists()
+        compose.onNodeWithText("Save").assertIsNotEnabled()
         assertEquals("", app.user.settings.value.displayName)
         compose.onNodeWithTag("display-name").performTextClearance()
         compose.onNodeWithTag("display-name").performTextInput("Dwayne")
+        compose.mainClock.advanceTimeBy(600)
+        compose.waitForIdle()
+        compose.onNodeWithText("✓ Available").assertExists()
         assertEquals("", app.user.settings.value.displayName) // typing alone changes nothing
         compose.onNodeWithText("Save").performClick()
         compose.waitForIdle()
         assertEquals("Dwayne", app.user.settings.value.displayName)
         assertEquals("admin1" to "Dwayne", names.taken["dwayne"])
+        // Saved: the field locks and offers Edit.
+        compose.onNodeWithText("Edit").assertExists()
+        shot("phone-settings-name-saved")
+    }
+
+    /** First launch shows the guidance-only notice once; accepting it is remembered. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_first_launch_disclaimer() {
+        app.user.updateSettings { it.copy(disclaimerAccepted = false) }
+        setApp()
+        compose.onNodeWithText("Before you ride").assertExists()
+        compose.onNodeWithText("I understand").performClick()
+        compose.waitForIdle()
+        assertTrue(app.user.settings.value.disclaimerAccepted)
+        compose.onNodeWithText("Before you ride").assertDoesNotExist()
+    }
+
+    /** Legal screen lists the licences and the privacy policy. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_legal_screen() {
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Legal & about").performScrollTo().performClick()
+        compose.onNodeWithText("Privacy policy").assertExists()
+        compose.onNodeWithText("Bay locations").assertExists()
+        shot("phone-legal")
+    }
+
+    /** Deleting the account removes the rider's content, name and sign-in. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_delete_account_wipes_everything() {
+        val auth = app.auth as FakeAuthRepository
+        val names = app.displayNames as FakeDisplayNames
+        names.taken["dwayne"] = "admin1" to "Dwayne"
+        runBlocking {
+            auth.set(FakeAuthRepository.RIDER)
+            app.community.submitComment(SampleBays.all[1], "Someone else's comment", "Rider")
+            auth.set(FakeAuthRepository.ADMIN)
+            app.community.submitComment(SampleBays.all[1], "Mine to delete", "Dwayne")
+        }
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Delete account & data").performScrollTo().performClick()
+        compose.onNodeWithText("Delete your account?").assertExists()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(auth.deleted)
+        assertEquals(null, auth.user.value)
+        assertTrue(app.community.data.value.comments.none { it.text == "Mine to delete" })
+        assertTrue(app.community.data.value.comments.any { it.text == "Someone else's comment" }) // other riders' content stays
+        assertEquals(null, names.taken["dwayne"])
+        assertEquals("", app.user.settings.value.displayName)
     }
 
     /** The tab counts must stay inside their segments at the largest common font size. */
