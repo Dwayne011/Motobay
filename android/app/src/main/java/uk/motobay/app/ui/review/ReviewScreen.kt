@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,6 +90,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val context = LocalContext.current
     var kind by rememberSaveable { mutableStateOf(Kind.Photos) }
     var showing by rememberSaveable { mutableStateOf(ModerationStatus.Pending) }
+    LaunchedEffect(kind, showing) { app.crashLog.noteScreen("ReviewDest/${kind.label}/${showing.filterLabel}") }
     var viewing by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf<Pair<Kind, String>?>(null) }
     var rejecting by remember { mutableStateOf<Pair<Kind, String>?>(null) }

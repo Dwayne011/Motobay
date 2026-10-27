@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -104,6 +105,8 @@ fun MotoBayApp(app: MotoBayApplication) {
     }
     val backStack by nav.currentBackStackEntryAsState()
     val current = backStack?.destination
+    // For crash reports: which screen the rider was on.
+    LaunchedEffect(current) { current?.route?.let { app.crashLog.noteScreen(it.substringAfterLast('.').substringBefore('/')) } }
 
     CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar, LocalRequireSignIn provides requireSignIn) {
         NavigationSuiteScaffold(

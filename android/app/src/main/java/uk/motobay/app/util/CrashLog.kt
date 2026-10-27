@@ -19,7 +19,7 @@ import java.util.Locale
  * from Settings. There is no crash-reporting service yet, and the moderator
  * testing the app needs a way to send back what went wrong.
  */
-class CrashLog(context: Context, private val versionName: String) {
+class CrashLog(private val context: Context, private val versionName: String) {
     private val file = File(context.filesDir, "last-crash.txt")
 
     fun install() {
@@ -32,6 +32,19 @@ class CrashLog(context: Context, private val versionName: String) {
 
     fun read(): String? = file.takeIf { it.exists() }?.readText()
 
+    private val prefs by lazy { context.getSharedPreferences("crashlog", Context.MODE_PRIVATE) }
+
+    /** Remembered on every navigation, so a report can say where the rider was. */
+    fun noteScreen(name: String) {
+        prefs.edit().putString("last_screen", name).putLong("last_screen_at", System.currentTimeMillis()).apply()
+    }
+
+    private fun lastScreenLine(): String {
+        val screen = prefs.getString("last_screen", null) ?: return "Last screen: unknown"
+        val at = prefs.getLong("last_screen_at", 0L)
+        return "Last screen: $screen (opened ${SimpleDateFormat("HH:mm:ss", Locale.UK).format(Date(at))})"
+    }
+
     /**
      * Uncaught exceptions are only one way to die. Native crashes (the map is
      * native code), ANR kills and the system reclaiming memory never reach the
@@ -41,7 +54,6 @@ class CrashLog(context: Context, private val versionName: String) {
     fun collectSystemExitReason(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || file.exists()) return
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val prefs = context.getSharedPreferences("crashlog", Context.MODE_PRIVATE)
         val lastSeen = prefs.getLong("last_exit", 0L)
         val exit = runCatching { am.getHistoricalProcessExitReasons(context.packageName, 0, 5) }.getOrNull()
             ?.filter { it.timestamp > lastSeen }
@@ -54,10 +66,19 @@ class CrashLog(context: Context, private val versionName: String) {
             append(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK).format(Date(exit.timestamp)))
             append(" · process ended: ${reasonName(exit.reason)} (status ${exit.status})\n")
             append("${exit.description ?: "No description from the system"}\n")
-            append("Memory at the time: ${exit.pss / 1024} MB PSS, ${exit.rss / 1024} MB RSS, importance ${exit.importance}\n\n")
+            append("App was ${importanceName(exit.importance)} when it ended (importance ${exit.importance})\n")
+            append("${lastScreenLine()}\n")
+            append("Memory at the time: ${exit.pss / 1024} MB PSS, ${exit.rss / 1024} MB RSS\n\n")
             if (!trace.isNullOrBlank()) append(trace.take(40_000))
         }
         runCatching { file.writeText(report) }
+    }
+
+    private fun importanceName(importance: Int) = when {
+        importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND -> "ON SCREEN (foreground)"
+        importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE -> "visible but not focused"
+        importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE -> "running in the background"
+        else -> "in the background, cached (not on screen)"
     }
 
     private fun reasonName(reason: Int) = when (reason) {
@@ -105,6 +126,6 @@ class CrashLog(context: Context, private val versionName: String) {
     private fun describe(thread: Thread, error: Throwable): String {
         val trace = StringWriter().also { error.printStackTrace(PrintWriter(it)) }.toString()
         val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK).format(Date())
-        return "MotoBays $versionName · Android ${Build.VERSION.RELEASE} · ${Build.MANUFACTURER} ${Build.MODEL}\n$time on thread ${thread.name}\n\n$trace"
+        return "MotoBays $versionName · Android ${Build.VERSION.RELEASE} · ${Build.MANUFACTURER} ${Build.MODEL}\n$time on thread ${thread.name}\n${lastScreenLine()}\n\n$trace"
     }
 }
