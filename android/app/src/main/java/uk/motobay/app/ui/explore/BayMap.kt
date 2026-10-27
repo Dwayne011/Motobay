@@ -254,6 +254,11 @@ fun BayMap(
             m.uiSettings.isRotateGesturesEnabled = false
             m.uiSettings.isTiltGesturesEnabled = false
             m.uiSettings.isCompassEnabled = false
+            // Keep the MapLibre logo and (i) attribution clear of the Map/List toggle that sits bottom-centre.
+            val density = mapView.resources.displayMetrics.density
+            val clearance = (ATTRIBUTION_BOTTOM_DP * density).toInt()
+            m.uiSettings.setLogoMargins((8 * density).toInt(), 0, 0, clearance)
+            m.uiSettings.setAttributionMargins((8 * density).toInt(), 0, 0, clearance)
             // First launch, or no saved position: central London, where most mapped bays are.
             val start = initialCamera ?: DEFAULT_CAMERA
             m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
@@ -548,3 +553,6 @@ private fun Color.toHex(): String = String.format("#%06X", 0xFFFFFF and toArgb()
 
 /** Where the map opens before the rider has moved it anywhere: central London. */
 val DEFAULT_CAMERA = CameraSnapshot(lat = 51.5074, lon = -0.1278, zoom = 12.0)
+
+/** Height of the Map/List toggle plus its padding, so the map attribution sits above it. */
+private const val ATTRIBUTION_BOTTOM_DP = 76

@@ -243,6 +243,14 @@ class ScreenshotTest {
         assertEquals("", app.user.settings.value.displayName)
     }
 
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_settings_large_text_dark() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        setApp(dark = true)
+        compose.onNodeWithText("Settings").performClick()
+        shot("phone-settings-large-text-dark")
+    }
+
     /** The tab counts must stay inside their segments at the largest common font size. */
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
     fun phone_review_large_text() {
@@ -284,7 +292,8 @@ class ScreenshotTest {
         setApp(dark = true)
         shot("phone-explore-large-text-dark")
         val bar = compose.onNodeWithText("Search a town, street or postcode").fetchSemanticsNode().boundsInRoot
-        val chip = compose.onNodeWithText("Covered").fetchSemanticsNode().boundsInRoot
+        // "All" is always on screen; the pill row scrolls sideways, so later pills may be clipped.
+        val chip = compose.onNodeWithText("All").fetchSemanticsNode().boundsInRoot
         assertTrue("filters overlap the search bar", chip.top >= bar.bottom)
     }
 

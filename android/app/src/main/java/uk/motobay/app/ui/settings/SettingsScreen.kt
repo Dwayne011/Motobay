@@ -29,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -61,6 +62,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uk.motobay.app.R
@@ -110,7 +112,8 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
                                     Icon(icon, contentDescription = null, Modifier.size(SegmentedButtonDefaults.IconSize))
                                 }
                             },
-                            label = { Text(label) },
+                            // Centre the label on its letters, not its line box, so it lines up with the icon at every font size.
+                            label = { Text(label, style = LocalTextStyle.current.copy(lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.Both))) },
                         )
                     }
                 }

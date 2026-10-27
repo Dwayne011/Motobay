@@ -10,12 +10,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material.icons.outlined.Roofing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -68,9 +67,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -102,7 +98,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -742,79 +737,61 @@ private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modi
 }
 
 /**
- * Price as a segmented button (quick single choice), covered as a filter chip.
- * The coloured dots match the pin colours, so they double as the map legend.
+ * One scrollable row of pills, like the chips over a Google Maps map: price is a
+ * single choice (All, Free, Paid, Unknown), Covered is a toggle. The coloured
+ * dots match the pin colours, so the row doubles as the map legend.
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onCovered: () -> Unit) {
-    BoxWithConstraints(Modifier.fillMaxWidth()) {
-        // One text size for every filter label: the largest (up to the M3 label size) at
-        // which the longest label still fits its segment at the current text scale.
-        val measurer = rememberTextMeasurer()
-        val base = MaterialTheme.typography.labelLarge
-        val density = LocalDensity.current
-        val segmentWidth = maxWidth / PriceFilter.entries.size
-        val labelSpace = with(density) { (segmentWidth - SEGMENT_PADDING - SEGMENT_ICON_SPACE).toPx() }
-        val fontSize = remember(labelSpace, density.fontScale, density.density) {
-            (14 downTo 9).map { it.sp }.firstOrNull { size ->
-                PriceFilter.entries.all { p ->
-                    measurer.measure(p.label, base.copy(fontSize = size), maxLines = 1, softWrap = false).size.width <= labelSpace
-                }
-            } ?: 9.sp
-        }
-        val labelStyle = base.copy(fontSize = fontSize)
-
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            itemVerticalAlignment = Alignment.CenterVertically,
-        ) {
-            Surface(
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                    PriceFilter.entries.forEachIndexed { i, p ->
-                        SegmentedButton(
-                            selected = filters.price == p,
-                            onClick = { onPrice(p) },
-                            shape = SegmentedButtonDefaults.itemShape(i, PriceFilter.entries.size),
-                            modifier = Modifier.weight(1f),
-                            label = {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    // Dot in the pin colour, so the bar doubles as the map legend.
-                                    val dot = p.fee?.let { pinColors(it).first }
-                                    if (dot != null && filters.price != p) {
-                                        Box(Modifier.size(10.dp).background(dot, CircleShape))
-                                        Spacer(Modifier.width(6.dp))
-                                    }
-                                    Text(p.label, style = labelStyle, maxLines = 1, softWrap = false)
-                                }
-                            },
-                        )
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        PriceFilter.entries.forEach { p ->
+            val selected = filters.price == p
+            Pill(
+                selected = selected,
+                onClick = { onPrice(p) },
+                label = p.label,
+                leading = {
+                    val dot = p.fee?.let { pinColors(it).first }
+                    when {
+                        selected -> Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize))
+                        dot != null -> Box(Modifier.size(10.dp).background(dot, CircleShape))
                     }
-                }
-            }
-            FilterChip(
-                selected = filters.coveredOnly,
-                onClick = onCovered,
-                label = { Text("Covered", style = labelStyle) },
-                leadingIcon = if (filters.coveredOnly) {
-                    { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize)) }
-                } else {
-                    null
                 },
-                colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
             )
         }
+        Pill(
+            selected = filters.coveredOnly,
+            onClick = onCovered,
+            label = "Covered",
+            leading = {
+                Icon(
+                    if (filters.coveredOnly) Icons.Filled.Check else Icons.Outlined.Roofing,
+                    contentDescription = null,
+                    Modifier.size(FilterChipDefaults.IconSize),
+                )
+            },
+        )
     }
 }
 
-/** Horizontal padding inside a segment, and the room its check icon or legend dot takes. */
-private val SEGMENT_PADDING = 24.dp
-private val SEGMENT_ICON_SPACE = 26.dp
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Pill(selected: Boolean, onClick: () -> Unit, label: String, leading: @Composable () -> Unit) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(label, maxLines = 1, softWrap = false) },
+        leadingIcon = leading,
+        shape = CircleShape,
+        colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = FilterChipDefaults.filterChipElevation(elevation = 2.dp),
+        border = null,
+    )
+}
 
 @Composable
 private fun Hint(text: String, modifier: Modifier = Modifier) {
