@@ -88,6 +88,6 @@ Google Maps or Waze.
 
 ## Before publishing
 
-- Replace the placeholder icons. The app id is `uk.motobays.app` on both platforms.
+- Replace the placeholder iOS icon (Android has its pin-and-motorcycle icon). The app id is `uk.motobays.app` on both platforms.
 - Finish the Firebase setup: enable the Apple provider, deploy the rules, move iOS onto Firebase, and add a release signing key's SHA-1 to the Android app.
 - Self-host or replace the public Photon search service if traffic grows.
