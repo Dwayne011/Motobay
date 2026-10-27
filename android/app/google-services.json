@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "742343123548-nmu495d3ij5at124q42fhhb1njps1rnb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.motobays.app",
+            "certificate_hash": "52e2d5f95599734664832fd5789e0c4905f84d00"
+          }
+        },
+        {
           "client_id": "742343123548-3i40t7il5hn92evte5ked289kqi68js5.apps.googleusercontent.com",
           "client_type": 3
         }
