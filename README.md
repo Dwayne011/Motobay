@@ -102,6 +102,10 @@ Google Maps or Waze.
   Turn on enforcement for Firestore, Storage and Authentication in the console only after the release key's SHA-256 is
   registered and a Play build has been seen passing, or the app locks itself out.
 - **Reports** from the app land in the `reports` collection (write-only from clients); read them in the Firebase console.
+  The privacy policy promises they are deleted 12 months after being dealt with: once a month, delete `reports` documents
+  older than a year in the console (filter on `createdAt`). Nothing automates this yet.
+- **Privacy commitments** made in `docs/privacy.md` that are yours to honour: rights requests answered within one month,
+  riders must be 16 or over (there is no age gate in the app), and the ICO complaint route.
 - **Hosted policy pages** live in `docs/` (`privacy.md`, `delete-account.md`); enable GitHub Pages for the `docs/` folder so
   `Legal.PRIVACY_POLICY_URL` and `Legal.DELETE_ACCOUNT_URL` resolve.
 
