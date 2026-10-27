@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,7 +31,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -56,13 +57,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uk.motobay.app.R
@@ -76,6 +78,7 @@ import uk.motobay.app.data.RecentSignInRequiredException
 import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
+import kotlin.math.roundToInt
 import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
@@ -107,13 +110,8 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
                             selected = settings.themeMode == mode,
                             onClick = { update { it.copy(themeMode = mode) } },
                             shape = SegmentedButtonDefaults.itemShape(i, modes.size),
-                            icon = {
-                                SegmentedButtonDefaults.Icon(active = settings.themeMode == mode) {
-                                    Icon(icon, contentDescription = null, Modifier.size(SegmentedButtonDefaults.IconSize))
-                                }
-                            },
-                            // Centre the label on its letters, not its line box, so it lines up with the icon at every font size.
-                            label = { Text(label, style = LocalTextStyle.current.copy(lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.Both))) },
+                            icon = {},
+                            label = { IconLabel(if (settings.themeMode == mode) Icons.Filled.Check else icon, label) },
                         )
                     }
                 }
@@ -419,3 +417,26 @@ private fun DeleteAccountRow() {
         )
     }
 }
+
+/**
+ * An icon beside a word, with the icon centred on the capital letters rather than
+ * on the text's line box: that is what the eye lines up, and the line box sits a
+ * little high because of the ascender space above the caps.
+ */
+@Composable
+private fun IconLabel(icon: ImageVector, label: String) {
+    val capHeightPx = with(LocalDensity.current) { (MaterialTheme.typography.labelLarge.fontSize * CAP_HEIGHT_EM).toPx() }
+    Row {
+        Icon(
+            icon, contentDescription = null,
+            Modifier.size(SegmentedButtonDefaults.IconSize)
+                // The icon's "baseline" is its centre plus half a cap height, so it sits on the text baseline centred on the caps.
+                .alignBy { it.measuredHeight / 2 + (capHeightPx / 2).roundToInt() },
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(label, Modifier.alignByBaseline(), maxLines = 1, softWrap = false)
+    }
+}
+
+/** Roboto's capital letters are this tall relative to the font size. */
+private const val CAP_HEIGHT_EM = 0.71f
