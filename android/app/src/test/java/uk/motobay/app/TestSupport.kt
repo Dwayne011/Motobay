@@ -72,6 +72,7 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
 
 /** Runs the real screens against the fakes above, so tests never touch Firebase. */
 class TestMotoBayApplication : MotoBayApplication() {
+    override fun useSampleData() = true
     override fun createAuth(): AuthRepository = FakeAuthRepository()
     override fun createCommunity(auth: AuthRepository): CommunityRepository = FakeCommunityRepository(auth)
 }

@@ -1,7 +1,9 @@
 package uk.motobay.app.ui.review
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +17,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TaskAlt
+import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -50,6 +57,7 @@ import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.components.label
 import java.text.DateFormat
 import java.util.Date
+import java.util.Locale
 
 private enum class Kind(val label: String) { Photos("Photos"), Comments("Comments"), Bays("Bays") }
 
@@ -67,6 +75,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val allBays by app.allBays.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var kind by rememberSaveable { mutableStateOf(Kind.Photos) }
+    var viewing by remember { mutableStateOf<String?>(null) }
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
 
     fun decide(kind: Kind, id: String, status: ModerationStatus) {
@@ -106,7 +115,15 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                             selected = kind == k,
                             onClick = { kind = k },
                             shape = SegmentedButtonDefaults.itemShape(i, Kind.entries.size),
-                            label = { Text("${k.label} ($count)", maxLines = 1) },
+                            icon = {},
+                            label = {
+                                // A badge beside the word rather than "(n)" in it: it never gets clipped on narrow screens.
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(k.label, maxLines = 1, softWrap = false)
+                                    if (count > 0) Badge(Modifier.padding(start = 4.dp)) { Text("$count") }
+                                }
+                            },
+                            modifier = Modifier.semantics { contentDescription = "${k.label}, $count waiting" },
                         )
                     }
                 }
@@ -131,22 +148,30 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             }
             if (kind == Kind.Photos) {
                 items(photos, key = { it.id }) { p ->
+                    val bay = allBays[p.bayId]
                     ReviewCard(
-                        author = p.author, date = dateFormat.format(Date(p.createdAt)), bayName = p.bayName,
+                        author = p.author, date = dateFormat.format(Date(p.createdAt)),
+                        bayName = bay?.title ?: p.bayName,
+                        place = bay?.let { placeLine(it.locality, it.lat, it.lon) },
                         onOpenBay = { onOpenBay(p.bayId) },
+                        onOpenMap = bay?.let { { openMap(context, it.lat, it.lon, it.title) } },
                         body = p.caption.ifEmpty { "No caption" },
-                        imagePath = p.url,
+                        imageUrl = p.url,
+                        onViewImage = { viewing = p.url },
                         onApprove = { decide(Kind.Photos, p.id, ModerationStatus.Approved) },
                         onReject = { decide(Kind.Photos, p.id, ModerationStatus.Rejected) },
                     )
                 }
             } else if (kind == Kind.Comments) {
                 items(comments, key = { it.id }) { c ->
+                    val bay = allBays[c.bayId]
                     ReviewCard(
-                        author = c.author, date = dateFormat.format(Date(c.createdAt)), bayName = c.bayName,
+                        author = c.author, date = dateFormat.format(Date(c.createdAt)),
+                        bayName = bay?.title ?: c.bayName,
+                        place = bay?.let { placeLine(it.locality, it.lat, it.lon) },
                         onOpenBay = { onOpenBay(c.bayId) },
+                        onOpenMap = bay?.let { { openMap(context, it.lat, it.lon, it.title) } },
                         body = c.text,
-                        imagePath = null,
                         onApprove = { decide(Kind.Comments, c.id, ModerationStatus.Approved) },
                         onReject = { decide(Kind.Comments, c.id, ModerationStatus.Rejected) },
                     )
@@ -163,15 +188,11 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                     )
                     ReviewCard(
                         author = b.author, date = dateFormat.format(Date(b.createdAt)),
-                        bayName = if (b.editOf != null) "Edit: ${original?.name ?: "bay"}" else "New bay",
-                        onOpenBay = {
-                            if (b.editOf != null) onOpenBay(b.editOf)
-                            else context.startActivity(
-                                Intent(Intent.ACTION_VIEW, Uri.parse("geo:${b.lat},${b.lon}?q=${b.lat},${b.lon}(New bay)")),
-                            )
-                        },
+                        bayName = if (b.editOf != null) "Edit: ${original?.title ?: "bay"}" else "New bay",
+                        place = placeLine(original?.locality, b.lat, b.lon),
+                        onOpenBay = if (b.editOf != null) ({ onOpenBay(b.editOf) }) else null,
+                        onOpenMap = { openMap(context, b.lat, b.lon, if (b.editOf != null) original?.title ?: "Bay" else "New bay") },
                         body = facts.joinToString("\n"),
-                        imagePath = null,
                         onApprove = { decide(Kind.Bays, b.id, ModerationStatus.Approved) },
                         onReject = { decide(Kind.Bays, b.id, ModerationStatus.Rejected) },
                     )
@@ -179,6 +200,23 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
             }
         }
     }
+
+    viewing?.let { url ->
+        AlertDialog(
+            onDismissRequest = { viewing = null },
+            text = { AsyncImage(model = url, contentDescription = "Submitted photo", modifier = Modifier.fillMaxWidth()) },
+            confirmButton = { TextButton(onClick = { viewing = null }) { Text("Close") } },
+        )
+    }
+}
+
+/** "Spitalfields, London E1 · 51.5190, -0.0742" */
+private fun placeLine(locality: String?, lat: Double, lon: Double): String =
+    listOfNotNull(locality, "%.4f, %.4f".format(Locale.UK, lat, lon)).joinToString(" · ")
+
+private fun openMap(context: Context, lat: Double, lon: Double, label: String) {
+    val q = Uri.encode(label)
+    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("geo:$lat,$lon?q=$lat,$lon($q)")))
 }
 
 @Composable
@@ -186,29 +224,41 @@ private fun ReviewCard(
     author: String,
     date: String,
     bayName: String,
-    onOpenBay: () -> Unit,
+    place: String?,
+    onOpenBay: (() -> Unit)?,
+    onOpenMap: (() -> Unit)?,
     body: String,
-    imagePath: String?,
+    imageUrl: String? = null,
+    onViewImage: (() -> Unit)? = null,
     onApprove: () -> Unit,
     onReject: () -> Unit,
 ) {
     OutlinedCard(Modifier.fillMaxWidth()) {
-        imagePath?.let {
+        imageUrl?.let {
             AsyncImage(
                 model = it,
                 contentDescription = "Submitted photo",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.fillMaxWidth().heightIn(max = 320.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 160.dp, max = 320.dp)
+                    .then(if (onViewImage != null) Modifier.clickable(onClick = onViewImage) else Modifier),
             )
         }
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text("$author · $date", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            TextButton(onClick = onOpenBay, contentPadding = PaddingValues(0.dp)) {
-                Text(bayName, style = MaterialTheme.typography.titleMedium)
+            Text(bayName, style = MaterialTheme.typography.titleMedium)
+            place?.let {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Icon(Icons.Outlined.Place, contentDescription = null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
-            Text(body, style = MaterialTheme.typography.bodyMedium)
+            Text(body, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+            Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                onOpenBay?.let { TextButton(onClick = it) { Text("View bay") } }
+                onOpenMap?.let { TextButton(onClick = it) { Text("Open in maps") } }
+            }
             Row(
-                Modifier.fillMaxWidth().padding(top = 8.dp),
+                Modifier.fillMaxWidth().padding(top = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
                 OutlinedButton(onClick = onReject) { Text("Reject") }

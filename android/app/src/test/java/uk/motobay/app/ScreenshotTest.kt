@@ -86,7 +86,7 @@ class ScreenshotTest {
         compose.onNodeWithText("Sample bay 1").assertExists()
         shot("phone-saved")
         compose.onNodeWithText("Review").performClick()
-        compose.onNodeWithText("Comments (1)").performClick()
+        compose.onNodeWithContentDescription("Comments, 1 waiting").performClick()
         compose.onNodeWithText("Pay by app only.").assertExists()
         shot("phone-review")
         compose.onNodeWithText("Approve").performClick()

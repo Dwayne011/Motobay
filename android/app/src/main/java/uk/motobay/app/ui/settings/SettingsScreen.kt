@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +20,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.SettingsBrightness
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -118,7 +115,6 @@ fun SettingsScreen() {
                     SeedSwatches(settings.sourceColor) { c -> update { it.copy(sourceColor = c) } }
                 }
             }
-            PalettePreview(MaterialTheme.colorScheme, Modifier.padding(16.dp))
 
             SectionHeader("Profile")
             OutlinedTextField(
@@ -191,49 +187,6 @@ private fun SeedSwatches(selected: Long, onSelect: (Long) -> Unit) {
             ) {
                 Surface(color = Color(argb), shape = CircleShape, modifier = Modifier.size(if (isSelected) 38.dp else 48.dp)) {
                     if (isSelected) Box(contentAlignment = Alignment.Center) { Icon(Icons.Filled.Check, null, tint = Color.White) }
-                }
-            }
-        }
-    }
-}
-
-/** Shows the generated roles and the five tonal elevation levels. */
-@Composable
-private fun PalettePreview(scheme: ColorScheme, modifier: Modifier = Modifier) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        val roles = listOf(
-            Triple("Primary", scheme.primary, scheme.onPrimary),
-            Triple("Secondary", scheme.secondary, scheme.onSecondary),
-            Triple("Tertiary", scheme.tertiary, scheme.onTertiary),
-            Triple("Primary container", scheme.primaryContainer, scheme.onPrimaryContainer),
-            Triple("Secondary container", scheme.secondaryContainer, scheme.onSecondaryContainer),
-            Triple("Tertiary container", scheme.tertiaryContainer, scheme.onTertiaryContainer),
-        )
-        roles.chunked(3).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                row.forEach { (label, bg, fg) ->
-                    Surface(color = bg, contentColor = fg, shape = MaterialTheme.shapes.medium, modifier = Modifier.weight(1f).heightIn(min = 56.dp)) {
-                        Text(label, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(12.dp))
-                    }
-                }
-            }
-        }
-        Text(
-            "Tonal elevation, levels 0–5",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 8.dp),
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            // M3 elevation levels 0–5 map to 0, 1, 3, 6, 8 and 12dp of tonal elevation.
-            listOf(0, 1, 3, 6, 8, 12).forEachIndexed { level, dp ->
-                Surface(
-                    tonalElevation = dp.dp,
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.weight(1f).height(56.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.medium),
-                ) {
-                    Box(contentAlignment = Alignment.Center) { Text("$level", style = MaterialTheme.typography.labelMedium) }
                 }
             }
         }

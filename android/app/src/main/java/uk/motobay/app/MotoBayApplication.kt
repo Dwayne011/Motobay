@@ -37,7 +37,7 @@ open class MotoBayApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = BuildConfig.SAMPLE_DATA)
+        bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
         auth = createAuth()
         community = createCommunity(auth)
         user = UserRepository(filesDir, appScope)
@@ -45,7 +45,9 @@ open class MotoBayApplication : Application() {
         allBays = combinedBays(bays.bays, community.data, appScope)
     }
 
-    // Overridden in tests so they don't need Firebase.
+    // Overridden in tests so they don't need Firebase or the network.
+    protected open fun useSampleData(): Boolean = BuildConfig.SAMPLE_DATA
+
     protected open fun createAuth(): AuthRepository = FirebaseAuthRepository(this, appScope)
 
     protected open fun createCommunity(auth: AuthRepository): CommunityRepository =
