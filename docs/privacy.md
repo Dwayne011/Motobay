@@ -5,6 +5,7 @@ title: MotoBays Privacy Policy
 # MotoBays Privacy Policy
 
 **Effective date:** 27 October 2026
+
 **Applies to:** the MotoBays Android app (`uk.motobays.app`) and the pages on this site
 
 ## 1. Who we are

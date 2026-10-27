@@ -113,6 +113,7 @@ fun parseMarkdown(src: String): List<Block> {
 /** **bold** and [text](url) inline; everything else literal. */
 fun inline(text: String): AnnotatedString = buildAnnotatedString {
     val linkless = text.replace(Regex("\\[([^]]+)]\\(([^)]+)\\)"), "$1")
+        .replace("`", "") // code spans: just show the text
     var i = 0
     val bold = Regex("\\*\\*(.+?)\\*\\*")
     for (m in bold.findAll(linkless)) {

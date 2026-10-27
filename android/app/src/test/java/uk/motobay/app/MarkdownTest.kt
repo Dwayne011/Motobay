@@ -36,6 +36,6 @@ class MarkdownTest {
         assertEquals(Block.Bullets(listOf("a", "b wrapped")), blocks[2])
         assertEquals(Block.Table(listOf("H1", "H2"), listOf(listOf("r1", "**v1**"), listOf("r2", "[link](http://x)"))), blocks[3])
         assertEquals(Block.Heading(2, "2. Next"), blocks[4])
-        assertEquals("see link here", inline("see [link](http://x) **here**").text)
+        assertEquals("see link here uk.motobays.app", inline("see [link](http://x) **here** `uk.motobays.app`").text)
     }
 }
