@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -34,7 +35,7 @@ import uk.motobay.app.data.Legal
 /** Disclaimer, data licences and the privacy policy, reachable from Settings. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LegalScreen(onBack: () -> Unit) {
+fun LegalScreen(onBack: () -> Unit, onOpenPolicy: (Policy) -> Unit = {}) {
     val context = LocalContext.current
     fun open(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
@@ -62,14 +63,14 @@ fun LegalScreen(onBack: () -> Unit) {
             ListItem(
                 headlineContent = { Text("Privacy policy") },
                 supportingContent = { Text("How MotoBays handles your account, photos and location (UK GDPR)") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                modifier = Modifier.clickable { open(Legal.PRIVACY_POLICY_URL) },
+                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+                modifier = Modifier.clickable { onOpenPolicy(Policy.Privacy) },
             )
             ListItem(
                 headlineContent = { Text("Delete your account") },
                 supportingContent = { Text("You can also delete it from Settings > Account. This page explains what is removed.") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                modifier = Modifier.clickable { open(Legal.DELETE_ACCOUNT_URL) },
+                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+                modifier = Modifier.clickable { onOpenPolicy(Policy.DeleteAccount) },
             )
             HorizontalDivider()
 

@@ -51,6 +51,8 @@ import uk.motobay.app.ui.review.ReviewScreen
 import uk.motobay.app.ui.saved.SavedScreen
 import uk.motobay.app.ui.settings.DisclaimerDialog
 import uk.motobay.app.ui.settings.LegalScreen
+import uk.motobay.app.ui.settings.Policy
+import uk.motobay.app.ui.settings.PolicyScreen
 import uk.motobay.app.ui.settings.SettingsScreen
 import kotlin.reflect.KClass
 
@@ -60,6 +62,7 @@ import kotlin.reflect.KClass
 @Serializable object SettingsDest
 @Serializable object MySubmissionsDest
 @Serializable object LegalDest
+@Serializable data class PolicyDest(val policy: String)
 @Serializable data class BayDest(val id: String)
 
 val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
@@ -147,9 +150,16 @@ fun MotoBayApp(app: MotoBayApplication) {
                 composable<SavedDest> { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
                 composable<ReviewDest> { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
                 composable<SettingsDest> {
-                    SettingsScreen(onOpenSubmissions = { nav.navigate(MySubmissionsDest) }, onOpenLegal = { nav.navigate(LegalDest) })
+                    SettingsScreen(
+                        onOpenSubmissions = { nav.navigate(MySubmissionsDest) },
+                        onOpenLegal = { nav.navigate(LegalDest) },
+                        onOpenPolicy = { nav.navigate(PolicyDest(it.name)) },
+                    )
                 }
-                composable<LegalDest> { LegalScreen(onBack = { nav.popBackStack() }) }
+                composable<LegalDest> { LegalScreen(onBack = { nav.popBackStack() }, onOpenPolicy = { nav.navigate(PolicyDest(it.name)) }) }
+                composable<PolicyDest> { entry ->
+                    PolicyScreen(policy = Policy.valueOf(entry.toRoute<PolicyDest>().policy), onBack = { nav.popBackStack() })
+                }
                 composable<MySubmissionsDest> {
                     MySubmissionsScreen(onBack = { nav.popBackStack() }, onOpenBay = { nav.navigate(BayDest(it)) })
                 }

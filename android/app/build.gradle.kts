@@ -68,6 +68,9 @@ android {
         }
     }
 
+    // The privacy policy and deletion page are shown inside the app from the same files GitHub Pages serves.
+    sourceSets.getByName("main").assets.srcDir(layout.buildDirectory.dir("generated/policies"))
+
     bundle {
         // One upload, Play serves per-device splits.
         language { enableSplit = true }
@@ -141,3 +144,9 @@ dependencies {
     testImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
 }
+
+val copyPolicies by tasks.registering(Copy::class) {
+    from(rootProject.file("../docs")) { include("privacy.md", "delete-account.md") }
+    into(layout.buildDirectory.dir("generated/policies/policies"))
+}
+tasks.named("preBuild") { dependsOn(copyPolicies) }

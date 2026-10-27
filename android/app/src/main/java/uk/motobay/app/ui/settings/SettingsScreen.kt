@@ -85,7 +85,7 @@ import uk.motobay.app.ui.account.SignInButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}) {
+fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}, onOpenPolicy: (Policy) -> Unit = {}) {
     val app = LocalApp.current
     val settings by app.user.settings.collectAsStateWithLifecycle()
     val update = app.user::updateSettings
@@ -186,12 +186,11 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
                 trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
                 modifier = Modifier.clickable(onClick = onOpenLegal),
             )
-            val context = LocalContext.current
             ListItem(
                 headlineContent = { Text("Privacy policy") },
-                supportingContent = { Text("Opens in your browser") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
-                modifier = Modifier.clickable { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Legal.PRIVACY_POLICY_URL))) },
+                supportingContent = { Text("What the app collects, why, and your rights") },
+                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+                modifier = Modifier.clickable { onOpenPolicy(Policy.Privacy) },
             )
             CrashReportRow()
         }

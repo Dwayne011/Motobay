@@ -207,6 +207,17 @@ class ScreenshotTest {
         compose.onNodeWithText("Before you ride").assertDoesNotExist()
     }
 
+    /** The privacy policy is readable inside the app, from the bundled copy of docs/privacy.md. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_privacy_policy_in_app() {
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Privacy policy").performScrollTo().performClick()
+        compose.onNodeWithText("MotoBays Privacy Policy").assertExists()
+        compose.onNodeWithText("1. Who we are").assertExists()
+        shot("phone-privacy-policy")
+    }
+
     /** Legal screen lists the licences and the privacy policy. */
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
     fun phone_legal_screen() {
