@@ -9,7 +9,9 @@ import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
 import uk.motobay.app.data.combinedBays
 import uk.motobay.app.data.CommunityRepository
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.FirebaseAuthRepository
+import uk.motobay.app.data.FirestoreDisplayNames
 import uk.motobay.app.data.FirestoreCommunityRepository
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.UserRepository
@@ -25,6 +27,8 @@ open class MotoBayApplication : Application() {
     lateinit var auth: AuthRepository
         private set
     lateinit var community: CommunityRepository
+        private set
+    lateinit var displayNames: DisplayNames
         private set
     lateinit var user: UserRepository
         private set
@@ -44,6 +48,7 @@ open class MotoBayApplication : Application() {
         bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
         auth = createAuth()
         community = createCommunity(auth)
+        displayNames = createDisplayNames(auth)
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
         allBays = combinedBays(bays.bays, community.data, appScope)
@@ -56,4 +61,6 @@ open class MotoBayApplication : Application() {
 
     protected open fun createCommunity(auth: AuthRepository): CommunityRepository =
         FirestoreCommunityRepository(this, auth, appScope)
+
+    protected open fun createDisplayNames(auth: AuthRepository): DisplayNames = FirestoreDisplayNames(auth)
 }

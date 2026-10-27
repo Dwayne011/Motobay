@@ -38,6 +38,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -57,10 +61,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uk.motobay.app.R
+import kotlinx.coroutines.launch
+import uk.motobay.app.data.ClaimResult
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.Moderators
 import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
+import uk.motobay.app.ui.LocalRequireSignIn
+import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,14 +133,7 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}) {
             }
 
             SectionHeader("Profile")
-            OutlinedTextField(
-                value = settings.displayName,
-                onValueChange = { v -> update { it.copy(displayName = v.take(40)) } },
-                label = { Text("Display name") },
-                supportingText = { Text("Shown next to your photos and comments") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            )
+            DisplayNameField(settings.displayName)
 
             SectionHeader("Account")
             val account by app.auth.user.collectAsStateWithLifecycle()
@@ -230,4 +232,70 @@ private fun CrashReportRow() {
             }
         },
     )
+}
+
+/**
+ * The name shown on the rider's submissions. Nothing changes until Save, which
+ * claims the name so no two riders share one.
+ */
+@Composable
+private fun DisplayNameField(saved: String) {
+    val app = LocalApp.current
+    val snackbar = LocalSnackbar.current
+    val requireSignIn = LocalRequireSignIn.current
+    val scope = rememberCoroutineScope()
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    var draft by rememberSaveable(saved) { mutableStateOf(saved) }
+    var problem by remember { mutableStateOf<String?>(null) }
+    var busy by remember { mutableStateOf(false) }
+    val changed = draft.trim() != saved
+
+    // Signed in on a new phone: pick up the name claimed before.
+    LaunchedEffect(account?.uid) {
+        if (account != null && saved.isBlank()) {
+            app.displayNames.current()?.let { name -> app.user.updateSettings { it.copy(displayName = name) } }
+        }
+    }
+
+    fun save() {
+        val name = draft.trim()
+        DisplayNames.problem(name)?.let { problem = it; return }
+        requireSignIn {
+            busy = true
+            scope.launch {
+                val result = app.displayNames.claim(name)
+                busy = false
+                when (result) {
+                    ClaimResult.Ok -> {
+                        app.user.updateSettings { it.copy(displayName = name) }
+                        problem = null
+                        snackbar.showSnackbar("Display name saved")
+                    }
+                    ClaimResult.Taken -> problem = "Someone already has that name"
+                    is ClaimResult.Invalid -> problem = result.why
+                    ClaimResult.Failed -> snackbar.showSnackbar("Couldn't save your name. Check you're online.")
+                }
+            }
+        }
+    }
+
+    Column(Modifier.padding(horizontal = 16.dp)) {
+        OutlinedTextField(
+            value = draft,
+            onValueChange = { draft = it.take(DisplayNames.MAX); problem = null },
+            label = { Text("Display name") },
+            supportingText = {
+                Text(problem ?: if (saved.isBlank()) "Shown next to your photos and comments. Until you set one, you're \"${DisplayNames.ANONYMOUS}\"." else "Shown next to your photos and comments")
+            },
+            isError = problem != null,
+            singleLine = true,
+            enabled = !busy,
+            trailingIcon = {
+                if (changed && draft.isNotBlank()) {
+                    TextButton(onClick = ::save, enabled = !busy) { Text("Save") }
+                }
+            },
+            modifier = Modifier.fillMaxWidth().testTag("display-name"),
+        )
+    }
 }

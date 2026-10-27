@@ -47,10 +47,18 @@ service cloud.firestore {
       return field is string && field.size() <= maxLen;
     }
 
+    // The author shown on a submission is either the rider's claimed display
+    // name or the anonymous placeholder, so nobody can post under someone else's name.
+    function ownsName(name) {
+      let path = /databases/$(database)/documents/displayNames/$(name.lower());
+      return exists(path) && get(path).data.uid == request.auth.uid;
+    }
+
     function commonFieldsOk() {
       let d = request.resource.data;
       return d.authorUid == request.auth.uid
         && isText(d.author, 40) && d.author.size() > 0
+        && (d.author == 'Anonymous rider' || ownsName(d.author))
         && d.createdAt == request.time
         && validStatusOnCreate();
     }
@@ -107,6 +115,23 @@ service cloud.firestore {
         && (!('covered' in request.resource.data) || request.resource.data.covered is bool);
       allow update: if isAdmin() && onlyStatusChanges();
       allow delete: if isAdmin();
+    }
+
+    // One document per display name, keyed by its lower-case form, so names are unique.
+    match /displayNames/{key} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid)
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 40
+        && request.resource.data.name.trim() == request.resource.data.name
+        && request.resource.data.name.matches('[\\p{L}\\p{N} ._\'-]+')
+        && key == request.resource.data.name.lower()
+        && key != 'anonymous rider'
+        && request.resource.data.createdAt == request.time;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     match /{document=**} {

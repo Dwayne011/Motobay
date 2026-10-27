@@ -19,6 +19,11 @@ after(() => env.cleanup());
 beforeEach(async () => {
   await env.clearFirestore();
   await env.clearStorage();
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    for (const [uid, name] of Object.entries(NAMES)) {
+      await setDoc(doc(ctx.firestore(), `displayNames/${name.toLowerCase()}`), { uid, name, createdAt: new Date() });
+    }
+  });
 });
 
 const google = (uid, email, extra = {}) =>
@@ -28,17 +33,21 @@ const admin = () => google('admin1', ADMIN_EMAIL);
 const gmailAdmin = () => google('admin2', 'dwayne.edwards89@gmail.com');
 const anon = () => env.unauthenticatedContext();
 
+// Each test account's claimed display name; seeded into displayNames before every test.
+const NAMES = { rider1: 'Sam', rider2: 'Alex', admin1: 'Dwayne', admin2: 'Dwayne G', someoneElse: 'Other' };
+const nameOf = (uid) => NAMES[uid] ?? 'Anonymous rider';
+
 const comment = (uid = 'rider1', over = {}) => ({
-  bayId: 'node/1', bayName: 'Bay', text: 'Usually has space', author: 'Sam', authorUid: uid,
+  bayId: 'node/1', bayName: 'Bay', text: 'Usually has space', author: nameOf(uid), authorUid: uid,
   createdAt: serverTimestamp(), status: 'Pending', ...over,
 });
 const photo = (uid = 'rider1', id = 'p1', over = {}) => ({
-  bayId: 'node/1', bayName: 'Bay', caption: '', author: 'Sam', authorUid: uid,
+  bayId: 'node/1', bayName: 'Bay', caption: '', author: nameOf(uid), authorUid: uid,
   url: `https://firebasestorage.googleapis.com/v0/b/x/o/photos%2F${uid}%2F${id}.jpg?alt=media&token=t`,
   storagePath: `photos/${uid}/${id}.jpg`, createdAt: serverTimestamp(), status: 'Pending', ...over,
 });
 const bay = (uid = 'rider1', over = {}) => ({
-  lat: 51.5, lon: -0.1, name: 'New bay', fee: 'Free', notes: '', author: 'Sam', authorUid: uid,
+  lat: 51.5, lon: -0.1, name: 'New bay', fee: 'Free', notes: '', author: nameOf(uid), authorUid: uid,
   createdAt: serverTimestamp(), status: 'Pending', ...over,
 });
 
@@ -68,6 +77,14 @@ describe('submitting', () => {
       await assertFails(setDoc(doc(rider().firestore(), `${col}/${id}`), { ...make('rider1'), isAdmin: true }));
     });
   }
+
+  test('the author must be the rider\'s own claimed name, or anonymous', async () => {
+    const db = rider('rider1').firestore();
+    await assertSucceeds(setDoc(doc(db, 'comments/a'), comment('rider1', { author: 'Sam' })));
+    await assertSucceeds(setDoc(doc(db, 'comments/b'), comment('rider1', { author: 'Anonymous rider' })));
+    await assertFails(setDoc(doc(db, 'comments/c'), comment('rider1', { author: 'Alex' })));
+    await assertFails(setDoc(doc(db, 'comments/d'), comment('rider1', { author: 'Nobody' })));
+  });
 
   test('comments: empty and over-long text are rejected', async () => {
     const db = rider().firestore();
@@ -181,6 +198,37 @@ describe('moderating', () => {
   test('unlisted collections are closed', async () => {
     await assertFails(setDoc(doc(admin().firestore(), 'other/x'), { a: 1 }));
     await assertFails(getDoc(doc(admin().firestore(), 'other/x')));
+  });
+});
+
+describe('display names', () => {
+  const claim = (ctx, name, uid, over = {}) =>
+    setDoc(doc(ctx.firestore(), `displayNames/${name.toLowerCase()}`), { uid, name, createdAt: serverTimestamp(), ...over });
+
+  test('a signed-in rider can claim a free name', async () => {
+    await assertSucceeds(claim(rider('rider1'), 'Night Rider', 'rider1'));
+  });
+  test('a name someone else holds cannot be taken over', async () => {
+    await assertFails(claim(rider('rider1'), 'Alex', 'rider1'));
+  });
+  test('a rider can re-save their own name and release it', async () => {
+    await assertSucceeds(claim(rider('rider1'), 'Sam', 'rider1'));
+    await assertSucceeds(deleteDoc(doc(rider('rider1').firestore(), 'displayNames/sam')));
+    await assertFails(deleteDoc(doc(rider('rider1').firestore(), 'displayNames/alex')));
+  });
+  test('the key must be the lower-case name, and the name must be valid', async () => {
+    const ctx = rider('rider1');
+    await assertFails(setDoc(doc(ctx.firestore(), 'displayNames/wrongkey'), { uid: 'rider1', name: 'Night Rider', createdAt: serverTimestamp() }));
+    await assertFails(claim(ctx, 'A', 'rider1'));
+    await assertFails(claim(ctx, 'x'.repeat(41), 'rider1'));
+    await assertFails(claim(ctx, 'Bad<name>', 'rider1'));
+    await assertFails(claim(ctx, 'Anonymous rider', 'rider1'));
+    await assertFails(claim(ctx, 'Night Rider', 'rider2'));
+  });
+  test('signed-out users can neither read nor claim names', async () => {
+    await assertFails(claim(anon(), 'Ghost', 'rider1'));
+    await assertFails(getDoc(doc(anon().firestore(), 'displayNames/sam')));
+    await assertSucceeds(getDoc(doc(rider('rider2').firestore(), 'displayNames/sam')));
   });
 });
 

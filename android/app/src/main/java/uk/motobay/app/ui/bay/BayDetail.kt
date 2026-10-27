@@ -75,6 +75,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import uk.motobay.app.data.Bay
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.BayComment
 import uk.motobay.app.data.BayPhoto
 import uk.motobay.app.data.BayLoadState
@@ -309,7 +310,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
                 editing = false
                 scope.launch {
                     val ok = runCatching {
-                        app.community.submitBay(submission.copy(author = settings.displayName.ifBlank { "Anonymous rider" }))
+                        app.community.submitBay(submission.copy(author = settings.displayName.ifBlank { DisplayNames.ANONYMOUS }))
                     }.isSuccess
                     snackbar.showSnackbar(if (ok) "Thanks! Your correction will be checked before it's published." else "Couldn't send that. Check you're signed in and online.")
                 }
@@ -429,7 +430,7 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
                     busy = true
                     scope.launch {
                         val ok = runCatching {
-                            app.community.submitPhoto(bay, uri, caption.trim(), settings.displayName.ifBlank { "Anonymous rider" })
+                            app.community.submitPhoto(bay, uri, caption.trim(), settings.displayName.ifBlank { DisplayNames.ANONYMOUS })
                         }.isSuccess
                         busy = false
                         draft = null
@@ -540,7 +541,7 @@ private fun CommentsSection(bay: Bay, moderator: Boolean) {
                     val body = text.trim()
                     scope.launch {
                         val ok = runCatching {
-                            app.community.submitComment(bay, body, settings.displayName.ifBlank { "Anonymous rider" })
+                            app.community.submitComment(bay, body, settings.displayName.ifBlank { DisplayNames.ANONYMOUS })
                         }.isSuccess
                         if (ok) text = ""
                         snackbar.showSnackbar(if (ok) "Thanks! Your comment will appear once it's been reviewed." else "Couldn't post that. Check you're signed in and online.")

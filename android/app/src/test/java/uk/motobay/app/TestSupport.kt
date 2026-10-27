@@ -13,7 +13,9 @@ import uk.motobay.app.data.BayComment
 import uk.motobay.app.data.BayPhoto
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.CommunityData
+import uk.motobay.app.data.ClaimResult
 import uk.motobay.app.data.CommunityRepository
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.ModerationStatus
 import java.util.UUID
 
@@ -73,8 +75,26 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
     override suspend fun deleteComment(id: String) = state.update { d -> d.copy(comments = d.comments.filterNot { it.id == id }) }
 }
 
+/** In-memory name registry: key is the lower-case name, value the uid that holds it. */
+class FakeDisplayNames(private val auth: AuthRepository) : DisplayNames {
+    val taken = mutableMapOf<String, Pair<String, String>>() // key -> (uid, name)
+
+    override suspend fun claim(name: String): ClaimResult {
+        val uid = auth.user.value?.uid ?: return ClaimResult.Failed
+        DisplayNames.problem(name)?.let { return ClaimResult.Invalid(it) }
+        val key = DisplayNames.key(name)
+        taken[key]?.let { (owner, _) -> if (owner != uid) return ClaimResult.Taken }
+        taken.entries.removeAll { it.value.first == uid }
+        taken[key] = uid to name.trim()
+        return ClaimResult.Ok
+    }
+
+    override suspend fun current(): String? = auth.user.value?.uid?.let { uid -> taken.values.firstOrNull { it.first == uid }?.second }
+}
+
 /** Runs the real screens against the fakes above, so tests never touch Firebase. */
 class TestMotoBayApplication : MotoBayApplication() {
+    override fun createDisplayNames(auth: AuthRepository): DisplayNames = FakeDisplayNames(auth)
     override fun useSampleData() = true
     override fun createAuth(): AuthRepository = FakeAuthRepository()
     override fun createCommunity(auth: AuthRepository): CommunityRepository = FakeCommunityRepository(auth)

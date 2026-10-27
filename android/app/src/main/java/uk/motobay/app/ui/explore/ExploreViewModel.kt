@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uk.motobay.app.MotoBayApplication
 import uk.motobay.app.data.Bay
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.CameraSnapshot
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.Fee
@@ -192,7 +193,7 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         cancelAddingBay()
         viewModelScope.launch {
             val ok = runCatching {
-                app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { "Anonymous rider" }))
+                app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { DisplayNames.ANONYMOUS }))
             }.isSuccess
             _messages.send(if (ok) "Thanks! Your bay will appear once it's been reviewed." else "Couldn't send that bay. Check you're signed in and online.")
         }

@@ -162,6 +162,28 @@ class ScreenshotTest {
         compose.onNodeWithText("Open bay and try again").assertExists()
     }
 
+    /** Names only change on Save, and a name another rider holds is refused. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_display_name_saves_and_rejects_duplicates() {
+        val names = app.displayNames as FakeDisplayNames
+        names.taken["ridermike"] = "someoneElse" to "RiderMike"
+        app.user.updateSettings { it.copy(displayName = "") }
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithTag("display-name").performTextInput("RiderMike")
+        compose.onNodeWithText("Save").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Someone already has that name").assertExists()
+        assertEquals("", app.user.settings.value.displayName)
+        compose.onNodeWithTag("display-name").performTextClearance()
+        compose.onNodeWithTag("display-name").performTextInput("Dwayne")
+        assertEquals("", app.user.settings.value.displayName) // typing alone changes nothing
+        compose.onNodeWithText("Save").performClick()
+        compose.waitForIdle()
+        assertEquals("Dwayne", app.user.settings.value.displayName)
+        assertEquals("admin1" to "Dwayne", names.taken["dwayne"])
+    }
+
     /** The tab counts must stay inside their segments at the largest common font size. */
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
     fun phone_review_large_text() {
