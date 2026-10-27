@@ -40,7 +40,7 @@ open class MotoBayApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install() }
+        crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install(); it.collectSystemExitReason(this) }
         bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
         auth = createAuth()
         community = createCommunity(auth)

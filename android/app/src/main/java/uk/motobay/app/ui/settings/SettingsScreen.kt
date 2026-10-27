@@ -215,9 +215,9 @@ private fun CrashReportRow() {
     var report by remember { mutableStateOf(app.crashLog.read()) }
     val text = report ?: return
     ListItem(
-        headlineContent = { Text("The app crashed last time") },
+        headlineContent = { Text("The app closed unexpectedly last time") },
         overlineContent = { Text("Send the report to ${Moderators.SUPPORT_EMAIL}") },
-        supportingContent = { Text(text.lineSequence().drop(3).firstOrNull { it.isNotBlank() } ?: "Crash report saved") },
+        supportingContent = { Text(text.lineSequence().drop(1).firstOrNull { it.isNotBlank() } ?: "Report saved") },
         leadingContent = { Icon(Icons.Outlined.BugReport, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
         trailingContent = {
             Row {
