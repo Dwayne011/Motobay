@@ -3,12 +3,28 @@ package uk.motobay.app.data
 /** Legal text, links and attributions. Change the URLs here, nowhere else. */
 object Legal {
     /** Replace with the hosted UK GDPR privacy policy before release. */
-    const val PRIVACY_POLICY_URL = "https://example.com/motobays/privacy"
+    const val PRIVACY_POLICY_URL = "https://dwayne011.github.io/Motobay/privacy.html"
+
+    /** Google Play requires a web page where account deletion can be requested. */
+    const val DELETE_ACCOUNT_URL = "https://dwayne011.github.io/Motobay/delete-account.html"
 
     /** Shown once on first launch, and always available under Settings > Legal. */
     const val DISCLAIMER = "Parking bay data is for guidance only. UK councils suspend bays and change permit rules " +
         "without notice. Always check physical street signage and bay markings before leaving your motorcycle. " +
         "This app accepts no liability for Penalty Charge Notices (PCNs), fines, or vehicle removal."
+
+    /** Shown with the disclaimer and before the first post. */
+    const val UGC_TERMS = "By posting photos or comments you agree not to upload abusive, illegal or misleading content. " +
+        "Everything posted is checked before it is published and can be reported or removed."
+
+    /** Why something is being reported; stored on the report document. */
+    val REPORT_REASONS = listOf(
+        "spam" to "Spam or advertising",
+        "abusive" to "Abusive or offensive",
+        "misleading" to "Wrong or misleading",
+        "privacy" to "Shows a face or number plate",
+        "other" to "Something else",
+    )
 
     data class Attribution(val title: String, val text: String, val url: String)
 

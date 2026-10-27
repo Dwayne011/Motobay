@@ -168,6 +168,17 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
                 )
             }
 
+            if (settings.blocked.isNotEmpty()) {
+                SectionHeader("Blocked riders")
+                settings.blocked.forEach { b ->
+                    ListItem(
+                        headlineContent = { Text(b.name) },
+                        supportingContent = { Text("Their photos and comments are hidden on this phone") },
+                        trailingContent = { TextButton(onClick = { app.user.unblock(b.uid) }) { Text("Unblock") } },
+                    )
+                }
+            }
+
             SectionHeader("About")
             ListItem(
                 headlineContent = { Text("Legal & about") },

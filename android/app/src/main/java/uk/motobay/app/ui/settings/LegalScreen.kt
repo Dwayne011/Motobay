@@ -55,6 +55,7 @@ fun LegalScreen(onBack: () -> Unit) {
                 Column(Modifier.padding(16.dp)) {
                     Text("Guidance only", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onErrorContainer)
                     Text(Legal.DISCLAIMER, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.padding(top = 8.dp))
+                    Text(Legal.UGC_TERMS, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.padding(top = 8.dp))
                 }
             }
 
@@ -63,6 +64,12 @@ fun LegalScreen(onBack: () -> Unit) {
                 supportingContent = { Text("How MotoBays handles your account, photos and location (UK GDPR)") },
                 trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
                 modifier = Modifier.clickable { open(Legal.PRIVACY_POLICY_URL) },
+            )
+            ListItem(
+                headlineContent = { Text("Delete your account") },
+                supportingContent = { Text("You can also delete it from Settings > Account. This page explains what is removed.") },
+                trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null) },
+                modifier = Modifier.clickable { open(Legal.DELETE_ACCOUNT_URL) },
             )
             HorizontalDivider()
 
@@ -96,7 +103,7 @@ fun DisclaimerDialog(onAccept: () -> Unit) {
         onDismissRequest = {},
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         title = { Text("Before you ride") },
-        text = { Text(Legal.DISCLAIMER) },
+        text = { Text("${Legal.DISCLAIMER}\n\n${Legal.UGC_TERMS}") },
         confirmButton = { Button(onClick = onAccept) { Text("I understand") } },
     )
 }

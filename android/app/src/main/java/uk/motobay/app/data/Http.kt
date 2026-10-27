@@ -8,16 +8,19 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
-/** Shared HTTP client. Open-data services ask apps to identify themselves. */
+/**
+ * What every request identifies itself as: "uk.motobays.app/1.0.0 (Android; +repo)".
+ * Photon, postcodes.io and OpenFreeMap ask for a real User-Agent and may throttle the
+ * stock OkHttp one.
+ */
+const val USER_AGENT = "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME} (Android; +https://github.com/Dwayne011/Motobay)"
+
+/** Shared HTTP client for bay data, Photon and postcodes.io; the map's tile requests use it too (see BayMap). */
 val httpClient: OkHttpClient = OkHttpClient.Builder()
     .connectTimeout(15, TimeUnit.SECONDS)
     .readTimeout(30, TimeUnit.SECONDS)
     .addInterceptor { chain ->
-        chain.proceed(
-            chain.request().newBuilder()
-                .header("User-Agent", "MotoBays/${BuildConfig.VERSION_NAME} (Android)")
-                .build(),
-        )
+        chain.proceed(chain.request().newBuilder().header("User-Agent", USER_AGENT).build())
     }
     .build()
 

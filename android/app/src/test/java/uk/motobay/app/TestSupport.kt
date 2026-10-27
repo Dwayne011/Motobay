@@ -17,6 +17,7 @@ import uk.motobay.app.data.ClaimResult
 import uk.motobay.app.data.CommunityRepository
 import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.data.ReportTarget
 import java.util.UUID
 
 /** Stands in for Firebase Auth in tests. Starts signed out. */
@@ -76,6 +77,11 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
     override suspend fun deletePhoto(id: String) = state.update { d -> d.copy(photos = d.photos.filterNot { it.id == id }) }
     override suspend fun deleteComment(id: String) = state.update { d -> d.copy(comments = d.comments.filterNot { it.id == id }) }
 
+    val reports = mutableListOf<Map<String, String>>()
+    override suspend fun report(target: ReportTarget, targetId: String, targetAuthorUid: String, reason: String, details: String) {
+        reports += mapOf("targetType" to target.key, "targetId" to targetId, "targetAuthorUid" to targetAuthorUid, "reporterUid" to uid(), "reason" to reason, "details" to details)
+    }
+
     override suspend fun deleteEverythingByMe() {
         val me = uid()
         state.update { d ->
@@ -118,6 +124,7 @@ class FakeDisplayNames(private val auth: AuthRepository) : DisplayNames {
 
 /** Runs the real screens against the fakes above, so tests never touch Firebase. */
 class TestMotoBayApplication : MotoBayApplication() {
+    override fun installAppCheck() {} // no Firebase in tests
     override fun createDisplayNames(auth: AuthRepository): DisplayNames = FakeDisplayNames(auth)
     override fun useSampleData() = true
     override fun createAuth(): AuthRepository = FakeAuthRepository()

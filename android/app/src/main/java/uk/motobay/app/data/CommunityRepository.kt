@@ -43,4 +43,9 @@ interface CommunityRepository {
 
     /** Every photo, comment and bay change the signed-in rider ever submitted, and the photo files. */
     suspend fun deleteEverythingByMe()
+
+    /** Flags someone else's content for the admin. [reason] is a key from [Legal.REPORT_REASONS]. */
+    suspend fun report(target: ReportTarget, targetId: String, targetAuthorUid: String, reason: String, details: String)
 }
+
+enum class ReportTarget(val key: String) { Photo("photo"), Comment("comment"), Bay("bay") }

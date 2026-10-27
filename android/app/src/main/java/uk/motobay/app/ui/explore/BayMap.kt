@@ -36,6 +36,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import org.maplibre.android.MapLibre
+import org.maplibre.android.module.http.HttpRequestUtil
+import uk.motobay.app.data.httpClient
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
@@ -214,6 +216,8 @@ fun BayMap(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val mapView = remember {
         MapLibre.getInstance(context.applicationContext)
+        // Tiles and styles go through the app's client, so OpenFreeMap sees the same User-Agent as everything else.
+        HttpRequestUtil.setOkHttpClient(httpClient)
         MapView(context).apply { onCreate(null) }
     }
     var map by remember { mutableStateOf<MapLibreMap?>(null) }

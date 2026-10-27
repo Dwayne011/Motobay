@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FieldValue
 internal const val PHOTOS = "photos"
 internal const val COMMENTS = "comments"
 internal const val BAYS = "bays"
+internal const val REPORTS = "reports"
 
 private fun Map<String, Any?>.str(key: String) = this[key] as? String
 private fun Map<String, Any?>.num(key: String) = (this[key] as? Number)

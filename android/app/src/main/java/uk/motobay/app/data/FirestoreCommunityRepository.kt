@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -151,6 +152,21 @@ class FirestoreCommunityRepository(
                 batch.commit().await()
             }
         }
+    }
+
+    override suspend fun report(target: ReportTarget, targetId: String, targetAuthorUid: String, reason: String, details: String) {
+        val uid = requireUid()
+        db.collection(REPORTS).document().set(
+            mapOf(
+                "targetType" to target.key,
+                "targetId" to targetId,
+                "targetAuthorUid" to targetAuthorUid,
+                "reporterUid" to uid,
+                "reason" to reason,
+                "details" to details.trim().take(300),
+                "createdAt" to FieldValue.serverTimestamp(),
+            ),
+        ).awaitQueued()
     }
 
     private fun requireUid(): String = auth.user.value?.uid ?: throw IllegalStateException("Sign in to contribute")

@@ -95,6 +95,16 @@ Google Maps or Waze.
   (and to the Firebase API key's Android restriction in Google Cloud).
 - Self-host or replace the public Photon search service if traffic grows.
 
+## Firebase hardening
+
+- **App Check** is wired in (`MotoBayApplication.installAppCheck`): Play Integrity in release, a debug token in debug builds.
+  The debug token is printed to logcat on first run; add it under Firebase console > App Check > Apps > Manage debug tokens.
+  Turn on enforcement for Firestore, Storage and Authentication in the console only after the release key's SHA-256 is
+  registered and a Play build has been seen passing, or the app locks itself out.
+- **Reports** from the app land in the `reports` collection (write-only from clients); read them in the Firebase console.
+- **Hosted policy pages** live in `docs/` (`privacy.md`, `delete-account.md`); enable GitHub Pages for the `docs/` folder so
+  `Legal.PRIVACY_POLICY_URL` and `Legal.DELETE_ACCOUNT_URL` resolve.
+
 ## Releasing to Google Play
 
 Signing: create an upload keystore once and keep it out of git (`.gitignore` already covers it):

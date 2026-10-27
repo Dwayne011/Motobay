@@ -134,6 +134,22 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
+    // Google Play UGC rule: riders can flag content. Reports are write-only from
+    // the app; the admin reads them in the Firebase console.
+    match /reports/{id} {
+      allow read, update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['targetType', 'targetId', 'targetAuthorUid', 'reporterUid', 'reason', 'details', 'createdAt'])
+        && request.resource.data.keys().hasAll(['targetType', 'targetId', 'targetAuthorUid', 'reporterUid', 'reason', 'details', 'createdAt'])
+        && request.resource.data.targetType in ['photo', 'comment', 'bay']
+        && isText(request.resource.data.targetId, 100)
+        && isText(request.resource.data.targetAuthorUid, 128)
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.reason in ['spam', 'abusive', 'misleading', 'privacy', 'other']
+        && isText(request.resource.data.details, 300)
+        && request.resource.data.createdAt == request.time;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

@@ -35,6 +35,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import uk.motobay.app.data.AuthUser
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.ModerationStatus
@@ -249,6 +250,37 @@ class ScreenshotTest {
         setApp(dark = true)
         compose.onNodeWithText("Settings").performClick()
         shot("phone-settings-large-text-dark")
+    }
+
+    /** UGC: a rider can report and block another rider from a comment; blocking hides their content at once. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_report_and_block_comment() {
+        val auth = app.auth as FakeAuthRepository
+        auth.set(FakeAuthRepository.RIDER)
+        runBlocking {
+            app.community.submitComment(SampleBays.all[0], "Rude remark", "Rider")
+            app.community.moderateComment(app.community.data.value.comments.first { it.text == "Rude remark" }.id, ModerationStatus.Approved)
+        }
+        auth.set(AuthUser("viewer1", "viewer@example.com", isModerator = false))
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Light) }
+        compose.setContent { DetailHost() }
+        compose.onNodeWithText("Rude remark").assertExists()
+        compose.onNodeWithContentDescription("More options for Rider's comment").performClick()
+        compose.onNodeWithText("Report").performClick()
+        compose.onNodeWithText("Abusive or offensive").performClick()
+        compose.onNodeWithTag("report-send").performClick()
+        compose.waitForIdle()
+        val report = (app.community as FakeCommunityRepository).reports.single()
+        assertEquals("comment", report["targetType"])
+        assertEquals("rider1", report["targetAuthorUid"])
+        assertEquals("viewer1", report["reporterUid"])
+        assertEquals("abusive", report["reason"])
+
+        compose.onNodeWithContentDescription("More options for Rider's comment").performClick()
+        compose.onNodeWithText("Block Rider").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Rude remark").assertDoesNotExist()
+        assertEquals(listOf("rider1"), app.user.settings.value.blocked.map { it.uid })
     }
 
     /** The tab counts must stay inside their segments at the largest common font size. */

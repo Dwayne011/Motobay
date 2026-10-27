@@ -22,6 +22,8 @@ data class Settings(
     val lastMap: CameraSnapshot? = null,
     /** Places picked from search, newest first. */
     val recentPlaces: List<RecentPlace> = emptyList(),
+    /** Riders whose photos and comments this device hides. Kept locally; the admin still sees everything. */
+    val blocked: List<BlockedUser> = emptyList(),
 ) {
     companion object {
         const val DEFAULT_SOURCE_COLOR = 0xFF0B6E99
@@ -31,6 +33,9 @@ data class Settings(
 
 @Serializable
 data class CameraSnapshot(val lat: Double, val lon: Double, val zoom: Double)
+
+@Serializable
+data class BlockedUser(val uid: String, val name: String)
 
 @Serializable
 data class RecentPlace(val title: String, val subtitle: String, val lat: Double, val lon: Double)
@@ -57,6 +62,12 @@ class UserRepository(dir: File, scope: CoroutineScope) {
     }
 
     fun clearRecentPlaces() = settingsStore.update { it.copy(recentPlaces = emptyList()) }
+
+    fun block(uid: String, name: String) = settingsStore.update { st ->
+        if (st.blocked.any { it.uid == uid }) st else st.copy(blocked = st.blocked + BlockedUser(uid, name))
+    }
+
+    fun unblock(uid: String) = settingsStore.update { st -> st.copy(blocked = st.blocked.filterNot { it.uid == uid }) }
 
     fun toggleFavourite(bay: Bay) = favouritesStore.update { f ->
         if (bay.id in f) f - bay.id else f + (bay.id to bay)

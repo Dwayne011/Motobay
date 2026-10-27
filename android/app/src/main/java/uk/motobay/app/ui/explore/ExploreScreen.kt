@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.outlined.Roofing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -781,15 +782,27 @@ private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onC
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Pill(selected: Boolean, onClick: () -> Unit, label: String, leading: @Composable () -> Unit) {
+    // Taller than the M3 default and with a visible outline, so they read over the map like Google Maps' chips.
     FilterChip(
         selected = selected,
         onClick = onClick,
-        label = { Text(label, maxLines = 1, softWrap = false) },
+        label = { Text(label, style = MaterialTheme.typography.titleSmall, maxLines = 1, softWrap = false, modifier = Modifier.padding(vertical = 4.dp)) },
         leadingIcon = leading,
         shape = CircleShape,
-        colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = FilterChipDefaults.filterChipElevation(elevation = 2.dp),
-        border = null,
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
+        elevation = FilterChipDefaults.filterChipElevation(elevation = 3.dp),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true, selected = selected,
+            borderColor = MaterialTheme.colorScheme.outline,
+            selectedBorderColor = MaterialTheme.colorScheme.primary,
+            borderWidth = 1.dp, selectedBorderWidth = 1.5.dp,
+        ),
+        modifier = Modifier.height(44.dp),
     )
 }
 

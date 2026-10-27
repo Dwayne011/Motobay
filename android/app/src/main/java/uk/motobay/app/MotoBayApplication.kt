@@ -1,6 +1,7 @@
 package uk.motobay.app
 
 import android.app.Application
+import com.google.firebase.appcheck.FirebaseAppCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +46,7 @@ open class MotoBayApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install(); it.collectSystemExitReason(this) }
+        installAppCheck()
         bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
         auth = createAuth()
         community = createCommunity(auth)
@@ -52,6 +54,15 @@ open class MotoBayApplication : Application() {
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
         allBays = combinedBays(bays.bays, community.data, appScope)
+    }
+
+    /**
+     * App Check: Firestore, Storage and Auth only answer requests that carry a token
+     * proving they came from this app (Play Integrity in release, a registered debug
+     * token in debug). Enforcement is switched on per service in the Firebase console.
+     */
+    protected open fun installAppCheck() {
+        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(appCheckProviderFactory())
     }
 
     // Overridden in tests so they don't need Firebase or the network.

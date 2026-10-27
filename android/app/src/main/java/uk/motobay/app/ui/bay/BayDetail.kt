@@ -31,6 +31,9 @@ import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -82,6 +85,8 @@ import uk.motobay.app.data.BayLoadState
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
 import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.ui.components.ReportSheet
+import uk.motobay.app.data.ReportTarget
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
@@ -330,8 +335,11 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
     val scope = rememberCoroutineScope()
     val community by app.community.data.collectAsStateWithLifecycle()
     val settings by app.user.settings.collectAsStateWithLifecycle()
-    val approved = community.photos.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved }
+    val blocked = settings.blocked.map { it.uid }.toSet()
+    val approved = community.photos.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved && it.authorUid !in blocked }
     val pending = community.photos.count { it.bayId == bay.id && it.status == ModerationStatus.Pending }
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    var reporting by remember { mutableStateOf<BayPhoto?>(null) }
 
     val requireSignIn = LocalRequireSignIn.current
     var chooser by remember { mutableStateOf(false) }
@@ -452,11 +460,34 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
                 }
             },
             confirmButton = { TextButton(onClick = { viewing = null }) { Text("Close") } },
-            dismissButton = if (moderator) ({
-                TextButton(onClick = { viewing = null; deleting = photo }) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+            dismissButton = {
+                Row {
+                    if (moderator) {
+                        TextButton(onClick = { viewing = null; deleting = photo }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+                    } else if (photo.authorUid.isNotEmpty() && photo.authorUid != account?.uid) {
+                        TextButton(onClick = { viewing = null; requireSignIn { reporting = photo } }) { Text("Report") }
+                        TextButton(onClick = {
+                            viewing = null
+                            app.user.block(photo.authorUid, photo.author)
+                            scope.launch { snackbar.showSnackbar("${photo.author} blocked. Unblock in Settings.") }
+                        }) { Text("Block") }
+                    }
                 }
-            }) else null,
+            },
+        )
+    }
+
+    reporting?.let { photo ->
+        ReportSheet(
+            what = "photo",
+            onDismiss = { reporting = null },
+            onSubmit = { reason, details ->
+                reporting = null
+                scope.launch {
+                    val ok = runCatching { app.community.report(ReportTarget.Photo, photo.id, photo.authorUid, reason, details) }.isSuccess
+                    snackbar.showSnackbar(if (ok) "Thanks, the photo has been reported." else "Couldn't send that report. Check you're online.")
+                }
+            },
         )
     }
 
@@ -487,8 +518,11 @@ private fun CommentsSection(bay: Bay, moderator: Boolean) {
     val requireSignIn = LocalRequireSignIn.current
     val community by app.community.data.collectAsStateWithLifecycle()
     val settings by app.user.settings.collectAsStateWithLifecycle()
-    val approved = community.comments.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved }
+    val blocked = settings.blocked.map { it.uid }.toSet()
+    val approved = community.comments.filter { it.bayId == bay.id && it.status == ModerationStatus.Approved && it.authorUid !in blocked }
     val pending = community.comments.count { it.bayId == bay.id && it.status == ModerationStatus.Pending }
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    var reporting by remember { mutableStateOf<BayComment?>(null) }
     var text by rememberSaveable { mutableStateOf("") }
     var deleting by remember { mutableStateOf<BayComment?>(null) }
     val dateFormat = remember { DateFormat.getDateInstance(DateFormat.MEDIUM) }
@@ -513,11 +547,36 @@ private fun CommentsSection(bay: Bay, moderator: Boolean) {
                         }
                     }
                 },
-                trailingContent = if (moderator) ({
-                    IconButton(onClick = { deleting = c }) {
-                        Icon(Icons.Outlined.Delete, contentDescription = "Delete comment", tint = MaterialTheme.colorScheme.error)
-                    }
-                }) else null,
+                trailingContent = when {
+                    moderator -> ({
+                        IconButton(onClick = { deleting = c }) {
+                            Icon(Icons.Outlined.Delete, contentDescription = "Delete comment", tint = MaterialTheme.colorScheme.error)
+                        }
+                    })
+                    c.authorUid.isNotEmpty() && c.authorUid != account?.uid -> ({
+                        var menu by remember { mutableStateOf(false) }
+                        Box {
+                            IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, contentDescription = "More options for ${c.author}'s comment") }
+                            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                                DropdownMenuItem(
+                                    text = { Text("Report") },
+                                    leadingIcon = { Icon(Icons.Outlined.Flag, contentDescription = null) },
+                                    onClick = { menu = false; requireSignIn { reporting = c } },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Block ${c.author}") },
+                                    leadingIcon = { Icon(Icons.Outlined.Block, contentDescription = null) },
+                                    onClick = {
+                                        menu = false
+                                        app.user.block(c.authorUid, c.author)
+                                        scope.launch { snackbar.showSnackbar("${c.author} blocked. Unblock in Settings.") }
+                                    },
+                                )
+                            }
+                        }
+                    })
+                    else -> null
+                },
             )
         }
         if (pending > 0) {
@@ -549,6 +608,20 @@ private fun CommentsSection(bay: Bay, moderator: Boolean) {
                 }
             }) { Text("Post") }
         }
+    }
+
+    reporting?.let { comment ->
+        ReportSheet(
+            what = "comment",
+            onDismiss = { reporting = null },
+            onSubmit = { reason, details ->
+                reporting = null
+                scope.launch {
+                    val ok = runCatching { app.community.report(ReportTarget.Comment, comment.id, comment.authorUid, reason, details) }.isSuccess
+                    snackbar.showSnackbar(if (ok) "Thanks, the comment has been reported." else "Couldn't send that report. Check you're online.")
+                }
+            },
+        )
     }
 
     deleting?.let { comment ->

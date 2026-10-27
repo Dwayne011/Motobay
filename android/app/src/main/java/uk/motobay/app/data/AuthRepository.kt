@@ -2,6 +2,7 @@ package uk.motobay.app.data
 
 import android.app.Activity
 import android.content.Context
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import uk.motobay.app.R
 
@@ -50,7 +52,7 @@ interface AuthRepository {
 
 class FirebaseAuthRepository(
     private val context: Context,
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
 ) : AuthRepository {
 
@@ -87,7 +89,13 @@ class FirebaseAuthRepository(
         }
     }
 
-    override fun signOut() = auth.signOut()
+    /** Firebase session first, then Credential Manager, so the next sign-in shows the account picker again. */
+    override fun signOut() {
+        auth.signOut()
+        scope.launch {
+            runCatching { CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest()) }
+        }
+    }
 
     override suspend fun deleteAccount() {
         val user = auth.currentUser ?: return
@@ -96,6 +104,7 @@ class FirebaseAuthRepository(
         } catch (e: FirebaseAuthRecentLoginRequiredException) {
             throw RecentSignInRequiredException()
         }
+        runCatching { CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest()) }
     }
 }
 

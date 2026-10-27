@@ -235,6 +235,35 @@ describe('display names', () => {
   });
 });
 
+describe('reports', () => {
+  const report = (over = {}) => ({
+    targetType: 'comment', targetId: 'c1', targetAuthorUid: 'rider2', reporterUid: 'rider1',
+    reason: 'abusive', details: '', createdAt: serverTimestamp(), ...over,
+  });
+  test('a signed-in rider can file a report about someone else\'s content', async () => {
+    await assertSucceeds(setDoc(doc(rider('rider1').firestore(), 'reports/r1'), report()));
+  });
+  test('signed-out users cannot report', async () => {
+    await assertFails(setDoc(doc(anon().firestore(), 'reports/r1'), report()));
+  });
+  test('reports are validated', async () => {
+    const db = rider('rider1').firestore();
+    await assertFails(setDoc(doc(db, 'reports/a'), report({ reporterUid: 'rider2' })));
+    await assertFails(setDoc(doc(db, 'reports/b'), report({ reason: 'dislike' })));
+    await assertFails(setDoc(doc(db, 'reports/c'), report({ targetType: 'user' })));
+    await assertFails(setDoc(doc(db, 'reports/d'), report({ details: 'x'.repeat(301) })));
+    await assertFails(setDoc(doc(db, 'reports/e'), report({ extra: true })));
+    await assertFails(setDoc(doc(db, 'reports/f'), report({ createdAt: new Date(2020, 1, 1) })));
+  });
+  test('nobody can read, change or delete reports from the app, not even the admin', async () => {
+    await seed('reports/r1', report());
+    await assertFails(getDoc(doc(rider('rider1').firestore(), 'reports/r1')));
+    await assertFails(getDoc(doc(admin().firestore(), 'reports/r1')));
+    await assertFails(updateDoc(doc(admin().firestore(), 'reports/r1'), { reason: 'spam' }));
+    await assertFails(deleteDoc(doc(admin().firestore(), 'reports/r1')));
+  });
+});
+
 describe('storage', () => {
   const jpeg = () => new Uint8Array([0xff, 0xd8, 0xff, 0xd9]);
   const meta = { contentType: 'image/jpeg' };
