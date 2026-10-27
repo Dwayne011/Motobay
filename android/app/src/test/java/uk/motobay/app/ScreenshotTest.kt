@@ -18,6 +18,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.core.app.ApplicationProvider
@@ -147,9 +148,18 @@ class ScreenshotTest {
         auth.set(FakeAuthRepository.RIDER)
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("My submissions").performClick()
+        compose.onNodeWithContentDescription("Rejected, 1").performClick()
+        compose.onNodeWithText("Reason: Bay is paid after 9am").assertExists()
+        shot("phone-my-submissions")
+        // Search narrows the list; a miss says so.
+        compose.onNodeWithText("Search bay, text or reason").performTextInput("zzz")
+        compose.onNodeWithText("Nothing rejected matches \"zzz\".").assertExists()
+        compose.onNodeWithText("zzz").performTextClearance()
+        compose.onNodeWithText("Search bay, text or reason").performTextInput("cheap")
+        // Tapping a row opens the details with the full reason and a way back to the bay.
+        compose.onNodeWithText("Reason: Bay is paid after 9am").performClick()
         compose.onNodeWithText("Not approved: Bay is paid after 9am").assertExists()
         compose.onNodeWithText("Open bay and try again").assertExists()
-        shot("phone-my-submissions")
     }
 
     /** The tab counts must stay inside their segments at the largest common font size. */
