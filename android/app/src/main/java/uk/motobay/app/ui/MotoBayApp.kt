@@ -1,6 +1,7 @@
 package uk.motobay.app.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -178,6 +179,8 @@ fun MotoBayApp(app: MotoBayApplication) {
                         }
                     },
                     containerColor = MaterialTheme.colorScheme.background,
+                    // Full screen: the map and each screen's own app bar run under the transparent status bar.
+                    contentWindowInsets = WindowInsets(0),
                 ) { inner -> Box(Modifier.padding(inner)) { content() } }
             } else {
                 NavigationSuiteScaffold(
