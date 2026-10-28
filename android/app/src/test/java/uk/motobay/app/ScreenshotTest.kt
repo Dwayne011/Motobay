@@ -365,6 +365,8 @@ class ScreenshotTest {
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
     fun phone_bay_opens_as_preview_card() {
         app.user.updateSettings { it.copy(lastMap = uk.motobay.app.data.CameraSnapshot(51.5136, -0.1365, 16.0)) }
+        (app.community as FakeCommunityRepository).seedRating(SampleBays.all[0].id, 5, "rider2")
+        (app.community as FakeCommunityRepository).seedRating(SampleBays.all[0].id, 4, "rider3")
         setApp(dark = true)
         // The map is a placeholder in tests, so pick the bay from Saved in the search view.
         compose.onNodeWithText("Search a town, street or postcode").performClick()
@@ -374,6 +376,8 @@ class ScreenshotTest {
         compose.waitForIdle()
         compose.onNodeWithTag("bay-preview").assertExists()
         compose.onNodeWithText("Go").assertExists()
+        // The bay's star rating sits in the card's top-right corner.
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
         // Still on Explore: the search bar is there, no "Bay details" app bar.
         compose.onNodeWithText("Search a town, street or postcode").assertExists()
         shot("phone-dark-bay-preview")

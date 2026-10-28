@@ -1,6 +1,14 @@
 package uk.motobay.app.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import java.util.Locale
+import uk.motobay.app.data.RatingSummary
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.platform.testTag
+import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -225,3 +233,35 @@ fun VSpace(dp: Int) = Spacer(Modifier.height(dp.dp))
 
 @Composable
 fun HSpace(dp: Int) = Spacer(Modifier.width(dp.dp))
+
+/**
+ * A bay's average rating: a gold star, "4.5" and "(12)", or "No ratings" when
+ * nobody has rated it yet. [compact] is the smaller size for the map's preview card.
+ */
+@Composable
+fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette, modifier: Modifier = Modifier, compact: Boolean = false) {
+    val description = summary?.let { "Rated %.1f out of 5 by %d %s".format(Locale.UK, it.average, it.count, if (it.count == 1) "rider" else "riders") }
+        ?: "No ratings yet"
+    val icon = if (compact) 12.dp else 14.dp
+    Surface(
+        shape = CircleShape,
+        color = palette.chipUnselectedBg,
+        border = BorderStroke(1.dp, palette.chipUnselectedBorder),
+        modifier = modifier.clearAndSetSemantics { contentDescription = description }.testTag("rating-badge"),
+    ) {
+        Row(
+            Modifier.padding(horizontal = if (compact) 8.dp else 10.dp, vertical = if (compact) 3.dp else 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 4.dp),
+        ) {
+            if (summary == null) {
+                Icon(Icons.Outlined.StarBorder, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(icon))
+                Text("No ratings", style = auroraStyle(if (compact) 10.sp else 11.sp, FontWeight.Medium, palette.cardSubtext), maxLines = 1, softWrap = false)
+            } else {
+                Icon(Icons.Filled.Star, contentDescription = null, tint = AuroraPalette.StatusPaid, modifier = Modifier.size(icon))
+                Text("%.1f".format(Locale.UK, summary.average), style = auroraStyle(if (compact) 12.sp else 13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
+                Text("(${summary.count})", style = auroraStyle(if (compact) 10.sp else 11.sp, color = palette.cardSubtext), maxLines = 1, softWrap = false)
+            }
+        }
+    }
+}

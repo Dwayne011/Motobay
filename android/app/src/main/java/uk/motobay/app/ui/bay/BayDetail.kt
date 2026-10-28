@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.RatingBadge
 import uk.motobay.app.ui.components.AuroraOutlinedButton
 import uk.motobay.app.ui.components.AuroraPrimaryButton
 import uk.motobay.app.ui.components.AuroraTag
@@ -388,30 +389,6 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 }
             },
         )
-    }
-}
-
-/** "4.5 (12)" with a gold star, or "No ratings yet" when nobody has rated the bay. */
-@Composable
-private fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette) {
-    val description = summary?.let { "Rated %.1f out of 5 by %d %s".format(Locale.UK, it.average, it.count, if (it.count == 1) "rider" else "riders") }
-        ?: "No ratings yet"
-    Surface(
-        shape = CircleShape,
-        color = palette.chipUnselectedBg,
-        border = BorderStroke(1.dp, palette.chipUnselectedBorder),
-        modifier = Modifier.clearAndSetSemantics { contentDescription = description }.testTag("rating-badge"),
-    ) {
-        Row(Modifier.padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            if (summary == null) {
-                Icon(Icons.Outlined.StarBorder, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(14.dp))
-                Text("No ratings", style = auroraStyle(11.sp, FontWeight.Medium, palette.cardSubtext), maxLines = 1, softWrap = false)
-            } else {
-                Icon(Icons.Filled.Star, contentDescription = null, tint = AuroraPalette.StatusPaid, modifier = Modifier.size(14.dp))
-                Text("%.1f".format(Locale.UK, summary.average), style = auroraStyle(13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
-                Text("(${summary.count})", style = auroraStyle(11.sp, color = palette.cardSubtext), maxLines = 1, softWrap = false)
-            }
-        }
     }
 }
 

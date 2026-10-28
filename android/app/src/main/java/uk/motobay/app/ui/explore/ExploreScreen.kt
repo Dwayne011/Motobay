@@ -8,6 +8,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.platform.LocalContext
 import uk.motobay.app.util.openDirections
 import uk.motobay.app.data.Fee
+import uk.motobay.app.ui.components.RatingBadge
+import uk.motobay.app.data.ratingSummary
+import uk.motobay.app.data.RatingSummary
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.ui.platform.testTag
@@ -171,6 +174,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val visible by vm.visible.collectAsStateWithLifecycle()
     val mapBays by vm.mapBays.collectAsStateWithLifecycle()
     val mapMoving by vm.mapMoving.collectAsStateWithLifecycle()
+    val community by app.community.data.collectAsStateWithLifecycle()
     val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
     val loadState by vm.loadState.collectAsStateWithLifecycle()
@@ -448,6 +452,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                                         SelectedBayPreviewCard(
                                             bay = bay,
                                             distanceMetres = userPosition?.let { distanceMetres(it, bay) },
+                                            rating = community.ratingSummary(bay.id),
                                             isSaved = bay.id in favourites,
                                             palette = palette,
                                             onToggleSave = { app.user.toggleFavourite(bay) },
@@ -1072,6 +1077,7 @@ private val PREVIEW_CLEARANCE = 200.dp
 private fun SelectedBayPreviewCard(
     bay: Bay,
     distanceMetres: Double?,
+    rating: RatingSummary?,
     isSaved: Boolean,
     palette: AuroraPalette,
     onToggleSave: () -> Unit,
@@ -1102,51 +1108,56 @@ private fun SelectedBayPreviewCard(
         shadowElevation = 8.dp,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("bay-preview"),
     ) {
-        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
-                    Spacer(Modifier.width(6.dp))
-                    Text(typeLabel, color = palette.cardTitleText, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                    Text(meta, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                }
-                Spacer(Modifier.height(2.dp))
-                Text(bay.title, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                subtitle?.let { Text(it, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        Column(Modifier.fillMaxWidth().padding(12.dp)) {
+            // Top line: status, spaces and distance, with the bay's star rating in the top-right corner.
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
+                Spacer(Modifier.width(6.dp))
+                Text(typeLabel, color = palette.cardTitleText, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+                Text(meta, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                Spacer(Modifier.width(8.dp))
+                RatingBadge(rating, palette, compact = true)
             }
-            Spacer(Modifier.width(10.dp))
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Surface(
-                    onClick = onToggleSave,
-                    shape = RoundedCornerShape(12.dp),
-                    color = if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.2f) else Color.Transparent,
-                    border = BorderStroke(1.dp, if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.5f) else palette.cardBorder),
-                    modifier = Modifier.size(36.dp),
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            if (isSaved) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                            contentDescription = if (isSaved) "Remove from saved" else "Save bay",
-                            tint = if (isSaved) AuroraPalette.StatusPaid else palette.cardSubtext,
-                            modifier = Modifier.size(16.dp),
-                        )
-                    }
+            Spacer(Modifier.height(4.dp))
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(bay.title, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    subtitle?.let { Text(it, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) }
                 }
-                Surface(onClick = onGo, shape = RoundedCornerShape(12.dp), color = palette.addFabBg, modifier = Modifier.height(36.dp)) {
-                    Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Icon(Icons.Filled.Navigation, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
-                        Text("Go", color = Color.White, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.width(10.dp))
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Surface(
+                        onClick = onToggleSave,
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.2f) else Color.Transparent,
+                        border = BorderStroke(1.dp, if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.5f) else palette.cardBorder),
+                        modifier = Modifier.size(36.dp),
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                if (isSaved) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                contentDescription = if (isSaved) "Remove from saved" else "Save bay",
+                                tint = if (isSaved) AuroraPalette.StatusPaid else palette.cardSubtext,
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
                     }
-                }
-                Surface(
-                    onClick = onClose,
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.Transparent,
-                    border = BorderStroke(1.dp, palette.cardBorder),
-                    modifier = Modifier.size(36.dp),
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(Icons.Filled.Close, contentDescription = "Close", tint = palette.cardSubtext, modifier = Modifier.size(16.dp))
+                    Surface(onClick = onGo, shape = RoundedCornerShape(12.dp), color = palette.addFabBg, modifier = Modifier.height(36.dp)) {
+                        Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Icon(Icons.Filled.Navigation, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+                            Text("Go", color = Color.White, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+                    Surface(
+                        onClick = onClose,
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color.Transparent,
+                        border = BorderStroke(1.dp, palette.cardBorder),
+                        modifier = Modifier.size(36.dp),
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(Icons.Filled.Close, contentDescription = "Close", tint = palette.cardSubtext, modifier = Modifier.size(16.dp))
+                        }
                     }
                 }
             }
