@@ -1,6 +1,26 @@
 package uk.motobay.app.ui.review
 
 import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.AuroraChip
+import uk.motobay.app.ui.components.AuroraHeader
+import uk.motobay.app.ui.components.AuroraOutlinedButton
+import uk.motobay.app.ui.components.AuroraPillTabs
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.AuroraTextAction
+import uk.motobay.app.ui.components.Coral
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
@@ -16,32 +36,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -88,6 +97,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     val data by app.community.data.collectAsStateWithLifecycle()
     val allBays by app.allBays.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val palette = auroraPalette()
     var kind by rememberSaveable { mutableStateOf(Kind.Photos) }
     var showing by rememberSaveable { mutableStateOf(ModerationStatus.Pending) }
     LaunchedEffect(kind, showing) { app.crashLog.noteScreen("ReviewDest/${kind.label}/${showing.filterLabel}") }
@@ -139,43 +149,26 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
         }
     }
 
-    Scaffold(topBar = { TopAppBar(title = { Text("Review") }) }) { padding ->
-        LazyColumn(
-            contentPadding = PaddingValues(
-                start = 16.dp, end = 16.dp, bottom = 16.dp,
-                top = padding.calculateTopPadding(),
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
+    LazyColumn(
+        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+            item { AuroraHeader("Review", palette) }
             item {
-                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                    Kind.entries.forEachIndexed { i, k ->
-                        val count = waiting(k)
-                        SegmentedButton(
-                            selected = kind == k,
-                            onClick = { kind = k },
-                            shape = SegmentedButtonDefaults.itemShape(i, Kind.entries.size),
-                            icon = {},
-                            label = {
-                                // Badge beside the word, and the word shrinks rather than clips at large font sizes.
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        k.label, maxLines = 1, softWrap = false,
-                                        autoSize = TextAutoSize.StepBased(minFontSize = 9.sp, maxFontSize = 14.sp, stepSize = 0.5.sp),
-                                        modifier = Modifier.weight(1f, fill = false),
-                                    )
-                                    if (count > 0) Badge(Modifier.padding(start = 4.dp)) { Text("$count") }
-                                }
-                            },
-                            modifier = Modifier.semantics { contentDescription = "${k.label}, $count waiting" },
-                        )
-                    }
-                }
+                AuroraPillTabs(
+                    labels = Kind.entries.map { it.label },
+                    selected = Kind.entries.indexOf(kind),
+                    palette = palette,
+                    onSelect = { kind = Kind.entries[it] },
+                    badge = { waiting(Kind.entries[it]) },
+                    segmentModifier = { i -> Modifier.semantics { contentDescription = "${Kind.entries[i].label}, ${waiting(Kind.entries[i])} waiting" } },
+                )
             }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ModerationStatus.entries.forEach { s ->
-                        FilterChip(selected = showing == s, onClick = { showing = s }, label = { Text(s.filterLabel) })
+                        AuroraChip(s.filterLabel, active = showing == s, palette = palette, onClick = { showing = s })
                     }
                 }
             }
@@ -187,13 +180,9 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Icon(Icons.Filled.TaskAlt, contentDescription = null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(if (showing == ModerationStatus.Pending) "All caught up" else "Nothing here", style = MaterialTheme.typography.titleMedium)
-                        Text(
-                            "No ${showing.filterLabel.lowercase()} ${kind.label.lowercase()}.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        Icon(Icons.Filled.TaskAlt, contentDescription = null, Modifier.size(48.dp), tint = palette.cardSubtext)
+                        Text(if (showing == ModerationStatus.Pending) "All caught up" else "Nothing here", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+                        Text("No ${showing.filterLabel.lowercase()} ${kind.label.lowercase()}.", style = auroraStyle(12.sp, color = palette.cardSubtext))
                     }
                 }
             }
@@ -201,6 +190,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                 items(photos, key = { it.id }) { p ->
                     val bay = allBays[p.bayId]
                     ReviewCard(
+                        palette = palette,
                         author = p.author, date = dateFormat.format(Date(p.createdAt)),
                         bayName = bay?.title ?: p.bayName,
                         place = bay?.let { placeLine(it.locality, it.lat, it.lon) },
@@ -219,6 +209,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                 items(comments, key = { it.id }) { c ->
                     val bay = allBays[c.bayId]
                     ReviewCard(
+                        palette = palette,
                         author = c.author, date = dateFormat.format(Date(c.createdAt)),
                         bayName = bay?.title ?: c.bayName,
                         place = bay?.let { placeLine(it.locality, it.lat, it.lon) },
@@ -242,6 +233,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                         b.notes.takeIf { it.isNotBlank() }?.let { "Notes: $it" },
                     )
                     ReviewCard(
+                        palette = palette,
                         author = b.author, date = dateFormat.format(Date(b.createdAt)),
                         bayName = if (b.editOf != null) "Edit: ${original?.title ?: "bay"}" else "New bay",
                         place = placeLine(original?.locality, b.lat, b.lon),
@@ -260,7 +252,6 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
                     )
                 }
             }
-        }
     }
 
     viewing?.let { url ->
@@ -333,6 +324,7 @@ private fun openMap(context: Context, lat: Double, lon: Double, label: String) {
 
 @Composable
 private fun ReviewCard(
+    palette: AuroraPalette,
     author: String,
     date: String,
     bayName: String,
@@ -347,7 +339,7 @@ private fun ReviewCard(
     onDecide: (ModerationStatus) -> Unit,
     onDelete: () -> Unit,
 ) {
-    OutlinedCard(Modifier.fillMaxWidth()) {
+    AuroraCard(palette, contentPadding = 0) {
         imageUrl?.let {
             AsyncImage(
                 model = it,
@@ -358,39 +350,46 @@ private fun ReviewCard(
             )
         }
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text("$author · $date", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(bayName, style = MaterialTheme.typography.titleMedium)
+            Text("$author \u2022 $date", style = auroraStyle(11.sp, color = palette.cardSubtext))
+            Text(bayName, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
             place?.let {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Icon(Icons.Outlined.Place, contentDescription = null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(Icons.Outlined.Explore, contentDescription = null, Modifier.size(12.dp), tint = palette.searchIconActive)
+                    Text(it, style = auroraStyle(11.sp, color = palette.cardSubtext))
                 }
             }
-            Text(body, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+            // The submission itself, in a quiet box.
+            Box(
+                Modifier.fillMaxWidth().padding(top = 6.dp).clip(RoundedCornerShape(12.dp))
+                    .background(if (palette.isDark) Color(0x26000000) else Color(0x0D1E293B))
+                    .padding(10.dp),
+            ) {
+                Text(body, style = auroraStyle(12.sp, color = palette.cardTitleText))
+            }
             if (status == ModerationStatus.Rejected) {
                 Text(
                     if (reason.isNullOrBlank()) "Rejected, no reason given" else "Rejected: $reason",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
+                    style = auroraStyle(11.sp, FontWeight.Medium, Coral),
+                    modifier = Modifier.padding(top = 4.dp),
                 )
             }
             Row(Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                onOpenBay?.let { TextButton(onClick = it) { Text("View bay") } }
-                onOpenMap?.let { TextButton(onClick = it) { Text("Open in maps") } }
+                onOpenBay?.let { AuroraTextAction("View bay", palette.searchIconActive, it) }
+                onOpenMap?.let { AuroraTextAction("Open in maps", palette.searchIconActive, it) }
             }
             Row(
                 Modifier.fillMaxWidth().padding(top = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = onDelete) {
-                    Icon(Icons.Outlined.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+                    Icon(Icons.Outlined.Delete, contentDescription = "Delete", tint = Coral)
                 }
                 Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
                     // Whatever the item's status, offer the other two outcomes.
-                    if (status != ModerationStatus.Rejected) OutlinedButton(onClick = { onDecide(ModerationStatus.Rejected) }) { Text("Reject") }
-                    if (status != ModerationStatus.Approved) Button(onClick = { onDecide(ModerationStatus.Approved) }) { Text("Approve") }
-                    if (status != ModerationStatus.Pending) OutlinedButton(onClick = { onDecide(ModerationStatus.Pending) }) { Text("Re-queue") }
+                    if (status != ModerationStatus.Rejected) AuroraOutlinedButton("Reject", palette, onClick = { onDecide(ModerationStatus.Rejected) })
+                    if (status != ModerationStatus.Approved) AuroraPrimaryButton("Approve", palette, onClick = { onDecide(ModerationStatus.Approved) })
+                    if (status != ModerationStatus.Pending) AuroraOutlinedButton("Re-queue", palette, onClick = { onDecide(ModerationStatus.Pending) })
                 }
             }
         }

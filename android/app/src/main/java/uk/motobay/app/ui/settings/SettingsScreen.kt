@@ -1,6 +1,32 @@
 package uk.motobay.app.ui.settings
 
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.AuroraHeader
+import uk.motobay.app.ui.components.AuroraOutlinedButton
+import uk.motobay.app.ui.components.AuroraPillTabs
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.AuroraRowText
+import uk.motobay.app.ui.components.AuroraSectionHeader
+import uk.motobay.app.ui.components.AuroraTag
+import uk.motobay.app.ui.components.AuroraTextAction
+import uk.motobay.app.ui.components.Coral
+import uk.motobay.app.ui.components.Slate950
+import uk.motobay.app.ui.components.VSpace
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.border
@@ -11,8 +37,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,28 +45,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.BugReport
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.SettingsBrightness
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,10 +66,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -67,7 +75,6 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import uk.motobay.app.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.motobay.app.data.ClaimResult
@@ -78,133 +85,116 @@ import uk.motobay.app.data.RecentSignInRequiredException
 import uk.motobay.app.data.Settings
 import uk.motobay.app.data.ThemeMode
 import uk.motobay.app.ui.LocalApp
-import kotlin.math.roundToInt
 import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}, onOpenPolicy: (Policy) -> Unit = {}) {
     val app = LocalApp.current
+    val palette = auroraPalette()
     val settings by app.user.settings.collectAsStateWithLifecycle()
     val update = app.user::updateSettings
-    val scroll = TopAppBarDefaults.pinnedScrollBehavior()
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scroll.nestedScrollConnection),
-        topBar = { TopAppBar(title = { Text("Settings") }, scrollBehavior = scroll) },
-    ) { padding ->
-        Column(Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(bottom = 24.dp)) {
-            SectionHeader("Appearance")
-            Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Theme", style = MaterialTheme.typography.bodyLarge)
-                SingleChoiceSegmentedButtonRow {
-                    val modes = listOf(
-                        Triple(ThemeMode.Light, "Light", Icons.Outlined.LightMode),
-                        Triple(ThemeMode.System, "System", Icons.Outlined.SettingsBrightness),
-                        Triple(ThemeMode.Dark, "Dark", Icons.Outlined.DarkMode),
+    Column(
+        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        AuroraHeader("Settings", palette)
+
+        AuroraSectionHeader("Appearance", palette)
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            val modes = listOf(ThemeMode.Light to "Light", ThemeMode.System to "System", ThemeMode.Dark to "Dark")
+            AuroraPillTabs(
+                labels = modes.map { it.second },
+                selected = modes.indexOfFirst { it.first == settings.themeMode },
+                palette = palette,
+                onSelect = { i -> update { it.copy(themeMode = modes[i].first) } },
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    AuroraRowText("Use wallpaper colours", "Match the colours of your phone's wallpaper", palette)
+                    Switch(
+                        checked = settings.wallpaperColors,
+                        onCheckedChange = { on -> update { it.copy(wallpaperColors = on) } },
+                        colors = SwitchDefaults.colors(checkedTrackColor = palette.searchIconActive, checkedThumbColor = Slate950),
                     )
-                    modes.forEachIndexed { i, (mode, label, icon) ->
-                        SegmentedButton(
-                            selected = settings.themeMode == mode,
-                            onClick = { update { it.copy(themeMode = mode) } },
-                            shape = SegmentedButtonDefaults.itemShape(i, modes.size),
-                            icon = {},
-                            label = { IconLabel(if (settings.themeMode == mode) Icons.Filled.Check else icon, label) },
-                        )
-                    }
                 }
             }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ListItem(
-                    headlineContent = { Text("Use wallpaper colours") },
-                    supportingContent = { Text("Match the colours of your phone's wallpaper") },
-                    trailingContent = {
-                        Switch(checked = settings.wallpaperColors, onCheckedChange = { on -> update { it.copy(wallpaperColors = on) } })
-                    },
-                )
-            }
-
             if (!settings.wallpaperColors || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Colour", style = MaterialTheme.typography.bodyLarge)
-                    Text(
-                        "Every colour in the app is generated from this one.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                Column(Modifier.padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Colour", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardTitleText))
+                    Text("Every colour in the app is generated from this one.", style = auroraStyle(10.sp, color = palette.cardSubtext))
                     SeedSwatches(settings.sourceColor) { c -> update { it.copy(sourceColor = c) } }
                 }
             }
+        }
 
-            SectionHeader("Profile")
-            DisplayNameField(settings.displayName)
+        AuroraSectionHeader("Profile", palette)
+        DisplayNameField(settings.displayName, palette)
 
-            SectionHeader("Account")
-            val account by app.auth.user.collectAsStateWithLifecycle()
-            val signedIn = account
-            if (signedIn == null) {
-                Text(
-                    "Sign in to add photos, comments and bays. Browsing needs no account.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                )
-                SignInButtons(Modifier.padding(horizontal = 16.dp))
-            } else {
-                ListItem(
-                    headlineContent = { Text(signedIn.email ?: "Signed in") },
-                    supportingContent = { Text(if (signedIn.isModerator) "Moderator: you can review submissions" else "Your submissions are reviewed before they're published") },
-                    trailingContent = { TextButton(onClick = app.auth::signOut) { Text("Sign out") } },
-                )
-                DeleteAccountRow()
-                ListItem(
-                    headlineContent = { Text("My submissions") },
-                    supportingContent = { Text("Your photos, comments and bay changes, and whether they've been approved") },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
-                    modifier = Modifier.clickable(onClick = onOpenSubmissions),
-                )
+        AuroraSectionHeader("Account", palette)
+        val account by app.auth.user.collectAsStateWithLifecycle()
+        val signedIn = account
+        if (signedIn == null) {
+            AuroraCard(palette, radius = 16) {
+                Text("Sign in to add photos, comments and bays. Browsing needs no account.", style = auroraStyle(12.sp, color = palette.cardSubtext))
+                VSpace(12)
+                SignInButtons()
             }
-
-            if (settings.blocked.isNotEmpty()) {
-                SectionHeader("Blocked riders")
-                settings.blocked.forEach { b ->
-                    ListItem(
-                        headlineContent = { Text(b.name) },
-                        supportingContent = { Text("Their photos and comments are hidden on this phone") },
-                        trailingContent = { TextButton(onClick = { app.user.unblock(b.uid) }) { Text("Unblock") } },
-                    )
+        } else {
+            AuroraCard(palette, radius = 16) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(signedIn.email ?: "Signed in", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if (signedIn.isModerator) {
+                            AuroraTag("Moderator", palette)
+                            Text("You can review submissions", style = auroraStyle(10.sp, color = palette.cardSubtext))
+                        } else {
+                            Text("Your submissions are reviewed before they're published", style = auroraStyle(10.sp, color = palette.cardSubtext))
+                        }
+                    }
+                    AuroraTextAction("Sign out", Coral, onClick = app.auth::signOut)
                 }
             }
-
-            SectionHeader("About")
-            ListItem(
-                headlineContent = { Text("Legal & about") },
-                supportingContent = { Text("Guidance-only notice, data licences (© OpenStreetMap contributors and others), app version") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
-                modifier = Modifier.clickable(onClick = onOpenLegal),
-            )
-            ListItem(
-                headlineContent = { Text("Privacy policy") },
-                supportingContent = { Text("What the app collects, why, and your rights") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
-                modifier = Modifier.clickable { onOpenPolicy(Policy.Privacy) },
-            )
-            CrashReportRow()
+            DeleteAccountRow(palette)
+            AuroraCard(palette, radius = 16, onClick = onOpenSubmissions) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AuroraRowText("My submissions", "Your photos, comments and bay changes, and whether they've been approved", palette)
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
+                }
+            }
         }
-    }
-}
 
-@Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text,
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
-    )
+        if (settings.blocked.isNotEmpty()) {
+            AuroraSectionHeader("Blocked riders", palette)
+            AuroraCard(palette, radius = 16) {
+                settings.blocked.forEachIndexed { i, b ->
+                    if (i > 0) VSpace(12)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AuroraRowText(b.name, "Their photos and comments are hidden on this phone", palette)
+                        AuroraTextAction("Unblock", palette.searchIconActive, onClick = { app.user.unblock(b.uid) })
+                    }
+                }
+            }
+        }
+
+        AuroraSectionHeader("About", palette)
+        AuroraCard(palette, radius = 16, onClick = onOpenLegal) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AuroraRowText("Legal & about", "Guidance-only notice, data licences (\u00a9 OpenStreetMap contributors and others), app version", palette)
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
+            }
+        }
+        AuroraCard(palette, radius = 16, onClick = { onOpenPolicy(Policy.Privacy) }) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AuroraRowText("Privacy policy", "What the app collects, why, and your rights", palette)
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
+            }
+        }
+        CrashReportBanner(palette)
+        VSpace(8)
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -236,27 +226,28 @@ private fun SeedSwatches(selected: Long, onSelect: (Long) -> Unit) {
 
 /** Shown only after a crash: lets the tester send the stack trace on. */
 @Composable
-private fun CrashReportRow() {
+private fun CrashReportBanner(palette: AuroraPalette) {
     val app = LocalApp.current
     val context = LocalContext.current
     var report by remember { mutableStateOf(app.crashLog.read()) }
     val text = report ?: return
-    ListItem(
-        headlineContent = { Text("The app closed unexpectedly last time") },
-        overlineContent = { Text("Send the report to ${Moderators.SUPPORT_EMAIL}") },
-        supportingContent = { Text(text.lineSequence().drop(1).firstOrNull { it.isNotBlank() } ?: "Report saved") },
-        leadingContent = { Icon(Icons.Outlined.BugReport, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-        trailingContent = {
-            Row {
-                TextButton(onClick = {
-                    val email = app.crashLog.emailIntent(text)
-                    if (email.resolveActivity(context.packageManager) != null) context.startActivity(email)
-                    else context.startActivity(app.crashLog.shareIntent(text))
-                }) { Text("Send") }
-                TextButton(onClick = { app.crashLog.clear(); report = null }) { Text("Dismiss") }
-            }
-        },
-    )
+    val summary = text.lineSequence().drop(1).firstOrNull { it.isNotBlank() } ?: "Report saved"
+    AuroraCard(palette, radius = 16, color = Color(0x40991B1B), border = Color(0x66EF4444), contentPadding = 12) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Icon(Icons.Outlined.Shield, contentDescription = null, tint = Coral, modifier = Modifier.size(18.dp))
+            Text("The app closed unexpectedly last time", style = auroraStyle(11.sp, FontWeight.Bold, Color(0xFFFEE2E2)), modifier = Modifier.weight(1f))
+            AuroraTextAction("Send", palette.searchIconActive, onClick = {
+                val email = app.crashLog.emailIntent(text)
+                if (email.resolveActivity(context.packageManager) != null) context.startActivity(email)
+                else context.startActivity(app.crashLog.shareIntent(text))
+            })
+            AuroraTextAction("Dismiss", palette.cardSubtext, onClick = { app.crashLog.clear(); report = null })
+        }
+        VSpace(6)
+        Text("Sends the report to ${Moderators.SUPPORT_EMAIL}", style = auroraStyle(10.sp, color = palette.cardSubtext))
+        VSpace(4)
+        Text(summary, style = auroraStyle(10.sp, color = Color(0xFFFCA5A5), mono = true))
+    }
 }
 
 /**
@@ -264,7 +255,7 @@ private fun CrashReportRow() {
  * type; nothing changes until Save, after which the field locks until Edit.
  */
 @Composable
-private fun DisplayNameField(saved: String) {
+private fun DisplayNameField(saved: String, palette: AuroraPalette) {
     val app = LocalApp.current
     val snackbar = LocalSnackbar.current
     val requireSignIn = LocalRequireSignIn.current
@@ -324,45 +315,58 @@ private fun DisplayNameField(saved: String) {
         }
     }
 
-    Column(Modifier.padding(horizontal = 16.dp)) {
-        OutlinedTextField(
-            value = draft,
-            onValueChange = { draft = it.take(DisplayNames.MAX) },
-            label = { Text("Display name") },
-            readOnly = !editing,
-            supportingText = {
-                Text(
-                    when (val c = check) {
-                        NameCheck.Idle -> if (saved.isBlank()) "Shown next to your photos and comments. Until you set one, you're \"${DisplayNames.ANONYMOUS}\"." else "Shown next to your photos and comments"
-                        NameCheck.Checking -> "Checking…"
-                        NameCheck.Available -> "✓ Available"
-                        NameCheck.Taken -> "Someone already has that name"
-                        NameCheck.SignIn -> "Sign in to check and save a name"
-                        NameCheck.Unknown -> "Couldn't check right now. You can still try to save."
-                        is NameCheck.Invalid -> c.why
-                    },
-                    color = when (check) {
-                        NameCheck.Available -> MaterialTheme.colorScheme.primary
-                        NameCheck.Taken, is NameCheck.Invalid -> MaterialTheme.colorScheme.error
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                )
-            },
-            isError = check == NameCheck.Taken || check is NameCheck.Invalid,
-            singleLine = true,
-            enabled = !busy,
-            trailingIcon = {
-                if (!editing) {
-                    TextButton(onClick = { editing = true }) { Text("Edit") }
-                } else {
-                    Row {
-                        if (saved.isNotBlank()) TextButton(onClick = { draft = saved; editing = false }) { Text("Cancel") }
-                        TextButton(onClick = ::save, enabled = !busy && changed && check !in setOf(NameCheck.Taken, NameCheck.Checking) && check !is NameCheck.Invalid) { Text("Save") }
-                    }
+    val hint = when (val c = check) {
+        NameCheck.Idle -> if (saved.isBlank()) "Shown next to your photos and comments. Until you set one, you're \"${DisplayNames.ANONYMOUS}\"." else "Shown next to your photos and comments"
+        NameCheck.Checking -> "Checking\u2026"
+        NameCheck.Available -> "\u2713 Available"
+        NameCheck.Taken -> "Someone already has that name"
+        NameCheck.SignIn -> "Sign in to check and save a name"
+        NameCheck.Unknown -> "Couldn't check right now. You can still try to save."
+        is NameCheck.Invalid -> c.why
+    }
+    val hintColor = when (check) {
+        NameCheck.Available -> palette.searchIconActive
+        NameCheck.Taken, is NameCheck.Invalid -> Coral
+        else -> palette.cardSubtext
+    }
+    AuroraCard(palette, radius = 16) {
+        if (!editing) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text("Display name", style = auroraStyle(10.sp, color = palette.cardSubtext))
+                    Text(saved, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.testTag("display-name"))
+                    Text(hint, style = auroraStyle(10.sp, color = hintColor))
                 }
-            },
-            modifier = Modifier.fillMaxWidth().testTag("display-name"),
-        )
+                Surface(onClick = { editing = true }, shape = RoundedCornerShape(8.dp), color = palette.searchSurface, border = BorderStroke(1.dp, palette.cardBorder)) {
+                    Text("Edit", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                }
+            }
+        } else {
+            OutlinedTextField(
+                value = draft,
+                onValueChange = { draft = it.take(DisplayNames.MAX) },
+                label = { Text("Display name") },
+                supportingText = { Text(hint, color = hintColor) },
+                isError = check == NameCheck.Taken || check is NameCheck.Invalid,
+                singleLine = true,
+                enabled = !busy,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = palette.cardTitleText, unfocusedTextColor = palette.cardTitleText,
+                    focusedBorderColor = palette.searchIconActive, unfocusedBorderColor = palette.cardBorder,
+                    focusedLabelColor = palette.searchIconActive, unfocusedLabelColor = palette.cardSubtext,
+                    cursorColor = palette.searchIconActive,
+                ),
+                modifier = Modifier.fillMaxWidth().testTag("display-name"),
+            )
+            VSpace(8)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)) {
+                if (saved.isNotBlank()) AuroraOutlinedButton("Cancel", palette, onClick = { draft = saved; editing = false })
+                AuroraPrimaryButton(
+                    "Save", palette, onClick = ::save,
+                    enabled = !busy && changed && check !in setOf(NameCheck.Taken, NameCheck.Checking) && check !is NameCheck.Invalid,
+                )
+            }
+        }
     }
 }
 
@@ -382,18 +386,18 @@ private sealed interface NameCheck {
  * sign-in first, so the dialog explains that when it happens.
  */
 @Composable
-private fun DeleteAccountRow() {
+private fun DeleteAccountRow(palette: AuroraPalette) {
     val app = LocalApp.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
     var confirm by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
 
-    ListItem(
-        headlineContent = { Text("Delete account & data", color = MaterialTheme.colorScheme.error) },
-        supportingContent = { Text("Removes your account, display name, photos, comments and bay changes. This can't be undone.") },
-        modifier = Modifier.clickable(enabled = !busy) { confirm = true },
-    )
+    AuroraCard(palette, radius = 16, color = Color(0x1AEF4444), border = Color(0x40EF4444), onClick = { if (!busy) confirm = true }) {
+        Text("Delete account & data", style = auroraStyle(13.sp, FontWeight.Bold, Coral))
+        VSpace(2)
+        Text("Removes your account, display name, photos, comments and bay changes. This can't be undone.", style = auroraStyle(10.sp, color = palette.cardSubtext))
+    }
 
     if (confirm) {
         AlertDialog(
@@ -428,25 +432,3 @@ private fun DeleteAccountRow() {
     }
 }
 
-/**
- * An icon beside a word, with the icon centred on the capital letters rather than
- * on the text's line box: that is what the eye lines up, and the line box sits a
- * little high because of the ascender space above the caps.
- */
-@Composable
-private fun IconLabel(icon: ImageVector, label: String) {
-    val capHeightPx = with(LocalDensity.current) { (MaterialTheme.typography.labelLarge.fontSize * CAP_HEIGHT_EM).toPx() }
-    Row {
-        Icon(
-            icon, contentDescription = null,
-            Modifier.size(SegmentedButtonDefaults.IconSize)
-                // The icon's "baseline" is its centre plus half a cap height, so it sits on the text baseline centred on the caps.
-                .alignBy { it.measuredHeight / 2 + (capHeightPx / 2).roundToInt() },
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(label, Modifier.alignByBaseline(), maxLines = 1, softWrap = false)
-    }
-}
-
-/** Roboto's capital letters are this tall relative to the font size. */
-private const val CAP_HEIGHT_EM = 0.71f
