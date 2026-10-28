@@ -3,6 +3,7 @@ package uk.motobay.app.ui.explore
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.PointF
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.view.animation.PathInterpolator
 import androidx.compose.foundation.Canvas
@@ -36,9 +37,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
-import org.maplibre.android.MapLibre
-import org.maplibre.android.module.http.HttpRequestUtil
-import uk.motobay.app.data.httpClient
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
@@ -221,13 +219,9 @@ fun BayMap(
     }
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val mapView = remember {
-        MapLibre.getInstance(context.applicationContext)
-        // Tiles and styles go through the app's client, so OpenFreeMap sees the same User-Agent as everything else.
-        HttpRequestUtil.setOkHttpClient(httpClient)
-        MapView(context).apply { onCreate(null) }
-    }
-    var map by remember { mutableStateOf<MapLibreMap?>(null) }
+    val holder = LocalMapHolder.current
+    val mapView = remember { holder?.mapView ?: MapHolder.createMapView(context) }
+    var map by remember { mutableStateOf(holder?.map) }
     var style by remember { mutableStateOf<Style?>(null) }
     var viewport by remember { mutableStateOf<MapViewport?>(null) }
     /** Bumped whenever the camera starts moving, which cancels any zoom transition in flight. */
@@ -257,11 +251,68 @@ fun BayMap(
             lifecycle.removeObserver(observer)
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) mapView.onPause()
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) mapView.onStop()
-            mapView.onDestroy()
+            // A shared map only pauses here; the activity destroys it.
+            if (holder == null) mapView.onDestroy()
         }
     }
 
+    // What the map's listeners call while this screen is on it; the holder's listeners outlive the screen.
+    val callbacks = remember {
+        object : MapCallbacks {
+            override fun onMoveStarted() { moveGen++; latestMoving(true) }
+            override fun onMoveCancelled() { latestMoving(false) }
+            override fun onIdle() {
+                latestMoving(false)
+                val vp = map?.readViewport() ?: return
+                viewport = vp
+                latestViewport(vp)
+            }
+            override fun onClick(point: LatLng): Boolean {
+                val m = map ?: return false
+                val screen: PointF = m.projection.toScreenLocation(point)
+                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, CLUSTERS).firstOrNull() ?: return false
+                val id = hit.getStringProperty("id") ?: return false
+                val node = displayed.value?.nodes?.firstOrNull { it.id == id }
+                if (node != null && node.isCluster) {
+                    // Zoom in until the cluster splits, centred on it.
+                    val byId = latestBays.associateBy { it.id }
+                    val members = node.members.mapNotNull { byId[it] }
+                    val vp = viewport ?: m.readViewport()
+                    val zoom = if (vp != null) {
+                        expansionZoom(members, floor(vp.zoom).toInt(), vp.box.expanded(0.5)).toDouble()
+                    } else {
+                        m.cameraPosition.zoom + 2
+                    }
+                    m.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(node.lat, node.lon), zoom), 500)
+                } else {
+                    latestBayClick(id)
+                }
+                return true
+            }
+            override fun onLongClick(point: LatLng) { latestLongPress(LatLon(point.latitude, point.longitude)) }
+            // If the Graphite style can't be fetched, fall back to OpenFreeMap's dark style once.
+            private var triedFallback = false
+            override fun onFailLoading() {
+                if (latestDark && !triedFallback) {
+                    triedFallback = true
+                    map?.setStyle(Style.Builder().fromUri(FALLBACK_DARK_STYLE))
+                }
+            }
+        }
+    }
+    val localCallbacks = remember { mutableStateOf<MapCallbacks?>(null) }
+    DisposableEffect(callbacks) {
+        if (holder != null) holder.callbacks = callbacks else localCallbacks.value = callbacks
+        onDispose { if (holder != null && holder.callbacks === callbacks) holder.callbacks = null }
+    }
+
     LaunchedEffect(mapView) {
+        val existing = map
+        if (existing != null) {
+            // Coming back to a live map: pick up where it is.
+            viewport = existing.readViewport()
+            return@LaunchedEffect
+        }
         mapView.getMapAsync { m ->
             m.uiSettings.isRotateGesturesEnabled = false
             m.uiSettings.isTiltGesturesEnabled = false
@@ -274,58 +325,18 @@ fun BayMap(
             // First launch, or no saved position: central London, where most mapped bays are.
             val start = initialCamera ?: DEFAULT_CAMERA
             m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
-            fun readViewport(): MapViewport? {
-                val b = m.projection.visibleRegion.latLngBounds
-                val c = m.cameraPosition.target ?: return null
-                return MapViewport(
-                    BBox(b.latitudeSouth, b.longitudeWest, b.latitudeNorth, b.longitudeEast),
-                    m.cameraPosition.zoom,
-                    LatLon(c.latitude, c.longitude),
-                )
+            val current: () -> MapCallbacks? = { holder?.callbacks ?: localCallbacks.value }
+            if (holder == null || !holder.listenersInstalled) {
+                holder?.listenersInstalled = true
+                m.addOnCameraMoveStartedListener { current()?.onMoveStarted() }
+                m.addOnCameraMoveCancelListener { current()?.onMoveCancelled() }
+                m.addOnCameraIdleListener { current()?.onIdle() }
+                m.addOnMapClickListener { point -> current()?.onClick(point) ?: false }
+                m.addOnMapLongClickListener { point -> current()?.onLongClick(point); true }
+                mapView.addOnDidFailLoadingMapListener { _: String -> current()?.onFailLoading() }
             }
-            m.addOnCameraMoveStartedListener { moveGen++; latestMoving(true) }
-            m.addOnCameraMoveCancelListener { latestMoving(false) }
-            m.addOnCameraIdleListener {
-                latestMoving(false)
-                val vp = readViewport() ?: return@addOnCameraIdleListener
-                viewport = vp
-                latestViewport(vp)
-            }
-            m.addOnMapClickListener { point ->
-                val screen: PointF = m.projection.toScreenLocation(point)
-                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, CLUSTERS).firstOrNull()
-                    ?: return@addOnMapClickListener false
-                val id = hit.getStringProperty("id") ?: return@addOnMapClickListener false
-                val node = displayed.value?.nodes?.firstOrNull { it.id == id }
-                if (node != null && node.isCluster) {
-                    // Zoom in until the cluster splits, centred on it.
-                    val byId = latestBays.associateBy { it.id }
-                    val members = node.members.mapNotNull { byId[it] }
-                    val vp = viewport ?: readViewport()
-                    val zoom = if (vp != null) {
-                        expansionZoom(members, floor(vp.zoom).toInt(), vp.box.expanded(0.5)).toDouble()
-                    } else {
-                        m.cameraPosition.zoom + 2
-                    }
-                    m.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(node.lat, node.lon), zoom), 500)
-                } else {
-                    latestBayClick(id)
-                }
-                true
-            }
-            // If the Graphite style can't be fetched, fall back to OpenFreeMap's dark style once.
-            var triedFallback = false
-            mapView.addOnDidFailLoadingMapListener { _: String ->
-                if (latestDark && !triedFallback) {
-                    triedFallback = true
-                    m.setStyle(Style.Builder().fromUri(FALLBACK_DARK_STYLE))
-                }
-            }
-            m.addOnMapLongClickListener { point ->
-                latestLongPress(LatLon(point.latitude, point.longitude))
-                true
-            }
-            viewport = readViewport()
+            viewport = m.readViewport()
+            holder?.map = m
             map = m
         }
     }
@@ -333,7 +344,13 @@ fun BayMap(
     // (Re)load the style when the theme flips between light and dark.
     LaunchedEffect(map, dark) {
         val m = map ?: return@LaunchedEffect
+        val kept = holder?.style
+        if (kept != null && holder.styleDark == dark && m.style === kept) {
+            style = kept
+            return@LaunchedEffect
+        }
         style = null
+        holder?.style = null
         m.setStyle(Style.Builder().fromUri(styleUrl(dark))) { loaded ->
             loaded.addSource(GeoJsonSource(BAY_SOURCE))
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
@@ -375,6 +392,8 @@ fun BayMap(
                 ),
             )
             displayed.value = null
+            holder?.style = loaded
+            holder?.styleDark = dark
             style = loaded
         }
     }
@@ -520,7 +539,10 @@ fun BayMap(
     }
 
     Box(modifier) {
-        AndroidView(factory = { mapView }, modifier = Modifier.fillMaxSize())
+        AndroidView(
+            factory = { mapView.also { v -> (v.parent as? ViewGroup)?.removeView(v) } },
+            modifier = Modifier.fillMaxSize(),
+        )
         // Zoom transition overlay; draws nothing (and takes no touches) when idle.
         Canvas(Modifier.fillMaxSize()) {
             val tr = transition ?: return@Canvas
@@ -536,6 +558,16 @@ fun BayMap(
             }
         }
     }
+}
+
+private fun MapLibreMap.readViewport(): MapViewport? {
+    val b = projection.visibleRegion.latLngBounds
+    val c = cameraPosition.target ?: return null
+    return MapViewport(
+        BBox(b.latitudeSouth, b.longitudeWest, b.latitudeNorth, b.longitudeEast),
+        cameraPosition.zoom,
+        LatLon(c.latitude, c.longitude),
+    )
 }
 
 private fun Bay.toNode() = MapNode(id, lat, lon, listOf(id), this)

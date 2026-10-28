@@ -60,7 +60,7 @@ class CrashLog(private val context: Context, private val versionName: String) {
             ?.maxByOrNull { it.timestamp } ?: return
         prefs.edit().putLong("last_exit", exit.timestamp).apply()
         if (exit.reason !in REPORTABLE) return
-        val trace = runCatching { exit.traceInputStream?.bufferedReader()?.use { it.readText() } }.getOrNull()
+        val trace = runCatching { exit.traceInputStream?.use { it.readBytes() } }.getOrNull()?.let(::readableTrace)
         val report = buildString {
             append("MotoBays $versionName · Android ${Build.VERSION.RELEASE} · ${Build.MANUFACTURER} ${Build.MODEL}\n")
             append(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK).format(Date(exit.timestamp)))
@@ -72,6 +72,21 @@ class CrashLog(private val context: Context, private val versionName: String) {
             if (!trace.isNullOrBlank()) append(trace.take(40_000))
         }
         runCatching { file.writeText(report) }
+    }
+
+    /**
+     * ANR traces are plain text. Native crash traces are a binary tombstone
+     * (protobuf), so keep only the readable runs: the signal, the abort
+     * message, thread names and the symbol names of each frame.
+     */
+    private fun readableTrace(bytes: ByteArray): String {
+        val text = String(bytes, Charsets.ISO_8859_1)
+        if (text.none { it.code < 9 || (it.code in 14..31) || it.code > 126 }) return text
+        val runs = Regex("[\\x20-\\x7E]{5,}").findAll(text).map { it.value.trim() }
+            .filter { r -> r.any { it.isLetter() } }
+            .filterNot { it.startsWith("/apex/") || it.startsWith("/system/") || it.startsWith("/vendor/") || it.startsWith("[anon") || it.matches(Regex("[0-9a-f]{20,}")) }
+            .toList()
+        return "(native trace, readable parts only)\n" + runs.joinToString("\n")
     }
 
     private fun importanceName(importance: Int) = when {
