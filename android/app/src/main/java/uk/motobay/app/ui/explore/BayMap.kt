@@ -3,8 +3,8 @@ package uk.motobay.app.ui.explore
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.PointF
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
 import android.view.animation.PathInterpolator
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -24,6 +24,8 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.lerp
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -35,7 +37,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
-import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
@@ -59,7 +60,6 @@ import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
 import org.maplibre.android.style.layers.PropertyFactory.iconAnchor
 import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.iconImage
-import org.maplibre.android.style.layers.PropertyFactory.iconOffset
 import org.maplibre.android.style.layers.PropertyFactory.iconOpacity
 import org.maplibre.android.style.layers.PropertyFactory.iconSize
 import org.maplibre.android.style.layers.SymbolLayer
@@ -85,14 +85,15 @@ sealed interface MapCommand {
 
 data class MapViewport(val box: BBox, val zoom: Double, val center: LatLon)
 
-/** Pin and cluster colours, taken from the current M3 colour scheme. */
+/** Marker colours: the semantic status dots plus the pill surfaces from the Aurora palette. */
 data class PinColors(
-    val free: Color, val onFree: Color,
-    val paid: Color, val onPaid: Color,
-    val unknown: Color, val onUnknown: Color,
-    /** Ring drawn round the selected pin. */
-    val selectedRing: Color,
-    val cluster: Color, val onCluster: Color,
+    val free: Color,
+    val paid: Color,
+    val unknown: Color,
+    val pillFill: Color,
+    val pillBorder: Color,
+    val pillText: Color,
+    val selectedFill: Color,
     val stroke: Color,
     val user: Color,
 )
@@ -120,6 +121,11 @@ private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/da
 private val EMPHASIZED_DECELERATE = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
 /** M3 "standard" easing, for things moving within the screen. */
 private val STANDARD = PathInterpolator(0.2f, 0f, 0f, 1f)
+
+/** The selected pill's scale, and the ring that pulses under it. */
+private const val SELECTED_SCALE = 1.12f
+private const val PULSE_RADIUS_DP = 24f
+private const val PULSE_MS = 1400L
 
 /** How long pins take to fly out of a cluster / gather back into one. */
 private const val SPLIT_MS = 400L
@@ -201,6 +207,7 @@ fun BayMap(
     initialCamera: CameraSnapshot?,
     onBayClick: (String) -> Unit,
     onViewportChange: (MapViewport) -> Unit,
+    onMovingChange: (Boolean) -> Unit = {},
     onCommandHandled: () -> Unit,
     onLongPress: (LatLon) -> Unit,
     modifier: Modifier = Modifier,
@@ -212,11 +219,9 @@ fun BayMap(
     }
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val mapView = remember {
-        MapLibre.getInstance(context.applicationContext)
-        MapView(context).apply { onCreate(null) }
-    }
-    var map by remember { mutableStateOf<MapLibreMap?>(null) }
+    val holder = LocalMapHolder.current
+    val mapView = remember { holder?.mapView ?: MapHolder.createMapView(context) }
+    var map by remember { mutableStateOf(holder?.map) }
     var style by remember { mutableStateOf<Style?>(null) }
     var viewport by remember { mutableStateOf<MapViewport?>(null) }
     /** Bumped whenever the camera starts moving, which cancels any zoom transition in flight. */
@@ -227,6 +232,7 @@ fun BayMap(
     val latestBays by rememberUpdatedState(bays)
     val latestBayClick by rememberUpdatedState(onBayClick)
     val latestViewport by rememberUpdatedState(onViewportChange)
+    val latestMoving by rememberUpdatedState(onMovingChange)
     val latestLongPress by rememberUpdatedState(onLongPress)
     val latestDark by rememberUpdatedState(dark)
 
@@ -245,43 +251,33 @@ fun BayMap(
             lifecycle.removeObserver(observer)
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) mapView.onPause()
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) mapView.onStop()
-            mapView.onDestroy()
+            // A shared map only pauses here; the activity destroys it.
+            if (holder == null) mapView.onDestroy()
         }
     }
 
-    LaunchedEffect(mapView) {
-        mapView.getMapAsync { m ->
-            m.uiSettings.isRotateGesturesEnabled = false
-            m.uiSettings.isTiltGesturesEnabled = false
-            m.uiSettings.isCompassEnabled = false
-            val start = initialCamera ?: CameraSnapshot(54.5, -3.0, 4.5)
-            m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
-            fun readViewport(): MapViewport? {
-                val b = m.projection.visibleRegion.latLngBounds
-                val c = m.cameraPosition.target ?: return null
-                return MapViewport(
-                    BBox(b.latitudeSouth, b.longitudeWest, b.latitudeNorth, b.longitudeEast),
-                    m.cameraPosition.zoom,
-                    LatLon(c.latitude, c.longitude),
-                )
-            }
-            m.addOnCameraMoveStartedListener { moveGen++ }
-            m.addOnCameraIdleListener {
-                val vp = readViewport() ?: return@addOnCameraIdleListener
+    // What the map's listeners call while this screen is on it; the holder's listeners outlive the screen.
+    val callbacks = remember {
+        object : MapCallbacks {
+            override fun onMoveStarted() { moveGen++; latestMoving(true) }
+            override fun onMoveCancelled() { latestMoving(false) }
+            override fun onIdle() {
+                latestMoving(false)
+                val vp = map?.readViewport() ?: return
                 viewport = vp
                 latestViewport(vp)
             }
-            m.addOnMapClickListener { point ->
+            override fun onClick(point: LatLng): Boolean {
+                val m = map ?: return false
                 val screen: PointF = m.projection.toScreenLocation(point)
-                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, CLUSTERS).firstOrNull()
-                    ?: return@addOnMapClickListener false
-                val id = hit.getStringProperty("id") ?: return@addOnMapClickListener false
+                val hit = m.queryRenderedFeatures(screen, SELECTED_PIN, BAY_PINS, CLUSTERS).firstOrNull() ?: return false
+                val id = hit.getStringProperty("id") ?: return false
                 val node = displayed.value?.nodes?.firstOrNull { it.id == id }
                 if (node != null && node.isCluster) {
                     // Zoom in until the cluster splits, centred on it.
                     val byId = latestBays.associateBy { it.id }
                     val members = node.members.mapNotNull { byId[it] }
-                    val vp = viewport ?: readViewport()
+                    val vp = viewport ?: m.readViewport()
                     val zoom = if (vp != null) {
                         expansionZoom(members, floor(vp.zoom).toInt(), vp.box.expanded(0.5)).toDouble()
                     } else {
@@ -291,21 +287,56 @@ fun BayMap(
                 } else {
                     latestBayClick(id)
                 }
-                true
+                return true
             }
+            override fun onLongClick(point: LatLng) { latestLongPress(LatLon(point.latitude, point.longitude)) }
             // If the Graphite style can't be fetched, fall back to OpenFreeMap's dark style once.
-            var triedFallback = false
-            mapView.addOnDidFailLoadingMapListener { _: String ->
+            private var triedFallback = false
+            override fun onFailLoading() {
                 if (latestDark && !triedFallback) {
                     triedFallback = true
-                    m.setStyle(Style.Builder().fromUri(FALLBACK_DARK_STYLE))
+                    map?.setStyle(Style.Builder().fromUri(FALLBACK_DARK_STYLE))
                 }
             }
-            m.addOnMapLongClickListener { point ->
-                latestLongPress(LatLon(point.latitude, point.longitude))
-                true
+        }
+    }
+    val localCallbacks = remember { mutableStateOf<MapCallbacks?>(null) }
+    DisposableEffect(callbacks) {
+        if (holder != null) holder.callbacks = callbacks else localCallbacks.value = callbacks
+        onDispose { if (holder != null && holder.callbacks === callbacks) holder.callbacks = null }
+    }
+
+    LaunchedEffect(mapView) {
+        val existing = map
+        if (existing != null) {
+            // Coming back to a live map: pick up where it is.
+            viewport = existing.readViewport()
+            return@LaunchedEffect
+        }
+        mapView.getMapAsync { m ->
+            m.uiSettings.isRotateGesturesEnabled = false
+            m.uiSettings.isTiltGesturesEnabled = false
+            m.uiSettings.isCompassEnabled = false
+            // Keep the MapLibre logo and (i) attribution clear of the Map/List toggle that sits bottom-centre.
+            val density = mapView.resources.displayMetrics.density
+            val clearance = (ATTRIBUTION_BOTTOM_DP * density).toInt()
+            m.uiSettings.setLogoMargins((8 * density).toInt(), 0, 0, clearance)
+            m.uiSettings.setAttributionMargins((8 * density).toInt(), 0, 0, clearance)
+            // First launch, or no saved position: central London, where most mapped bays are.
+            val start = initialCamera ?: DEFAULT_CAMERA
+            m.cameraPosition = CameraPosition.Builder().target(LatLng(start.lat, start.lon)).zoom(start.zoom).build()
+            val current: () -> MapCallbacks? = { holder?.callbacks ?: localCallbacks.value }
+            if (holder == null || !holder.listenersInstalled) {
+                holder?.listenersInstalled = true
+                m.addOnCameraMoveStartedListener { current()?.onMoveStarted() }
+                m.addOnCameraMoveCancelListener { current()?.onMoveCancelled() }
+                m.addOnCameraIdleListener { current()?.onIdle() }
+                m.addOnMapClickListener { point -> current()?.onClick(point) ?: false }
+                m.addOnMapLongClickListener { point -> current()?.onLongClick(point); true }
+                mapView.addOnDidFailLoadingMapListener { _: String -> current()?.onFailLoading() }
             }
-            viewport = readViewport()
+            viewport = m.readViewport()
+            holder?.map = m
             map = m
         }
     }
@@ -313,7 +344,13 @@ fun BayMap(
     // (Re)load the style when the theme flips between light and dark.
     LaunchedEffect(map, dark) {
         val m = map ?: return@LaunchedEffect
+        val kept = holder?.style
+        if (kept != null && holder.styleDark == dark && m.style === kept) {
+            style = kept
+            return@LaunchedEffect
+        }
         style = null
+        holder?.style = null
         m.setStyle(Style.Builder().fromUri(styleUrl(dark))) { loaded ->
             loaded.addSource(GeoJsonSource(BAY_SOURCE))
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
@@ -327,18 +364,17 @@ fun BayMap(
                     iconIgnorePlacement(true),
                 ),
             )
-            // Teardrop with its tip on the bay; the tip sits one outline-width above the bitmap's bottom edge.
+            // A capsule pill centred on the bay.
             loaded.addLayer(
                 SymbolLayer(BAY_PINS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     iconImage(get("icon")),
-                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconOffset(arrayOf(0f, PIN_STROKE_DP)),
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
-            // Selected bay: a soft ripple on the ground, then the same pin, larger, with a bright ring.
+            // Selected bay: a pulsing ring on the ground, then the same pill, sprung up to 1.12x, with its status colour as border.
             loaded.addLayer(
                 CircleLayer(SELECTED_PULSE, SELECTED_SOURCE).withProperties(
                     circleColor(toColor(get("fill"))),
@@ -350,13 +386,14 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(SELECTED_PIN, SELECTED_SOURCE).withProperties(
                     iconImage(get("icon")),
-                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconOffset(arrayOf(0f, SELECTED_PIN_STROKE_DP)),
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
             displayed.value = null
+            holder?.style = loaded
+            holder?.styleDark = dark
             style = loaded
         }
     }
@@ -455,15 +492,16 @@ fun BayMap(
         images.install(s, listOf(key))
         source?.setGeoJson(selected.toNode().toFeature(images, iconKey = key))
         try {
-            // Drops in with a bounce, like an M3 FAB appearing...
-            animate(420, OvershootInterpolator(2f)) { t -> pin?.setProperties(iconSize(0.2f + 0.8f * t)) }
-            pin?.setProperties(iconSize(1f))
-            // ...then a ripple spreads from the tip while the bay stays selected.
+            // Springs up to 1.12x (spec: dampingRatio 0.65, stiffness 400)...
+            Animatable(1f).animateTo(SELECTED_SCALE, spring(dampingRatio = 0.65f, stiffness = 400f)) {
+                pin?.setProperties(iconSize(value))
+            }
+            pin?.setProperties(iconSize(SELECTED_SCALE))
+            // ...while a 48dp ring pulses out to 1.65x and fades, every 1400ms, for as long as the bay stays selected.
             while (true) {
-                animate(1600, LinearInterpolator()) { t ->
-                    pulse?.setProperties(circleRadius(6f + 26f * t), circleOpacity(0.45f * (1f - t)))
+                animate(PULSE_MS, LinearInterpolator()) { t ->
+                    pulse?.setProperties(circleRadius(PULSE_RADIUS_DP * (1f + 0.65f * t)), circleOpacity(0.35f * (1f - t)))
                 }
-                delay(400)
             }
         } finally {
             runCatching {
@@ -501,7 +539,10 @@ fun BayMap(
     }
 
     Box(modifier) {
-        AndroidView(factory = { mapView }, modifier = Modifier.fillMaxSize())
+        AndroidView(
+            factory = { mapView.also { v -> (v.parent as? ViewGroup)?.removeView(v) } },
+            modifier = Modifier.fillMaxSize(),
+        )
         // Zoom transition overlay; draws nothing (and takes no touches) when idle.
         Canvas(Modifier.fillMaxSize()) {
             val tr = transition ?: return@Canvas
@@ -517,6 +558,16 @@ fun BayMap(
             }
         }
     }
+}
+
+private fun MapLibreMap.readViewport(): MapViewport? {
+    val b = projection.visibleRegion.latLngBounds
+    val c = cameraPosition.target ?: return null
+    return MapViewport(
+        BBox(b.latitudeSouth, b.longitudeWest, b.latitudeNorth, b.longitudeEast),
+        cameraPosition.zoom,
+        LatLon(c.latitude, c.longitude),
+    )
 }
 
 private fun Bay.toNode() = MapNode(id, lat, lon, listOf(id), this)
@@ -544,3 +595,9 @@ private fun MapNode.toFeature(images: PinImages, iconKey: String = images.key(th
 private fun Fee.fillHex(images: PinImages): String = images.fillColor(this).toHex()
 
 private fun Color.toHex(): String = String.format("#%06X", 0xFFFFFF and toArgb())
+
+/** Where the map opens before the rider has moved it anywhere: central London. */
+val DEFAULT_CAMERA = CameraSnapshot(lat = 51.5074, lon = -0.1278, zoom = 12.0)
+
+/** Height of the Map/List toggle plus its padding, so the map attribution sits above it. */
+private const val ATTRIBUTION_BOTTOM_DP = 76

@@ -41,18 +41,29 @@ data class Bay(
     /** True when the mapper gave the bay no real name, just what it is. */
     val hasGenericName: Boolean get() = name.trim().lowercase() in GENERIC_NAMES
 
-    /** What to call the bay: its name, or failing that its street. */
-    val title: String get() = if (hasGenericName) street ?: name else name
+    /**
+     * What to call the bay: its real name, or failing that where it is (street,
+     * then the car park's operator, area, town or postcode). Never just
+     * "Motorcycle parking": every bay in the app is one.
+     */
+    val title: String
+        get() = if (!hasGenericName) {
+            name
+        } else {
+            street ?: operator ?: area ?: city ?: postcode ?: "Unnamed bay"
+        }
 
     /**
-     * Where it is, for the line under the title: street (unless it is the title),
-     * then area, town and outward postcode, e.g. "Spitalfields, London E1".
+     * Where it is, for the line under the title: street, then area, town and
+     * outward postcode, e.g. "Spitalfields, London E1", leaving out whatever the
+     * title already says.
      */
     val locality: String?
         get() {
-            val place = listOfNotNull(area, city?.takeIf { it != area }).joinToString(", ")
-            val placeWithPostcode = listOfNotNull(place.ifEmpty { null }, postcode).joinToString(" ")
-            val streetPart = street?.takeIf { it != title }
+            val t = title
+            val place = listOfNotNull(area?.takeIf { it != t }, city?.takeIf { it != area && it != t }).joinToString(", ")
+            val placeWithPostcode = listOfNotNull(place.ifEmpty { null }, postcode?.takeIf { it != t }).joinToString(" ")
+            val streetPart = street?.takeIf { it != t }
             return listOfNotNull(streetPart, placeWithPostcode.ifEmpty { null }).joinToString(", ").ifEmpty { null }
         }
 }
@@ -76,12 +87,18 @@ data class BayPhoto(
     val id: String,
     val bayId: String,
     val bayName: String,
-    /** Local file path in the mock backend. A real backend would return a URL. */
-    val path: String,
+    /** Download URL in Firebase Storage. */
+    val url: String,
     val caption: String,
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    /** Firebase uid of the rider who submitted it. */
+    val authorUid: String = "",
+    /** Where the file lives in Firebase Storage, so the admin can delete it with the document. */
+    val storagePath: String = "",
+    /** Why the admin rejected it, shown to the rider so they can fix and resubmit. */
+    val reason: String? = null,
 )
 
 @Serializable
@@ -93,6 +110,8 @@ data class BayComment(
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    val authorUid: String = "",
+    val reason: String? = null,
 )
 
 /**
@@ -113,4 +132,6 @@ data class BaySubmission(
     val author: String,
     val createdAt: Long,
     val status: ModerationStatus,
+    val authorUid: String = "",
+    val reason: String? = null,
 )

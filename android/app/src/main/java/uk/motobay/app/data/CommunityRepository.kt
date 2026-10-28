@@ -1,94 +1,79 @@
 package uk.motobay.app.data
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
-import java.io.File
-import java.util.UUID
-import kotlin.math.max
-import kotlin.math.roundToInt
 
 @Serializable
 data class CommunityData(
     val photos: List<BayPhoto> = emptyList(),
     val comments: List<BayComment> = emptyList(),
     val bays: List<BaySubmission> = emptyList(),
+    val ratings: List<BayRating> = emptyList(),
 )
 
 /**
- * Photos, comments, new bays and bay corrections that riders submit.
- * Everything starts as Pending and is only shown publicly after a moderator
- * approves it.
- *
- * This is a local, on-device mock of the backend so the app can be built and
- * tested now. Replace the bodies of these functions with API calls once a
- * backend (for example Supabase or Firebase) is chosen; screens only use this
- * class, so they won't need to change.
+ * One rider's 1 to 5 star rating of a bay. A rider has at most one per bay,
+ * and it is public straight away: there is no text to moderate.
  */
-class CommunityRepository(private val context: Context, scope: CoroutineScope) {
-    private val store = JsonFileStore(File(context.filesDir, "community.json"), CommunityData.serializer(), CommunityData(), scope)
-    private val photoDir = File(context.filesDir, "photos").apply { mkdirs() }
+@Serializable
+data class BayRating(val bayId: String, val stars: Int, val authorUid: String, val updatedAt: Long)
 
-    val data = store.state
+/** A bay's average star rating and how many riders gave one. */
+data class RatingSummary(val average: Double, val count: Int)
 
-    suspend fun submitPhoto(bay: Bay, source: Uri, caption: String, author: String) {
-        val id = UUID.randomUUID().toString()
-        val file = File(photoDir, "$id.jpg")
-        withContext(Dispatchers.IO) { saveDownscaled(source, file) }
-        val photo = BayPhoto(id, bay.id, bay.name, file.absolutePath, caption, author, System.currentTimeMillis(), ModerationStatus.Pending)
-        store.update { it.copy(photos = listOf(photo) + it.photos) }
-    }
-
-    fun submitComment(bay: Bay, text: String, author: String) {
-        val comment = BayComment(UUID.randomUUID().toString(), bay.id, bay.name, text, author, System.currentTimeMillis(), ModerationStatus.Pending)
-        store.update { it.copy(comments = listOf(comment) + it.comments) }
-    }
-
-    /**
-     * A new bay, or a correction when [editOf] is set. Moderators' own submissions
-     * are approved straight away.
-     */
-    fun submitBay(submission: BaySubmission, autoApprove: Boolean) {
-        val s = submission.copy(
-            id = UUID.randomUUID().toString(),
-            createdAt = System.currentTimeMillis(),
-            status = if (autoApprove) ModerationStatus.Approved else ModerationStatus.Pending,
-        )
-        store.update { it.copy(bays = listOf(s) + it.bays) }
-    }
-
-    fun moderateBay(id: String, status: ModerationStatus) =
-        store.update { d -> d.copy(bays = d.bays.map { if (it.id == id) it.copy(status = status) else it }) }
-
-    fun moderatePhoto(id: String, status: ModerationStatus) =
-        store.update { d -> d.copy(photos = d.photos.map { if (it.id == id) it.copy(status = status) else it }) }
-
-    fun moderateComment(id: String, status: ModerationStatus) =
-        store.update { d -> d.copy(comments = d.comments.map { if (it.id == id) it.copy(status = status) else it }) }
-
-    /** Saves at most 1600px on the longest side as JPEG, which also drops EXIF location data. */
-    private fun saveDownscaled(source: Uri, target: File, maxSize: Int = 1600) {
-        val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, source)) { decoder, info, _ ->
-                val longest = max(info.size.width, info.size.height)
-                if (longest > maxSize) {
-                    val scale = maxSize.toFloat() / longest
-                    decoder.setTargetSize((info.size.width * scale).roundToInt(), (info.size.height * scale).roundToInt())
-                }
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            val full = MediaStore.Images.Media.getBitmap(context.contentResolver, source)
-            val scale = minOf(1f, maxSize.toFloat() / max(full.width, full.height))
-            Bitmap.createScaledBitmap(full, (full.width * scale).roundToInt(), (full.height * scale).roundToInt(), true)
-        }
-        target.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 82, it) }
-    }
+fun CommunityData.ratingSummary(bayId: String): RatingSummary? {
+    val stars = ratings.filter { it.bayId == bayId }.map { it.stars }
+    return if (stars.isEmpty()) null else RatingSummary(stars.average(), stars.size)
 }
+
+fun CommunityData.ratingBy(uid: String?, bayId: String): BayRating? =
+    uid?.let { u -> ratings.firstOrNull { it.bayId == bayId && it.authorUid == u } }
+
+/** The document id of a rider's rating of a bay; firestore.rules checks it, which is what makes it one per rider per bay. */
+fun ratingId(uid: String, bayId: String) = uid + "_" + bayId.replace('/', '_')
+
+/**
+ * Photos, comments, new bays and bay corrections that riders submit.
+ * Everything starts as Pending and is only shown publicly after the admin
+ * approves it. [FirestoreCommunityRepository] is the real implementation.
+ *
+ * [data] holds what the signed-in rider is allowed to see: approved items,
+ * their own pending and rejected items, and (for the admin) everything.
+ * Submitting needs a signed-in rider; the functions throw if there isn't one
+ * or the server refuses.
+ */
+interface CommunityRepository {
+    val data: StateFlow<CommunityData>
+
+    suspend fun submitPhoto(bay: Bay, source: Uri, caption: String, author: String)
+
+    suspend fun submitComment(bay: Bay, text: String, author: String)
+
+    /** A new bay, or a correction when [BaySubmission.editOf] is set. Held for review like everything else. */
+    suspend fun submitBay(submission: BaySubmission)
+
+    /** Admin only: approve, reject (optionally saying why), or put back in the queue. */
+    suspend fun moderateBay(id: String, status: ModerationStatus, reason: String? = null)
+    suspend fun moderatePhoto(id: String, status: ModerationStatus, reason: String? = null)
+    suspend fun moderateComment(id: String, status: ModerationStatus, reason: String? = null)
+
+    /** Admin only: remove for good, whatever its status. */
+    suspend fun deleteBay(id: String)
+    suspend fun deletePhoto(id: String)
+    suspend fun deleteComment(id: String)
+
+    /** Sets the signed-in rider's star rating of [bay] (1 to 5), replacing any earlier one. */
+    suspend fun rate(bay: Bay, stars: Int)
+
+    /** Takes back the signed-in rider's rating of [bay]. */
+    suspend fun removeRating(bay: Bay)
+
+    /** Every photo, comment, bay change and rating the signed-in rider ever submitted, and the photo files. */
+    suspend fun deleteEverythingByMe()
+
+    /** Flags someone else's content for the admin. [reason] is a key from [Legal.REPORT_REASONS]. */
+    suspend fun report(target: ReportTarget, targetId: String, targetAuthorUid: String, reason: String, details: String)
+}
+
+enum class ReportTarget(val key: String) { Photo("photo"), Comment("comment"), Bay("bay") }

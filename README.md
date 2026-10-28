@@ -30,11 +30,28 @@ Two fully native apps:
 
 ## Community content and moderation
 
-Both apps store photos and comments **on the device** for now
-(`CommunityRepository.kt`, `CommunityStore` in `Stores.swift`). These classes
-mirror the backend calls the apps need: submit photo, submit comment, list, and
-approve/reject. Replace their bodies with real API calls once a backend is
-chosen. "Moderator mode" in Settings is a demo stand-in for real admin accounts.
+Riders sign in (Google or Apple), then submit photos, comments, new bays and
+bay corrections. Everything starts as *Pending*, the admin's own submissions
+included; only the admin can approve, reject or delete it, and only approved
+items are public. Riders also see their own pending items.
+
+- **Android** uses Firebase Auth, Cloud Firestore (the database named
+  `motobays`, in `eur3`) and Cloud Storage (`FirestoreCommunityRepository.kt`, `FirebaseAuthRepository`). The
+  Review tab appears only for the admin account (`Moderators.kt`).
+- **iOS** still keeps photos and comments on the device (`CommunityStore` in
+  `Stores.swift`) and has its `GoogleService-Info.plist` ready for when it is
+  switched over.
+- **Rules** are in `firestore.rules` and `storage.rules`. The admin's email is
+  listed in both and in `Moderators.kt`; a unit test checks they agree.
+  Deploy them with `firebase deploy --only firestore:rules,storage` (project
+  `motobays-3405f`, set in `.firebaserc`).
+- **Rules tests** run against the Firebase emulators:
+  `cd rules-tests && npm install && npm test` (needs Java).
+- Photos reach other riders through a download URL stored on the Firestore
+  photo document, which is only readable once the photo is approved. The files
+  of rejected photos are not deleted automatically.
+- Apple sign-in on Android needs the Apple provider enabled in the Firebase
+  console (Authentication > Sign-in method).
 
 ## Android
 
@@ -71,6 +88,47 @@ Google Maps or Waze.
 
 ## Before publishing
 
-- Replace the placeholder icons. The app id is `uk.motobays.app` on both platforms.
-- Connect Firebase for accounts (Google and Apple sign-in), photo storage and moderation.
+- Set `PRIVACY_POLICY_URL` in `android/app/src/main/java/uk/motobay/app/data/Legal.kt` to the hosted UK GDPR policy, and give
+  Play the same URL plus a web page for account-deletion requests (Play Console > App content > Data safety and Account deletion).
+- Replace the placeholder iOS icon (Android has its pin-and-motorcycle icon). The app id is `uk.motobays.app` on both platforms.
+- Finish the Firebase setup: enable the Apple provider, move iOS onto Firebase, and add the upload key's SHA-1 to the Android app
+  (and to the Firebase API key's Android restriction in Google Cloud).
 - Self-host or replace the public Photon search service if traffic grows.
+
+## Firebase hardening
+
+- **App Check** is wired in (`MotoBayApplication.installAppCheck`): Play Integrity in release, a debug token in debug builds.
+  The debug token is printed to logcat on first run; add it under Firebase console > App Check > Apps > Manage debug tokens.
+  Turn on enforcement for Firestore, Storage and Authentication in the console only after the release key's SHA-256 is
+  registered and a Play build has been seen passing, or the app locks itself out.
+- **Reports** from the app land in the `reports` collection (write-only from clients); read them in the Firebase console.
+  The privacy policy promises they are deleted 12 months after being dealt with: once a month, delete `reports` documents
+  older than a year in the console (filter on `createdAt`). Nothing automates this yet.
+- **Privacy commitments** made in `docs/privacy.md` that are yours to honour: rights requests answered within one month,
+  riders must be 16 or over (there is no age gate in the app), and the ICO complaint route.
+- **Hosted policy pages** live in `docs/` (`privacy.md`, `delete-account.md`); enable GitHub Pages for the `docs/` folder so
+  `Legal.PRIVACY_POLICY_URL` and `Legal.DELETE_ACCOUNT_URL` resolve.
+
+## Releasing to Google Play
+
+Signing: create an upload keystore once and keep it out of git (`.gitignore` already covers it):
+
+```bash
+cd android
+keytool -genkeypair -v -keystore upload-keystore.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000
+printf 'storeFile=upload-keystore.jks\nstorePassword=...\nkeyAlias=upload\nkeyPassword=...\n' > keystore.properties
+keytool -list -v -keystore upload-keystore.jks -alias upload | grep SHA1   # register in Firebase + Google Cloud key restriction
+```
+
+Build and check:
+
+```bash
+./gradlew bundleRelease -Pmotobay.versionCode=17 -Pmotobay.versionName=1.0.1   # app/build/outputs/bundle/release/app-release.aab
+./gradlew testDebugUnitTest
+# Permissions in the final manifest must be INTERNET, ACCESS_NETWORK_STATE, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION only
+# (plus the app-private DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION that androidx adds):
+grep uses-permission app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml
+```
+
+`versionCode` must go up on every upload; without `-Pmotobay.versionCode` it uses the default in `app/build.gradle.kts`.
+Release builds are minified with R8 and only signed when `keystore.properties` exists.

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uk.motobay.app.MotoBayApplication
 import uk.motobay.app.data.Bay
+import uk.motobay.app.data.DisplayNames
 import uk.motobay.app.data.CameraSnapshot
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.Fee
@@ -62,6 +63,8 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     val filters = MutableStateFlow(ExploreFilters())
     val compactView = MutableStateFlow(CompactView.Map)
     val viewport = MutableStateFlow<MapViewport?>(null)
+    /** True while the map camera is in motion (a pan, zoom or fly); the UI calms down until it settles. */
+    val mapMoving = MutableStateFlow(false)
     val command = MutableStateFlow<MapCommand?>(null)
     val locating = MutableStateFlow(false)
     val search = MutableStateFlow(SearchUiState())
@@ -106,6 +109,22 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
                 .map { (bay, d) -> BayWithDistance(bay, if (pos != null) d else null) }
                 .toList()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /**
+     * How many bays each price pill would show in the current view, so the pills
+     * can carry live counts. Ignores the price choice (that is what the pill
+     * picks) but respects "covered".
+     */
+    val counts: StateFlow<Map<PriceFilter, Int>> =
+        combine(allBays, viewport, filters) { all, vp, f ->
+            if (vp == null) return@combine emptyMap()
+            val inView = all.values.filter { it in vp.box && (!f.coveredOnly || it.covered == true) }
+            PriceFilter.entries.associateWith { p -> inView.count { p == PriceFilter.All || it.fee == p.fee } }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
+
+    fun onMapMovingChange(moving: Boolean) {
+        mapMoving.value = moving
+    }
 
     init {
         retryLoad()
@@ -189,17 +208,23 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     }
 
     fun submitNewBay(submission: BaySubmission) {
-        val moderator = app.user.settings.value.moderator
-        app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { "Anonymous rider" }), autoApprove = moderator)
         cancelAddingBay()
         viewModelScope.launch {
-            _messages.send(if (moderator) "Bay added" else "Thanks! Your bay will appear once it's been reviewed.")
+            val ok = runCatching {
+                app.community.submitBay(submission.copy(author = app.user.settings.value.displayName.ifBlank { DisplayNames.ANONYMOUS }))
+            }.isSuccess
+            _messages.send(if (ok) "Thanks! Your bay will appear once it's been reviewed." else "Couldn't send that bay. Check you're signed in and online.")
         }
     }
 
     /** Searches with the keyboard's search key: goes to the top suggestion. */
     fun onSearchSubmit() {
         search.value.suggestions.firstOrNull()?.let(::onSuggestionClick)
+    }
+
+    /** The rider said no to location: say so once, searching still works. */
+    fun locationDenied() {
+        viewModelScope.launch { _messages.send("Location is off. Search for a town, street or postcode instead.") }
     }
 
     /** Called after location permission is granted. */

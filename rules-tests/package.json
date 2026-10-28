@@ -1,0 +1,14 @@
+{
+  "name": "motobays-rules-tests",
+  "private": true,
+  "type": "module",
+  "description": "Tests the Firestore and Storage security rules against the Firebase emulators.",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore,storage --project motobays-rules-test \"node --test rules.test.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.0.0",
+    "firebase-tools": "^14.0.0"
+  }
+}

@@ -3,6 +3,13 @@ android/.gradle/
 android/build/
 android/app/build/
 android/local.properties
+# Release signing: never commit. The shared debug keystore is the one exception.
+android/keystore.properties
+*.jks
+*.keystore
+!android/debug.keystore
+.env
+.env.*
 android/.idea/
 android/.kotlin/
 *.iml

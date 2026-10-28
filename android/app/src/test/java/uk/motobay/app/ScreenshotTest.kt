@@ -10,16 +10,22 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.core.app.ApplicationProvider
 import com.github.takahirom.roborazzi.captureRoboImage
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -29,6 +35,9 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import uk.motobay.app.data.AuthUser
+import uk.motobay.app.data.BaySubmission
+import uk.motobay.app.data.Fee
 import uk.motobay.app.data.ModerationStatus
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.SampleBays
@@ -46,7 +55,7 @@ import uk.motobay.app.ui.theme.MotoBayTheme
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35])
+@Config(sdk = [35], application = TestMotoBayApplication::class)
 class ScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
@@ -54,10 +63,14 @@ class ScreenshotTest {
 
     @Before
     fun seed() {
-        app.user.updateSettings { it.copy(moderator = true, displayName = "Dwayne", themeMode = ThemeMode.Light) }
-        app.community.submitComment(SampleBays.all[0], "Usually has space before 9am.", "Sam")
-        app.community.moderateComment(app.community.data.value.comments.first().id, ModerationStatus.Approved)
-        app.community.submitComment(SampleBays.all[1], "Pay by app only.", "Alex")
+        app.user.updateSettings { it.copy(displayName = "Dwayne", themeMode = ThemeMode.Light, disclaimerAccepted = true) }
+        // Signed in as the admin, so the Review tab shows.
+        (app.auth as FakeAuthRepository).set(FakeAuthRepository.ADMIN)
+        runBlocking {
+            app.community.submitComment(SampleBays.all[0], "Usually has space before 9am.", "Sam")
+            app.community.moderateComment(app.community.data.value.comments.first().id, ModerationStatus.Approved)
+            app.community.submitComment(SampleBays.all[1], "Pay by app only.", "Alex")
+        }
         app.user.toggleFavourite(SampleBays.all[0])
     }
 
@@ -81,14 +94,218 @@ class ScreenshotTest {
         compose.onNodeWithText("Sample bay 1").assertExists()
         shot("phone-saved")
         compose.onNodeWithText("Review").performClick()
-        compose.onNodeWithText("Comments (1)").performClick()
+        compose.onNodeWithContentDescription("Comments, 1 waiting").performClick()
         compose.onNodeWithText("Pay by app only.").assertExists()
         shot("phone-review")
         compose.onNodeWithText("Approve").performClick()
         compose.waitForIdle()
         assertEquals(ModerationStatus.Approved, app.community.data.value.comments.first().status)
+        // Approved items stay reachable so the moderator can delete them.
+        compose.onNodeWithText("Approved").performClick()
+        compose.onNodeWithText("Pay by app only.").assertExists()
+        compose.onAllNodesWithContentDescription("Delete")[0].performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(app.community.data.value.comments.none { it.text == "Pay by app only." })
         compose.onNodeWithText("Settings").performClick()
         shot("phone-settings")
+    }
+
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_review_bays_tab() {
+        runBlocking {
+            app.community.submitBay(BaySubmission("", null, 51.52, -0.13, "Behind the station", Fee.Free, 6, true, "Next to the bins", "Sam", 0, ModerationStatus.Pending))
+            app.community.submitBay(BaySubmission("", SampleBays.all[0].id, 51.5136, -0.1365, "", Fee.Paid, null, null, "", "Alex", 0, ModerationStatus.Pending))
+        }
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        compose.onNodeWithContentDescription("Bays, 2 waiting").performClick()
+        compose.onNodeWithText("New bay").assertExists()
+        compose.onNodeWithText("Edit: Sample bay 1").assertExists()
+        shot("phone-review-bays")
+    }
+
+    /** A rejection with a reason reaches the rider on their My submissions page. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_reject_with_reason_shows_in_my_submissions() {
+        // A rider posts, then the admin rejects with a reason.
+        val auth = app.auth as FakeAuthRepository
+        auth.set(FakeAuthRepository.RIDER)
+        runBlocking { app.community.submitComment(SampleBays.all[0], "Cheap all day", "Rider") }
+        auth.set(FakeAuthRepository.ADMIN)
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        compose.onNodeWithContentDescription("Comments, 2 waiting").performClick()
+        compose.onNodeWithText("Cheap all day").assertExists()
+        // Newest first, so the rider's comment is the top card.
+        compose.onAllNodesWithText("Reject")[0].performClick()
+        compose.onNodeWithText("Reject this comment?").assertExists()
+        compose.onNodeWithText("Reason (optional)").performTextInput("Bay is paid after 9am")
+        compose.onNodeWithTag("reject-confirm").performClick()
+        compose.waitForIdle()
+        val comment = app.community.data.value.comments.first { it.text == "Cheap all day" }
+        assertEquals(ModerationStatus.Rejected, comment.status)
+        assertEquals("Bay is paid after 9am", comment.reason)
+
+        // The rider sees it, with the reason.
+        auth.set(FakeAuthRepository.RIDER)
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("My submissions").performClick()
+        compose.onNodeWithContentDescription("Rejected, 1").performClick()
+        compose.onNodeWithText("Reason: Bay is paid after 9am").assertExists()
+        shot("phone-my-submissions")
+        // Search narrows the list; a miss says so.
+        compose.onNodeWithText("Search bay, text or reason").performTextInput("zzz")
+        compose.onNodeWithText("Nothing rejected matches \"zzz\".").assertExists()
+        compose.onNodeWithText("zzz").performTextClearance()
+        compose.onNodeWithText("Search bay, text or reason").performTextInput("cheap")
+        // Tapping a row opens the details with the full reason and a way back to the bay.
+        compose.onNodeWithText("Reason: Bay is paid after 9am").performClick()
+        compose.onNodeWithText("Not approved: Bay is paid after 9am").assertExists()
+        compose.onNodeWithText("Open bay and try again").assertExists()
+    }
+
+    /** Names only change on Save, and a name another rider holds is refused. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_display_name_saves_and_rejects_duplicates() {
+        val names = app.displayNames as FakeDisplayNames
+        names.taken["ridermike"] = "someoneElse" to "RiderMike"
+        app.user.updateSettings { it.copy(displayName = "") }
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        // Typing shows availability live, and a taken name can't be saved.
+        compose.onNodeWithTag("display-name").performTextInput("RiderMike")
+        compose.mainClock.advanceTimeBy(600)
+        compose.waitForIdle()
+        compose.onNodeWithText("Someone already has that name").assertExists()
+        compose.onNodeWithText("Save").assertIsNotEnabled()
+        assertEquals("", app.user.settings.value.displayName)
+        compose.onNodeWithTag("display-name").performTextClearance()
+        compose.onNodeWithTag("display-name").performTextInput("Dwayne")
+        compose.mainClock.advanceTimeBy(600)
+        compose.waitForIdle()
+        compose.onNodeWithText("✓ Available").assertExists()
+        assertEquals("", app.user.settings.value.displayName) // typing alone changes nothing
+        compose.onNodeWithText("Save").performClick()
+        compose.waitForIdle()
+        assertEquals("Dwayne", app.user.settings.value.displayName)
+        assertEquals("admin1" to "Dwayne", names.taken["dwayne"])
+        // Saved: the field locks and offers Edit.
+        compose.onNodeWithText("Edit").assertExists()
+        shot("phone-settings-name-saved")
+    }
+
+    /** First launch shows the guidance-only notice once; accepting it is remembered. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_first_launch_disclaimer() {
+        app.user.updateSettings { it.copy(disclaimerAccepted = false) }
+        setApp()
+        compose.onNodeWithText("Before you ride").assertExists()
+        compose.onNodeWithText("I understand").performClick()
+        compose.waitForIdle()
+        assertTrue(app.user.settings.value.disclaimerAccepted)
+        compose.onNodeWithText("Before you ride").assertDoesNotExist()
+    }
+
+    /** The privacy policy is readable inside the app, from the bundled copy of docs/privacy.md. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_privacy_policy_in_app() {
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Privacy policy").performScrollTo().performClick()
+        compose.onNodeWithText("MotoBays Privacy Policy").assertExists()
+        compose.onNodeWithText("1. Who we are").assertExists()
+        shot("phone-privacy-policy")
+    }
+
+    /** Legal screen lists the licences and the privacy policy. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_legal_screen() {
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Legal & about").performScrollTo().performClick()
+        compose.onNodeWithText("Privacy policy").assertExists()
+        compose.onNodeWithText("Bay locations").assertExists()
+        shot("phone-legal")
+    }
+
+    /** Deleting the account removes the rider's content, name and sign-in. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_delete_account_wipes_everything() {
+        val auth = app.auth as FakeAuthRepository
+        val names = app.displayNames as FakeDisplayNames
+        names.taken["dwayne"] = "admin1" to "Dwayne"
+        runBlocking {
+            auth.set(FakeAuthRepository.RIDER)
+            app.community.submitComment(SampleBays.all[1], "Someone else's comment", "Rider")
+            auth.set(FakeAuthRepository.ADMIN)
+            app.community.submitComment(SampleBays.all[1], "Mine to delete", "Dwayne")
+        }
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Delete account & data").performScrollTo().performClick()
+        compose.onNodeWithText("Delete your account?").assertExists()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(auth.deleted)
+        assertEquals(null, auth.user.value)
+        assertTrue(app.community.data.value.comments.none { it.text == "Mine to delete" })
+        assertTrue(app.community.data.value.comments.any { it.text == "Someone else's comment" }) // other riders' content stays
+        assertEquals(null, names.taken["dwayne"])
+        assertEquals("", app.user.settings.value.displayName)
+    }
+
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_settings_large_text_dark() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        setApp(dark = true)
+        compose.onNodeWithText("Settings").performClick()
+        shot("phone-settings-large-text-dark")
+    }
+
+    /** UGC: a rider can report and block another rider from a comment; blocking hides their content at once. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_report_and_block_comment() {
+        val auth = app.auth as FakeAuthRepository
+        auth.set(FakeAuthRepository.RIDER)
+        runBlocking {
+            app.community.submitComment(SampleBays.all[0], "Rude remark", "Rider")
+            app.community.moderateComment(app.community.data.value.comments.first { it.text == "Rude remark" }.id, ModerationStatus.Approved)
+        }
+        auth.set(AuthUser("viewer1", "viewer@example.com", isModerator = false))
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Light) }
+        compose.setContent { DetailHost() }
+        compose.onNodeWithText("Rude remark").assertExists()
+        compose.onNodeWithContentDescription("More options for Rider's comment").performClick()
+        compose.onNodeWithText("Report").performClick()
+        compose.onNodeWithText("Abusive or offensive").performClick()
+        compose.onNodeWithTag("report-send").performClick()
+        compose.waitForIdle()
+        val report = (app.community as FakeCommunityRepository).reports.single()
+        assertEquals("comment", report["targetType"])
+        assertEquals("rider1", report["targetAuthorUid"])
+        assertEquals("viewer1", report["reporterUid"])
+        assertEquals("abusive", report["reason"])
+
+        compose.onNodeWithContentDescription("More options for Rider's comment").performClick()
+        compose.onNodeWithText("Block Rider").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Rude remark").assertDoesNotExist()
+        assertEquals(listOf("rider1"), app.user.settings.value.blocked.map { it.uid })
+    }
+
+    /** The tab counts must stay inside their segments at the largest common font size. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_review_large_text() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        runBlocking { app.community.submitPhoto(SampleBays.all[0], android.net.Uri.parse("file:///none.jpg"), "", "Sam") }
+        setApp()
+        compose.onNodeWithText("Review").performClick()
+        shot("phone-review-large-text")
+        val row = compose.onNodeWithContentDescription("Comments, 1 waiting").fetchSemanticsNode().boundsInRoot
+        val badge = compose.onNodeWithContentDescription("Comments, 1 waiting").fetchSemanticsNode()
+            .let { node -> compose.onAllNodesWithText("1").fetchSemanticsNodes().first { it.boundsInRoot.left >= row.left - 1f && it.boundsInRoot.right <= row.right + 1f }.boundsInRoot }
+        assertTrue("badge $badge must sit inside its segment $row", badge.right <= row.right && badge.left >= row.left)
     }
 
     /** Uses a recorded Photon response, so it runs offline. */
@@ -118,7 +335,8 @@ class ScreenshotTest {
         setApp(dark = true)
         shot("phone-explore-large-text-dark")
         val bar = compose.onNodeWithText("Search a town, street or postcode").fetchSemanticsNode().boundsInRoot
-        val chip = compose.onNodeWithText("Covered").fetchSemanticsNode().boundsInRoot
+        // "All" is always on screen; the pill row scrolls sideways, so later pills may be clipped.
+        val chip = compose.onNodeWithText("All").fetchSemanticsNode().boundsInRoot
         assertTrue("filters overlap the search bar", chip.top >= bar.bottom)
     }
 
@@ -143,10 +361,12 @@ class ScreenshotTest {
         shot("phone-dark-add-bay-form")
     }
 
-    /** Tapping a bay opens a sheet over the map rather than a new screen. */
+    /** Tapping a bay shows its preview card over the map rather than a new screen. */
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
-    fun phone_bay_opens_as_bottom_sheet() {
+    fun phone_bay_opens_as_preview_card() {
         app.user.updateSettings { it.copy(lastMap = uk.motobay.app.data.CameraSnapshot(51.5136, -0.1365, 16.0)) }
+        (app.community as FakeCommunityRepository).seedRating(SampleBays.all[0].id, 5, "rider2")
+        (app.community as FakeCommunityRepository).seedRating(SampleBays.all[0].id, 4, "rider3")
         setApp(dark = true)
         // The map is a placeholder in tests, so pick the bay from Saved in the search view.
         compose.onNodeWithText("Search a town, street or postcode").performClick()
@@ -154,13 +374,16 @@ class ScreenshotTest {
         compose.onAllNodesWithText("Saved")[0].performClick()
         compose.onNodeWithText("Sample bay 1").performClick()
         compose.waitForIdle()
-        compose.onNodeWithText("Directions").assertExists()
+        compose.onNodeWithTag("bay-preview").assertExists()
+        compose.onNodeWithText("Go").assertExists()
+        // The bay's star rating sits in the card's top-right corner.
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
         // Still on Explore: the search bar is there, no "Bay details" app bar.
         compose.onNodeWithText("Search a town, street or postcode").assertExists()
-        shot("phone-dark-bay-sheet")
+        shot("phone-dark-bay-preview")
         compose.onNodeWithContentDescription("Close").performClick()
         compose.waitForIdle()
-        compose.onNodeWithText("Directions").assertDoesNotExist()
+        compose.onNodeWithTag("bay-preview").assertDoesNotExist()
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
@@ -183,6 +406,12 @@ class ScreenshotTest {
         compose.setContent { DetailHost() }
         compose.onNodeWithText("Directions").assertExists()
         shot("phone-bay-detail")
+        // Signed in as the moderator, so approved comments can be deleted from here too.
+        compose.onNodeWithText("Usually has space before 9am.").assertExists()
+        compose.onNodeWithContentDescription("Delete comment").performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.waitForIdle()
+        assertTrue(app.community.data.value.comments.none { it.text == "Usually has space before 9am." })
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
@@ -200,6 +429,35 @@ class ScreenshotTest {
         assertTrue(comments.first().status == ModerationStatus.Pending)
     }
 
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_bay_detail_tap_a_star_to_rate() {
+        val bay = SampleBays.all[0]
+        val fake = app.community as FakeCommunityRepository
+        fake.seedRating(bay.id, 5, "rider2")
+        fake.seedRating(bay.id, 4, "rider3")
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Dark) }
+        compose.setContent { DetailHost() }
+        // The average sits in the header's top-right corner.
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
+        compose.onNodeWithText("Rate this bay").assertExists()
+        // One tap is the rating, as in Google Maps; no submit step.
+        compose.onNodeWithContentDescription("3 stars").performClick()
+        compose.waitForIdle()
+        val mine = app.community.data.value.ratings.single { it.authorUid == FakeAuthRepository.ADMIN.uid }
+        assertEquals(3, mine.stars)
+        compose.onNodeWithContentDescription("Rated 4.0 out of 5 by 3 riders").assertExists()
+        compose.onNodeWithText("Your rating").assertExists()
+        shot("phone-dark-bay-rating")
+        // Tapping another star changes it rather than adding a second rating.
+        compose.onNodeWithContentDescription("5 stars").performClick()
+        compose.waitForIdle()
+        assertEquals(listOf(5), app.community.data.value.ratings.filter { it.authorUid == FakeAuthRepository.ADMIN.uid }.map { it.stars })
+        compose.onNodeWithContentDescription("Rated 4.7 out of 5 by 3 riders").assertExists()
+        compose.onNodeWithText("Remove").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
+    }
+
     @Composable
     private fun DetailHost() {
         val settings by app.user.settings.collectAsStateWithLifecycle()
@@ -212,7 +470,7 @@ class ScreenshotTest {
 /** The Map / List switch on its own, at the tester's font size, with the widest count it can show. */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi")
+@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi", application = TestMotoBayApplication::class)
 class ViewToggleScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
@@ -225,17 +483,17 @@ class ViewToggleScreenshotTest {
             MotoBayTheme(settings) {
                 Surface {
                     androidx.compose.foundation.layout.Column(androidx.compose.ui.Modifier.padding(16.dp), verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)) {
-                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.Map, "5", {})
-                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.List, "200+", {})
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.Map, "5", uk.motobay.app.ui.theme.AuroraPalette.Dark, {})
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.List, "200+", uk.motobay.app.ui.theme.AuroraPalette.Dark, {})
                     }
                 }
             }
         }
         compose.onRoot().captureRoboImage("build/outputs/roborazzi/view-toggle-large-text.png")
-        // The segments share one width, so the toggle must grow for the wider count rather than clip it.
+        // The toggle is 220dp wide by the spec, and may only grow (never clip) for a wider count.
         val narrow = compose.onAllNodesWithTag("view-toggle")[0].fetchSemanticsNode().boundsInRoot
         val wide = compose.onAllNodesWithTag("view-toggle")[1].fetchSemanticsNode().boundsInRoot
         compose.onNodeWithText("List\u00A0200+").assertExists()
-        assertTrue("toggle must widen for a 3-digit count ($narrow vs $wide)", wide.width > narrow.width + 40f)
+        assertTrue("toggle must not shrink for a 3-digit count ($narrow vs $wide)", wide.width >= narrow.width)
     }
 }
