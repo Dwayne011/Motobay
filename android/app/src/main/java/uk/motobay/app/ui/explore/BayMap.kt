@@ -203,6 +203,7 @@ fun BayMap(
     initialCamera: CameraSnapshot?,
     onBayClick: (String) -> Unit,
     onViewportChange: (MapViewport) -> Unit,
+    onMovingChange: (Boolean) -> Unit = {},
     onCommandHandled: () -> Unit,
     onLongPress: (LatLon) -> Unit,
     modifier: Modifier = Modifier,
@@ -231,6 +232,7 @@ fun BayMap(
     val latestBays by rememberUpdatedState(bays)
     val latestBayClick by rememberUpdatedState(onBayClick)
     val latestViewport by rememberUpdatedState(onViewportChange)
+    val latestMoving by rememberUpdatedState(onMovingChange)
     val latestLongPress by rememberUpdatedState(onLongPress)
     val latestDark by rememberUpdatedState(dark)
 
@@ -275,8 +277,10 @@ fun BayMap(
                     LatLon(c.latitude, c.longitude),
                 )
             }
-            m.addOnCameraMoveStartedListener { moveGen++ }
+            m.addOnCameraMoveStartedListener { moveGen++; latestMoving(true) }
+            m.addOnCameraMoveCancelListener { latestMoving(false) }
             m.addOnCameraIdleListener {
+                latestMoving(false)
                 val vp = readViewport() ?: return@addOnCameraIdleListener
                 viewport = vp
                 latestViewport(vp)

@@ -5,6 +5,17 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -142,6 +153,8 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
 
     val visible by vm.visible.collectAsStateWithLifecycle()
     val mapBays by vm.mapBays.collectAsStateWithLifecycle()
+    val mapMoving by vm.mapMoving.collectAsStateWithLifecycle()
+    val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
     val loadState by vm.loadState.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
@@ -208,6 +221,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                     initialCamera = settings.lastMap,
                     onBayClick = { id -> allBays[id]?.let(onPick) },
                     onViewportChange = vm::onViewportChange,
+                    onMovingChange = vm::onMapMovingChange,
                     onCommandHandled = { vm.command.value = null },
                     onLongPress = { requireSignIn { vm.startAddingBay(it) } },
                     modifier = Modifier.fillMaxSize(),
@@ -311,14 +325,14 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         Column(Modifier.fillMaxSize()) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 DockedSearchBar(
-                                    inputField = { SearchField(search, vm) },
+                                    inputField = { SearchField(search, vm, mapMoving) },
                                     expanded = search.expanded,
                                     onExpandedChange = vm::onSearchExpandedChange,
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier.fillMaxWidth().padding(AURORA_INSET),
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, vm::setPrice, vm::toggleCovered)
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -390,16 +404,17 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             SearchBar(
-                                inputField = { SearchField(search, vm) },
+                                inputField = { SearchField(search, vm, mapMoving) },
                                 expanded = search.expanded,
                                 onExpandedChange = vm::onSearchExpandedChange,
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = side)
-                                    .padding(top = if (search.expanded) 0.dp else 8.dp),
+                                    .padding(top = if (search.expanded) 0.dp else 8.dp)
+                                    .padding(if (search.expanded) 0.dp else AURORA_INSET),
                                 content = suggestions,
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, vm::setPrice, vm::toggleCovered)
                                 }
                             }
                         }
@@ -469,8 +484,10 @@ private fun AddBayOverlay(onCancel: () -> Unit, onNext: () -> Unit) {
 /** The text field inside the search bar, shared by the full-screen and docked versions. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchField(search: SearchUiState, vm: ExploreViewModel) {
+private fun SearchField(search: SearchUiState, vm: ExploreViewModel, mapMoving: Boolean) {
     SearchBarDefaults.InputField(
+        // The aurora glow hugs the field itself; it goes out while the bar fills the screen.
+        modifier = Modifier.auroraGlow(boosted = mapMoving || search.expanded, visible = !search.expanded),
         query = search.query,
         onQueryChange = vm::onQueryChange,
         onSearch = { vm.onSearchSubmit() },
@@ -737,56 +754,136 @@ private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modi
     }
 }
 
+/** Gap between the aurora glow and the search bar, so the bloom has room to breathe. */
+private val AURORA_INSET = 4.dp
+
 /**
  * One scrollable row of pills, like the chips over a Google Maps map: price is a
  * single choice (All, Free, Paid, Unknown), Covered is a toggle. The coloured
- * dots match the pin colours, so the row doubles as the map legend.
+ * dots match the pin colours, so the row doubles as the map legend. Each price
+ * pill carries a live count of bays in view; while the map is moving the row
+ * collapses into a single telemetry pill until the camera settles.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Filters(filters: ExploreFilters, onPrice: (PriceFilter) -> Unit, onCovered: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        PriceFilter.entries.forEach { p ->
-            val selected = filters.price == p
-            Pill(
-                selected = selected,
-                onClick = { onPrice(p) },
-                label = p.label,
-                leading = {
-                    val dot = p.fee?.let { pinColors(it).first }
-                    when {
-                        selected -> Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize))
-                        dot != null -> Box(Modifier.size(10.dp).background(dot, CircleShape))
-                    }
-                },
-            )
-        }
-        Pill(
-            selected = filters.coveredOnly,
-            onClick = onCovered,
-            label = "Covered",
-            leading = {
-                Icon(
-                    if (filters.coveredOnly) Icons.Filled.Check else Icons.Outlined.Roofing,
-                    contentDescription = null,
-                    Modifier.size(FilterChipDefaults.IconSize),
+private fun Filters(
+    filters: ExploreFilters,
+    counts: Map<PriceFilter, Int>,
+    mapMoving: Boolean,
+    onPrice: (PriceFilter) -> Unit,
+    onCovered: () -> Unit,
+) {
+    AnimatedContent(
+        targetState = mapMoving,
+        transitionSpec = {
+            (fadeIn(tween(220)) + expandVertically(tween(220))) togetherWith (fadeOut(tween(160)) + shrinkVertically(tween(160)))
+        },
+        label = "filters",
+    ) { moving ->
+        if (moving) {
+            val label = filters.price.label
+            val count = counts[filters.price] ?: 0
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 3.dp,
+                shadowElevation = 3.dp,
+                border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
+                modifier = Modifier.height(44.dp).semantics { contentDescription = "Map moving, $label $count" },
+            ) {
+                Row(
+                    Modifier.padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Box(Modifier.size(8.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
+                    Text(
+                        "Telemetry active \u00b7 $label",
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                    Odometer(count, selected = true)
+                }
+            }
+        } else {
+            Row(
+                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                PriceFilter.entries.forEach { p ->
+                    val selected = filters.price == p
+                    Pill(
+                        selected = selected,
+                        onClick = { onPrice(p) },
+                        label = p.label,
+                        count = counts[p],
+                        leading = {
+                            val dot = p.fee?.let { pinColors(it).first }
+                            when {
+                                selected -> Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(FilterChipDefaults.IconSize))
+                                dot != null -> Box(Modifier.size(10.dp).background(dot, CircleShape))
+                            }
+                        },
+                    )
+                }
+                Pill(
+                    selected = filters.coveredOnly,
+                    onClick = onCovered,
+                    label = "Covered",
+                    count = null,
+                    leading = {
+                        Icon(
+                            if (filters.coveredOnly) Icons.Filled.Check else Icons.Outlined.Roofing,
+                            contentDescription = null,
+                            Modifier.size(FilterChipDefaults.IconSize),
+                        )
+                    },
                 )
+            }
+        }
+    }
+}
+
+/** A small count badge whose digits roll up or down like an odometer when the number changes. */
+@Composable
+private fun Odometer(count: Int, selected: Boolean) {
+    val bg = if (selected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceContainerHighest
+    Box(
+        Modifier.background(bg, CircleShape).padding(horizontal = 7.dp, vertical = 1.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        AnimatedContent(
+            targetState = count,
+            transitionSpec = {
+                val up = targetState > initialState
+                (slideInVertically(tween(260)) { if (up) it else -it } + fadeIn(tween(260))) togetherWith
+                    (slideOutVertically(tween(260)) { if (up) -it else it } + fadeOut(tween(260)))
             },
-        )
+            label = "odometer",
+        ) { n ->
+            Text(n.toString(), style = MaterialTheme.typography.labelSmall, maxLines = 1, softWrap = false)
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Pill(selected: Boolean, onClick: () -> Unit, label: String, leading: @Composable () -> Unit) {
+private fun Pill(selected: Boolean, onClick: () -> Unit, label: String, count: Int?, leading: @Composable () -> Unit) {
     // Taller than the M3 default and with a visible outline, so they read over the map like Google Maps' chips.
     FilterChip(
         selected = selected,
         onClick = onClick,
-        label = { Text(label, style = MaterialTheme.typography.titleSmall, maxLines = 1, softWrap = false, modifier = Modifier.padding(vertical = 4.dp)) },
+        label = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.padding(vertical = 4.dp),
+            ) {
+                Text(label, style = MaterialTheme.typography.titleSmall, maxLines = 1, softWrap = false)
+                if (count != null) Odometer(count, selected)
+            }
+        },
         leadingIcon = leading,
         shape = CircleShape,
         colors = FilterChipDefaults.filterChipColors(
