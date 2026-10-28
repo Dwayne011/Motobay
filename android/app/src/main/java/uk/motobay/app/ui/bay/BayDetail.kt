@@ -1,6 +1,32 @@
 package uk.motobay.app.ui.bay
 
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.AuroraOutlinedButton
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.AuroraTag
+import uk.motobay.app.ui.components.AuroraTextAction
+import uk.motobay.app.ui.components.Coral
+import uk.motobay.app.ui.components.HSpace
+import uk.motobay.app.ui.components.Slate950
+import uk.motobay.app.ui.components.VSpace
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.components.label
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -21,10 +47,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.EditLocationAlt
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
@@ -36,27 +59,20 @@ import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,7 +85,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -90,7 +105,6 @@ import uk.motobay.app.data.ReportTarget
 import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
-import uk.motobay.app.ui.components.BayFacts
 import uk.motobay.app.util.distanceMetres
 import uk.motobay.app.util.formatDistance
 import uk.motobay.app.util.openDirections
@@ -101,38 +115,28 @@ import java.text.DateFormat
 import java.util.Date
 
 /** Full-screen bay detail (compact and medium windows). */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayDetailRoute(id: String, onBack: () -> Unit) {
     val app = LocalApp.current
+    val palette = auroraPalette()
     val allBays by app.allBays.collectAsStateWithLifecycle()
     val loadState by app.bays.state.collectAsStateWithLifecycle()
     LaunchedEffect(id) { if (allBays[id] == null) app.bays.load() }
-    // M3 small top app bar: changes to surfaceContainer when content scrolls under it.
-    val scroll = TopAppBarDefaults.pinnedScrollBehavior()
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scroll.nestedScrollConnection),
-        topBar = {
-            TopAppBar(
-                title = { Text("Bay details") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") }
-                },
-                scrollBehavior = scroll,
-            )
-        },
-    ) { padding ->
-        Box(Modifier.padding(padding).fillMaxSize()) {
+    Surface(color = palette.mapBackground, modifier = Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize().statusBarsPadding()) {
             val bay = allBays[id]
             when {
-                bay != null -> BayDetailContent(bay, onDeleted = onBack)
-                loadState == BayLoadState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                else -> Text(
-                    "This bay couldn't be found. It may have been removed from the map.",
-                    Modifier.padding(24.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                bay != null -> BayDetailContent(bay, onDeleted = onBack, onBack = onBack)
+                loadState == BayLoadState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center), color = palette.searchIconActive)
+                else -> Column(Modifier.padding(16.dp)) {
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = palette.cardTitleText) }
+                    Text(
+                        "This bay couldn't be found. It may have been removed from the map.",
+                        style = auroraStyle(12.sp, color = palette.cardSubtext),
+                        modifier = Modifier.padding(8.dp),
+                    )
+                }
             }
         }
     }
@@ -144,11 +148,12 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
  * approved by mistake; [onDeleted] runs after the bay itself is deleted.
  */
 @Composable
-fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
+fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> Unit)? = null) {
     val app = LocalApp.current
     val context = LocalContext.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
+    val palette = auroraPalette()
     val account by app.auth.user.collectAsStateWithLifecycle()
     val moderator = account?.isModerator == true
     val community by app.community.data.collectAsStateWithLifecycle()
@@ -159,46 +164,64 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
     val position by app.location.position.collectAsStateWithLifecycle()
     val saved = bay.id in favourites
     var editing by rememberSaveable { mutableStateOf(false) }
+    var reportingBay by remember { mutableStateOf(false) }
     val settings by app.user.settings.collectAsStateWithLifecycle()
     val requireSignIn = LocalRequireSignIn.current
 
     Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Column {
-            Text(bay.title, style = MaterialTheme.typography.headlineSmall)
-            val subtitle = listOfNotNull(bay.locality, bay.operator, position?.let { "${formatDistance(distanceMetres(it, bay))} away" })
-                .joinToString(" · ").ifEmpty { "Motorcycle parking" }
-            Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        // Header: back arrow, 20sp title, 12sp place and distance.
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = palette.cardTitleText) }
+            }
+            Column(Modifier.weight(1f)) {
+                Text(bay.title, style = auroraStyle(20.sp, FontWeight.Bold, palette.cardTitleText))
+                VSpace(2)
+                val subtitle = listOfNotNull(bay.locality, bay.operator, position?.let { "${formatDistance(distanceMetres(it, bay))} away" })
+                    .joinToString(" \u2022 ").ifEmpty { "Motorcycle parking" }
+                Text(subtitle, style = auroraStyle(12.sp, color = palette.cardSubtext))
+            }
         }
 
-        BayFacts(bay)
+        // Price tag and the other facts as capsule tags.
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            AuroraTag(if (bay.fee == Fee.Unknown) "Price unknown" else bay.fee.label, palette)
+            bay.capacity?.let { AuroraTag("$it spaces", palette) }
+            bay.covered?.let { AuroraTag(if (it) "Covered" else "Not covered", palette) }
+            bay.maxStay?.let { AuroraTag("Max stay $it", palette) }
+        }
+        bay.openingHours?.let { Text(it, style = auroraStyle(12.sp, color = palette.cardSubtext)) }
 
         val unknowns = listOfNotNull(
             "free or paid".takeIf { bay.fee == Fee.Unknown },
             "covered".takeIf { bay.covered == null },
         )
         if (unknowns.isNotEmpty()) {
-            Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.medium) {
-                Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            // Crowdsourcing banner.
+            AuroraCard(palette, radius = 16, color = palette.searchSurface) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         "Do you know if this bay is ${unknowns.joinToString(", or whether it's ")}?",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = auroraStyle(12.sp, color = palette.cardTitleText),
                         modifier = Modifier.weight(1f),
                     )
-                    TextButton(onClick = { requireSignIn { editing = true } }) { Text("Tell us") }
+                    HSpace(12)
+                    AuroraTextAction("Tell us", palette.searchIconActive, onClick = { requireSignIn { editing = true } })
                 }
             }
         }
 
+        // Action toolbar: Directions, Save, Share, Report; all 40dp with 12dp corners.
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             var menu by remember { mutableStateOf(false) }
-            Box {
-                Button(onClick = { openDirections(context, bay) }) {
-                    Icon(Icons.Filled.Directions, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                    Text("Directions", Modifier.padding(start = ButtonDefaults.IconSpacing))
-                }
+            Box(Modifier.weight(1f)) {
+                AuroraPrimaryButton(
+                    "Directions", palette, onClick = { openDirections(context, bay) },
+                    icon = Icons.Filled.Navigation, modifier = Modifier.fillMaxWidth().height(40.dp),
+                )
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(
                         text = { Text("Open in another maps app") },
@@ -207,69 +230,92 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
                     )
                 }
             }
-            FilledTonalButton(onClick = {
-                app.user.toggleFavourite(bay)
-                scope.launch { snackbar.showSnackbar(if (saved) "Removed from saved" else "Saved") }
-            }) {
-                Icon(if (saved) Icons.Filled.Star else Icons.Outlined.StarBorder, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                Text(if (saved) "Saved" else "Save", Modifier.padding(start = ButtonDefaults.IconSpacing))
+            Surface(
+                onClick = {
+                    app.user.toggleFavourite(bay)
+                    scope.launch { snackbar.showSnackbar(if (saved) "Removed from saved" else "Saved") }
+                },
+                shape = RoundedCornerShape(12.dp),
+                color = if (saved) Color(0x33F59E0B) else Color.Transparent,
+                border = BorderStroke(1.dp, if (saved) Color(0x80F59E0B) else palette.cardBorder),
+                modifier = Modifier.height(40.dp),
+            ) {
+                Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Icon(
+                        if (saved) Icons.Filled.Star else Icons.Outlined.StarBorder, contentDescription = null,
+                        tint = if (saved) AuroraPalette.StatusPaid else palette.cardSubtext, modifier = Modifier.size(16.dp),
+                    )
+                    Text(if (saved) "Saved" else "Save", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText), maxLines = 1, softWrap = false)
+                }
             }
-            IconButton(onClick = { shareBay(context, bay) }) { Icon(Icons.Filled.Share, contentDescription = "Share") }
-            IconButton(onClick = { menu = true }) { Icon(Icons.Filled.Map, contentDescription = "Open in another maps app") }
+            ToolbarIcon(Icons.Filled.Share, "Share", palette) { shareBay(context, bay) }
+            ToolbarIcon(Icons.Outlined.Flag, "Report this bay", palette) { requireSignIn { reportingBay = true } }
+            ToolbarIcon(Icons.Filled.Map, "Open in another maps app", palette) { menu = true }
         }
 
-        HorizontalDivider()
-        PhotosSection(bay, moderator)
-        HorizontalDivider()
-        CommentsSection(bay, moderator)
-        HorizontalDivider()
+        PhotosSection(bay, moderator, palette)
+        CommentsSection(bay, moderator, palette)
 
+        HorizontalDivider(color = palette.cardBorder)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Data", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("Data", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
             Text(
                 when {
                     bay.isSample -> "This is a development sample, not a real bay."
                     bay.isRiderAdded -> "Added by ${bay.addedBy ?: "a rider"}."
-                    else -> "Bay data © OpenStreetMap contributors, under the Open Database Licence."
+                    else -> "Bay data \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                 },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = auroraStyle(10.sp, color = palette.cardSubtext),
             )
-            OutlinedButton(onClick = { requireSignIn { editing = true } }) {
-                Icon(Icons.Filled.Edit, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                Text("Suggest an edit", Modifier.padding(start = ButtonDefaults.IconSpacing))
+            Surface(
+                onClick = { requireSignIn { editing = true } },
+                shape = RoundedCornerShape(18.dp),
+                color = palette.searchSurface,
+                border = BorderStroke(1.dp, palette.cardBorder),
+                modifier = Modifier.fillMaxWidth().height(36.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)) {
+                    Icon(Icons.Filled.Edit, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(14.dp))
+                    Text("Suggest an edit", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText))
+                }
             }
             if (moderator && bay.isRiderAdded) {
-                OutlinedButton(
-                    onClick = { confirm = ModeratorDelete.Bay },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                ) {
-                    Icon(Icons.Outlined.Delete, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                    Text("Delete this bay", Modifier.padding(start = ButtonDefaults.IconSpacing))
-                }
+                AuroraOutlinedButton("Delete this bay", palette, color = Coral, onClick = { confirm = ModeratorDelete.Bay }, modifier = Modifier.fillMaxWidth())
             }
             if (moderator && corrections.isNotEmpty()) {
-                OutlinedButton(
-                    onClick = { confirm = ModeratorDelete.Corrections },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                ) {
-                    Icon(Icons.Outlined.Delete, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                    Text(
-                        if (corrections.size == 1) "Remove the rider correction" else "Remove ${corrections.size} rider corrections",
-                        Modifier.padding(start = ButtonDefaults.IconSpacing),
-                    )
-                }
+                AuroraOutlinedButton(
+                    if (corrections.size == 1) "Remove the rider correction" else "Remove ${corrections.size} rider corrections",
+                    palette, color = Coral, onClick = { confirm = ModeratorDelete.Corrections }, modifier = Modifier.fillMaxWidth(),
+                )
             }
             if (!bay.isSample && !bay.isRiderAdded) {
-                TextButton(onClick = {
-                    val (type, num) = bay.id.split("/")
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.openstreetmap.org/edit?$type=$num")))
-                }) {
-                    Icon(Icons.Filled.EditLocationAlt, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                    Text("Edit on OpenStreetMap", Modifier.padding(start = ButtonDefaults.IconSpacing))
+                Row(
+                    Modifier.clip(RoundedCornerShape(8.dp)).clickable {
+                        val (type, num) = bay.id.split("/")
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.openstreetmap.org/edit?$type=$num")))
+                    }.padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, tint = palette.searchIconActive, modifier = Modifier.size(14.dp))
+                    Text("Edit on OpenStreetMap", style = auroraStyle(11.sp, FontWeight.Medium, palette.searchIconActive))
                 }
             }
         }
+    }
+
+    if (reportingBay) {
+        ReportSheet(
+            what = "bay",
+            onDismiss = { reportingBay = false },
+            onSubmit = { reason, details ->
+                reportingBay = false
+                scope.launch {
+                    val ok = runCatching { app.community.report(ReportTarget.Bay, bay.id, bay.addedBy ?: "", reason, details) }.isSuccess
+                    snackbar.showSnackbar(if (ok) "Thanks, the bay has been reported." else "Couldn't send that report. Check you're online.")
+                }
+            },
+        )
     }
 
     confirm?.let { what ->
@@ -324,11 +370,25 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null) {
     }
 }
 
+/** 40dp bordered icon button for the action toolbar. */
+@Composable
+private fun ToolbarIcon(icon: ImageVector, description: String, palette: AuroraPalette, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        color = Color.Transparent,
+        border = BorderStroke(1.dp, palette.cardBorder),
+        modifier = Modifier.size(40.dp),
+    ) {
+        Box(contentAlignment = Alignment.Center) { Icon(icon, contentDescription = description, tint = palette.cardSubtext, modifier = Modifier.size(16.dp)) }
+    }
+}
+
 private enum class ModeratorDelete { Bay, Corrections }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PhotosSection(bay: Bay, moderator: Boolean) {
+private fun PhotosSection(bay: Bay, moderator: Boolean, palette: AuroraPalette) {
     val app = LocalApp.current
     val context = LocalContext.current
     val snackbar = LocalSnackbar.current
@@ -352,16 +412,24 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri -> if (uri != null) draft = uri }
     val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok -> if (ok) draft = cameraUri }
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Photos", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-            OutlinedButton(onClick = { requireSignIn { chooser = true } }) {
-                Icon(Icons.Filled.AddAPhoto, contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-                Text("Add photo", Modifier.padding(start = ButtonDefaults.IconSpacing))
+            Text("Photos", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), modifier = Modifier.weight(1f))
+            Surface(
+                onClick = { requireSignIn { chooser = true } },
+                shape = CircleShape,
+                color = palette.searchSurface,
+                border = BorderStroke(1.dp, palette.cardBorder),
+                modifier = Modifier.height(32.dp),
+            ) {
+                Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Icon(Icons.Filled.PhotoCamera, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(14.dp))
+                    Text("Add photo", style = auroraStyle(11.sp, FontWeight.Medium, palette.cardTitleText), maxLines = 1, softWrap = false)
+                }
             }
         }
         if (approved.isEmpty()) {
-            Text("No photos yet. Help other riders by adding one.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("No photos yet. Help other riders by adding one.", style = auroraStyle(12.sp, color = palette.cardSubtext))
         } else {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(approved, key = { it.id }) { p ->
@@ -369,7 +437,7 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
                         model = p.url,
                         contentDescription = p.caption.ifEmpty { "Photo of ${bay.name} by ${p.author}" },
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(120.dp).clip(MaterialTheme.shapes.small).clickable { viewing = p },
+                        modifier = Modifier.size(120.dp).clip(RoundedCornerShape(12.dp)).clickable { viewing = p },
                     )
                 }
             }
@@ -377,8 +445,7 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
         if (pending > 0) {
             Text(
                 if (pending == 1) "1 photo is waiting for review." else "$pending photos are waiting for review.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = auroraStyle(10.sp, color = palette.cardSubtext),
             )
         }
     }
@@ -511,7 +578,7 @@ private fun PhotosSection(bay: Bay, moderator: Boolean) {
 }
 
 @Composable
-private fun CommentsSection(bay: Bay, moderator: Boolean) {
+private fun CommentsSection(bay: Bay, moderator: Boolean, palette: AuroraPalette) {
     val app = LocalApp.current
     val snackbar = LocalSnackbar.current
     val scope = rememberCoroutineScope()
@@ -527,86 +594,111 @@ private fun CommentsSection(bay: Bay, moderator: Boolean) {
     var deleting by remember { mutableStateOf<BayComment?>(null) }
     val dateFormat = remember { DateFormat.getDateInstance(DateFormat.MEDIUM) }
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Comments", style = MaterialTheme.typography.titleMedium)
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("Comments", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
         if (approved.isEmpty()) {
-            Text("No comments yet. Is it easy to find? Is it usually full?", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("No comments yet. Is it easy to find? Is it usually full?", style = auroraStyle(12.sp, color = palette.cardSubtext))
         }
         approved.forEach { c ->
-            ListItem(
-                headlineContent = { Text(c.text) },
-                overlineContent = { Text("${c.author} · ${dateFormat.format(Date(c.createdAt))}") },
-                leadingContent = {
-                    androidx.compose.material3.Surface(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
-                        modifier = Modifier.size(40.dp),
+            AuroraCard(palette, radius = 12, contentPadding = 12) {
+                Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Box(
+                        Modifier.size(32.dp).clip(CircleShape).background(palette.chipSelectedBg),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(c.author.take(1).uppercase(), color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.titleMedium)
-                        }
+                        Text(c.author.take(1).uppercase(), style = auroraStyle(13.sp, FontWeight.Bold, Color.White))
                     }
-                },
-                trailingContent = when {
-                    moderator -> ({
-                        IconButton(onClick = { deleting = c }) {
-                            Icon(Icons.Outlined.Delete, contentDescription = "Delete comment", tint = MaterialTheme.colorScheme.error)
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text("${c.author} \u2022 ${dateFormat.format(Date(c.createdAt))}", style = auroraStyle(11.sp, color = palette.cardSubtext))
+                        Text(c.text, style = auroraStyle(12.sp, color = palette.cardTitleText))
+                    }
+                    when {
+                        moderator -> IconButton(onClick = { deleting = c }, modifier = Modifier.size(32.dp)) {
+                            Icon(Icons.Outlined.Delete, contentDescription = "Delete comment", tint = Coral, modifier = Modifier.size(18.dp))
                         }
-                    })
-                    c.authorUid.isNotEmpty() && c.authorUid != account?.uid -> ({
-                        var menu by remember { mutableStateOf(false) }
-                        Box {
-                            IconButton(onClick = { menu = true }) { Icon(Icons.Filled.MoreVert, contentDescription = "More options for ${c.author}'s comment") }
-                            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                                DropdownMenuItem(
-                                    text = { Text("Report") },
-                                    leadingIcon = { Icon(Icons.Outlined.Flag, contentDescription = null) },
-                                    onClick = { menu = false; requireSignIn { reporting = c } },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Block ${c.author}") },
-                                    leadingIcon = { Icon(Icons.Outlined.Block, contentDescription = null) },
-                                    onClick = {
-                                        menu = false
-                                        app.user.block(c.authorUid, c.author)
-                                        scope.launch { snackbar.showSnackbar("${c.author} blocked. Unblock in Settings.") }
-                                    },
-                                )
+                        c.authorUid.isNotEmpty() && c.authorUid != account?.uid -> {
+                            var menu by remember { mutableStateOf(false) }
+                            Box {
+                                IconButton(onClick = { menu = true }, modifier = Modifier.size(32.dp)) {
+                                    Icon(Icons.Filled.MoreVert, contentDescription = "More options for ${c.author}'s comment", tint = palette.cardSubtext, modifier = Modifier.size(18.dp))
+                                }
+                                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                                    DropdownMenuItem(
+                                        text = { Text("Report") },
+                                        leadingIcon = { Icon(Icons.Outlined.Flag, contentDescription = null) },
+                                        onClick = { menu = false; requireSignIn { reporting = c } },
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("Block ${c.author}") },
+                                        leadingIcon = { Icon(Icons.Outlined.Block, contentDescription = null) },
+                                        onClick = {
+                                            menu = false
+                                            app.user.block(c.authorUid, c.author)
+                                            scope.launch { snackbar.showSnackbar("${c.author} blocked. Unblock in Settings.") }
+                                        },
+                                    )
+                                }
                             }
                         }
-                    })
-                    else -> null
-                },
-            )
+                    }
+                }
+            }
         }
         if (pending > 0) {
             Text(
                 if (pending == 1) "1 comment is waiting for review." else "$pending comments are waiting for review.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = auroraStyle(10.sp, color = palette.cardSubtext),
             )
         }
-        OutlinedTextField(
-            value = text,
-            onValueChange = { text = it.take(500) },
-            label = { Text("Add a comment") },
-            supportingText = { Text("Comments are checked before they're published · ${text.length}/500") },
-            minLines = 2,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            Button(enabled = text.isNotBlank(), onClick = {
-                requireSignIn {
-                    val body = text.trim()
-                    scope.launch {
-                        val ok = runCatching {
-                            app.community.submitComment(bay, body, settings.displayName.ifBlank { DisplayNames.ANONYMOUS })
-                        }.isSuccess
-                        if (ok) text = ""
-                        snackbar.showSnackbar(if (ok) "Thanks! Your comment will appear once it's been reviewed." else "Couldn't post that. Check you're signed in and online.")
+        // Comment input box: 12dp corners, 1dp border, transparent field inside.
+        Surface(shape = RoundedCornerShape(12.dp), color = Color.Transparent, border = BorderStroke(1.dp, palette.cardBorder)) {
+            Column(Modifier.padding(12.dp)) {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it.take(500) },
+                    placeholder = { Text("Add a comment", style = auroraStyle(12.sp, color = palette.cardSubtext)) },
+                    textStyle = auroraStyle(12.sp, color = palette.cardTitleText),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Transparent, unfocusedBorderColor = Color.Transparent,
+                        focusedTextColor = palette.cardTitleText, unfocusedTextColor = palette.cardTitleText,
+                        cursorColor = palette.searchIconActive,
+                    ),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp),
+                )
+                VSpace(8)
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Comments are checked before they're published \u2022 ${text.length}/500",
+                        style = auroraStyle(10.sp, color = palette.cardSubtext),
+                        modifier = Modifier.weight(1f),
+                    )
+                    HSpace(8)
+                    val canPost = text.isNotBlank()
+                    Surface(
+                        onClick = {
+                            requireSignIn {
+                                val body = text.trim()
+                                scope.launch {
+                                    val ok = runCatching {
+                                        app.community.submitComment(bay, body, settings.displayName.ifBlank { DisplayNames.ANONYMOUS })
+                                    }.isSuccess
+                                    if (ok) text = ""
+                                    snackbar.showSnackbar(if (ok) "Thanks! Your comment will appear once it's been reviewed." else "Couldn't post that. Check you're signed in and online.")
+                                }
+                            }
+                        },
+                        enabled = canPost,
+                        shape = CircleShape,
+                        color = if (canPost) palette.searchIconActive else palette.searchSurface,
+                        border = if (canPost) null else BorderStroke(1.dp, palette.cardBorder),
+                        modifier = Modifier.height(32.dp),
+                    ) {
+                        Box(Modifier.padding(horizontal = 14.dp), contentAlignment = Alignment.Center) {
+                            Text("Post", style = auroraStyle(11.sp, FontWeight.SemiBold, if (canPost) Slate950 else palette.cardSubtext))
+                        }
                     }
                 }
-            }) { Text("Post") }
+            }
         }
     }
 
