@@ -235,6 +235,49 @@ describe('display names', () => {
   });
 });
 
+describe('ratings', () => {
+  const rating = (uid = 'rider1', over = {}) => ({ bayId: 'node/1', stars: 4, authorUid: uid, updatedAt: serverTimestamp(), ...over });
+  const path = (uid = 'rider1', bayId = 'node/1') => `ratings/${uid}_${bayId.replace('/', '_')}`;
+
+  test('a signed-in rider can rate a bay and change their rating', async () => {
+    await assertSucceeds(setDoc(doc(rider().firestore(), path()), rating()));
+    await assertSucceeds(setDoc(doc(rider().firestore(), path()), rating('rider1', { stars: 2 })));
+  });
+  test('signed-out users cannot rate', async () => {
+    await assertFails(setDoc(doc(anon().firestore(), path()), rating()));
+  });
+  test('stars must be a whole number from 1 to 5', async () => {
+    for (const stars of [0, 6, 3.5, '4']) {
+      await assertFails(setDoc(doc(rider().firestore(), path()), rating('rider1', { stars })));
+    }
+  });
+  test('one rating per rider per bay: the id must be the rider and the bay', async () => {
+    await assertFails(setDoc(doc(rider().firestore(), 'ratings/anything'), rating()));
+    await assertFails(setDoc(doc(rider().firestore(), path('rider1', 'node/2')), rating()));
+    await assertFails(setDoc(doc(rider().firestore(), path('rider2')), rating('rider1')));
+  });
+  test('a rider cannot rate as someone else or change their rating', async () => {
+    await assertFails(setDoc(doc(rider('rider1').firestore(), path('rider2')), rating('rider2')));
+    await seed(path('rider2'), { bayId: 'node/1', stars: 5, authorUid: 'rider2', updatedAt: new Date() });
+    await assertFails(setDoc(doc(rider('rider1').firestore(), path('rider2')), rating('rider2', { stars: 1 })));
+  });
+  test('updatedAt must be the server time and unknown fields are rejected', async () => {
+    await assertFails(setDoc(doc(rider().firestore(), path()), rating('rider1', { updatedAt: new Date(2020, 1, 1) })));
+    await assertFails(setDoc(doc(rider().firestore(), path()), { ...rating(), comment: 'hi' }));
+  });
+  test('anyone, even signed out, can read ratings', async () => {
+    await seed(path('rider2'), { bayId: 'node/1', stars: 5, authorUid: 'rider2', updatedAt: new Date() });
+    await assertSucceeds(getDoc(doc(anon().firestore(), path('rider2'))));
+  });
+  test('the rider and the admin can delete a rating; other riders cannot', async () => {
+    await seed(path('rider1'), { bayId: 'node/1', stars: 5, authorUid: 'rider1', updatedAt: new Date() });
+    await assertFails(deleteDoc(doc(rider('rider2').firestore(), path('rider1'))));
+    await assertSucceeds(deleteDoc(doc(rider('rider1').firestore(), path('rider1'))));
+    await seed(path('rider2'), { bayId: 'node/1', stars: 5, authorUid: 'rider2', updatedAt: new Date() });
+    await assertSucceeds(deleteDoc(doc(admin().firestore(), path('rider2'))));
+  });
+});
+
 describe('reports', () => {
   const report = (over = {}) => ({
     targetType: 'comment', targetId: 'c1', targetAuthorUid: 'rider2', reporterUid: 'rider1',

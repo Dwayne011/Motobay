@@ -425,6 +425,35 @@ class ScreenshotTest {
         assertTrue(comments.first().status == ModerationStatus.Pending)
     }
 
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_bay_detail_tap_a_star_to_rate() {
+        val bay = SampleBays.all[0]
+        val fake = app.community as FakeCommunityRepository
+        fake.seedRating(bay.id, 5, "rider2")
+        fake.seedRating(bay.id, 4, "rider3")
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Dark) }
+        compose.setContent { DetailHost() }
+        // The average sits in the header's top-right corner.
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
+        compose.onNodeWithText("Rate this bay").assertExists()
+        // One tap is the rating, as in Google Maps; no submit step.
+        compose.onNodeWithContentDescription("3 stars").performClick()
+        compose.waitForIdle()
+        val mine = app.community.data.value.ratings.single { it.authorUid == FakeAuthRepository.ADMIN.uid }
+        assertEquals(3, mine.stars)
+        compose.onNodeWithContentDescription("Rated 4.0 out of 5 by 3 riders").assertExists()
+        compose.onNodeWithText("Your rating").assertExists()
+        shot("phone-dark-bay-rating")
+        // Tapping another star changes it rather than adding a second rating.
+        compose.onNodeWithContentDescription("5 stars").performClick()
+        compose.waitForIdle()
+        assertEquals(listOf(5), app.community.data.value.ratings.filter { it.authorUid == FakeAuthRepository.ADMIN.uid }.map { it.stars })
+        compose.onNodeWithContentDescription("Rated 4.7 out of 5 by 3 riders").assertExists()
+        compose.onNodeWithText("Remove").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
+    }
+
     @Composable
     private fun DetailHost() {
         val settings by app.user.settings.collectAsStateWithLifecycle()

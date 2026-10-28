@@ -9,7 +9,29 @@ data class CommunityData(
     val photos: List<BayPhoto> = emptyList(),
     val comments: List<BayComment> = emptyList(),
     val bays: List<BaySubmission> = emptyList(),
+    val ratings: List<BayRating> = emptyList(),
 )
+
+/**
+ * One rider's 1 to 5 star rating of a bay. A rider has at most one per bay,
+ * and it is public straight away: there is no text to moderate.
+ */
+@Serializable
+data class BayRating(val bayId: String, val stars: Int, val authorUid: String, val updatedAt: Long)
+
+/** A bay's average star rating and how many riders gave one. */
+data class RatingSummary(val average: Double, val count: Int)
+
+fun CommunityData.ratingSummary(bayId: String): RatingSummary? {
+    val stars = ratings.filter { it.bayId == bayId }.map { it.stars }
+    return if (stars.isEmpty()) null else RatingSummary(stars.average(), stars.size)
+}
+
+fun CommunityData.ratingBy(uid: String?, bayId: String): BayRating? =
+    uid?.let { u -> ratings.firstOrNull { it.bayId == bayId && it.authorUid == u } }
+
+/** The document id of a rider's rating of a bay; firestore.rules checks it, which is what makes it one per rider per bay. */
+fun ratingId(uid: String, bayId: String) = uid + "_" + bayId.replace('/', '_')
 
 /**
  * Photos, comments, new bays and bay corrections that riders submit.
@@ -41,7 +63,13 @@ interface CommunityRepository {
     suspend fun deletePhoto(id: String)
     suspend fun deleteComment(id: String)
 
-    /** Every photo, comment and bay change the signed-in rider ever submitted, and the photo files. */
+    /** Sets the signed-in rider's star rating of [bay] (1 to 5), replacing any earlier one. */
+    suspend fun rate(bay: Bay, stars: Int)
+
+    /** Takes back the signed-in rider's rating of [bay]. */
+    suspend fun removeRating(bay: Bay)
+
+    /** Every photo, comment, bay change and rating the signed-in rider ever submitted, and the photo files. */
     suspend fun deleteEverythingByMe()
 
     /** Flags someone else's content for the admin. [reason] is a key from [Legal.REPORT_REASONS]. */

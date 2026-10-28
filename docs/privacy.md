@@ -4,7 +4,7 @@ title: MotoBays Privacy Policy
 
 # MotoBays Privacy Policy
 
-**Effective date:** 27 October 2026
+**Effective date:** 28 October 2026
 
 **Applies to:** the MotoBays Android app (`uk.motobays.app`) and the pages on this site
 
@@ -20,7 +20,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 
 - You can use the app without an account. Browsing bays, searching and getting directions involve no account and no data about you other than what the services in section 6 receive to answer a request.
 - The app only uses your location when you tap the "my location" button, and never stores or uploads it.
-- If you sign in (Google or Apple) and post photos, comments or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
+- If you sign in (Google or Apple) and post photos, comments, star ratings or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
 - There are no adverts, no analytics and no tracking in the app.
 - You can delete your account and everything linked to it from inside the app at any time.
 
@@ -30,7 +30,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 |---|---|---|
 | **Account** | A unique user ID, your email address, whether the address is verified, and which provider you used (Google or Apple) | When you sign in |
 | **Profile** | The display name you choose | When you save a display name |
-| **Content you post** | Photos, comments, new bays and corrections to existing bays, each with the date, time and your user ID | When you submit them |
+| **Content you post** | Photos, comments, star ratings, new bays and corrections to existing bays, each with the date, time and your user ID | When you submit them |
 | **Reports** | The item reported, the reason you pick, any note you add, and your user ID | When you report another rider's content |
 | **Location** | Your device's current position (precise or approximate, your choice) | Only while you use the "my location" button or search with location allowed. It stays on the device and is never sent to us. |
 | **Device data on request** | Device model, Android version, app version and a technical trace | Only if the app closes unexpectedly and you choose to send us the report by email |
@@ -53,6 +53,7 @@ We do not collect contacts, your photo library, your files, advertising identifi
 
 - **Approved** photos, comments and bay changes are public: anyone using the app can see them, with your display name (or "Anonymous rider" if you have not set one).
 - **Pending and rejected** items are visible only to you and the moderator.
+- **Star ratings** are published straight away, as there is no text to check. The app shows only each bay's average and how many riders rated it, never who gave which rating. Each rating is stored with your account ID, a random code that is not your name or email.
 - Your **email address** is never shown to other riders. Only the moderator can see it.
 - **Reports** are seen only by the moderator. The person you report is not told who reported them.
 
@@ -81,7 +82,7 @@ Google may process Firebase data outside the UK, including in the United States.
 | Data | Retention |
 |---|---|
 | Account and profile | Until you delete your account |
-| Posts | Until you delete them, the moderator removes them, or you delete your account |
+| Posts and ratings | Until you delete them, the moderator removes them, or you delete your account |
 | Reports | Up to 12 months after they are resolved, then deleted; unlinked from your account immediately if you delete it |
 | Location | Never stored |
 | Crash reports you email us | Until the bug is fixed, then deleted |
@@ -106,7 +107,7 @@ You can do most of this yourself: **Settings › My submissions** shows everythi
 
 ## 11. Deleting your account
 
-Open **Settings › Account › Delete account & data** in the app, or follow the instructions at [Delete your MotoBays account](delete-account.html). Deletion removes your sign-in, your display name, and every photo, comment and bay change you submitted. It is immediate and cannot be undone.
+Open **Settings › Account › Delete account & data** in the app, or follow the instructions at [Delete your MotoBays account](delete-account.html). Deletion removes your sign-in, your display name, and every photo, comment, star rating and bay change you submitted. It is immediate and cannot be undone.
 
 ## 12. Children
 

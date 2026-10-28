@@ -8,6 +8,7 @@ internal const val PHOTOS = "photos"
 internal const val COMMENTS = "comments"
 internal const val BAYS = "bays"
 internal const val REPORTS = "reports"
+internal const val RATINGS = "ratings"
 
 private fun Map<String, Any?>.str(key: String) = this[key] as? String
 private fun Map<String, Any?>.num(key: String) = (this[key] as? Number)
@@ -108,3 +109,20 @@ internal fun baySubmissionToMap(s: BaySubmission, uid: String, status: Moderatio
     put("createdAt", FieldValue.serverTimestamp())
     put("status", status.name)
 }
+
+internal fun ratingFrom(@Suppress("UNUSED_PARAMETER") id: String, m: Map<String, Any?>): BayRating? {
+    val stars = m.num("stars")?.toInt()?.takeIf { it in 1..5 } ?: return null
+    return BayRating(
+        bayId = m.str("bayId") ?: return null,
+        stars = stars,
+        authorUid = m.str("authorUid") ?: return null,
+        updatedAt = (m["updatedAt"] as? Timestamp)?.toDate()?.time ?: System.currentTimeMillis(),
+    )
+}
+
+internal fun ratingToMap(bay: Bay, stars: Int, uid: String) = mapOf(
+    "bayId" to bay.id,
+    "stars" to stars,
+    "authorUid" to uid,
+    "updatedAt" to FieldValue.serverTimestamp(),
+)

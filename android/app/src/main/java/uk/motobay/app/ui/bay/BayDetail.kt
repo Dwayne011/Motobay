@@ -1,6 +1,20 @@
 package uk.motobay.app.ui.bay
 
 import android.content.Intent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import uk.motobay.app.data.RatingSummary
+import uk.motobay.app.data.ratingBy
+import uk.motobay.app.data.ratingSummary
+import java.util.Locale
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
@@ -184,6 +198,8 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     .joinToString(" \u2022 ").ifEmpty { "Motorcycle parking" }
                 Text(subtitle, style = auroraStyle(12.sp, color = palette.cardSubtext))
             }
+            // The bay's average star rating, top right.
+            RatingBadge(community.ratingSummary(bay.id), palette)
         }
 
         // Price tag and the other facts as capsule tags.
@@ -252,6 +268,8 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             ToolbarIcon(Icons.Outlined.Flag, "Report this bay", palette) { requireSignIn { reportingBay = true } }
             ToolbarIcon(Icons.Filled.Map, "Open in another maps app", palette) { menu = true }
         }
+
+        RateBay(bay, palette)
 
         PhotosSection(bay, moderator, palette)
         CommentsSection(bay, moderator, palette)
@@ -367,6 +385,96 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 }
             },
         )
+    }
+}
+
+/** "4.5 (12)" with a gold star, or "No ratings yet" when nobody has rated the bay. */
+@Composable
+private fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette) {
+    val description = summary?.let { "Rated %.1f out of 5 by %d %s".format(Locale.UK, it.average, it.count, if (it.count == 1) "rider" else "riders") }
+        ?: "No ratings yet"
+    Surface(
+        shape = CircleShape,
+        color = palette.chipUnselectedBg,
+        border = BorderStroke(1.dp, palette.chipUnselectedBorder),
+        modifier = Modifier.clearAndSetSemantics { contentDescription = description }.testTag("rating-badge"),
+    ) {
+        Row(Modifier.padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            if (summary == null) {
+                Icon(Icons.Outlined.StarBorder, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(14.dp))
+                Text("No ratings", style = auroraStyle(11.sp, FontWeight.Medium, palette.cardSubtext), maxLines = 1, softWrap = false)
+            } else {
+                Icon(Icons.Filled.Star, contentDescription = null, tint = AuroraPalette.StatusPaid, modifier = Modifier.size(14.dp))
+                Text("%.1f".format(Locale.UK, summary.average), style = auroraStyle(13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
+                Text("(${summary.count})", style = auroraStyle(11.sp, color = palette.cardSubtext), maxLines = 1, softWrap = false)
+            }
+        }
+    }
+}
+
+/**
+ * Rate the bay by tapping a star, as in Google Maps: the tap is the rating,
+ * saved at once, and tapping another star changes it. Signing in is asked for
+ * first if needed.
+ */
+@Composable
+private fun RateBay(bay: Bay, palette: AuroraPalette) {
+    val app = LocalApp.current
+    val snackbar = LocalSnackbar.current
+    val scope = rememberCoroutineScope()
+    val requireSignIn = LocalRequireSignIn.current
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    val community by app.community.data.collectAsStateWithLifecycle()
+    val mine = community.ratingBy(account?.uid, bay.id)?.stars
+    // Shown the moment a star is tapped, before the write comes back.
+    var pending by remember(bay.id) { mutableStateOf<Int?>(null) }
+    val shown = pending ?: mine ?: 0
+
+    fun rate(stars: Int) = requireSignIn {
+        if (stars == mine) return@requireSignIn
+        pending = stars
+        scope.launch {
+            val ok = runCatching { app.community.rate(bay, stars) }.isSuccess
+            pending = null
+            if (!ok) snackbar.showSnackbar("Couldn't save your rating. Check you're online.")
+        }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(if (mine == null) "Rate this bay" else "Your rating", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            for (n in 1..5) {
+                val filled = n <= shown
+                val scale by animateFloatAsState(if (filled) 1f else 0.88f, spring(dampingRatio = 0.5f, stiffness = 500f), label = "star$n")
+                Box(
+                    Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .clickable(role = Role.Button, onClickLabel = "Rate $n") { rate(n) }
+                        .semantics {
+                            contentDescription = if (n == 1) "1 star" else "$n stars"
+                            selected = n == shown
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        if (filled) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        contentDescription = null,
+                        tint = if (filled) AuroraPalette.StatusPaid else palette.cardSubtext,
+                        modifier = Modifier.size(32.dp).graphicsLayer { scaleX = scale; scaleY = scale },
+                    )
+                }
+            }
+            if (mine != null) {
+                Spacer(Modifier.weight(1f))
+                AuroraTextAction("Remove", palette.cardSubtext, onClick = {
+                    scope.launch {
+                        val ok = runCatching { app.community.removeRating(bay) }.isSuccess
+                        if (!ok) snackbar.showSnackbar("Couldn't remove your rating. Check you're online.")
+                    }
+                })
+            }
+        }
     }
 }
 

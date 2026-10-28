@@ -117,6 +117,25 @@ service cloud.firestore {
       allow delete: if isAdmin() || isAuthor();
     }
 
+    // Star ratings, 1 to 5. One per rider per bay: the document id is the rider's
+    // uid and the bay id, so a second rating replaces the first. Public straight
+    // away, since a star has no text to moderate.
+    match /ratings/{id} {
+      allow read: if true;
+      allow create, update: if signedIn()
+        && (resource == null || resource.data.authorUid == request.auth.uid)
+        && request.resource.data.keys().hasOnly(['bayId', 'stars', 'authorUid', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['bayId', 'stars', 'authorUid', 'updatedAt'])
+        && request.resource.data.authorUid == request.auth.uid
+        && isText(request.resource.data.bayId, 100)
+        && request.resource.data.bayId.size() > 0
+        && id == request.auth.uid + '_' + request.resource.data.bayId.replace('/', '_')
+        && request.resource.data.stars is int
+        && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin() || isAuthor();
+    }
+
     // One document per display name, keyed by its lower-case form, so names are unique.
     match /displayNames/{key} {
       allow read: if signedIn();

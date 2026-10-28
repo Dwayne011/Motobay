@@ -48,11 +48,14 @@ class FirestoreCommunityRepository(
                 listen(PHOTOS, viewer, ::photoFrom),
                 listen(COMMENTS, viewer, ::commentFrom),
                 listen(BAYS, viewer, ::baySubmissionFrom),
-            ) { photos, comments, bays ->
+                // Ratings are public and unmoderated, so everyone reads them all.
+                db.collection(RATINGS).snapshotFlow(::ratingFrom),
+            ) { photos, comments, bays, ratings ->
                 CommunityData(
                     photos = photos.sortedByDescending { it.createdAt },
                     comments = comments.sortedByDescending { it.createdAt },
                     bays = bays.sortedByDescending { it.createdAt },
+                    ratings = ratings.values.toList(),
                 )
             }
         }
@@ -117,6 +120,17 @@ class FirestoreCommunityRepository(
         db.collection(BAYS).document().set(baySubmissionToMap(submission, uid, ModerationStatus.Pending)).awaitQueued()
     }
 
+    override suspend fun rate(bay: Bay, stars: Int) {
+        require(stars in 1..5) { "A rating is 1 to 5 stars" }
+        val uid = requireUid()
+        db.collection(RATINGS).document(ratingId(uid, bay.id)).set(ratingToMap(bay, stars, uid)).awaitQueued()
+    }
+
+    override suspend fun removeRating(bay: Bay) {
+        val uid = requireUid()
+        db.collection(RATINGS).document(ratingId(uid, bay.id)).delete().awaitQueued()
+    }
+
     override suspend fun moderateBay(id: String, status: ModerationStatus, reason: String?) = moderate(BAYS, id, status, reason)
     override suspend fun moderatePhoto(id: String, status: ModerationStatus, reason: String?) = moderate(PHOTOS, id, status, reason)
     override suspend fun moderateComment(id: String, status: ModerationStatus, reason: String?) = moderate(COMMENTS, id, status, reason)
@@ -138,7 +152,7 @@ class FirestoreCommunityRepository(
 
     override suspend fun deleteEverythingByMe() {
         val uid = requireUid()
-        for (collection in listOf(PHOTOS, COMMENTS, BAYS)) {
+        for (collection in listOf(PHOTOS, COMMENTS, BAYS, RATINGS)) {
             val docs = db.collection(collection).whereEqualTo("authorUid", uid).get().await().documents
             if (collection == PHOTOS) {
                 docs.mapNotNull { it.getString("storagePath") }.forEach { path ->

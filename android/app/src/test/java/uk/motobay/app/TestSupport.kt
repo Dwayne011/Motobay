@@ -10,6 +10,7 @@ import uk.motobay.app.data.AuthRepository
 import uk.motobay.app.data.AuthUser
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayComment
+import uk.motobay.app.data.BayRating
 import uk.motobay.app.data.BayPhoto
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.CommunityData
@@ -73,6 +74,21 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
     override suspend fun moderateComment(id: String, status: ModerationStatus, reason: String?) =
         state.update { d -> d.copy(comments = d.comments.map { if (it.id == id) it.copy(status = status, reason = why(status, reason)) else it }) }
 
+    override suspend fun rate(bay: Bay, stars: Int) {
+        require(stars in 1..5)
+        val me = uid()
+        state.update { d -> d.copy(ratings = d.ratings.filterNot { it.bayId == bay.id && it.authorUid == me } + BayRating(bay.id, stars, me, now())) }
+    }
+
+    override suspend fun removeRating(bay: Bay) {
+        val me = uid()
+        state.update { d -> d.copy(ratings = d.ratings.filterNot { it.bayId == bay.id && it.authorUid == me }) }
+    }
+
+    /** Ratings from other riders, for tests. */
+    fun seedRating(bayId: String, stars: Int, uid: String) =
+        state.update { d -> d.copy(ratings = d.ratings + BayRating(bayId, stars, uid, now())) }
+
     override suspend fun deleteBay(id: String) = state.update { d -> d.copy(bays = d.bays.filterNot { it.id == id }) }
     override suspend fun deletePhoto(id: String) = state.update { d -> d.copy(photos = d.photos.filterNot { it.id == id }) }
     override suspend fun deleteComment(id: String) = state.update { d -> d.copy(comments = d.comments.filterNot { it.id == id }) }
@@ -89,6 +105,7 @@ class FakeCommunityRepository(private val auth: AuthRepository) : CommunityRepos
                 photos = d.photos.filterNot { it.authorUid == me },
                 comments = d.comments.filterNot { it.authorUid == me },
                 bays = d.bays.filterNot { it.authorUid == me },
+                ratings = d.ratings.filterNot { it.authorUid == me },
             )
         }
     }
