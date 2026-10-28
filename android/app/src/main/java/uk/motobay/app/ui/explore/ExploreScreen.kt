@@ -5,6 +5,21 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.ui.platform.LocalContext
+import uk.motobay.app.util.openDirections
+import uk.motobay.app.data.Fee
+import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.AnimatedVisibility
 import uk.motobay.app.ui.theme.auroraPalette
 import uk.motobay.app.ui.theme.AuroraPalette
 import androidx.compose.material.icons.filled.Add
@@ -71,7 +86,6 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Train
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
@@ -86,21 +100,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -137,7 +147,6 @@ import uk.motobay.app.ui.components.BayListItem
 import uk.motobay.app.ui.components.BayPin
 import uk.motobay.app.ui.components.label
 import uk.motobay.app.ui.components.pinColors
-import uk.motobay.app.ui.theme.MotoBayColors
 import uk.motobay.app.ui.theme.isAppInDarkTheme
 import uk.motobay.app.util.distanceMetres
 import uk.motobay.app.util.formatDistance
@@ -155,13 +164,13 @@ import uk.motobay.app.util.formatDistance
 @Composable
 fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val app = LocalApp.current
+    val context = LocalContext.current
     val vm: ExploreViewModel = viewModel { ExploreViewModel(app) }
     val snackbar = LocalSnackbar.current
 
     val visible by vm.visible.collectAsStateWithLifecycle()
     val mapBays by vm.mapBays.collectAsStateWithLifecycle()
     val mapMoving by vm.mapMoving.collectAsStateWithLifecycle()
-    val palette = auroraPalette()
     val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
     val loadState by vm.loadState.collectAsStateWithLifecycle()
@@ -202,13 +211,15 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     }
 
     val scheme = MaterialTheme.colorScheme
-    val ext = MotoBayColors.extended
+    val palette = auroraPalette()
     val mapColors = PinColors(
-        free = ext.pinFree, onFree = ext.onPinFree,
-        paid = ext.pinPaid, onPaid = ext.onPinPaid,
-        unknown = ext.pinUnknown, onUnknown = ext.onPinUnknown,
-        selectedRing = scheme.onSurface,
-        cluster = scheme.primaryContainer, onCluster = scheme.onPrimaryContainer,
+        free = AuroraPalette.StatusFree,
+        paid = AuroraPalette.StatusPaid,
+        unknown = AuroraPalette.StatusUnknown,
+        pillFill = palette.chipUnselectedBg,
+        pillBorder = palette.chipUnselectedBorder,
+        pillText = palette.chipUnselectedText,
+        selectedFill = palette.searchSurface,
         stroke = scheme.surface, user = scheme.tertiary,
     )
     val countLabel = if (visible.size >= 200) "200+" else "${visible.size}"
@@ -260,6 +271,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             color = palette.locateFabBg,
                             contentColor = palette.locateFabIcon,
                             border = BorderStroke(1.dp, palette.locateFabBorder),
+                            shadowElevation = 6.dp,
                             modifier = Modifier.size(44.dp),
                         ) {
                             Box(contentAlignment = Alignment.Center) {
@@ -274,6 +286,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             color = palette.addFabBg,
                             contentColor = palette.addFabIcon,
                             border = BorderStroke(1.dp, palette.addFabBorder),
+                            shadowElevation = 8.dp,
                             modifier = Modifier.size(52.dp),
                         ) {
                             Box(contentAlignment = Alignment.Center) {
@@ -379,42 +392,21 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
             val density = LocalDensity.current
             val headerDp = with(density) { headerHeight.toDp() }
             val selectedBay = selectedId?.let { allBays[it] ?: favourites[it] }
-            val sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
-            val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
-            val scope = rememberCoroutineScope()
-            val peekDp = 300.dp
-            val peekPx = with(density) { peekDp.roundToPx() }
-
-            // Open the sheet part-way when a bay is picked; clear the pick when it's swiped away.
-            LaunchedEffect(selectedBay?.id) {
-                if (selectedBay != null) sheetState.partialExpand() else sheetState.hide()
-            }
-            LaunchedEffect(sheetState.currentValue) {
-                if (sheetState.currentValue == SheetValue.Hidden && selectedId != null) vm.clearSelection()
-            }
+            // The preview card sits above the bottom controls, so fly the picked bay above it.
+            val cardClearancePx = with(density) { PREVIEW_CLEARANCE.roundToPx() }
             BackHandler(enabled = selectedBay != null) { vm.clearSelection() }
 
-            val pick: (Bay) -> Unit = { bay -> vm.select(bay, bottomPaddingPx = peekPx) }
+            val pick: (Bay) -> Unit = { bay -> vm.select(bay, bottomPaddingPx = cardClearancePx) }
 
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetPeekHeight = if (selectedBay != null) peekDp else 0.dp,
-                sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                sheetContent = {
-                    selectedBay?.let { bay ->
-                        Box(Modifier.fillMaxSize()) {
-                            BayDetailContent(bay)
-                            IconButton(
-                                onClick = vm::clearSelection,
-                                modifier = Modifier.align(Alignment.TopEnd).padding(horizontal = 8.dp),
-                            ) { Icon(Icons.Filled.Close, contentDescription = "Close") }
-                        }
-                    }
-                },
-            ) {
-                Box(Modifier.fillMaxSize()) {
+            run {
+                Box(Modifier.fillMaxSize().background(palette.mapBackground)) {
                     // The map stays alive under the list so switching back keeps its state.
                     mapWith(pick, Modifier.fillMaxSize())
+                    // Top protection vignette, so the status bar and search bar read over busy tiles.
+                    Box(
+                        Modifier.fillMaxWidth().height(140.dp).align(Alignment.TopCenter)
+                            .background(Brush.verticalGradient(listOf(palette.topVignetteStart, Color.Transparent))),
+                    )
                     if (compactView == CompactView.List && !addingBay) {
                         Surface(Modifier.fillMaxSize()) {
                             listWith(pick, Modifier.fillMaxSize().padding(top = headerDp + 8.dp, bottom = 88.dp))
@@ -443,14 +435,37 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                                 }
                             }
                         }
-                        if (!search.expanded && selectedBay == null) {
-                            ViewToggle(
-                                view = compactView,
-                                countLabel = countLabel,
-                                palette = palette,
-                                onSelect = { vm.compactView.value = it },
-                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp),
-                            )
+                        if (!search.expanded) {
+                            Column(Modifier.align(Alignment.BottomCenter).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                                // The picked bay's preview, fading in above the controls while the map is still.
+                                AnimatedVisibility(
+                                    visible = selectedBay != null && compactView == CompactView.Map && !mapMoving,
+                                    enter = fadeIn(),
+                                    exit = fadeOut(),
+                                ) {
+                                    val bay = selectedBay ?: return@AnimatedVisibility
+                                    Column {
+                                        SelectedBayPreviewCard(
+                                            bay = bay,
+                                            distanceMetres = userPosition?.let { distanceMetres(it, bay) },
+                                            isSaved = bay.id in favourites,
+                                            palette = palette,
+                                            onToggleSave = { app.user.toggleFavourite(bay) },
+                                            onGo = { openDirections(context, bay) },
+                                            onOpen = { onOpenBay(bay.id) },
+                                            onClose = vm::clearSelection,
+                                        )
+                                        Spacer(Modifier.height(10.dp))
+                                    }
+                                }
+                                ViewToggle(
+                                    view = compactView,
+                                    countLabel = countLabel,
+                                    palette = palette,
+                                    onSelect = { vm.compactView.value = it },
+                                    modifier = Modifier.padding(bottom = 12.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -907,10 +922,10 @@ private fun Filters(
                 modifier = Modifier.heightIn(min = 36.dp).semantics { contentDescription = "Map moving, $label $count" },
             ) {
                 Row(Modifier.padding(horizontal = 14.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(8.dp).clip(CircleShape).background(palette.searchIconActive))
+                    PulsingDot(palette.searchIconActive)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        "Telemetry Active \u2022 ${label.uppercase()} ($count)",
+                        "Telemetry Active \u2022 ${label.uppercase()} ($count ${if (count == 1) "bay" else "bays"})",
                         color = palette.chipUnselectedText,
                         fontSize = 12.sp,
                         lineHeight = 16.sp,
@@ -1022,6 +1037,119 @@ private fun Pill(
             if (count != null) {
                 Spacer(Modifier.width(6.dp))
                 Odometer(count, selected, palette)
+            }
+        }
+    }
+}
+
+/** An 8dp dot that breathes while telemetry is live (still in previews and screenshot tests). */
+@Composable
+private fun PulsingDot(color: Color) {
+    val alpha = if (LocalInspectionMode.current) {
+        1f
+    } else {
+        val transition = rememberInfiniteTransition(label = "TelemetryDot")
+        val a by transition.animateFloat(
+            initialValue = 1f,
+            targetValue = 0.3f,
+            animationSpec = infiniteRepeatable(tween(700, easing = LinearEasing), RepeatMode.Reverse),
+            label = "TelemetryDotAlpha",
+        )
+        a
+    }
+    Box(Modifier.size(8.dp).graphicsLayer { this.alpha = alpha }.clip(CircleShape).background(color))
+}
+
+/** How much map the preview card and bottom controls cover, so a picked bay is flown above them. */
+private val PREVIEW_CLEARANCE = 200.dp
+
+/**
+ * The spec's compact preview of the picked bay: status, spaces and distance on
+ * top, the name and street below, a star to save it and a Go button for
+ * directions. Tapping the card opens the full bay page.
+ */
+@Composable
+private fun SelectedBayPreviewCard(
+    bay: Bay,
+    distanceMetres: Double?,
+    isSaved: Boolean,
+    palette: AuroraPalette,
+    onToggleSave: () -> Unit,
+    onGo: () -> Unit,
+    onOpen: () -> Unit,
+    onClose: () -> Unit,
+) {
+    val dot = when (bay.fee) {
+        Fee.Free -> AuroraPalette.StatusFree
+        Fee.Paid -> AuroraPalette.StatusPaid
+        Fee.Unknown -> AuroraPalette.StatusUnknown
+    }
+    val typeLabel = when (bay.fee) {
+        Fee.Free -> "Free"
+        Fee.Paid -> "Paid"
+        Fee.Unknown -> "Unknown rules"
+    }
+    val meta = buildString {
+        bay.capacity?.let { append(" \u2022 $it ${if (it == 1) "space" else "spaces"}") }
+        distanceMetres?.let { append(" \u2022 ${formatDistance(it)}") }
+    }
+    val subtitle = listOfNotNull(bay.street, bay.area ?: bay.city).joinToString(", ")
+        .ifEmpty { if (bay.covered == true) "Covered bay" else "Motorcycle bay" }
+    Surface(
+        onClick = onOpen,
+        shape = RoundedCornerShape(18.dp),
+        color = palette.cardSurface,
+        border = BorderStroke(1.dp, palette.cardBorder),
+        shadowElevation = 8.dp,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("bay-preview"),
+    ) {
+        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
+                    Spacer(Modifier.width(6.dp))
+                    Text(typeLabel, color = palette.cardTitleText, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+                    Text(meta, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+                Spacer(Modifier.height(2.dp))
+                Text(bay.name, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(subtitle, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+            Spacer(Modifier.width(10.dp))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Surface(
+                    onClick = onToggleSave,
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.2f) else Color.Transparent,
+                    border = BorderStroke(1.dp, if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.5f) else palette.cardBorder),
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            if (isSaved) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = if (isSaved) "Remove from saved" else "Save bay",
+                            tint = if (isSaved) AuroraPalette.StatusPaid else palette.cardSubtext,
+                            modifier = Modifier.size(16.dp),
+                        )
+                    }
+                }
+                Surface(onClick = onGo, shape = RoundedCornerShape(12.dp), color = palette.addFabBg, modifier = Modifier.height(36.dp)) {
+                    Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(Icons.Filled.Navigation, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+                        Text("Go", color = Color.White, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+                Surface(
+                    onClick = onClose,
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.Transparent,
+                    border = BorderStroke(1.dp, palette.cardBorder),
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(Icons.Filled.Close, contentDescription = "Close", tint = palette.cardSubtext, modifier = Modifier.size(16.dp))
+                    }
+                }
             }
         }
     }

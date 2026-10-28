@@ -53,6 +53,7 @@ fun ViewToggle(
         shape = CircleShape,
         color = palette.segmentedContainerBg,
         border = BorderStroke(1.dp, palette.segmentedContainerBorder),
+        shadowElevation = 6.dp,
         // 220dp wide, growing only if a large-text label needs more room.
         modifier = modifier.widthIn(min = 220.dp).width(IntrinsicSize.Max).height(40.dp).testTag("view-toggle"),
     ) {

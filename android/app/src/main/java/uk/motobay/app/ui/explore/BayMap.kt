@@ -4,7 +4,6 @@ import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.PointF
 import android.view.animation.LinearInterpolator
-import android.view.animation.OvershootInterpolator
 import android.view.animation.PathInterpolator
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -24,6 +23,8 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.lerp
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -61,7 +62,6 @@ import org.maplibre.android.style.layers.PropertyFactory.iconAllowOverlap
 import org.maplibre.android.style.layers.PropertyFactory.iconAnchor
 import org.maplibre.android.style.layers.PropertyFactory.iconIgnorePlacement
 import org.maplibre.android.style.layers.PropertyFactory.iconImage
-import org.maplibre.android.style.layers.PropertyFactory.iconOffset
 import org.maplibre.android.style.layers.PropertyFactory.iconOpacity
 import org.maplibre.android.style.layers.PropertyFactory.iconSize
 import org.maplibre.android.style.layers.SymbolLayer
@@ -87,14 +87,15 @@ sealed interface MapCommand {
 
 data class MapViewport(val box: BBox, val zoom: Double, val center: LatLon)
 
-/** Pin and cluster colours, taken from the current M3 colour scheme. */
+/** Marker colours: the semantic status dots plus the pill surfaces from the Aurora palette. */
 data class PinColors(
-    val free: Color, val onFree: Color,
-    val paid: Color, val onPaid: Color,
-    val unknown: Color, val onUnknown: Color,
-    /** Ring drawn round the selected pin. */
-    val selectedRing: Color,
-    val cluster: Color, val onCluster: Color,
+    val free: Color,
+    val paid: Color,
+    val unknown: Color,
+    val pillFill: Color,
+    val pillBorder: Color,
+    val pillText: Color,
+    val selectedFill: Color,
     val stroke: Color,
     val user: Color,
 )
@@ -122,6 +123,11 @@ private const val FALLBACK_DARK_STYLE = "https://tiles.openfreemap.org/styles/da
 private val EMPHASIZED_DECELERATE = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
 /** M3 "standard" easing, for things moving within the screen. */
 private val STANDARD = PathInterpolator(0.2f, 0f, 0f, 1f)
+
+/** The selected pill's scale, and the ring that pulses under it. */
+private const val SELECTED_SCALE = 1.12f
+private const val PULSE_RADIUS_DP = 24f
+private const val PULSE_MS = 1400L
 
 /** How long pins take to fly out of a cluster / gather back into one. */
 private const val SPLIT_MS = 400L
@@ -341,18 +347,17 @@ fun BayMap(
                     iconIgnorePlacement(true),
                 ),
             )
-            // Teardrop with its tip on the bay; the tip sits one outline-width above the bitmap's bottom edge.
+            // A capsule pill centred on the bay.
             loaded.addLayer(
                 SymbolLayer(BAY_PINS, BAY_SOURCE).withFilter(not(has("point_count"))).withProperties(
                     iconImage(get("icon")),
-                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconOffset(arrayOf(0f, PIN_STROKE_DP)),
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
             )
             loaded.addLayer(CircleLayer(USER_LAYER, USER_SOURCE).withProperties(circleRadius(8f), circleStrokeWidth(3f)))
-            // Selected bay: a soft ripple on the ground, then the same pin, larger, with a bright ring.
+            // Selected bay: a pulsing ring on the ground, then the same pill, sprung up to 1.12x, with its status colour as border.
             loaded.addLayer(
                 CircleLayer(SELECTED_PULSE, SELECTED_SOURCE).withProperties(
                     circleColor(toColor(get("fill"))),
@@ -364,8 +369,7 @@ fun BayMap(
             loaded.addLayer(
                 SymbolLayer(SELECTED_PIN, SELECTED_SOURCE).withProperties(
                     iconImage(get("icon")),
-                    iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-                    iconOffset(arrayOf(0f, SELECTED_PIN_STROKE_DP)),
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
                     iconAllowOverlap(true),
                     iconIgnorePlacement(true),
                 ),
@@ -469,15 +473,16 @@ fun BayMap(
         images.install(s, listOf(key))
         source?.setGeoJson(selected.toNode().toFeature(images, iconKey = key))
         try {
-            // Drops in with a bounce, like an M3 FAB appearing...
-            animate(420, OvershootInterpolator(2f)) { t -> pin?.setProperties(iconSize(0.2f + 0.8f * t)) }
-            pin?.setProperties(iconSize(1f))
-            // ...then a ripple spreads from the tip while the bay stays selected.
+            // Springs up to 1.12x (spec: dampingRatio 0.65, stiffness 400)...
+            Animatable(1f).animateTo(SELECTED_SCALE, spring(dampingRatio = 0.65f, stiffness = 400f)) {
+                pin?.setProperties(iconSize(value))
+            }
+            pin?.setProperties(iconSize(SELECTED_SCALE))
+            // ...while a 48dp ring pulses out to 1.65x and fades, every 1400ms, for as long as the bay stays selected.
             while (true) {
-                animate(1600, LinearInterpolator()) { t ->
-                    pulse?.setProperties(circleRadius(6f + 26f * t), circleOpacity(0.45f * (1f - t)))
+                animate(PULSE_MS, LinearInterpolator()) { t ->
+                    pulse?.setProperties(circleRadius(PULSE_RADIUS_DP * (1f + 0.65f * t)), circleOpacity(0.35f * (1f - t)))
                 }
-                delay(400)
             }
         } finally {
             runCatching {

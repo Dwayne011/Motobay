@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.luminance
 @Immutable
 data class AuroraPalette(
     val isDark: Boolean,
+    val mapBackground: Color,
+    val topVignetteStart: Color,
     val searchSurface: Color,
     val searchPlaceholder: Color,
     val searchIconIdle: Color,
@@ -28,6 +30,10 @@ data class AuroraPalette(
     val chipBadgeSelectedText: Color,
     val chipBadgeUnselectedBg: Color,
     val chipBadgeUnselectedText: Color,
+    val cardSurface: Color,
+    val cardBorder: Color,
+    val cardTitleText: Color,
+    val cardSubtext: Color,
     val segmentedContainerBg: Color,
     val segmentedContainerBorder: Color,
     val segmentedActiveBg: Color,
@@ -57,6 +63,8 @@ data class AuroraPalette(
 
         val Dark = AuroraPalette(
             isDark = true,
+            mapBackground = Color(0xFF111315),
+            topVignetteStart = Color(0xE60C0E12),
             searchSurface = Color(0xF21D2228),
             searchPlaceholder = Color(0xFFCBD5E1),
             searchIconIdle = Color(0xFFCBD5E1),
@@ -71,6 +79,10 @@ data class AuroraPalette(
             chipBadgeSelectedText = Color(0xFFE0F2FE),
             chipBadgeUnselectedBg = Color(0xFF1E293B),
             chipBadgeUnselectedText = Color(0xFF94A3B8),
+            cardSurface = Color(0xF2191E26),
+            cardBorder = Color(0x1AFFFFFF),
+            cardTitleText = Color(0xFFFFFFFF),
+            cardSubtext = Color(0xFF94A3B8),
             segmentedContainerBg = Color(0xF21B1F26),
             segmentedContainerBorder = Color(0xFF475569),
             segmentedActiveBg = Color(0xFF3A495C),
@@ -98,11 +110,13 @@ data class AuroraPalette(
                 Color.Transparent,
             ),
             outerAuraIdleAlpha = 0.28f,
-            outerAuraBoostAlpha = 0.52f,
+            outerAuraBoostAlpha = 0.55f,
         )
 
         val Light = AuroraPalette(
             isDark = false,
+            mapBackground = Color(0xFFEBF0F5),
+            topVignetteStart = Color(0xD9F8FAFC),
             searchSurface = Color(0xF2FFFFFF),
             searchPlaceholder = Color(0xFF334155),
             searchIconIdle = Color(0xFF475569),
@@ -117,6 +131,10 @@ data class AuroraPalette(
             chipBadgeSelectedText = Color(0xFFFFFFFF),
             chipBadgeUnselectedBg = Color(0xFFF1F5F9),
             chipBadgeUnselectedText = Color(0xFF475569),
+            cardSurface = Color(0xF2FFFFFF),
+            cardBorder = Color(0xFFCBD5E1),
+            cardTitleText = Color(0xFF0F172A),
+            cardSubtext = Color(0xFF475569),
             segmentedContainerBg = Color(0xF2FFFFFF),
             segmentedContainerBorder = Color(0xFFCBD5E1),
             segmentedActiveBg = Color(0xFF3B526E),
@@ -144,7 +162,7 @@ data class AuroraPalette(
                 Color.Transparent,
             ),
             outerAuraIdleAlpha = 0.35f,
-            outerAuraBoostAlpha = 0.60f,
+            outerAuraBoostAlpha = 0.65f,
         )
     }
 }

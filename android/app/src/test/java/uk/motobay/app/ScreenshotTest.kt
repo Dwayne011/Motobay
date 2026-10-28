@@ -361,9 +361,9 @@ class ScreenshotTest {
         shot("phone-dark-add-bay-form")
     }
 
-    /** Tapping a bay opens a sheet over the map rather than a new screen. */
+    /** Tapping a bay shows its preview card over the map rather than a new screen. */
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
-    fun phone_bay_opens_as_bottom_sheet() {
+    fun phone_bay_opens_as_preview_card() {
         app.user.updateSettings { it.copy(lastMap = uk.motobay.app.data.CameraSnapshot(51.5136, -0.1365, 16.0)) }
         setApp(dark = true)
         // The map is a placeholder in tests, so pick the bay from Saved in the search view.
@@ -372,13 +372,14 @@ class ScreenshotTest {
         compose.onAllNodesWithText("Saved")[0].performClick()
         compose.onNodeWithText("Sample bay 1").performClick()
         compose.waitForIdle()
-        compose.onNodeWithText("Directions").assertExists()
+        compose.onNodeWithTag("bay-preview").assertExists()
+        compose.onNodeWithText("Go").assertExists()
         // Still on Explore: the search bar is there, no "Bay details" app bar.
         compose.onNodeWithText("Search a town, street or postcode").assertExists()
-        shot("phone-dark-bay-sheet")
+        shot("phone-dark-bay-preview")
         compose.onNodeWithContentDescription("Close").performClick()
         compose.waitForIdle()
-        compose.onNodeWithText("Directions").assertDoesNotExist()
+        compose.onNodeWithTag("bay-preview").assertDoesNotExist()
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")

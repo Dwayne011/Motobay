@@ -1,15 +1,11 @@
 package uk.motobay.app.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.BoxWithConstraints
 import uk.motobay.app.ui.theme.auroraPalette
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -121,48 +117,19 @@ fun MotoBayApp(app: MotoBayApplication) {
     LaunchedEffect(current) { current?.route?.let { app.crashLog.noteScreen(it.substringAfterLast('.').substringBefore('/')) } }
 
     val palette = auroraPalette()
-    val itemColors = NavigationSuiteDefaults.itemColors(
-        navigationBarItemColors = NavigationBarItemDefaults.colors(
-            selectedIconColor = palette.navIconActive,
-            selectedTextColor = palette.navTextActive,
-            indicatorColor = palette.navPillActiveBg,
-            unselectedIconColor = palette.navTextInactive,
-            unselectedTextColor = palette.navTextInactive,
-        ),
-    )
     CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar, LocalRequireSignIn provides requireSignIn) {
-        NavigationSuiteScaffold(
-            navigationSuiteColors = NavigationSuiteDefaults.colors(
-                navigationBarContainerColor = palette.navBarBg,
-                navigationBarContentColor = palette.navTextInactive,
-            ),
-            navigationSuiteItems = {
-                destinations.forEach { d ->
-                    val selected = current?.hierarchy?.any { it.hasRoute(d.routeClass) } == true ||
-                        (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true)
-                    item(
-                        selected = selected,
-                        onClick = {
-                            nav.navigate(d.route) {
-                                popUpTo(nav.graph.findStartDestination().id) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            val icon = if (selected) d.selectedIcon else d.icon
-                            if (d.route == ReviewDest && pending > 0) {
-                                BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null, Modifier.size(20.dp)) }
-                            } else {
-                                Icon(icon, contentDescription = null, Modifier.size(20.dp))
-                            }
-                        },
-                        label = { Text(d.label, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1) },
-                        colors = itemColors,
-                    )
-                }
-            },
-        ) {
+    val onPick: (TopLevel) -> Unit = { d ->
+        nav.navigate(d.route) {
+            popUpTo(nav.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    val isSelected: (TopLevel) -> Boolean = { d ->
+        current?.hierarchy?.any { it.hasRoute(d.routeClass) } == true ||
+            (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true)
+    }
+    val content: @Composable () -> Unit = {
             Box(Modifier.fillMaxSize()) {
             NavHost(nav, startDestination = ExploreDest) {
                 composable<ExploreDest> {
@@ -189,8 +156,50 @@ fun MotoBayApp(app: MotoBayApplication) {
                 }
             }
             SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
-            // The navigation bar's 1dp top hairline.
-            Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(1.dp).background(palette.navBarBorder))
+            }
+    }
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            // M3 adaptive rule: a bar on compact windows (phones, or anything short), a rail otherwise.
+            if (maxWidth < 600.dp || maxHeight < 480.dp) {
+                Scaffold(
+                    bottomBar = {
+                        AuroraNavigationBar(palette) {
+                            destinations.forEach { d ->
+                                val selected = isSelected(d)
+                                AuroraNavigationItem(selected = selected, label = d.label, palette = palette, onClick = { onPick(d) }) { tint ->
+                                    val icon = if (selected) d.selectedIcon else d.icon
+                                    if (d.route == ReviewDest && pending > 0) {
+                                        BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null, Modifier.size(20.dp), tint = tint) }
+                                    } else {
+                                        Icon(icon, contentDescription = null, Modifier.size(20.dp), tint = tint)
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.background,
+                ) { inner -> Box(Modifier.padding(inner)) { content() } }
+            } else {
+                NavigationSuiteScaffold(
+                    navigationSuiteItems = {
+                        destinations.forEach { d ->
+                            val selected = isSelected(d)
+                            item(
+                                selected = selected,
+                                onClick = { onPick(d) },
+                                icon = {
+                                    val icon = if (selected) d.selectedIcon else d.icon
+                                    if (d.route == ReviewDest && pending > 0) {
+                                        BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null) }
+                                    } else {
+                                        Icon(icon, contentDescription = null)
+                                    }
+                                },
+                                label = { Text(d.label) },
+                            )
+                        }
+                    },
+                ) { content() }
             }
         }
         if (askToSignIn) SignInDialog(onDismiss = { askToSignIn = false })
