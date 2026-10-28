@@ -5,6 +5,12 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateDpAsState
+import uk.motobay.app.ui.theme.auroraPalette
+import uk.motobay.app.ui.theme.AuroraPalette
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.ui.semantics.Role
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clip
@@ -25,6 +31,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.outlined.Roofing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -51,7 +58,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EditRoad
@@ -72,7 +78,6 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -82,7 +87,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -157,6 +161,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val visible by vm.visible.collectAsStateWithLifecycle()
     val mapBays by vm.mapBays.collectAsStateWithLifecycle()
     val mapMoving by vm.mapMoving.collectAsStateWithLifecycle()
+    val palette = auroraPalette()
     val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
     val loadState by vm.loadState.collectAsStateWithLifecycle()
@@ -243,21 +248,37 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         )
                     }
                     Column(
-                        Modifier.align(Alignment.BottomEnd).padding(16.dp),
+                        Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 12.dp),
                         horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         if (!expanded && selectedId != null) return@Column
-                        SmallFloatingActionButton(
+                        // Locate mini-FAB: 44dp, 14dp corners, 1dp border, 20dp icon.
+                        Surface(
                             onClick = onLocate,
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            contentColor = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(14.dp),
+                            color = palette.locateFabBg,
+                            contentColor = palette.locateFabIcon,
+                            border = BorderStroke(1.dp, palette.locateFabBorder),
+                            modifier = Modifier.size(44.dp),
                         ) {
-                            if (locating) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
-                            else Icon(Icons.Filled.MyLocation, contentDescription = "Show my location")
+                            Box(contentAlignment = Alignment.Center) {
+                                if (locating) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = palette.locateFabIcon)
+                                else Icon(Icons.Filled.MyLocation, contentDescription = "Show my location", Modifier.size(20.dp))
+                            }
                         }
-                        FloatingActionButton(onClick = { requireSignIn { vm.startAddingBay() } }) {
-                            Icon(Icons.Filled.AddLocationAlt, contentDescription = "Add a bay")
+                        // Add bay primary FAB: 52dp, 16dp corners, 1dp border, 22dp icon.
+                        Surface(
+                            onClick = { requireSignIn { vm.startAddingBay() } },
+                            shape = RoundedCornerShape(16.dp),
+                            color = palette.addFabBg,
+                            contentColor = palette.addFabIcon,
+                            border = BorderStroke(1.dp, palette.addFabBorder),
+                            modifier = Modifier.size(52.dp),
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.Add, contentDescription = "Add a bay", Modifier.size(22.dp))
+                            }
                         }
                     }
                 }
@@ -328,15 +349,15 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         Column(Modifier.fillMaxSize()) {
                             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 DockedSearchBar(
-                                    inputField = { SearchField(search, vm, mapMoving) },
+                                    inputField = { SearchField(search, vm, mapMoving, palette) },
                                     expanded = search.expanded,
                                     onExpandedChange = vm::onSearchExpandedChange,
                                     colors = searchBarColors(search.expanded),
-                                    modifier = Modifier.fillMaxWidth().padding(AURORA_INSET),
+                                    modifier = Modifier.fillMaxWidth(),
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, counts, mapMoving, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, palette, vm::setPrice, vm::toggleCovered)
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -405,21 +426,20 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                         val side by animateDpAsState(if (search.expanded) 0.dp else 16.dp, label = "searchSidePadding")
                         Column(
                             Modifier.onSizeChanged { if (!search.expanded) headerHeight = it.height },
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             SearchBar(
-                                inputField = { SearchField(search, vm, mapMoving) },
+                                inputField = { SearchField(search, vm, mapMoving, palette) },
                                 expanded = search.expanded,
                                 onExpandedChange = vm::onSearchExpandedChange,
                                 colors = searchBarColors(search.expanded),
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = side)
-                                    .padding(top = if (search.expanded) 0.dp else 8.dp)
-                                    .padding(if (search.expanded) 0.dp else AURORA_INSET),
+                                    .padding(top = if (search.expanded) 0.dp else 8.dp),
                                 content = suggestions,
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, counts, mapMoving, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, palette, vm::setPrice, vm::toggleCovered)
                                 }
                             }
                         }
@@ -427,8 +447,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             ViewToggle(
                                 view = compactView,
                                 countLabel = countLabel,
+                                palette = palette,
                                 onSelect = { vm.compactView.value = it },
-                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp),
+                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp),
                             )
                         }
                     }
@@ -486,77 +507,123 @@ private fun AddBayOverlay(onCancel: () -> Unit, onNext: () -> Unit) {
     }
 }
 
-/** The text field inside the search bar, shared by the full-screen and docked versions. */
+/**
+ * The input slot of the search bar. Collapsed, it is the spec's 54dp aurora
+ * capsule (a tap expands the search); expanded, it is the real text field so
+ * typing, the keyboard and suggestions work as before.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchField(search: SearchUiState, vm: ExploreViewModel, mapMoving: Boolean) {
-    val boosted = mapMoving || search.expanded
+private fun SearchField(search: SearchUiState, vm: ExploreViewModel, mapMoving: Boolean, palette: AuroraPalette) {
+    if (!search.expanded) {
+        AuroraSearchCapsule(
+            query = search.query,
+            mapMoving = mapMoving,
+            palette = palette,
+            onClick = { vm.onSearchExpandedChange(true) },
+            onClear = { vm.onQueryChange("") },
+        )
+        return
+    }
     SearchBarDefaults.InputField(
-        // The aurora glow hugs the field itself; it goes out while the bar fills the screen.
-        modifier = Modifier.auroraGlow(boosted = boosted, visible = !search.expanded),
         query = search.query,
         onQueryChange = vm::onQueryChange,
         onSearch = { vm.onSearchSubmit() },
-        expanded = search.expanded,
+        expanded = true,
         onExpandedChange = vm::onSearchExpandedChange,
         placeholder = { Text("Search a town, street or postcode", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        colors = if (search.expanded) {
-            SearchBarDefaults.inputFieldColors()
-        } else {
-            SearchBarDefaults.inputFieldColors(
-                focusedTextColor = AuroraTokens.SearchText,
-                unfocusedTextColor = AuroraTokens.SearchText,
-                focusedContainerColor = AuroraTokens.SearchSurface,
-                unfocusedContainerColor = AuroraTokens.SearchSurface,
-                cursorColor = AuroraTokens.Sky,
-                focusedLeadingIconColor = AuroraTokens.Sky,
-                unfocusedLeadingIconColor = if (boosted) AuroraTokens.Sky else AuroraTokens.SearchPlaceholder,
-                focusedTrailingIconColor = AuroraTokens.SearchPlaceholder,
-                unfocusedTrailingIconColor = AuroraTokens.SearchPlaceholder,
-                focusedPlaceholderColor = AuroraTokens.SearchPlaceholder,
-                unfocusedPlaceholderColor = AuroraTokens.SearchPlaceholder,
-            )
-        },
         leadingIcon = {
-            if (search.expanded) {
-                IconButton(onClick = { vm.onSearchExpandedChange(false) }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Close search")
-                }
-            } else {
-                Icon(Icons.Filled.Search, contentDescription = null)
+            IconButton(onClick = { vm.onSearchExpandedChange(false) }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Close search")
             }
         },
         trailingIcon = {
             if (search.query.isNotEmpty()) {
                 IconButton(onClick = { vm.onQueryChange("") }) { Icon(Icons.Filled.Close, contentDescription = "Clear search") }
-            } else if (!search.expanded) {
-                // Telemetry status: a "Scanning..." badge crossfades in while the map camera moves.
-                AnimatedContent(targetState = mapMoving, label = "TelemetryScanBadge") { scanning ->
-                    if (scanning) {
-                        Text(
-                            "Scanning...",
-                            color = AuroraTokens.Iris,
-                            style = MaterialTheme.typography.labelSmall,
-                            maxLines = 1,
-                            softWrap = false,
-                            modifier = Modifier
-                                .padding(end = 12.dp)
-                                .clip(CircleShape)
-                                .background(AuroraTokens.Sky.copy(alpha = 0.16f))
-                                .padding(horizontal = 8.dp, vertical = 3.dp),
-                        )
-                    }
-                }
             }
         },
     )
 }
 
-/** Search bar container: the spec's dark glass while collapsed, the theme surface once it fills the screen. */
+/** The collapsed search bar: 54dp capsule, 2dp aurora rim, 16dp inner padding, 20dp icon, 15sp text. */
+@Composable
+private fun AuroraSearchCapsule(
+    query: String,
+    mapMoving: Boolean,
+    palette: AuroraPalette,
+    onClick: () -> Unit,
+    onClear: () -> Unit,
+) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(54.dp)
+            .auroraGlow(palette, boosted = mapMoving)
+            .padding(2.dp)
+            .clip(CircleShape)
+            .background(palette.searchSurface)
+            .clickable(onClick = onClick, role = Role.Button)
+            .semantics { contentDescription = if (query.isEmpty()) "Search a town, street or postcode" else "Search: $query" }
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Filled.Search,
+                contentDescription = null,
+                tint = if (mapMoving) palette.searchIconActive else palette.searchIconIdle,
+                modifier = Modifier.size(20.dp),
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                if (query.isEmpty()) "Search a town, street or postcode" else query,
+                color = palette.searchPlaceholder,
+                fontSize = 15.sp,
+                lineHeight = 20.sp,
+                fontWeight = FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            if (query.isNotEmpty()) {
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = "Clear search",
+                    tint = palette.searchIconIdle,
+                    modifier = Modifier.padding(start = 8.dp).size(20.dp).clip(CircleShape).clickable(onClick = onClear),
+                )
+            } else {
+                // Telemetry status: a "Scanning" pill crossfades in while the map camera moves.
+                AnimatedContent(targetState = mapMoving, label = "ScanningStatusBadge") { scanning ->
+                    if (scanning) {
+                        Text(
+                            "Scanning",
+                            color = palette.searchIconActive,
+                            fontSize = 10.sp,
+                            lineHeight = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            softWrap = false,
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .height(22.dp)
+                                .clip(CircleShape)
+                                .background(palette.searchIconActive.copy(alpha = 0.15f))
+                                .padding(horizontal = 8.dp)
+                                .wrapContentHeight(Alignment.CenterVertically),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Search bar container: see-through behind the collapsed capsule, the theme surface once it fills the screen. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun searchBarColors(expanded: Boolean) =
-    if (expanded) SearchBarDefaults.colors() else SearchBarDefaults.colors(containerColor = AuroraTokens.SearchSurface)
+    if (expanded) SearchBarDefaults.colors() else SearchBarDefaults.colors(containerColor = Color.Transparent)
 
 private enum class EmptyTab { Recent, Saved }
 
@@ -801,29 +868,27 @@ private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modi
     }
 }
 
-/** Gap between the aurora glow and the search bar, so the bloom has room to breathe. */
-private val AURORA_INSET = 4.dp
-
 /** The spec's status dot for each price pill; null for All. */
 private val PriceFilter.dot: Color?
     get() = when (this) {
         PriceFilter.All -> null
-        PriceFilter.Free -> AuroraTokens.DotFree
-        PriceFilter.Paid -> AuroraTokens.DotPaid
-        PriceFilter.Unknown -> AuroraTokens.DotUnknown
+        PriceFilter.Free -> AuroraPalette.StatusFree
+        PriceFilter.Paid -> AuroraPalette.StatusPaid
+        PriceFilter.Unknown -> AuroraPalette.StatusUnknown
     }
 
 /**
- * One scrollable row of pills over the map: price is a single choice (All,
- * Free, Paid, Unknown), Covered is a toggle. Each price pill carries a live
- * count of bays in view as an odometer badge; while the map is moving the row
- * collapses into a single telemetry pill until the camera settles.
+ * One scrollable row of 36dp chips over the map: price is a single choice
+ * (All, Free, Paid, Unknown), Covered is a toggle. Each price chip carries a
+ * live count of bays in view as an odometer badge; while the map is moving the
+ * row collapses into a single telemetry pill until the camera settles.
  */
 @Composable
 private fun Filters(
     filters: ExploreFilters,
     counts: Map<PriceFilter, Int>,
     mapMoving: Boolean,
+    palette: AuroraPalette,
     onPrice: (PriceFilter) -> Unit,
     onCovered: () -> Unit,
 ) {
@@ -837,17 +902,19 @@ private fun Filters(
             val count = counts[filters.price] ?: 0
             Surface(
                 shape = CircleShape,
-                color = AuroraTokens.SearchSurface,
-                border = BorderStroke(1.dp, AuroraTokens.TelemetryBorder),
-                modifier = Modifier.semantics { contentDescription = "Map moving, $label $count" },
+                color = palette.searchSurface,
+                border = BorderStroke(1.dp, palette.searchIconActive.copy(alpha = 0.45f)),
+                modifier = Modifier.heightIn(min = 36.dp).semantics { contentDescription = "Map moving, $label $count" },
             ) {
                 Row(Modifier.padding(horizontal = 14.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(8.dp).clip(CircleShape).background(AuroraTokens.Sky))
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(palette.searchIconActive))
                     Spacer(Modifier.width(8.dp))
                     Text(
                         "Telemetry Active \u2022 ${label.uppercase()} ($count)",
-                        color = AuroraTokens.TelemetryText,
-                        style = MaterialTheme.typography.labelMedium,
+                        color = palette.chipUnselectedText,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
                         softWrap = false,
                     )
@@ -855,7 +922,7 @@ private fun Filters(
             }
         } else {
             Row(
-                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 2.dp),
+                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 PriceFilter.entries.forEach { p ->
@@ -865,9 +932,10 @@ private fun Filters(
                         onClick = { onPrice(p) },
                         label = p.label,
                         count = counts[p] ?: 0,
+                        palette = palette,
                         leading = {
                             val dot = p.dot
-                            if (dot != null) Box(Modifier.size(9.dp).clip(CircleShape).background(dot))
+                            if (dot != null) Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
                         },
                     )
                 }
@@ -876,8 +944,9 @@ private fun Filters(
                     onClick = onCovered,
                     label = "Covered",
                     count = null,
+                    palette = palette,
                     leading = {
-                        Icon(Icons.Outlined.Roofing, contentDescription = null, tint = AuroraTokens.ChipLabel, modifier = Modifier.size(15.dp))
+                        Icon(Icons.Outlined.Roofing, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
                     },
                 )
             }
@@ -887,7 +956,7 @@ private fun Filters(
 
 /** A small count badge whose digits roll up or down like an odometer when the number changes. */
 @Composable
-private fun Odometer(count: Int, selected: Boolean) {
+private fun Odometer(count: Int, selected: Boolean, palette: AuroraPalette) {
     AnimatedContent(
         targetState = count,
         transitionSpec = {
@@ -901,40 +970,58 @@ private fun Odometer(count: Int, selected: Boolean) {
     ) { n ->
         Text(
             n.toString(),
-            color = if (selected) AuroraTokens.BadgeSelectedText else AuroraTokens.BadgeUnselectedText,
-            style = MaterialTheme.typography.labelSmall,
+            color = if (selected) palette.chipBadgeSelectedText else palette.chipBadgeUnselectedText,
+            fontSize = 11.sp,
+            lineHeight = 14.sp,
+            fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             softWrap = false,
             modifier = Modifier
-                .clip(CircleShape)
-                .background(if (selected) AuroraTokens.BadgeSelectedFill else AuroraTokens.BadgeUnselectedFill)
+                .clip(RoundedCornerShape(10.dp))
+                .background(if (selected) palette.chipBadgeSelectedBg else palette.chipBadgeUnselectedBg)
                 .padding(horizontal = 6.dp, vertical = 2.dp),
         )
     }
 }
 
-/** A filter chip in the spec's slate glass: a check when selected, otherwise [leading], then the label and optional count. */
+/** A 36dp filter chip: a 15dp check when selected, otherwise [leading], then the 13sp label and optional count. */
 @Composable
-private fun Pill(selected: Boolean, onClick: () -> Unit, label: String, count: Int?, leading: @Composable () -> Unit) {
+private fun Pill(
+    selected: Boolean,
+    onClick: () -> Unit,
+    label: String,
+    count: Int?,
+    palette: AuroraPalette,
+    leading: @Composable () -> Unit,
+) {
     Surface(
         onClick = onClick,
         shape = CircleShape,
-        color = if (selected) AuroraTokens.ChipSelectedFill else AuroraTokens.ChipUnselectedFill,
-        border = BorderStroke(1.dp, if (selected) AuroraTokens.ChipSelectedBorder else AuroraTokens.ChipUnselectedBorder),
-        modifier = Modifier.semantics { this.selected = selected },
+        color = if (selected) palette.chipSelectedBg else palette.chipUnselectedBg,
+        border = BorderStroke(1.dp, if (selected) palette.chipSelectedBorder else palette.chipUnselectedBorder),
+        // 36dp by the spec; taller only when a large font scale needs it.
+        modifier = Modifier.heightIn(min = 36.dp).semantics { this.selected = selected },
     ) {
         Row(Modifier.padding(horizontal = 12.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
             if (selected) {
-                Icon(Icons.Filled.Check, contentDescription = null, tint = AuroraTokens.ChipLabel, modifier = Modifier.size(15.dp))
+                Icon(Icons.Filled.Check, contentDescription = null, tint = palette.chipSelectedText, modifier = Modifier.size(15.dp))
                 Spacer(Modifier.width(6.dp))
             } else {
                 leading()
                 Spacer(Modifier.width(6.dp))
             }
-            Text(label, color = AuroraTokens.ChipLabel, style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
+            Text(
+                label,
+                color = if (selected) palette.chipSelectedText else palette.chipUnselectedText,
+                fontSize = 13.sp,
+                lineHeight = 18.sp,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                softWrap = false,
+            )
             if (count != null) {
                 Spacer(Modifier.width(6.dp))
-                Odometer(count, selected)
+                Odometer(count, selected, palette)
             }
         }
     }

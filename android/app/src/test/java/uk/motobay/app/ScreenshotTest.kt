@@ -449,17 +449,17 @@ class ViewToggleScreenshotTest {
             MotoBayTheme(settings) {
                 Surface {
                     androidx.compose.foundation.layout.Column(androidx.compose.ui.Modifier.padding(16.dp), verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)) {
-                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.Map, "5", {})
-                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.List, "200+", {})
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.Map, "5", uk.motobay.app.ui.theme.AuroraPalette.Dark, {})
+                        uk.motobay.app.ui.explore.ViewToggle(uk.motobay.app.ui.explore.CompactView.List, "200+", uk.motobay.app.ui.theme.AuroraPalette.Dark, {})
                     }
                 }
             }
         }
         compose.onRoot().captureRoboImage("build/outputs/roborazzi/view-toggle-large-text.png")
-        // The segments share one width, so the toggle must grow for the wider count rather than clip it.
+        // The toggle is 220dp wide by the spec, and may only grow (never clip) for a wider count.
         val narrow = compose.onAllNodesWithTag("view-toggle")[0].fetchSemanticsNode().boundsInRoot
         val wide = compose.onAllNodesWithTag("view-toggle")[1].fetchSemanticsNode().boundsInRoot
         compose.onNodeWithText("List\u00A0200+").assertExists()
-        assertTrue("toggle must widen for a 3-digit count ($narrow vs $wide)", wide.width > narrow.width + 40f)
+        assertTrue("toggle must not shrink for a 3-digit count ($narrow vs $wide)", wide.width >= narrow.width)
     }
 }

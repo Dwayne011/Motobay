@@ -20,27 +20,20 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import uk.motobay.app.ui.theme.AuroraPalette
 
-/** The "M3 Dynamic Aurora" sweep: sky, iris violet, teal, indigo, with a clear gap so the beam reads as travelling. */
-private val AuroraStops = arrayOf(
-    0.00f to Color.Transparent,
-    0.15f to Color.Transparent,
-    0.36f to Color(0xFF38BDF8), // primary sky
-    0.58f to Color(0xFFC084FC), // tertiary iris violet
-    0.80f to Color(0xFF2DD4BF), // secondary teal
-    0.95f to Color(0xFF818CF8), // expressive indigo
-    1.00f to Color.Transparent,
-)
+/** Where each of the palette's seven sweep colours sits round the capsule. */
+private val AuroraPositions = floatArrayOf(0.00f, 0.15f, 0.36f, 0.58f, 0.80f, 0.95f, 1.00f)
 
 /** A sweep gradient turned by [angle] degrees about the capsule's centre, so only the beam moves, not the capsule. */
-private class RotatedSweep(private val angle: Float) : ShaderBrush() {
+private class RotatedSweep(private val colors: List<Color>, private val angle: Float) : ShaderBrush() {
     override fun createShader(size: Size): Shader {
         val cx = size.width / 2f
         val cy = size.height / 2f
         return android.graphics.SweepGradient(
             cx, cy,
-            IntArray(AuroraStops.size) { AuroraStops[it].second.toArgb() },
-            FloatArray(AuroraStops.size) { AuroraStops[it].first },
+            IntArray(colors.size) { colors[it].toArgb() },
+            AuroraPositions,
         ).apply {
             setLocalMatrix(android.graphics.Matrix().apply { setRotate(angle, cx, cy) })
         }
@@ -52,12 +45,17 @@ private const val BOOSTED_ORBIT_MS = 1350
 
 /**
  * A beam of colour travelling round the edge of a capsule, as a soft bloom plus
- * a crisp trace. [boosted] (map moving, search focused) spins it 2.4x faster and
- * brightens the bloom. [visible] false draws nothing, e.g. while the search bar
+ * a crisp trace, in the [palette]'s colours. [boosted] (map moving, search
+ * focused) spins it 2.4x faster and brightens the bloom. [visible] false draws nothing, e.g. while the search bar
  * is expanded to full screen and no longer a capsule. Previews and screenshot
  * tests get a still frame.
  */
-fun Modifier.auroraGlow(boosted: Boolean, visible: Boolean = true, strokeWidth: Dp = 2.dp): Modifier = composed {
+fun Modifier.auroraGlow(
+    palette: AuroraPalette,
+    boosted: Boolean,
+    visible: Boolean = true,
+    strokeWidth: Dp = 2.dp,
+): Modifier = composed {
     if (!visible) return@composed this
     val still = LocalInspectionMode.current
     val angle: Float = if (still) {
@@ -75,12 +73,12 @@ fun Modifier.auroraGlow(boosted: Boolean, visible: Boolean = true, strokeWidth: 
         )
         a
     }
-    val bloomAlpha = if (boosted) 0.48f else 0.25f
+    val bloomAlpha = if (boosted) palette.outerAuraBoostAlpha else palette.outerAuraIdleAlpha
     drawWithCache {
         val stroke = strokeWidth.toPx()
-        val bloom = stroke * 3.2f
+        val bloom = stroke * 3f
         val radius = CornerRadius(size.height / 2f, size.height / 2f)
-        val sweep = RotatedSweep(angle)
+        val sweep = RotatedSweep(palette.auroraSweepColors, angle)
         onDrawWithContent {
             drawRoundRect(brush = sweep, cornerRadius = radius, style = Stroke(width = bloom), alpha = bloomAlpha)
             drawRoundRect(brush = sweep, cornerRadius = radius, style = Stroke(width = stroke))

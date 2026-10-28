@@ -1,6 +1,15 @@
 package uk.motobay.app.ui
 
 import androidx.compose.foundation.layout.Box
+import uk.motobay.app.ui.theme.auroraPalette
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -111,8 +120,22 @@ fun MotoBayApp(app: MotoBayApplication) {
     // For crash reports: which screen the rider was on.
     LaunchedEffect(current) { current?.route?.let { app.crashLog.noteScreen(it.substringAfterLast('.').substringBefore('/')) } }
 
+    val palette = auroraPalette()
+    val itemColors = NavigationSuiteDefaults.itemColors(
+        navigationBarItemColors = NavigationBarItemDefaults.colors(
+            selectedIconColor = palette.navIconActive,
+            selectedTextColor = palette.navTextActive,
+            indicatorColor = palette.navPillActiveBg,
+            unselectedIconColor = palette.navTextInactive,
+            unselectedTextColor = palette.navTextInactive,
+        ),
+    )
     CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar, LocalRequireSignIn provides requireSignIn) {
         NavigationSuiteScaffold(
+            navigationSuiteColors = NavigationSuiteDefaults.colors(
+                navigationBarContainerColor = palette.navBarBg,
+                navigationBarContentColor = palette.navTextInactive,
+            ),
             navigationSuiteItems = {
                 destinations.forEach { d ->
                     val selected = current?.hierarchy?.any { it.hasRoute(d.routeClass) } == true ||
@@ -129,12 +152,13 @@ fun MotoBayApp(app: MotoBayApplication) {
                         icon = {
                             val icon = if (selected) d.selectedIcon else d.icon
                             if (d.route == ReviewDest && pending > 0) {
-                                BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null) }
+                                BadgedBox(badge = { Badge { Text("$pending") } }) { Icon(icon, contentDescription = null, Modifier.size(20.dp)) }
                             } else {
-                                Icon(icon, contentDescription = null)
+                                Icon(icon, contentDescription = null, Modifier.size(20.dp))
                             }
                         },
-                        label = { Text(d.label) },
+                        label = { Text(d.label, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1) },
+                        colors = itemColors,
                     )
                 }
             },
@@ -165,6 +189,8 @@ fun MotoBayApp(app: MotoBayApplication) {
                 }
             }
             SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+            // The navigation bar's 1dp top hairline.
+            Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(1.dp).background(palette.navBarBorder))
             }
         }
         if (askToSignIn) SignInDialog(onDismiss = { askToSignIn = false })
