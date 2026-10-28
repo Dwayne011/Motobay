@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
@@ -15,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
@@ -79,11 +82,31 @@ class FirestoreCommunityRepository(
         }
     }
 
-    private fun <T> Query.snapshotFlow(parse: (String, Map<String, Any?>) -> T?): Flow<Map<String, T>> = callbackFlow {
+    /**
+     * Live results of the query. Firestore ends a listener for good when it fails
+     * (offline too long, or refused by rules that are later fixed), so after an
+     * error this listens again, waiting longer each time, rather than going quiet
+     * until the app restarts. An empty result stands in until the first answer.
+     */
+    private fun <T> Query.snapshotFlow(parse: (String, Map<String, Any?>) -> T?): Flow<Map<String, T>> = flow {
+        var wait = RETRY_FIRST_MS
+        var answered = false
+        while (true) {
+            try {
+                listenOnce(parse).collect { emit(it); answered = true; wait = RETRY_FIRST_MS }
+            } catch (e: FirebaseFirestoreException) {
+                Log.w(TAG, "Listener failed, retrying in ${wait / 1000}s: ${e.message}")
+                if (!answered) { emit(emptyMap()); answered = true }
+                delay(wait)
+                wait = (wait * 2).coerceAtMost(RETRY_MAX_MS)
+            }
+        }
+    }
+
+    private fun <T> Query.listenOnce(parse: (String, Map<String, Any?>) -> T?): Flow<Map<String, T>> = callbackFlow {
         val registration = addSnapshotListener { snapshot, error ->
             if (error != null) {
-                Log.w(TAG, "Listener failed: ${error.message}")
-                trySend(emptyMap())
+                close(error)
             } else if (snapshot != null) {
                 val docs = snapshot.documents.mapNotNull { d ->
                     d.getData(DocumentSnapshot.ServerTimestampBehavior.ESTIMATE)?.let { parse(d.id, it) }?.let { d.id to it }
@@ -199,5 +222,7 @@ class FirestoreCommunityRepository(
         const val DATABASE_ID = "motobays"
         private const val TAG = "Community"
         private const val WRITE_WAIT_MS = 15_000L
+        private const val RETRY_FIRST_MS = 2_000L
+        private const val RETRY_MAX_MS = 60_000L
     }
 }

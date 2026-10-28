@@ -1093,8 +1093,7 @@ private fun SelectedBayPreviewCard(
         bay.capacity?.let { append(" \u2022 $it ${if (it == 1) "space" else "spaces"}") }
         distanceMetres?.let { append(" \u2022 ${formatDistance(it)}") }
     }
-    val subtitle = listOfNotNull(bay.street, bay.area ?: bay.city).joinToString(", ")
-        .ifEmpty { if (bay.covered == true) "Covered bay" else "Motorcycle bay" }
+    val subtitle = bay.locality
     Surface(
         onClick = onOpen,
         shape = RoundedCornerShape(18.dp),
@@ -1112,8 +1111,8 @@ private fun SelectedBayPreviewCard(
                     Text(meta, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Spacer(Modifier.height(2.dp))
-                Text(bay.name, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(subtitle, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(bay.title, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                subtitle?.let { Text(it, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) }
             }
             Spacer(Modifier.width(10.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {

@@ -194,9 +194,12 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             Column(Modifier.weight(1f)) {
                 Text(bay.title, style = auroraStyle(20.sp, FontWeight.Bold, palette.cardTitleText))
                 VSpace(2)
-                val subtitle = listOfNotNull(bay.locality, bay.operator, position?.let { "${formatDistance(distanceMetres(it, bay))} away" })
-                    .joinToString(" \u2022 ").ifEmpty { "Motorcycle parking" }
-                Text(subtitle, style = auroraStyle(12.sp, color = palette.cardSubtext))
+                val subtitle = listOfNotNull(
+                    bay.locality,
+                    bay.operator?.takeIf { it != bay.title },
+                    position?.let { "${formatDistance(distanceMetres(it, bay))} away" },
+                ).joinToString(" \u2022 ")
+                if (subtitle.isNotEmpty()) Text(subtitle, style = auroraStyle(12.sp, color = palette.cardSubtext))
             }
             // The bay's average star rating, top right.
             RatingBadge(community.ratingSummary(bay.id), palette)
@@ -430,18 +433,23 @@ private fun RateBay(bay: Bay, palette: AuroraPalette) {
     var pending by remember(bay.id) { mutableStateOf<Int?>(null) }
     val shown = pending ?: mine ?: 0
 
+    // The tapped star stays lit until the saved rating arrives from the server.
+    LaunchedEffect(mine) { if (pending == mine) pending = null }
+
     fun rate(stars: Int) = requireSignIn {
-        if (stars == mine) return@requireSignIn
+        if (stars == (pending ?: mine)) return@requireSignIn
         pending = stars
         scope.launch {
             val ok = runCatching { app.community.rate(bay, stars) }.isSuccess
-            pending = null
-            if (!ok) snackbar.showSnackbar("Couldn't save your rating. Check you're online.")
+            if (!ok) {
+                pending = null
+                snackbar.showSnackbar("Couldn't save your rating. Check you're online.")
+            }
         }
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(if (mine == null) "Rate this bay" else "Your rating", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+        Text(if ((pending ?: mine) == null) "Rate this bay" else "Your rating", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
         Row(verticalAlignment = Alignment.CenterVertically) {
             for (n in 1..5) {
                 val filled = n <= shown
@@ -465,9 +473,10 @@ private fun RateBay(bay: Bay, palette: AuroraPalette) {
                     )
                 }
             }
-            if (mine != null) {
+            if (mine != null || pending != null) {
                 Spacer(Modifier.weight(1f))
                 AuroraTextAction("Remove", palette.cardSubtext, onClick = {
+                    pending = null
                     scope.launch {
                         val ok = runCatching { app.community.removeRating(bay) }.isSuccess
                         if (!ok) snackbar.showSnackbar("Couldn't remove your rating. Check you're online.")
