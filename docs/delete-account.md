@@ -26,6 +26,7 @@ Send an email to **dwayne.edwards89@googlemail.com** from the address you signed
 - Your display name
 - Every photo you uploaded, including the image files
 - Every comment you posted
+- Every star rating you gave
 - Every bay you added and every correction you suggested, whether approved or not
 - Reports you made are kept but no longer linked to an account
 
@@ -37,5 +38,7 @@ Deletion is permanent and takes effect immediately in the app; Google's backups 
 - Nothing else: the app holds no other data about you. See the [privacy policy](privacy.html).
 
 ## Partial deletion
+
+You can take back a star rating yourself: open the bay and tap **Remove** under **Your rating**.
 
 To remove a single photo, comment or bay change without closing your account, ask by email with a link or description of the item, or wait for it to be reviewed: anything not yet approved can be withdrawn on request.
