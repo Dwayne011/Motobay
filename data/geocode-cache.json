@@ -4885,6 +4885,12 @@
 "postcode": "EH1",
 "street": "Forth Street"
 },
+"node/1666600170@55.95840,-3.18956": {
+"area": "Bellevue",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "Broughton Street"
+},
 "node/1666600170@55.95847,-3.18931": {
 "area": "Gayfield",
 "city": "Edinburgh",
@@ -16464,6 +16470,16 @@
 "city": "Hove",
 "postcode": "BN3",
 "street": "Holland Road"
+},
+"way/1572185582@54.24639,-1.06121": {
+"area": "Helmsley",
+"postcode": "YO62",
+"street": "Market Place"
+},
+"way/1573376631@52.98141,-3.41149": {
+"area": "Tyn y Cefn",
+"city": "Melin Rûg",
+"postcode": "LL21"
 },
 "way/157460683@55.97788,-3.17305": {
 "area": "The Shore",
