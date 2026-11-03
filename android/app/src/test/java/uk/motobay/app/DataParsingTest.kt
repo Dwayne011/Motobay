@@ -79,9 +79,22 @@ class BayTitleTest {
         assertEquals("Manchester M3", b.locality)
     }
 
+    @Test fun noStreetFallsBackToTheAreaWithoutRepeatingIt() {
+        // Never just "Motorcycle parking": every bay is one.
+        val b = bay("Motorcycle parking", area = "Hove", city = "Brighton and Hove", postcode = "BN3")
+        assertEquals("Hove", b.title)
+        assertEquals("Brighton and Hove BN3", b.locality)
+    }
+
+    @Test fun noStreetOrAreaFallsBackToTheTown() {
+        val b = bay("Motorbike parking", city = "Stroud")
+        assertEquals("Stroud", b.title)
+        assertNull(b.locality)
+    }
+
     @Test fun nothingKnownGivesNoLocality() {
         val b = bay("Motorcycle parking")
-        assertEquals("Motorcycle parking", b.title)
+        assertEquals("Unnamed bay", b.title)
         assertNull(b.locality)
     }
 }
