@@ -458,11 +458,29 @@ class ScreenshotTest {
         compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
     }
 
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_council_bay_detail() {
+        val bay = uk.motobay.app.data.Bay(
+            id = "council/hillingdon/ruislip-high-street-144", lat = 51.57311, lon = -0.42354, name = "Motorcycle parking",
+            fee = uk.motobay.app.data.Fee.Free, feeUnconfirmed = true, street = "High Street", area = "Ruislip", postcode = "HA4",
+            openingHours = "Any time", maxStay = "20 minutes, no return within 1 hour", lengthMetres = 7.7,
+            note = "South-west side, from 10.9 m north-west of the south-east wall of No. 144, south-east for 7.7 m.",
+            source = "Hillingdon Council traffic orders (FOI 06397)",
+        )
+        app.user.updateSettings { it.copy(themeMode = ThemeMode.Dark) }
+        compose.setContent { DetailHost(bay) }
+        compose.onNodeWithText("Free (unconfirmed)").assertExists()
+        compose.onNodeWithText("7.7 m long").assertExists()
+        compose.onNodeWithText("Where to look").assertExists()
+        compose.onNodeWithText("Edit on OpenStreetMap").assertDoesNotExist()
+        shot("phone-dark-council-bay")
+    }
+
     @Composable
-    private fun DetailHost() {
+    private fun DetailHost(bay: uk.motobay.app.data.Bay = SampleBays.all[0]) {
         val settings by app.user.settings.collectAsStateWithLifecycle()
         CompositionLocalProvider(LocalInspectionMode provides true, LocalApp provides app, LocalSnackbar provides SnackbarHostState()) {
-            MotoBayTheme(settings) { Surface { BayDetailContent(SampleBays.all[0]) } }
+            MotoBayTheme(settings) { Surface { BayDetailContent(bay) } }
         }
     }
 }

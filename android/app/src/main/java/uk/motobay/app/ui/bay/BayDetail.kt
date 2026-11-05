@@ -1,6 +1,9 @@
 package uk.motobay.app.ui.bay
 
 import android.content.Intent
+import uk.motobay.app.ui.components.feeText
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Spacer
@@ -162,6 +165,7 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
  * Moderators can also delete rider content from here, in case something was
  * approved by mistake; [onDeleted] runs after the bay itself is deleted.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> Unit)? = null) {
     val app = LocalApp.current
@@ -206,17 +210,26 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             RatingBadge(community.ratingSummary(bay.id), palette)
         }
 
-        // Price tag and the other facts as capsule tags.
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            AuroraTag(if (bay.fee == Fee.Unknown) "Price unknown" else bay.fee.label, palette)
+        // Price tag and the other facts as capsule tags; they wrap on narrow screens.
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            AuroraTag(bay.feeText, palette)
             bay.capacity?.let { AuroraTag("$it spaces", palette) }
+            bay.lengthMetres?.let { AuroraTag("%s m long".format(Locale.UK, "%.1f".format(Locale.UK, it).removeSuffix(".0")), palette) }
             bay.covered?.let { AuroraTag(if (it) "Covered" else "Not covered", palette) }
+            bay.openingHours?.let { AuroraTag(it, palette) }
             bay.maxStay?.let { AuroraTag("Max stay $it", palette) }
         }
-        bay.openingHours?.let { Text(it, style = auroraStyle(12.sp, color = palette.cardSubtext)) }
+        // Where exactly, in the source's own words (a council traffic order, say).
+        bay.note?.let { note ->
+            AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
+                Text(if (bay.approximate) "Where to look (pin is approximate)" else "Where to look", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
+                VSpace(2)
+                Text(note, style = auroraStyle(12.sp, color = palette.cardSubtext))
+            }
+        }
 
         val unknowns = listOfNotNull(
-            "free or paid".takeIf { bay.fee == Fee.Unknown },
+            "free or paid".takeIf { bay.fee == Fee.Unknown || bay.feeUnconfirmed },
             "covered".takeIf { bay.covered == null },
         )
         if (unknowns.isNotEmpty()) {
@@ -285,6 +298,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 when {
                     bay.isSample -> "This is a development sample, not a real bay."
                     bay.isRiderAdded -> "Added by ${bay.addedBy ?: "a rider"}."
+                    bay.source != null -> "From ${bay.source}. The council hasn't confirmed charges or the number of spaces."
                     else -> "Bay data \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                 },
                 style = auroraStyle(10.sp, color = palette.cardSubtext),
@@ -310,7 +324,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     palette, color = Coral, onClick = { confirm = ModeratorDelete.Corrections }, modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (!bay.isSample && !bay.isRiderAdded) {
+            if (bay.isOsm) {
                 Row(
                     Modifier.clip(RoundedCornerShape(8.dp)).clickable {
                         val (type, num) = bay.id.split("/")

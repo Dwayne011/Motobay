@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import uk.motobay.app.util.openDirections
 import uk.motobay.app.data.Fee
 import uk.motobay.app.ui.components.RatingBadge
+import uk.motobay.app.ui.components.feeText
 import uk.motobay.app.data.ratingSummary
 import uk.motobay.app.data.RatingSummary
 import androidx.compose.material.icons.filled.Navigation
@@ -762,7 +763,7 @@ private fun LazyListScope.savedItems(saved: List<Bay>, position: LatLon?, onSave
             Column(Modifier.weight(1f)) {
                 Text(bay.title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
-                    listOfNotNull(bay.locality, bay.fee.label).joinToString(" · "),
+                    listOfNotNull(bay.locality, bay.feeText).joinToString(" · "),
                     style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
                 )
@@ -1091,7 +1092,7 @@ private fun SelectedBayPreviewCard(
         Fee.Unknown -> AuroraPalette.StatusUnknown
     }
     val typeLabel = when (bay.fee) {
-        Fee.Free -> "Free"
+        Fee.Free -> if (bay.feeUnconfirmed) "Free (unconfirmed)" else "Free"
         Fee.Paid -> "Paid"
         Fee.Unknown -> "Unknown rules"
     }

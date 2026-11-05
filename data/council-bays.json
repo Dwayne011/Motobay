@@ -1,0 +1,42 @@
+{
+  "about": "Motorcycle bays from council traffic orders, merged into uk-bays.json by scripts/fetch_uk_bays.py. Positions were placed from each order's description using OpenStreetMap addresses and junctions; 'approximate' marks those placed from a nearby address or postcode rather than the exact reference point. Councils have not confirmed charges or the number of spaces, so fee is 'free' with feeUnconfirmed set, and capacity is left out.",
+  "sources": {
+    "hillingdon": "Hillingdon Council traffic orders (FOI 06397)"
+  },
+  "bays": [
+    {"id": "council/hillingdon/cowley-high-street", "source": "hillingdon", "lat": 51.53028, "lon": -0.48188, "street": "High Street", "approximate": true, "lengthMetres": 6.0, "openingHours": "Any time",
+     "note": "Service road on the east side of High Street, Cowley: south-west side, from 13.2 m west of the boundary of Nos. 3 and 5 Station Road, north-west for 6 m."},
+    {"id": "council/hillingdon/field-end-road-morford-way", "source": "hillingdon", "lat": 51.5783, "lon": -0.39926, "street": "Field End Road", "lengthMetres": 6.21, "openingHours": "Any time",
+     "note": "South-west side, from 43.85 m north-west of Morford Way, north-west for 6.21 m."},
+    {"id": "council/hillingdon/coldharbour-lane-19-21", "source": "hillingdon", "lat": 51.50812, "lon": -0.41685, "street": "Coldharbour Lane", "approximate": true, "lengthMetres": 6.0, "openingHours": "Any time",
+     "note": "North-west side, from 1.3 m north-east of the boundary of Nos. 19 and 21, north-east for 6 m."},
+    {"id": "council/hillingdon/station-road-hayes-42a", "source": "hillingdon", "lat": 51.50588, "lon": -0.41926, "street": "Station Road", "lengthMetres": 5.0, "openingHours": "Any time",
+     "note": "West side, from 1 m south of the north wall of No. 42a, south for 5 m."},
+    {"id": "council/hillingdon/eastbury-road-3", "source": "hillingdon", "lat": 51.61158, "lon": -0.42363, "street": "Eastbury Road", "approximate": true, "lengthMetres": 6.0, "openingHours": "Any time",
+     "note": "East side, from 2.4 m north of the south wall of No. 3, north for 6 m."},
+    {"id": "council/hillingdon/joel-street-65-67", "source": "hillingdon", "lat": 51.60036, "lon": -0.40985, "street": "Joel Street", "lengthMetres": 5.0, "openingHours": "Any time",
+     "note": "West side, opposite a point 15.8 m north of the boundary of Nos. 65 and 67, north for 5 m."},
+    {"id": "council/hillingdon/ruislip-high-street-144", "source": "hillingdon", "lat": 51.57311, "lon": -0.42354, "street": "High Street", "lengthMetres": 7.7, "openingHours": "Any time", "maxStay": "20 minutes, no return within 1 hour",
+     "note": "South-west side, from 10.9 m north-west of the south-east wall of No. 144, south-east for 7.7 m."},
+    {"id": "council/hillingdon/ruislip-high-street-midcroft", "source": "hillingdon", "lat": 51.57493, "lon": -0.42537, "street": "High Street", "lengthMetres": 7.9, "openingHours": "Any time",
+     "note": "North-east side, from 39.6 m north-west of Midcroft, north-west for 7.9 m."},
+    {"id": "council/hillingdon/victoria-road-56-58", "source": "hillingdon", "lat": 51.57325, "lon": -0.413, "street": "Victoria Road", "approximate": true, "lengthMetres": 6.5, "openingHours": "Any time",
+     "note": "South-west side, from 4.6 m south-east of the boundary of Nos. 56 and 58, south-east for 6.5 m."},
+    {"id": "council/hillingdon/belmont-road", "source": "hillingdon", "lat": 51.5472, "lon": -0.48017, "street": "Belmont Road", "lengthMetres": 5.0, "openingHours": "Mon–Sat 8am–6.30pm",
+     "note": "South-east side, from 15 m north-east of High Street, for 5 m. Motorcycles only Monday to Saturday, 8am to 6.30pm."},
+    {"id": "council/hillingdon/uxbridge-high-street-228-229", "source": "hillingdon", "lat": 51.54435, "lon": -0.47495, "street": "High Street", "approximate": true, "lengthMetres": 5.0, "openingHours": "Any time",
+     "note": "South-west side, opposite a point 15.4 m north-west of the boundary of Nos. 228 and 229, north-west for 5 m."},
+    {"id": "council/hillingdon/uxbridge-high-street-124-125", "source": "hillingdon", "lat": 51.54836, "lon": -0.48095, "street": "High Street", "lengthMetres": 12.0, "openingHours": "Any time", "maxStay": "20 minutes, no return within 1 hour",
+     "note": "North-east side, from 1.4 m north-west of the south-east boundary of Nos. 124 and 125, north-west for 12 m."},
+    {"id": "council/hillingdon/windsor-street-50-51", "source": "hillingdon", "lat": 51.54568, "lon": -0.48015, "street": "Windsor Street", "lengthMetres": 6.3, "openingHours": "Any time", "maxStay": "20 minutes, no return within 1 hour",
+     "note": "North-west side, from the boundary of Nos. 50 and 51, north-east for 6.3 m."},
+    {"id": "council/hillingdon/bentinck-road", "source": "hillingdon", "lat": 51.5107, "lon": -0.47372, "street": "Bentinck Road", "lengthMetres": 6.0, "openingHours": "Any time",
+     "note": "South-west side, from 10 m north-west of High Street, Yiewsley, north-west for 6 m."}
+  ],
+  "unplaced": [
+    {"source": "hillingdon", "description": "FIELD END ROAD, the service road fronting Nos. 202-214, south-west side, from 4 m north-west of the boundary of Nos. 214 and 216, south-east for 5 m.", "why": "No house numbers on this stretch in OpenStreetMap."},
+    {"source": "hillingdon", "description": "KINGSHILL AVENUE, north-west side, from 1.7 m north-east of the boundary of Nos. 314 and 312, north-east for 5 m.", "why": "No house numbers on Kingshill Avenue in OpenStreetMap; the road is about 2 km long."},
+    {"source": "hillingdon", "description": "WINDMILL HILL, south-west side, opposite 6.0 m north-west to 10.5 m south-east of the south-east boundary of Crown Apartments.", "why": "Crown Apartments is not in OpenStreetMap."},
+    {"source": "hillingdon", "description": "HIGH STREET, north-east side, from 2 m north-west of the north-west boundary of No. 133a, south-east for 6.2 m.", "why": "The order does not name the town; Ruislip and Uxbridge both have a 133 High Street."}
+  ]
+}

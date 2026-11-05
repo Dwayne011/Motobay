@@ -1,4 +1,78 @@
 {
+"council/hillingdon/belmont-road@51.54720,-0.48017": {
+"area": "Hillingdon",
+"city": "London Borough of Hillingdon",
+"postcode": "UB8",
+"street": "Belmont Road"
+},
+"council/hillingdon/bentinck-road@51.51070,-0.47372": {
+"area": "Yiewsley",
+"city": "West Drayton",
+"postcode": "UB7",
+"street": "Bentinck Road"
+},
+"council/hillingdon/coldharbour-lane-19-21@51.50812,-0.41685": {
+"area": "Hayes",
+"postcode": "UB3",
+"street": "Coldharbour Lane"
+},
+"council/hillingdon/cowley-high-street@51.53028,-0.48188": {
+"area": "London Borough of Hillingdon"
+},
+"council/hillingdon/eastbury-road-3@51.61158,-0.42363": {
+"area": "Northwood Green Lane",
+"city": "London Borough of Hillingdon",
+"postcode": "HA6",
+"street": "Eastbury Road"
+},
+"council/hillingdon/field-end-road-morford-way@51.57830,-0.39926": {
+"area": "Eastcote",
+"city": "London Borough of Hillingdon",
+"postcode": "HA5",
+"street": "Field End Road"
+},
+"council/hillingdon/joel-street-65-67@51.60036,-0.40985": {
+"area": "Northwood Hills",
+"city": "London Borough of Hillingdon",
+"postcode": "HA6",
+"street": "Joel Street"
+},
+"council/hillingdon/ruislip-high-street-144@51.57311,-0.42354": {
+"area": "Ruislip",
+"postcode": "HA4",
+"street": "High Street"
+},
+"council/hillingdon/ruislip-high-street-midcroft@51.57493,-0.42537": {
+"area": "Ickenham",
+"city": "London Borough of Hillingdon",
+"postcode": "HA4",
+"street": "High Street"
+},
+"council/hillingdon/station-road-hayes-42a@51.50588,-0.41926": {
+"area": "Hayes",
+"postcode": "UB3",
+"street": "Station Road"
+},
+"council/hillingdon/uxbridge-high-street-124-125@51.54836,-0.48095": {
+"area": "Hillingdon",
+"city": "Uxbridge",
+"postcode": "UB8",
+"street": "High Street"
+},
+"council/hillingdon/uxbridge-high-street-228-229@51.54435,-0.47495": {
+"area": "London Borough of Hillingdon"
+},
+"council/hillingdon/victoria-road-56-58@51.57325,-0.41300": {
+"area": "London Borough of Hillingdon",
+"postcode": "HA4",
+"street": "Victoria Road"
+},
+"council/hillingdon/windsor-street-50-51@51.54568,-0.48015": {
+"area": "Cowley",
+"city": "London Borough of Hillingdon",
+"postcode": "UB8",
+"street": "Windsor Street"
+},
 "node/10003989317@51.38058,-2.36223": {
 "area": "Kingsmead",
 "city": "Bath",

@@ -34,9 +34,25 @@ data class Bay(
     val postcode: String? = null,
     /** Set for bays added by riders (not from OpenStreetMap). */
     val addedBy: String? = null,
+    /** Who the bay's details come from when it isn't OpenStreetMap, e.g. a council's traffic orders. */
+    val source: String? = null,
+    /** The source's own description of where the bay is, e.g. a traffic order's wording. */
+    val note: String? = null,
+    /** Length of the bay along the kerb, when the source gives it. */
+    val lengthMetres: Double? = null,
+    /** The price is a best guess the source hasn't confirmed. */
+    val feeUnconfirmed: Boolean = false,
+    /** The pin was placed from a nearby address, so it may be a few doors out. */
+    val approximate: Boolean = false,
 ) {
     val isSample: Boolean get() = id.startsWith("sample/")
     val isRiderAdded: Boolean get() = id.startsWith("rider/")
+
+    /** From a council's traffic orders rather than OpenStreetMap. */
+    val isCouncil: Boolean get() = id.startsWith("council/")
+
+    /** An OpenStreetMap element ("node/1", "way/2"), so it can be edited there. */
+    val isOsm: Boolean get() = id.startsWith("node/") || id.startsWith("way/") || id.startsWith("relation/")
 
     /** True when the mapper gave the bay no real name, just what it is. */
     val hasGenericName: Boolean get() = name.trim().lowercase() in GENERIC_NAMES

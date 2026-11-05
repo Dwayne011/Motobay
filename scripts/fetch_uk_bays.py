@@ -4,8 +4,13 @@ OpenStreetMap, normalised into the shape both apps read.
 
 Runs weekly in GitHub Actions (.github/workflows/update-bay-data.yml), so the
 apps download one file instead of every phone querying the shared Overpass
-servers. Usage: python3 scripts/fetch_uk_bays.py data/uk-bays.json
+servers. Bays from council traffic orders (data/council-bays.json) are merged
+in on top. Usage: python3 scripts/fetch_uk_bays.py data/uk-bays.json
+
+To re-merge council bays into the existing file without refetching:
+python3 scripts/fetch_uk_bays.py --merge-only data/uk-bays.json
 """
+import os
 import json
 import math
 import sys
@@ -130,7 +135,48 @@ def merge_spaces(bays, spaces):
     return merged
 
 
-def build(response):
+OSM_ATTRIBUTION = "© OpenStreetMap contributors, ODbL 1.0"
+
+# What a council bay carries into the published file. "approximate" marks a
+# position placed from a nearby address rather than the exact reference point.
+COUNCIL_FIELDS = ("id", "lat", "lon", "street", "openingHours", "maxStay", "lengthMetres", "note", "approximate")
+
+
+def council_bays(council, osm_bays):
+    """Bays from council traffic orders, minus any OpenStreetMap already has
+    (within SPACE_MERGE_METRES). Charges and space counts aren't confirmed by
+    the councils, so they go in as free-but-unconfirmed with no capacity."""
+    sources = council.get("sources", {})
+    out = []
+    for c in council.get("bays", []):
+        if any(metres(c, b) <= SPACE_MERGE_METRES for b in osm_bays):
+            continue
+        bay = {k: c[k] for k in COUNCIL_FIELDS if k in c}
+        bay["lat"], bay["lon"] = round(c["lat"], 6), round(c["lon"], 6)
+        bay["name"] = "Motorcycle parking"
+        bay["fee"] = "free"
+        bay["feeUnconfirmed"] = True
+        bay["source"] = sources.get(c["source"], c["source"])
+        out.append(bay)
+    return out
+
+
+def with_council(osm_bays, council):
+    """The published file: OpenStreetMap bays plus council bays, sorted by id."""
+    extra = council_bays(council, osm_bays) if council else []
+    bays = sorted(osm_bays + extra, key=lambda b: b["id"])
+    attribution = OSM_ATTRIBUTION
+    if extra:
+        attribution += "; " + "; ".join(sorted(set(b["source"] for b in extra)))
+    return {
+        "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "attribution": attribution,
+        "count": len(bays),
+        "bays": bays,
+    }
+
+
+def build(response, council=None):
     bays, spaces = [], []
     for el in response.get("elements", []):
         bay = to_bay(el)
@@ -139,18 +185,28 @@ def build(response):
         is_space = (el.get("tags") or {}).get("amenity") == "parking_space"
         (spaces if is_space else bays).append(bay)
     bays += merge_spaces(bays, spaces)
-    bays.sort(key=lambda b: b["id"])
-    return {
-        "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "attribution": "© OpenStreetMap contributors, ODbL 1.0",
-        "count": len(bays),
-        "bays": bays,
-    }
+    return with_council(bays, council)
+
+
+def load_council(out):
+    path = os.path.join(os.path.dirname(os.path.abspath(out)), "council-bays.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except OSError:
+        return None
 
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else "data/uk-bays.json"
-    data = build(fetch())
+    args = [a for a in sys.argv[1:] if a != "--merge-only"]
+    out = args[0] if args else "data/uk-bays.json"
+    council = load_council(out)
+    if "--merge-only" in sys.argv:
+        with open(out, encoding="utf-8") as f:
+            osm = [b for b in json.load(f)["bays"] if not b["id"].startswith("council/")]
+        data = with_council(osm, council)
+    else:
+        data = build(fetch(), council)
     # Guard against a bad response wiping the published file.
     if data["count"] < 1000:
         raise SystemExit(f"Only {data['count']} bays returned; refusing to publish.")

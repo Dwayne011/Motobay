@@ -39,6 +39,25 @@ class DataParsingTest {
         assertEquals(data.count, data.bays.size)
         assertTrue(data.bays.size > 1000)
         assertTrue(data.bays.all { it.lat in 49.0..61.5 && it.lon in -9.0..2.5 })
+        // Council bays from traffic orders: free but unconfirmed, with the order's own description.
+        val council = data.bays.filter { it.isCouncil }
+        assertTrue(council.isNotEmpty())
+        assertTrue(council.all { it.fee == Fee.Free && it.feeUnconfirmed && it.note != null && it.source != null && !it.isOsm })
+    }
+
+    @Test fun decodesCouncilBay() {
+        val body = """
+            {"generated":"2026-11-03T00:00:00Z","attribution":"x","count":1,"bays":[
+              {"id":"council/hillingdon/joel-street-65-67","lat":51.60036,"lon":-0.40985,"name":"Motorcycle parking","fee":"free",
+               "feeUnconfirmed":true,"street":"Joel Street","lengthMetres":5.0,"openingHours":"Any time","note":"West side.",
+               "source":"Hillingdon Council traffic orders (FOI 06397)","approximate":true}
+            ]}
+        """.trimIndent()
+        val bay = Json { ignoreUnknownKeys = true }.decodeFromString(BayDataset.serializer(), body).bays.single()
+        assertTrue(bay.isCouncil && bay.feeUnconfirmed && bay.approximate)
+        assertEquals("Joel Street", bay.title)
+        assertEquals(5.0, bay.lengthMetres!!, 0.0)
+        assertEquals("West side.", bay.note)
     }
 
     /** A real Photon response for "camden", recorded on 2026-10-25. */

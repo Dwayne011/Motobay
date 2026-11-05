@@ -38,7 +38,7 @@ import uk.motobay.app.ui.components.AuroraTag
 import uk.motobay.app.ui.components.HSpace
 import uk.motobay.app.ui.components.VSpace
 import uk.motobay.app.ui.components.auroraStyle
-import uk.motobay.app.ui.components.label
+import uk.motobay.app.ui.components.feeText
 import uk.motobay.app.ui.theme.AuroraPalette
 import uk.motobay.app.ui.theme.auroraPalette
 import uk.motobay.app.util.distanceMetres
@@ -106,7 +106,7 @@ private fun SavedBayCard(bay: Bay, distance: String?, palette: AuroraPalette, on
                 }
                 VSpace(8)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    AuroraTag(bay.fee.label, palette)
+                    AuroraTag(bay.feeText, palette)
                     bay.capacity?.let { AuroraTag("$it spaces", palette) }
                     if (bay.covered == true) AuroraTag("Covered", palette)
                 }
