@@ -4819,6 +4819,22 @@
 "postcode": "EH14",
 "street": "Calder Road"
 },
+"node/14341069210@51.58856,-1.42633": {
+"area": "Belmont",
+"city": "Vale of White Horse",
+"postcode": "OX12",
+"street": "Market Place"
+},
+"node/14342137071@53.00268,-2.27144": {
+"area": "Keele",
+"city": "Newcastle-under-Lyme"
+},
+"node/14359874285@51.47328,-0.18254": {
+"area": "Imperial Wharf",
+"city": "London Borough of Hammersmith and Fulham",
+"postcode": "SW6",
+"street": "The Boulevard"
+},
 "node/1443454124@55.82038,-4.02231": {
 "area": "Hattonrigg",
 "city": "Bellshill",
@@ -16486,6 +16502,18 @@
 "city": "Edinburgh",
 "postcode": "EH6",
 "street": "Commercial Quay"
+},
+"way/1576328981@51.28907,-0.76050": {
+"area": "North Farnborough",
+"city": "Rushmoor",
+"postcode": "GU14",
+"street": "Solartron Road"
+},
+"way/1576577633@52.44816,-0.82437": {
+"area": "Desborough",
+"city": "Kettering",
+"postcode": "NN14",
+"street": "Cockerel Rise"
 },
 "way/168875609@55.94247,-3.06702": {
 "area": "East Lothian"
