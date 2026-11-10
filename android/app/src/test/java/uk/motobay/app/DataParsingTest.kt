@@ -39,10 +39,12 @@ class DataParsingTest {
         assertEquals(data.count, data.bays.size)
         assertTrue(data.bays.size > 1000)
         assertTrue(data.bays.all { it.lat in 49.0..61.5 && it.lon in -9.0..2.5 })
-        // Council bays from traffic orders: free but unconfirmed, with the order's own description.
+        // Council bays from traffic orders: free, with the order's own description. Hillingdon confirmed
+        // there are no charges or permits, so its bays aren't marked unconfirmed.
         val council = data.bays.filter { it.isCouncil }
         assertTrue(council.isNotEmpty())
-        assertTrue(council.all { it.fee == Fee.Free && it.feeUnconfirmed && it.note != null && it.source != null && !it.isOsm })
+        assertTrue(council.all { it.fee == Fee.Free && it.note != null && it.source != null && !it.isOsm && it.capacity == null })
+        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") }.none { it.feeUnconfirmed })
     }
 
     @Test fun decodesCouncilBay() {

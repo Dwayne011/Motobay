@@ -462,14 +462,17 @@ class ScreenshotTest {
     fun phone_council_bay_detail() {
         val bay = uk.motobay.app.data.Bay(
             id = "council/hillingdon/ruislip-high-street-144", lat = 51.57311, lon = -0.42354, name = "Motorcycle parking",
-            fee = uk.motobay.app.data.Fee.Free, feeUnconfirmed = true, street = "High Street", area = "Ruislip", postcode = "HA4",
+            fee = uk.motobay.app.data.Fee.Free, street = "High Street", area = "Ruislip", postcode = "HA4",
             openingHours = "Any time", maxStay = "20 minutes, no return within 1 hour", lengthMetres = 7.7,
             note = "South-west side, from 10.9 m north-west of the south-east wall of No. 144, south-east for 7.7 m.",
             source = "Hillingdon Council traffic orders (FOI 06397)",
         )
         app.user.updateSettings { it.copy(themeMode = ThemeMode.Dark) }
         compose.setContent { DetailHost(bay) }
-        compose.onNodeWithText("Free (unconfirmed)").assertExists()
+        // Hillingdon confirmed its on-street motorcycle bays are free, so no "(unconfirmed)" and no "Tell us" about the price.
+        compose.onNodeWithText("Free").assertExists()
+        compose.onNodeWithText("Free (unconfirmed)").assertDoesNotExist()
+        compose.onNodeWithText("no permit needed", substring = true).assertExists()
         compose.onNodeWithText("7.7 m long").assertExists()
         compose.onNodeWithText("Where to look").assertExists()
         compose.onNodeWithText("Edit on OpenStreetMap").assertDoesNotExist()

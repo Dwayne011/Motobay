@@ -144,19 +144,24 @@ COUNCIL_FIELDS = ("id", "lat", "lon", "street", "openingHours", "maxStay", "leng
 
 def council_bays(council, osm_bays):
     """Bays from council traffic orders, minus any OpenStreetMap already has
-    (within SPACE_MERGE_METRES). Charges and space counts aren't confirmed by
-    the councils, so they go in as free-but-unconfirmed with no capacity."""
+    (within SPACE_MERGE_METRES). They go in as free, marked unconfirmed until the
+    council confirms it, and with no capacity, which councils don't record."""
     sources = council.get("sources", {})
     out = []
     for c in council.get("bays", []):
         if any(metres(c, b) <= SPACE_MERGE_METRES for b in osm_bays):
             continue
+        # A source is a plain name, or {"name": ..., "feeConfirmed": true} once the council confirms it's free.
+        src = sources.get(c["source"], c["source"])
+        if isinstance(src, str):
+            src = {"name": src}
         bay = {k: c[k] for k in COUNCIL_FIELDS if k in c}
         bay["lat"], bay["lon"] = round(c["lat"], 6), round(c["lon"], 6)
         bay["name"] = "Motorcycle parking"
         bay["fee"] = "free"
-        bay["feeUnconfirmed"] = True
-        bay["source"] = sources.get(c["source"], c["source"])
+        if not src.get("feeConfirmed"):
+            bay["feeUnconfirmed"] = True
+        bay["source"] = src["name"]
         out.append(bay)
     return out
 

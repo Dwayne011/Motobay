@@ -1,7 +1,11 @@
 {
-  "about": "Motorcycle bays from council traffic orders, merged into uk-bays.json by scripts/fetch_uk_bays.py. Positions were placed from each order's description using OpenStreetMap addresses and junctions; 'approximate' marks those placed from a nearby address or postcode rather than the exact reference point. Councils have not confirmed charges or the number of spaces, so fee is 'free' with feeUnconfirmed set, and capacity is left out.",
+  "about": "Motorcycle bays from council traffic orders, merged into uk-bays.json by scripts/fetch_uk_bays.py. Positions were placed from each order's description using OpenStreetMap addresses and junctions; 'approximate' marks those placed from a nearby address or postcode rather than the exact reference point. Fee is 'free'; it is marked unconfirmed unless the source's feeConfirmed is true. Capacity is left out, since councils do not record it.",
   "sources": {
-    "hillingdon": "Hillingdon Council traffic orders (FOI 06397)"
+    "hillingdon": {
+      "name": "Hillingdon Council traffic orders (FOI 06397)",
+      "feeConfirmed": true,
+      "confirmation": "Hillingdon Council confirmed in its follow-up to FOI 06397 (November 2026) that no parking charges or permits apply to any designated on-street motorcycle parking place in the borough, and that it holds no record of how many motorcycles each place holds."
+    }
   },
   "bays": [
     {"id": "council/hillingdon/cowley-high-street", "source": "hillingdon", "lat": 51.53028, "lon": -0.48188, "street": "High Street", "approximate": true, "lengthMetres": 6.0, "openingHours": "Any time",

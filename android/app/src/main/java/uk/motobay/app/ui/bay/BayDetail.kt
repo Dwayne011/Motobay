@@ -298,7 +298,8 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 when {
                     bay.isSample -> "This is a development sample, not a real bay."
                     bay.isRiderAdded -> "Added by ${bay.addedBy ?: "a rider"}."
-                    bay.source != null -> "From ${bay.source}. The council hasn't confirmed charges or the number of spaces."
+                    bay.source != null && bay.feeUnconfirmed -> "From ${bay.source}. The council hasn't confirmed charges or the number of spaces."
+                    bay.source != null -> "From ${bay.source}. The council confirms it's free with no permit needed, but doesn't record how many bikes it holds."
                     else -> "Bay data \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                 },
                 style = auroraStyle(10.sp, color = palette.cardSubtext),

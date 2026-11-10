@@ -86,6 +86,13 @@ class CouncilBaysTest(unittest.TestCase):
         self.assertTrue(a["approximate"])
         self.assertIn("Hillingdon", data["attribution"])
 
+    def test_a_source_that_confirmed_it_is_free_drops_the_unconfirmed_flag(self):
+        council = dict(self.COUNCIL, sources={"hillingdon": {"name": "Hillingdon Council traffic orders (FOI 06397)", "feeConfirmed": True}})
+        data = with_council([], council)
+        self.assertTrue(all(b["fee"] == "free" and "feeUnconfirmed" not in b for b in data["bays"]))
+        self.assertEqual(data["bays"][0]["source"], "Hillingdon Council traffic orders (FOI 06397)")
+        self.assertIn("Hillingdon Council traffic orders (FOI 06397)", data["attribution"])
+
     def test_bays_openstreetmap_already_has_are_skipped(self):
         osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "Motorcycle parking", "fee": "unknown"}]
         data = with_council(osm, self.COUNCIL)
