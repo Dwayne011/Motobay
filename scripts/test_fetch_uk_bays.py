@@ -93,6 +93,11 @@ class CouncilBaysTest(unittest.TestCase):
         self.assertEqual(data["bays"][0]["source"], "Hillingdon Council traffic orders (FOI 06397)")
         self.assertIn("Hillingdon Council traffic orders (FOI 06397)", data["attribution"])
 
+    def test_capacity_is_kept_when_the_council_gives_one(self):
+        council = {"sources": {"bromley": "Bromley"}, "bays": [
+            {"id": "council/bromley/x", "source": "bromley", "lat": 51.4, "lon": 0.01, "capacity": 12, "note": "Mouth of the road."}]}
+        self.assertEqual(with_council([], council)["bays"][0]["capacity"], 12)
+
     def test_bays_openstreetmap_already_has_are_skipped(self):
         osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "Motorcycle parking", "fee": "unknown"}]
         data = with_council(osm, self.COUNCIL)

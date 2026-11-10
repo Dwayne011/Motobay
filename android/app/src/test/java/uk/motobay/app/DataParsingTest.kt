@@ -43,8 +43,10 @@ class DataParsingTest {
         // there are no charges or permits, so its bays aren't marked unconfirmed.
         val council = data.bays.filter { it.isCouncil }
         assertTrue(council.isNotEmpty())
-        assertTrue(council.all { it.fee == Fee.Free && it.note != null && it.source != null && !it.isOsm && it.capacity == null })
-        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") }.none { it.feeUnconfirmed })
+        assertTrue(council.all { it.fee == Fee.Free && it.note != null && it.source != null && !it.isOsm })
+        // Hillingdon and Bromley both say their bays are free; only Bromley gives space counts.
+        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") }.none { it.feeUnconfirmed || it.capacity != null })
+        assertEquals(40, council.single { it.id == "council/bromley/edison-road" }.capacity)
     }
 
     @Test fun decodesCouncilBay() {

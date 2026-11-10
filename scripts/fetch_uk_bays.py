@@ -139,13 +139,13 @@ OSM_ATTRIBUTION = "© OpenStreetMap contributors, ODbL 1.0"
 
 # What a council bay carries into the published file. "approximate" marks a
 # position placed from a nearby address rather than the exact reference point.
-COUNCIL_FIELDS = ("id", "lat", "lon", "street", "openingHours", "maxStay", "lengthMetres", "note", "approximate")
+COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "approximate")
 
 
 def council_bays(council, osm_bays):
     """Bays from council traffic orders, minus any OpenStreetMap already has
     (within SPACE_MERGE_METRES). They go in as free, marked unconfirmed until the
-    council confirms it, and with no capacity, which councils don't record."""
+    council confirms it, with a capacity only where the council gives one."""
     sources = council.get("sources", {})
     out = []
     for c in council.get("bays", []):

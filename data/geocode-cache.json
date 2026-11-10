@@ -1,4 +1,35 @@
 {
+"council/bromley/berwick-way@51.37575,0.09824": {
+"area": "Broom Hill",
+"city": "Orpington",
+"postcode": "BR6",
+"street": "Knoll Rise"
+},
+"council/bromley/churchill-way@51.40280,0.01478": {
+"area": "Greater London",
+"postcode": "BR1"
+},
+"council/bromley/edison-road@51.40590,0.01190": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR2",
+"street": "St. Jame's Court"
+},
+"council/bromley/ravensbourne-road@51.40096,0.01650": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR1",
+"street": "Ravensbourne Road"
+},
+"council/bromley/ringers-road@51.40182,0.01568": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR1",
+"street": "Ringers Road"
+},
+"council/bromley/walnuts-road@51.37551,0.10361": {
+"area": "London Borough of Bromley"
+},
 "council/hillingdon/belmont-road@51.54720,-0.48017": {
 "area": "Hillingdon",
 "city": "London Borough of Hillingdon",

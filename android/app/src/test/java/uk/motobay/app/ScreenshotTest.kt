@@ -472,7 +472,7 @@ class ScreenshotTest {
         // Hillingdon confirmed its on-street motorcycle bays are free, so no "(unconfirmed)" and no "Tell us" about the price.
         compose.onNodeWithText("Free").assertExists()
         compose.onNodeWithText("Free (unconfirmed)").assertDoesNotExist()
-        compose.onNodeWithText("no permit needed", substring = true).assertExists()
+        compose.onNodeWithText("The council says it's free, but it doesn't say how many bikes it holds.", substring = true).assertExists()
         compose.onNodeWithText("7.7 m long").assertExists()
         compose.onNodeWithText("Where to look").assertExists()
         compose.onNodeWithText("Edit on OpenStreetMap").assertDoesNotExist()
