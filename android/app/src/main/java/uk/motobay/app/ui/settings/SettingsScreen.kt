@@ -24,6 +24,8 @@ import uk.motobay.app.ui.components.AuroraTextAction
 import uk.motobay.app.ui.components.Coral
 import uk.motobay.app.ui.components.Slate950
 import uk.motobay.app.ui.components.VSpace
+import uk.motobay.app.ui.components.HSpace
+import androidx.compose.material.icons.filled.Favorite
 import uk.motobay.app.ui.components.auroraStyle
 import uk.motobay.app.ui.theme.AuroraPalette
 import uk.motobay.app.ui.theme.auroraPalette
@@ -90,7 +92,7 @@ import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
 
 @Composable
-fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}, onOpenPolicy: (Policy) -> Unit = {}) {
+fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}, onOpenPolicy: (Policy) -> Unit = {}, onOpenSupporter: () -> Unit = {}) {
     val app = LocalApp.current
     val palette = auroraPalette()
     val settings by app.user.settings.collectAsStateWithLifecycle()
@@ -101,6 +103,20 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         AuroraHeader("Settings", palette)
+
+        val supporter by app.supporter.state.collectAsStateWithLifecycle()
+        AuroraCard(palette, radius = 16, color = palette.searchSurface, onClick = onOpenSupporter) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.Favorite, contentDescription = null, tint = palette.searchIconActive, modifier = Modifier.size(18.dp))
+                HSpace(10)
+                AuroraRowText(
+                    "MotoBays Supporter",
+                    if (supporter.isSupporter) "Unlocked. Thank you for supporting the app." else "Unlock the \"Free now\" filter and keep the app free of adverts",
+                    palette,
+                )
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
+            }
+        }
 
         AuroraSectionHeader("Appearance", palette)
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {

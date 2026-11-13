@@ -139,10 +139,10 @@ OSM_ATTRIBUTION = "© OpenStreetMap contributors, ODbL 1.0"
 
 # What a council bay carries into the published file. "approximate" marks a
 # position placed from a nearby address rather than the exact reference point.
-COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules", "approximate")
+COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules", "charged", "approximate")
 # What an OpenStreetMap bay takes from the council bay it matches: the council's
 # facts, but not its id or position, so riders' ratings and comments stay attached.
-OVERLAY_FIELDS = ("capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules")
+OVERLAY_FIELDS = ("capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules", "charged")
 
 
 def council_bays(council, osm_bays):

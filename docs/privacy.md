@@ -4,7 +4,7 @@ title: MotoBays Privacy Policy
 
 # MotoBays Privacy Policy
 
-**Effective date:** 28 October 2026
+**Effective date:** 13 November 2026
 
 **Applies to:** the MotoBays Android app (`uk.motobays.app`) and the pages on this site
 
@@ -22,6 +22,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 - The app only uses your location when you tap the "my location" button, and never stores or uploads it.
 - If you sign in (Google or Apple) and post photos, comments, star ratings or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
 - There are no adverts, no analytics and no tracking in the app.
+- MotoBays is free. An optional one-off "Supporter" purchase is handled entirely by Google Play; we never see your payment details.
 - You can delete your account and everything linked to it from inside the app at any time.
 
 ## 3. Personal data we collect
@@ -33,6 +34,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 | **Content you post** | Photos, comments, star ratings, new bays and corrections to existing bays, each with the date, time and your user ID | When you submit them |
 | **Reports** | The item reported, the reason you pick, any note you add, and your user ID | When you report another rider's content |
 | **Location** | Your device's current position (precise or approximate, your choice) | Only while you use the "my location" button or search with location allowed. It stays on the device and is never sent to us. |
+| **Purchase** | Whether your Google account has bought the optional Supporter upgrade. Google Play tells the app yes or no; we receive no name, card or billing details, and the answer is kept on your phone only. | When you open the app or buy Supporter |
 | **Device data on request** | Device model, Android version, app version and a technical trace | Only if the app closes unexpectedly and you choose to send us the report by email |
 | **Stored on your phone only** | Saved bays, settings, blocked riders, recent searches, last map position | As you use the app. This data never leaves your device except through Android's own backup, if you have it enabled. |
 
@@ -64,6 +66,7 @@ We do not sell personal data and we do not share it with advertisers. The app re
 | Provider | What they process | Role and location |
 |---|---|---|
 | **Google LLC – Firebase** (Authentication, Cloud Firestore, Cloud Storage, App Check) | Account, profile, content, reports, attestation tokens | Our processor. Firestore data is stored in Google's EU multi-region (`eur3`); Firebase Authentication is a global service. Google's commitments: https://firebase.google.com/support/privacy |
+| **Google Play** (Google Play Billing) | Your Supporter purchase and payment, under your Google account | Independent controller for payments; Google's privacy policy: https://policies.google.com/privacy |
 | **OpenFreeMap** | The map tiles you request (which reveal the area you are looking at) and your IP address | Independent provider of map tiles: https://openfreemap.org |
 | **Photon by komoot** | The text you type into place search and your IP address | Independent provider of place search: https://photon.komoot.io |
 | **postcodes.io** | Postcodes you type and your IP address | Independent provider of postcode lookup: https://postcodes.io |
@@ -85,6 +88,7 @@ Google may process Firebase data outside the UK, including in the United States.
 | Posts and ratings | Until you delete them, the moderator removes them, or you delete your account |
 | Reports | Up to 12 months after they are resolved, then deleted; unlinked from your account immediately if you delete it |
 | Location | Never stored |
+| Purchase | Held by Google Play under your Google account; the yes/no copy on your phone goes when you uninstall the app or clear its data |
 | Crash reports you email us | Until the bug is fixed, then deleted |
 | Google backups of Firebase data | Purged within 180 days of deletion |
 

@@ -132,3 +132,15 @@ grep uses-permission app/build/intermediates/merged_manifest/release/processRele
 
 `versionCode` must go up on every upload; without `-Pmotobay.versionCode` it uses the default in `app/build.gradle.kts`.
 Release builds are minified with R8 and only signed when `keystore.properties` exists.
+
+## Supporter (in-app purchase)
+
+The Android app sells one optional, one-off in-app product through Google Play
+Billing. To put it on sale, create a **managed (one-time) product** in the Play
+Console under Monetise › Products › In-app products with the id `supporter`,
+give it a name, description and price, and activate it. The app reads the price
+from Play, so nothing in the code changes when the price does. Until the
+product exists (and in builds not installed from Play) the Supporter page says
+it isn't available; debug builds have a switch on that page to turn it on for
+testing. Supporter unlocks the "Free now" filter and the live charge status on
+paid bays, both driven by the `charged` hours in `data/council-bays.json`.

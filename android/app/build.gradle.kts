@@ -136,6 +136,9 @@ dependencies {
     implementation(libs.androidx.credentials.play.services)
     implementation(libs.google.id)
 
+    // One-off Supporter purchase through Google Play.
+    implementation(libs.play.billing)
+
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.roborazzi)

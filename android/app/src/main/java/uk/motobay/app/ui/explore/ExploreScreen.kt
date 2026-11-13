@@ -52,6 +52,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.outlined.Roofing
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -166,7 +168,7 @@ import uk.motobay.app.util.formatDistance
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExploreScreen(onOpenBay: (String) -> Unit) {
+fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {}) {
     val app = LocalApp.current
     val context = LocalContext.current
     val vm: ExploreViewModel = viewModel { ExploreViewModel(app) }
@@ -175,6 +177,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
     val visible by vm.visible.collectAsStateWithLifecycle()
     val mapBays by vm.mapBays.collectAsStateWithLifecycle()
     val mapMoving by vm.mapMoving.collectAsStateWithLifecycle()
+    val supporter by app.supporter.state.collectAsStateWithLifecycle()
+    // "Free now" is a Supporter extra: without it the chip explains what it is instead of filtering.
+    val onFreeNow = { if (supporter.isSupporter) vm.toggleFreeNow() else onOpenSupporter() }
     val community by app.community.data.collectAsStateWithLifecycle()
     val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
@@ -375,7 +380,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, counts, mapMoving, palette, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow)
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -436,7 +441,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit) {
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, counts, mapMoving, palette, vm::setPrice, vm::toggleCovered)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow)
                                 }
                             }
                         }
@@ -910,8 +915,10 @@ private fun Filters(
     counts: Map<PriceFilter, Int>,
     mapMoving: Boolean,
     palette: AuroraPalette,
+    supporter: Boolean,
     onPrice: (PriceFilter) -> Unit,
     onCovered: () -> Unit,
+    onFreeNow: () -> Unit,
 ) {
     AnimatedContent(
         targetState = mapMoving,
@@ -960,6 +967,22 @@ private fun Filters(
                         },
                     )
                 }
+                // Supporter extra: free to park in right now, counting paid bays outside their charged hours.
+                Pill(
+                    selected = supporter && filters.freeNow,
+                    onClick = onFreeNow,
+                    label = "Free now",
+                    count = null,
+                    palette = palette,
+                    leading = {
+                        Icon(
+                            if (supporter) Icons.Outlined.Schedule else Icons.Outlined.Lock,
+                            contentDescription = if (supporter) null else "Supporter extra",
+                            tint = palette.chipUnselectedText,
+                            modifier = Modifier.size(15.dp),
+                        )
+                    },
+                )
                 Pill(
                     selected = filters.coveredOnly,
                     onClick = onCovered,

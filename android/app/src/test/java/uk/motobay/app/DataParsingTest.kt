@@ -48,6 +48,9 @@ class DataParsingTest {
         // Camden's open data: paid bays with the daily tariff, plus one bay whose price it doesn't give.
         val camden = data.bays.filter { it.source?.contains("Camden") == true }
         assertEquals(333, camden.size)
+        // Every paid council bay carries charged hours the app can parse, so "Free now" can reason about it.
+        val paidCouncil = data.bays.filter { it.source != null && it.fee == Fee.Paid }
+        assertTrue(paidCouncil.size > 500 && paidCouncil.all { uk.motobay.app.data.ChargedHours.parse(it.charged) != null })
         assertTrue(camden.count { it.fee == Fee.Paid } >= 320)
         assertTrue(camden.filter { it.isCouncil && it.fee == Fee.Paid }.all { "£1.30 a day" in it.rules!! })
         // Islington's bays are paid, with spaces and charging hours; ones OpenStreetMap already had keep their id.
