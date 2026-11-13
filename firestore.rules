@@ -1,0 +1,176 @@
+rules_version = '2';
+
+// Riders submit photos, comments and bay additions/corrections. Everything
+// starts as 'Pending'; only the admin can approve or reject. Approved items
+// are public. A rider can also read their own pending and rejected items.
+//
+// Keep the admin emails in sync with Moderators.kt (a unit test checks this).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email in [
+          'dwayne.edwards89@googlemail.com',
+          'dwayne.edwards89@gmail.com'
+        ];
+    }
+
+    function isAuthor() {
+      return signedIn() && resource.data.authorUid == request.auth.uid;
+    }
+
+    function canRead() {
+      return resource.data.status == 'Approved' || isAuthor() || isAdmin();
+    }
+
+    // Everything, the admin's own submissions included, starts in the queue.
+    function validStatusOnCreate() {
+      return request.resource.data.status == 'Pending';
+    }
+
+    // A decision may change the status and, when rejecting, add a reason the rider sees.
+    function onlyStatusChanges() {
+      let d = request.resource.data;
+      return d.diff(resource.data).affectedKeys().hasOnly(['status', 'reason'])
+        && d.status in ['Pending', 'Approved', 'Rejected']
+        && (!('reason' in d) || (d.status == 'Rejected' && isText(d.reason, 300)));
+    }
+
+    function isText(field, maxLen) {
+      return field is string && field.size() <= maxLen;
+    }
+
+    // The author shown on a submission is either the rider's claimed display
+    // name or the anonymous placeholder, so nobody can post under someone else's name.
+    function ownsName(name) {
+      let path = /databases/$(database)/documents/displayNames/$(name.lower());
+      return exists(path) && get(path).data.uid == request.auth.uid;
+    }
+
+    function commonFieldsOk() {
+      let d = request.resource.data;
+      return d.authorUid == request.auth.uid
+        && isText(d.author, 40) && d.author.size() > 0
+        && (d.author == 'Anonymous rider' || ownsName(d.author))
+        && d.createdAt == request.time
+        && validStatusOnCreate();
+    }
+
+    match /photos/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['bayId', 'bayName', 'url', 'storagePath', 'caption', 'author', 'authorUid', 'createdAt', 'status'])
+        && commonFieldsOk()
+        && isText(request.resource.data.bayId, 100)
+        && isText(request.resource.data.bayName, 200)
+        && isText(request.resource.data.caption, 140)
+        && request.resource.data.url is string
+        && request.resource.data.url.matches('https://firebasestorage.googleapis.com/.*')
+        && request.resource.data.storagePath == 'photos/' + request.auth.uid + '/' + id + '.jpg';
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    match /comments/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['bayId', 'bayName', 'text', 'author', 'authorUid', 'createdAt', 'status'])
+        && commonFieldsOk()
+        && isText(request.resource.data.bayId, 100)
+        && isText(request.resource.data.bayName, 200)
+        && isText(request.resource.data.text, 500)
+        && request.resource.data.text.size() > 0;
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    // New bays and corrections to existing ones.
+    match /bays/{id} {
+      allow read: if canRead();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(
+             ['editOf', 'lat', 'lon', 'name', 'fee', 'capacity', 'covered', 'notes', 'author', 'authorUid', 'createdAt', 'status'])
+        && request.resource.data.keys().hasAll(['lat', 'lon', 'name', 'fee', 'notes'])
+        && commonFieldsOk()
+        && request.resource.data.lat is number
+        && request.resource.data.lat >= -90 && request.resource.data.lat <= 90
+        && request.resource.data.lon is number
+        && request.resource.data.lon >= -180 && request.resource.data.lon <= 180
+        && isText(request.resource.data.name, 100)
+        && request.resource.data.fee in ['Free', 'Paid', 'Unknown']
+        && isText(request.resource.data.notes, 500)
+        && (!('editOf' in request.resource.data) || isText(request.resource.data.editOf, 100))
+        && (!('capacity' in request.resource.data)
+            || (request.resource.data.capacity is int
+                && request.resource.data.capacity >= 0 && request.resource.data.capacity <= 500))
+        && (!('covered' in request.resource.data) || request.resource.data.covered is bool);
+      allow update: if isAdmin() && onlyStatusChanges();
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    // Star ratings, 1 to 5. One per rider per bay: the document id is the rider's
+    // uid and the bay id, so a second rating replaces the first. Public straight
+    // away, since a star has no text to moderate.
+    match /ratings/{id} {
+      allow read: if true;
+      allow create, update: if signedIn()
+        && (resource == null || resource.data.authorUid == request.auth.uid)
+        && request.resource.data.keys().hasOnly(['bayId', 'stars', 'authorUid', 'updatedAt'])
+        && request.resource.data.keys().hasAll(['bayId', 'stars', 'authorUid', 'updatedAt'])
+        && request.resource.data.authorUid == request.auth.uid
+        && isText(request.resource.data.bayId, 100)
+        && request.resource.data.bayId.size() > 0
+        && id == request.auth.uid + '_' + request.resource.data.bayId.replace('/', '_')
+        && request.resource.data.stars is int
+        && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    // One document per display name, keyed by its lower-case form, so names are unique.
+    match /displayNames/{key} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid)
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 40
+        && request.resource.data.name.trim() == request.resource.data.name
+        && request.resource.data.name.matches('[\\p{L}\\p{N} ._\'-]+')
+        && key == request.resource.data.name.lower()
+        && key != 'anonymous rider'
+        && request.resource.data.createdAt == request.time;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // Google Play UGC rule: riders can flag content. Reports are write-only from
+    // the app; the admin reads them in the Firebase console.
+    match /reports/{id} {
+      allow read, update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['targetType', 'targetId', 'targetAuthorUid', 'reporterUid', 'reason', 'details', 'createdAt'])
+        && request.resource.data.keys().hasAll(['targetType', 'targetId', 'targetAuthorUid', 'reporterUid', 'reason', 'details', 'createdAt'])
+        && request.resource.data.targetType in ['photo', 'comment', 'bay']
+        && isText(request.resource.data.targetId, 100)
+        && isText(request.resource.data.targetAuthorUid, 128)
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.reason in ['spam', 'abusive', 'misleading', 'privacy', 'other']
+        && isText(request.resource.data.details, 300)
+        && request.resource.data.createdAt == request.time;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

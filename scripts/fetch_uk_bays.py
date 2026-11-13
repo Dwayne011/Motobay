@@ -4,8 +4,13 @@ OpenStreetMap, normalised into the shape both apps read.
 
 Runs weekly in GitHub Actions (.github/workflows/update-bay-data.yml), so the
 apps download one file instead of every phone querying the shared Overpass
-servers. Usage: python3 scripts/fetch_uk_bays.py data/uk-bays.json
+servers. Bays from council traffic orders (data/council-bays.json) are merged
+in on top. Usage: python3 scripts/fetch_uk_bays.py data/uk-bays.json
+
+To re-merge council bays into the existing file without refetching:
+python3 scripts/fetch_uk_bays.py --merge-only data/uk-bays.json
 """
+import os
 import json
 import math
 import sys
@@ -130,7 +135,94 @@ def merge_spaces(bays, spaces):
     return merged
 
 
-def build(response):
+OSM_ATTRIBUTION = "© OpenStreetMap contributors, ODbL 1.0"
+
+# What a council bay carries into the published file. "approximate" marks a
+# position placed from a nearby address rather than the exact reference point.
+COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules", "approximate")
+# What an OpenStreetMap bay takes from the council bay it matches: the council's
+# facts, but not its id or position, so riders' ratings and comments stay attached.
+OVERLAY_FIELDS = ("capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules")
+
+
+def council_bays(council, osm_bays):
+    """Merges council bays into [osm_bays] and returns the ones to add.
+
+    A council bay within SPACE_MERGE_METRES of an OpenStreetMap bay is the same
+    bay: the OpenStreetMap one keeps its id and position and takes the council's
+    details (each OpenStreetMap bay is matched once, by the nearest council bay
+    to claim it). The rest are returned as new bays. A bay is free unless it
+    says otherwise, marked unconfirmed until its source confirms the price."""
+    sources = council.get("sources", {})
+    out, claimed = [], set()
+    for c in council.get("bays", []):
+        # A source is a plain name, or {"name": ..., "feeConfirmed": true} once the council confirms prices.
+        src = sources.get(c["source"], c["source"])
+        if isinstance(src, str):
+            src = {"name": src}
+        fee = c.get("fee", "free")
+        unconfirmed = not src.get("feeConfirmed")
+        near = [b for b in osm_bays if b["id"] not in claimed and metres(c, b) <= SPACE_MERGE_METRES]
+        if near:
+            match = min(near, key=lambda b: metres(c, b))
+            claimed.add(match["id"])
+            before = dict(match)
+            for k in OVERLAY_FIELDS:
+                if k in c:
+                    match[k] = c[k]
+            if fee != "unknown" and (not unconfirmed or match.get("fee", "unknown") == "unknown"):
+                match["fee"] = fee
+                match.pop("feeUnconfirmed", None)
+                if unconfirmed:
+                    match["feeUnconfirmed"] = True
+            match["source"] = src["name"]
+            # Remember what OpenStreetMap said, so the council details can be taken off again (see without_council).
+            match["osm"] = {k: before.get(k) for k in match if k != "osm" and match[k] != before.get(k)}
+            continue
+        bay = {k: c[k] for k in COUNCIL_FIELDS if k in c}
+        bay["lat"], bay["lon"] = round(c["lat"], 6), round(c["lon"], 6)
+        bay["name"] = "Motorcycle parking"
+        bay["fee"] = fee
+        if unconfirmed and fee != "unknown":
+            bay["feeUnconfirmed"] = True
+        bay["source"] = src["name"]
+        out.append(bay)
+    return out
+
+
+def without_council(bays):
+    """The OpenStreetMap bays of a published file, as they were before council details were merged in."""
+    out = []
+    for b in bays:
+        if b["id"].startswith("council/"):
+            continue
+        b = dict(b)
+        for k, v in (b.pop("osm", None) or {}).items():
+            if v is None:
+                b.pop(k, None)
+            else:
+                b[k] = v
+        out.append(b)
+    return out
+
+
+def with_council(osm_bays, council):
+    """The published file: OpenStreetMap bays plus council bays, sorted by id."""
+    extra = council_bays(council, osm_bays) if council else []
+    bays = sorted(osm_bays + extra, key=lambda b: b["id"])
+    attribution = OSM_ATTRIBUTION
+    credited = sorted(set(b["source"] for b in bays if b.get("source")))
+    if credited:
+        attribution += "; " + "; ".join(credited)
+    return {
+        "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "attribution": attribution,
+        "count": len(bays),
+        "bays": bays,
+    }
+
+
+def build(response, council=None):
     bays, spaces = [], []
     for el in response.get("elements", []):
         bay = to_bay(el)
@@ -139,18 +231,28 @@ def build(response):
         is_space = (el.get("tags") or {}).get("amenity") == "parking_space"
         (spaces if is_space else bays).append(bay)
     bays += merge_spaces(bays, spaces)
-    bays.sort(key=lambda b: b["id"])
-    return {
-        "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "attribution": "© OpenStreetMap contributors, ODbL 1.0",
-        "count": len(bays),
-        "bays": bays,
-    }
+    return with_council(bays, council)
+
+
+def load_council(out):
+    path = os.path.join(os.path.dirname(os.path.abspath(out)), "council-bays.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except OSError:
+        return None
 
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else "data/uk-bays.json"
-    data = build(fetch())
+    args = [a for a in sys.argv[1:] if a != "--merge-only"]
+    out = args[0] if args else "data/uk-bays.json"
+    council = load_council(out)
+    if "--merge-only" in sys.argv:
+        with open(out, encoding="utf-8") as f:
+            osm = without_council(json.load(f)["bays"])
+        data = with_council(osm, council)
+    else:
+        data = build(fetch(), council)
     # Guard against a bad response wiping the published file.
     if data["count"] < 1000:
         raise SystemExit(f"Only {data['count']} bays returned; refusing to publish.")

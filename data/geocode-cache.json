@@ -1,4 +1,2205 @@
 {
+"council/bromley/berwick-way@51.37575,0.09824": {
+"area": "Broom Hill",
+"city": "Orpington",
+"postcode": "BR6",
+"street": "Knoll Rise"
+},
+"council/bromley/churchill-way@51.40280,0.01478": {
+"area": "Greater London",
+"postcode": "BR1"
+},
+"council/bromley/edison-road@51.40590,0.01190": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR2",
+"street": "St. Jame's Court"
+},
+"council/bromley/ravensbourne-road@51.40096,0.01650": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR1",
+"street": "Ravensbourne Road"
+},
+"council/bromley/ringers-road@51.40182,0.01568": {
+"area": "Bromley Park",
+"city": "London Borough of Bromley",
+"postcode": "BR1",
+"street": "Ringers Road"
+},
+"council/bromley/walnuts-road@51.37551,0.10361": {
+"area": "London Borough of Bromley"
+},
+"council/camden/abbot-s-place-46043513@51.54066,-0.19102": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Abbot's Place"
+},
+"council/camden/agar-grove-estate-46135938@51.54207,-0.13416": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/ajax-road-46043872@51.55411,-0.19693": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/aldred-road-46043864@51.55247,-0.19596": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Aldred Road"
+},
+"council/camden/alvanley-gardens-46044358@51.55139,-0.18704": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Alvanley Gardens"
+},
+"council/camden/alvanley-gardens-46044359@51.55229,-0.18807": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Alvanley Gardens"
+},
+"council/camden/ampthill-square-estate-46135958@51.53185,-0.13670": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "NW1",
+"street": "Eversholt Street"
+},
+"council/camden/ampton-street-46127768@51.52743,-0.11744": {
+"area": "King's Cross",
+"city": "London",
+"postcode": "WC1X",
+"street": "Ampton Street"
+},
+"council/camden/anglers-lane-46045325@51.54688,-0.14330": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Anglers Lane"
+},
+"council/camden/antrim-grove-46046998@51.54843,-0.16211": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Antrim Grove"
+},
+"council/camden/ariel-road-46044293@51.54731,-0.19823": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Ariel Road"
+},
+"council/camden/arlington-road-46047839@51.53725,-0.14274": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Arlington Road"
+},
+"council/camden/arlington-road-46047858@51.53895,-0.14438": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Arlington Road"
+},
+"council/camden/back-hill-46042529@51.52282,-0.10937": {
+"area": "Hatton Garden",
+"city": "London",
+"postcode": "EC1R",
+"street": "Back Hill"
+},
+"council/camden/back-hill-46042780@51.52229,-0.10948": {
+"area": "Hatton Garden",
+"city": "London",
+"postcode": "EC1R",
+"street": "Back Hill"
+},
+"council/camden/bartholomew-road-46045421@51.54969,-0.13481": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Bartholomew Road"
+},
+"council/camden/bassett-street-46045617@51.54867,-0.15143": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Bassett Street"
+},
+"council/camden/bayham-place-46127136@51.53517,-0.13742": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/bedford-place-46035876@51.51969,-0.12363": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC1B",
+"street": "Bedford Place"
+},
+"council/camden/bedford-square-46134539@51.51870,-0.13089": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC1B",
+"street": "Bedford Square"
+},
+"council/camden/bedford-square-46134542@51.51832,-0.13057": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC1B",
+"street": "Bedford Square"
+},
+"council/camden/belmont-street-46045633@51.54374,-0.15129": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Belmont Street"
+},
+"council/camden/belsize-avenue-46047016@51.54997,-0.16863": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Avenue"
+},
+"council/camden/belsize-grove-46046986@51.54906,-0.16385": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Grove"
+},
+"council/camden/belsize-lane-46035124@51.54901,-0.17187": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Lane"
+},
+"council/camden/belsize-park-46035075@51.54572,-0.17468": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/belsize-park-46035531@51.54617,-0.17389": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Park"
+},
+"council/camden/belsize-square-46047010@51.54716,-0.16911": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Square"
+},
+"council/camden/belsize-terrace-46047095@51.54893,-0.17108": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Terrace"
+},
+"council/camden/berkley-road-46047947@51.54178,-0.15628": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Regent's Park Road"
+},
+"council/camden/bisham-gardens-46044907@51.57033,-0.14643": {
+"area": "Crouch End",
+"city": "London",
+"postcode": "N6",
+"street": "Highgate High Street"
+},
+"council/camden/blackburn-road-46044245@51.54707,-0.19075": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/bloomsbury-square-46128347@51.51907,-0.12374": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC1A",
+"street": "Bloomsbury Square"
+},
+"council/camden/bourne-estate-46135926@51.52093,-0.11053": {
+"area": "Bourne Estate",
+"city": "London",
+"postcode": "EC1N",
+"street": "Portpool Lane"
+},
+"council/camden/broadhurst-gardens-46046539@51.54665,-0.18106": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW6",
+"street": "Broadhurst Gardens"
+},
+"council/camden/buck-street-46048315@51.54028,-0.14298": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Buck Street"
+},
+"council/camden/burrard-road-46043845@51.55411,-0.19584": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Fortune Green Road"
+},
+"council/camden/camden-square-46048333@51.54426,-0.13226": {
+"area": "London Borough of Camden",
+"city": "London",
+"postcode": "NW1",
+"street": "Camden Square"
+},
+"council/camden/castle-road-46045381@51.54521,-0.14192": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Kentish Town Road"
+},
+"council/camden/castlehaven-road-46048321@51.54252,-0.14482": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Castlehaven Road"
+},
+"council/camden/castlehaven-road-46138041@51.54583,-0.14390": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Castlehaven Road"
+},
+"council/camden/chalton-street-46136971@51.53505,-0.13320": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Goldington Crescent"
+},
+"council/camden/chenies-street-46129422@51.52067,-0.13327": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1E",
+"street": "Chenies Street"
+},
+"council/camden/chesterford-gardens-46035103@51.55611,-0.18551": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Chesterford Gardens"
+},
+"council/camden/chitty-street-46036273@51.52099,-0.13651": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "W1T",
+"street": "Charlotte Mews"
+},
+"council/camden/constantine-road-46046284@51.55425,-0.16441": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Constantine Road"
+},
+"council/camden/constantine-road-46046386@51.55478,-0.16271": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Constantine Road"
+},
+"council/camden/cotleigh-road-46043435@51.54353,-0.19306": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/courthope-road-46046053@51.55571,-0.15656": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Savernake Road"
+},
+"council/camden/courthope-road-46046325@51.55488,-0.15612": {
+"area": "Gospel Oak",
+"city": "London",
+"postcode": "NW3",
+"street": "Courthope Road"
+},
+"council/camden/crediton-hill-46044362@51.55251,-0.18955": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/daleham-gardens-46035085@51.54991,-0.17410": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW3",
+"street": "Daleham Gardens"
+},
+"council/camden/dartmouth-park-road-46044692@51.55718,-0.14683": {
+"area": "Dartmouth Park",
+"city": "London",
+"postcode": "NW5",
+"street": "Dartmouth Park Road"
+},
+"council/camden/dennington-park-road-46044371@51.55011,-0.19240": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Dennington Park Road"
+},
+"council/camden/doric-way-46136931@51.52937,-0.13103": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Churchway"
+},
+"council/camden/drummond-crescent-46049339@51.52979,-0.13253": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Edith Neville Cottages"
+},
+"council/camden/drummond-crescent-46135393@51.52981,-0.13198": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Drummond Crescent"
+},
+"council/camden/elsworthy-road-46046644@51.54123,-0.16490": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/endell-street-46132346@51.51560,-0.12616": {
+"area": "Seven Dials",
+"city": "London",
+"postcode": "WC2H",
+"street": "Endell Street"
+},
+"council/camden/endsleigh-street-46036259@51.52639,-0.13121": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "WC1H",
+"street": "Endsleigh Gardens"
+},
+"council/camden/england-s-lane-46047461@51.54668,-0.16107": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "England's Lane"
+},
+"council/camden/estelle-road-46046052@51.55556,-0.15551": {
+"area": "Gospel Oak",
+"city": "London",
+"postcode": "NW3",
+"street": "Estelle Road"
+},
+"council/camden/eton-avenue-46047094@51.54551,-0.16312": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Belsize Park Gardens"
+},
+"council/camden/eton-avenue-46047439@51.54430,-0.17349": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW3",
+"street": "Eton Avenue"
+},
+"council/camden/eton-road-46045630@51.54539,-0.15772": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Eton Villas"
+},
+"council/camden/eton-villas-46045631@51.54564,-0.15857": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Eton Villas"
+},
+"council/camden/euston-street-46047514@51.52688,-0.13571": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "NW1",
+"street": "Melton Street"
+},
+"council/camden/eyre-street-hill-46042506@51.52270,-0.11035": {
+"area": "Hatton Garden",
+"city": "London",
+"postcode": "EC1R",
+"street": "Summers Street"
+},
+"council/camden/fairhazel-gardens-46046528@51.54626,-0.18540": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Fairhazel Gardens"
+},
+"council/camden/falkland-road-46045382@51.55213,-0.14080": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Fortess Road"
+},
+"council/camden/fawley-road-46044621@51.55018,-0.19121": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/fellows-road-46047022@51.54465,-0.16203": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/fellows-road-46047024@51.54399,-0.16715": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Fellows Road"
+},
+"council/camden/fellows-road-46047025@51.54344,-0.17139": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Fellows Road"
+},
+"council/camden/field-street-46043077@51.53025,-0.11956": {
+"area": "King's Cross",
+"city": "London",
+"postcode": "WC1X",
+"street": "Field Street"
+},
+"council/camden/fitzroy-road-46048005@51.54017,-0.15443": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Chalcot Road"
+},
+"council/camden/fitzroy-street-46036095@51.52354,-0.13995": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "W1T",
+"street": "Fitzroy Square"
+},
+"council/camden/fitzroy-street-46036275@51.52163,-0.13805": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "W1T",
+"street": "Fitzroy Street"
+},
+"council/camden/flask-walk-46048985@51.55676,-0.17720": {
+"area": "Belsize Park",
+"city": "London",
+"postcode": "NW3",
+"street": "Flask Walk"
+},
+"council/camden/fordwych-road-46043765@51.54825,-0.20190": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Fordwych Road"
+},
+"council/camden/fordwych-road-46043777@51.55133,-0.20647": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Fordwych Road"
+},
+"council/camden/fortune-green-road-46043913@51.55522,-0.19678": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Fortune Green Road"
+},
+"council/camden/frederick-street-46043223@51.52814,-0.11682": {
+"area": "King's Cross",
+"city": "London",
+"postcode": "WC1X",
+"street": "Frederick Street"
+},
+"council/camden/frognal-46035090@51.55125,-0.18050": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Frognal"
+},
+"council/camden/garnett-road-46046226@51.55217,-0.16165": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Lawn Road"
+},
+"council/camden/gascony-avenue-46043398@51.54225,-0.19678": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Gascony Avenue"
+},
+"council/camden/gascony-avenue-46043431@51.54262,-0.19507": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Gascony Avenue"
+},
+"council/camden/gate-street-46042466@51.51717,-0.11969": {
+"area": "Seven Dials",
+"city": "London",
+"postcode": "WC2B",
+"street": "Gate Street"
+},
+"council/camden/gate-street-46134861@51.51711,-0.11894": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/glenbrook-road-46044374@51.55057,-0.19751": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/glenilla-road-46047051@51.54868,-0.16795": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Glenilla Road"
+},
+"council/camden/gloucester-avenue-46047830@51.54248,-0.15517": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW1",
+"street": "Regent's Park Road"
+},
+"council/camden/gloucester-avenue-46134887@51.54137,-0.15343": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW1",
+"street": "Gloucester Avenue"
+},
+"council/camden/gondar-gardens-46043880@51.55382,-0.20058": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/gondar-gardens-46043882@51.55341,-0.20245": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Gondar Gardens"
+},
+"council/camden/gordon-square-46036235@51.52400,-0.12992": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "WC1H",
+"street": "Gordon Square"
+},
+"council/camden/gough-street-46042510@51.52377,-0.11381": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/gower-place-46036240@51.52563,-0.13388": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "WC1E",
+"street": "Gower Court"
+},
+"council/camden/grafton-terrace-46134844@51.54964,-0.15587": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Grafton Terrace"
+},
+"council/camden/grangeway-46043600@51.54292,-0.19842": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Grangeway"
+},
+"council/camden/greencroft-gardens-46046780@51.54414,-0.18241": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Greencroft Gardens"
+},
+"council/camden/greenland-place-46047850@51.53888,-0.14165": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/greenwood-place-46128544@51.55315,-0.14300": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Greenwood place"
+},
+"council/camden/gresse-street-46035837@51.51756,-0.13328": {
+"area": "East Marylebone",
+"city": "London",
+"postcode": "W1T",
+"street": "Gresse Street"
+},
+"council/camden/guilford-street-46042548@51.52365,-0.11889": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/hammond-street-46045147@51.54879,-0.13858": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Caversham Road"
+},
+"council/camden/hampstead-high-street-46048712@51.55559,-0.17627": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/hampstead-high-street-46048713@51.55524,-0.17435": {
+"area": "Belsize Park",
+"city": "London",
+"postcode": "NW3",
+"street": "Vane Close"
+},
+"council/camden/harben-road-estate-1-46135950@51.54453,-0.17697": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/harrington-square-46047562@51.53354,-0.13883": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "NW1",
+"street": "Harrington Square"
+},
+"council/camden/harrison-street-46131815@51.52783,-0.11926": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/hawley-crescent-46048318@51.54110,-0.14295": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Hawley Crescent"
+},
+"council/camden/healey-street-46045295@51.54560,-0.14541": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Healey Street"
+},
+"council/camden/heath-street-46035109@51.55550,-0.17859": {
+"area": "Belsize Park",
+"city": "London",
+"postcode": "NW3",
+"street": "Heath Street"
+},
+"council/camden/hemstal-road-46043412@51.54497,-0.19703": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Hemstal Road"
+},
+"council/camden/hemstal-road-46044323@51.54452,-0.19538": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Hemstal Road"
+},
+"council/camden/hemstal-road-46044324@51.54442,-0.19408": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Hemstal Road"
+},
+"council/camden/hillfield-road-46043868@51.55263,-0.19709": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/hillfield-road-46043869@51.55185,-0.20052": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Hillfield Road"
+},
+"council/camden/hillfield-road-46043870@51.55173,-0.20123": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Gondar Gardens"
+},
+"council/camden/hillfield-road-46043871@51.55142,-0.20072": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Mill Lane"
+},
+"council/camden/hilltop-road-46044325@51.54507,-0.19312": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Hilltop Road"
+},
+"council/camden/holmdale-road-46044348@51.55110,-0.19474": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/holmdale-road-46044349@51.55050,-0.19394": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Holmdale Road"
+},
+"council/camden/holmdale-road-46044350@51.55002,-0.19360": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Dennington Park Road"
+},
+"council/camden/honeybourne-road-46044369@51.55204,-0.19064": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/howitt-road-46046983@51.54812,-0.16612": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Howitt Road"
+},
+"council/camden/howland-street-46036051@51.52180,-0.13699": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/huntley-street-46035885@51.52291,-0.13458": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "WC1E",
+"street": "Huntley Street"
+},
+"council/camden/huntley-street-46036057@51.52192,-0.13351": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1E",
+"street": "Huntley Street"
+},
+"council/camden/inglewood-road-46044375@51.55082,-0.19162": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/iverson-road-46044276@51.54724,-0.19609": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Iverson Road"
+},
+"council/camden/kilburn-vale-46043508@51.53832,-0.19140": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Kilburn Vale"
+},
+"council/camden/king-s-college-road-46047027@51.54381,-0.16973": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Fellows Road"
+},
+"council/camden/kingdon-road-46044342@51.54939,-0.19317": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Kingdon Road"
+},
+"council/camden/kingdon-road-46044343@51.54966,-0.19279": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Kingdon Road"
+},
+"council/camden/kingsgate-road-46043403@51.54275,-0.19553": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Kingsgate Road"
+},
+"council/camden/kingsgate-road-46043426@51.54152,-0.19531": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Kingsgate Road"
+},
+"council/camden/kingsgate-road-46043427@51.54162,-0.19540": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Kingsgate Road"
+},
+"council/camden/lady-margaret-road-46045364@51.55104,-0.13801": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Leighton Road"
+},
+"council/camden/lady-margaret-road-46045365@51.55432,-0.13696": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/lady-margaret-road-46045368@51.55113,-0.13800": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Lady Margaret Road"
+},
+"council/camden/lady-somerset-road-46045505@51.55433,-0.14405": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Lady Somerset Road"
+},
+"council/camden/lambolle-place-46047425@51.54568,-0.16550": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Lambolle Place"
+},
+"council/camden/lambolle-road-46047364@51.54644,-0.16637": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Lambolle Road"
+},
+"council/camden/lancaster-grove-46047389@51.54582,-0.16777": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Lancaster Grove"
+},
+"council/camden/lawford-road-46048370@51.54631,-0.13571": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Bartholomew Road"
+},
+"council/camden/lindfield-gardens-46035108@51.55148,-0.18224": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/lissenden-gardens-46044900@51.55749,-0.14812": {
+"area": "Gospel Oak",
+"city": "London",
+"postcode": "NW5",
+"street": "Lissenden Gardens"
+},
+"council/camden/longford-street-46047504@51.52566,-0.14330": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "NW1",
+"street": "Longford Street"
+},
+"council/camden/loveridge-road-46044298@51.54732,-0.19921": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Loveridge Road"
+},
+"council/camden/lowfield-road-46044313@51.54560,-0.19596": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Lowfield Road"
+},
+"council/camden/lowfield-road-46044315@51.54527,-0.19616": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Lowfield Road"
+},
+"council/camden/lymington-road-46044357@51.54926,-0.19073": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/maiden-lane-46131232@51.54190,-0.12872": {
+"area": "Maiden Lane Community",
+"city": "London",
+"postcode": "NW1",
+"street": "St Paul's Crescent"
+},
+"council/camden/malden-road-46045712@51.54662,-0.15128": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Malden Road"
+},
+"council/camden/malet-street-46036040@51.52232,-0.13112": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1E",
+"street": "Malet Street"
+},
+"council/camden/malet-street-46036314@51.52062,-0.12927": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1B",
+"street": "Malet Street"
+},
+"council/camden/manstone-road-46043791@51.55301,-0.20902": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Manstone Road"
+},
+"council/camden/manstone-road-46043794@51.55251,-0.21004": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Cricklewood Broadway"
+},
+"council/camden/maple-place-46036012@51.52195,-0.13753": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/maresfield-gardens-46035660@51.54942,-0.17768": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Maresfield Gardens"
+},
+"council/camden/maygrove-road-46043704@51.54800,-0.19976": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/maygrove-road-46044286@51.54786,-0.19644": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Maygrove Road"
+},
+"council/camden/maygrove-road-46044310@51.54765,-0.20100": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Maygrove Road"
+},
+"council/camden/merton-rise-46047029@51.54450,-0.16680": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Merton Rise"
+},
+"council/camden/messina-avenue-46043385@51.54230,-0.19820": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Messina Avenue"
+},
+"council/camden/mill-lane-46043900@51.55116,-0.20135": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Mill Lane"
+},
+"council/camden/mill-lane-46043909@51.55112,-0.20304": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Mill Lane"
+},
+"council/camden/miller-street-46047565@51.53571,-0.14023": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/minster-road-46043830@51.55129,-0.20832": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Shoot-up Hill"
+},
+"council/camden/minster-road-46043889@51.55365,-0.20327": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW2",
+"street": "Minster Road"
+},
+"council/camden/mornington-crescent-46047570@51.53433,-0.13965": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "NW1",
+"street": "Mornington Crescent"
+},
+"council/camden/mortimer-market-46036082@51.52277,-0.13588": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "W1T",
+"street": "Tottenham Court Road"
+},
+"council/camden/mount-pleasant-46042508@51.52339,-0.11250": {
+"area": "Hatton Garden",
+"city": "London",
+"postcode": "WC1X",
+"street": "Mount Pleasant"
+},
+"council/camden/nassington-road-46049189@51.55655,-0.16084": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Nassington Road"
+},
+"council/camden/netherhall-gardens-46035089@51.55221,-0.17618": {
+"area": "Swiss Cottage",
+"city": "London",
+"postcode": "NW3",
+"street": "Fitzjohn's Avenue"
+},
+"council/camden/netherhall-gardens-46035618@51.54937,-0.17917": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Netherhall Gardens"
+},
+"council/camden/new-compton-street-46042415@51.51434,-0.12840": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC2H",
+"street": "New Compton Street"
+},
+"council/camden/new-compton-street-46042600@51.51461,-0.12812": {
+"area": "St Giles",
+"city": "London",
+"postcode": "WC2H",
+"street": "St. Giles Passage"
+},
+"council/camden/new-oxford-street-46042328@51.51722,-0.12367": {
+"area": "Seven Dials",
+"city": "London",
+"postcode": "WC1A",
+"street": "New Oxford Street"
+},
+"council/camden/oakley-square-46047558@51.53341,-0.13714": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Oakley Square"
+},
+"council/camden/ospringe-road-46045224@51.55383,-0.13667": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Ospringe Road"
+},
+"council/camden/ospringe-road-46045376@51.55393,-0.13809": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Ospringe Road"
+},
+"council/camden/ossulston-estate-1-46135934@51.53150,-0.13130": {
+"area": "Somers Town",
+"city": "London"
+},
+"council/camden/ossulston-estate-2-46135930@51.52987,-0.12902": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Church Way"
+},
+"council/camden/oval-road-46137766@51.54022,-0.14803": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Oval Road"
+},
+"council/camden/park-village-east-46047588@51.53429,-0.14396": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Mornington Street"
+},
+"council/camden/parker-street-46042398@51.51614,-0.12115": {
+"area": "Seven Dials",
+"city": "London",
+"postcode": "WC2B",
+"street": "Parker Street"
+},
+"council/camden/parliament-hill-46049171@51.55684,-0.16312": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Parliament Hill"
+},
+"council/camden/pilgrim-s-lane-46049024@51.55573,-0.17188": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/polygon-road-46135632@51.53138,-0.13351": {
+"area": "Somers Town",
+"city": "London"
+},
+"council/camden/portpool-lane-46128679@51.52099,-0.11149": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/pratt-street-46127408@51.53858,-0.13756": {
+"area": "London Borough of Camden",
+"city": "London",
+"postcode": "NW1",
+"street": "Pratt Street"
+},
+"council/camden/prince-of-wales-road-46045642@51.54594,-0.14977": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW5",
+"street": "Prince of Wales Road"
+},
+"council/camden/provost-road-46045627@51.54465,-0.15856": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Eton Road"
+},
+"council/camden/queen-s-crescent-46045658@51.54801,-0.15401": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Queen's Crescent"
+},
+"council/camden/queen-square-46043052@51.52112,-0.12225": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1N",
+"street": "Queen Square"
+},
+"council/camden/raglan-street-46045301@51.54847,-0.14290": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Raglan Street"
+},
+"council/camden/raglan-street-46045303@51.54800,-0.14240": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Raglan Street"
+},
+"council/camden/ravenshaw-street-46043863@51.55096,-0.20078": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Ravenshaw Street"
+},
+"council/camden/regent-s-park-road-46047955@51.54178,-0.15651": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW1",
+"street": "Regent's Park Road"
+},
+"council/camden/regent-s-park-road-46048141@51.54353,-0.15354": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/richborough-road-46043753@51.55508,-0.21288": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Richborough Road"
+},
+"council/camden/ridgmount-street-46036251@51.52102,-0.13198": {
+"area": "Bloomsbury",
+"city": "London",
+"postcode": "WC1E",
+"street": "Ridgmount Street"
+},
+"council/camden/rochester-square-46048351@51.54346,-0.13620": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/rona-road-46046051@51.55553,-0.15436": {
+"area": "Gospel Oak",
+"city": "London",
+"postcode": "NW3",
+"street": "Savernake Road"
+},
+"council/camden/rondu-road-46043805@51.55330,-0.21076": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/rosemont-road-46044403@51.54913,-0.18351": {
+"area": "South Hampstead",
+"city": "London",
+"postcode": "NW3",
+"street": "Rosemont Road"
+},
+"council/camden/royal-college-street-46126607@51.53785,-0.13505": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/russell-nurseries-estate-46135946@51.55177,-0.16378": {
+"area": "Russell Nurseries Estate",
+"city": "London",
+"postcode": "NW3",
+"street": "Russell Place"
+},
+"council/camden/sandwell-crescent-46044339@51.54943,-0.19187": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Sandwell Crescent"
+},
+"council/camden/savernake-road-46046048@51.55580,-0.15531": {
+"area": "Gospel Oak",
+"city": "London",
+"postcode": "NW3",
+"street": "Savernake Road"
+},
+"council/camden/shelton-street-46127616@51.51351,-0.12593": {
+"area": "East Marylebone",
+"city": "London",
+"postcode": "WC2H",
+"street": "Shelton Street"
+},
+"council/camden/sherriff-road-46044453@51.54608,-0.19154": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/shirlock-road-46046056@51.55548,-0.15745": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Savernake Road"
+},
+"council/camden/skardu-road-46043819@51.55430,-0.21100": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Skardu Road"
+},
+"council/camden/skardu-road-46043822@51.55396,-0.21163": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW2",
+"street": "Cricklewood Broadway"
+},
+"council/camden/solent-road-46044354@51.54990,-0.19615": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "Solent Road"
+},
+"council/camden/south-end-close-estate-46135954@51.55492,-0.16418": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/south-grove-46044874@51.57047,-0.14855": {
+"area": "Highgate",
+"city": "London",
+"postcode": "N6",
+"street": "South Grove"
+},
+"council/camden/south-hill-park-46048988@51.55887,-0.16368": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/south-hill-park-46049166@51.55590,-0.16525": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "Parliament Hill"
+},
+"council/camden/south-hill-park-46049280@51.55821,-0.16422": {
+"area": "South End Green",
+"city": "London",
+"postcode": "NW3",
+"street": "South Hill Park"
+},
+"council/camden/southampton-road-46046364@51.55180,-0.15741": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Southampton Road"
+},
+"council/camden/southampton-road-46130226@51.55060,-0.15667": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Southampton Road"
+},
+"council/camden/spring-place-46045407@51.54906,-0.14650": {
+"area": "Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Spring Place"
+},
+"council/camden/st-cross-street-46128749@51.52068,-0.10824": {
+"area": "Hatton Garden",
+"city": "London",
+"postcode": "EC1N",
+"street": "St Cross Street"
+},
+"council/camden/stanhope-street-46047505@51.52638,-0.14092": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "NW1",
+"street": "Stanhope Street"
+},
+"council/camden/steele-s-road-46045620@51.54515,-0.16012": {
+"area": "Steele's Village",
+"city": "London",
+"postcode": "NW3",
+"street": "Steele's Road"
+},
+"council/camden/sumatra-road-46044330@51.54886,-0.19267": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/sumatra-road-46044331@51.54896,-0.19428": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/swain-s-lane-46045009@51.56181,-0.15004": {
+"area": "Dartmouth Park",
+"city": "London",
+"postcode": "N6",
+"street": "Swain's Lane"
+},
+"council/camden/tanza-road-46049183@51.55666,-0.16015": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/tavistock-square-46036263@51.52560,-0.12947": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "WC1H",
+"street": "Tavistock Square"
+},
+"council/camden/taviton-street-46036258@51.52604,-0.13220": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/templewood-avenue-46035201@51.55952,-0.18770": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/tower-street-46134547@51.51304,-0.12747": {
+"area": "Seven Dials",
+"city": "London",
+"postcode": "WC2H",
+"street": "Tower Street"
+},
+"council/camden/twisden-road-46044906@51.55785,-0.14340": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/vale-of-health-46048990@51.56222,-0.17649": {
+"area": "Vale of Health",
+"city": "London",
+"postcode": "NW3",
+"street": "Vale of Health"
+},
+"council/camden/vicar-s-road-46127504@51.55246,-0.15201": {
+"area": "West Kentish Town",
+"city": "London",
+"postcode": "NW5",
+"street": "Vicar's Road"
+},
+"council/camden/weedington-road-46046015@51.55067,-0.15110": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/camden/west-end-lane-46043521@51.53944,-0.19183": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/west-end-lane-46043837@51.55218,-0.19195": {
+"area": "West Hampstead",
+"city": "London",
+"postcode": "NW6",
+"street": "West End Lane"
+},
+"council/camden/west-end-sidings-estate-46135942@51.54922,-0.20046": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Barlow Road"
+},
+"council/camden/wicklow-street-46043224@51.52952,-0.11775": {
+"area": "King's Cross",
+"city": "London",
+"postcode": "WC1X",
+"street": "Wicklow Street"
+},
+"council/camden/william-road-46047509@51.52715,-0.14004": {
+"area": "Fitzrovia",
+"city": "London",
+"postcode": "NW1",
+"street": "Stanhope Street"
+},
+"council/camden/winchester-road-46046955@51.54239,-0.17159": {
+"area": "Primrose Hill",
+"city": "London",
+"postcode": "NW3",
+"street": "Winchester Road"
+},
+"council/camden/york-rise-46044998@51.55880,-0.14384": {
+"area": "London Borough of Camden",
+"city": "London"
+},
+"council/hillingdon/belmont-road@51.54720,-0.48017": {
+"area": "Hillingdon",
+"city": "London Borough of Hillingdon",
+"postcode": "UB8",
+"street": "Belmont Road"
+},
+"council/hillingdon/bentinck-road@51.51070,-0.47372": {
+"area": "Yiewsley",
+"city": "West Drayton",
+"postcode": "UB7",
+"street": "Bentinck Road"
+},
+"council/hillingdon/coldharbour-lane-19-21@51.50812,-0.41685": {
+"area": "Hayes",
+"postcode": "UB3",
+"street": "Coldharbour Lane"
+},
+"council/hillingdon/cowley-high-street@51.53028,-0.48188": {
+"area": "London Borough of Hillingdon"
+},
+"council/hillingdon/eastbury-road-3@51.61158,-0.42363": {
+"area": "Northwood Green Lane",
+"city": "London Borough of Hillingdon",
+"postcode": "HA6",
+"street": "Eastbury Road"
+},
+"council/hillingdon/field-end-road-morford-way@51.57830,-0.39926": {
+"area": "Eastcote",
+"city": "London Borough of Hillingdon",
+"postcode": "HA5",
+"street": "Field End Road"
+},
+"council/hillingdon/joel-street-65-67@51.60036,-0.40985": {
+"area": "Northwood Hills",
+"city": "London Borough of Hillingdon",
+"postcode": "HA6",
+"street": "Joel Street"
+},
+"council/hillingdon/ruislip-high-street-144@51.57311,-0.42354": {
+"area": "Ruislip",
+"postcode": "HA4",
+"street": "High Street"
+},
+"council/hillingdon/ruislip-high-street-midcroft@51.57493,-0.42537": {
+"area": "Ickenham",
+"city": "London Borough of Hillingdon",
+"postcode": "HA4",
+"street": "High Street"
+},
+"council/hillingdon/station-road-hayes-42a@51.50588,-0.41926": {
+"area": "Hayes",
+"postcode": "UB3",
+"street": "Station Road"
+},
+"council/hillingdon/uxbridge-high-street-124-125@51.54836,-0.48095": {
+"area": "Hillingdon",
+"city": "Uxbridge",
+"postcode": "UB8",
+"street": "High Street"
+},
+"council/hillingdon/uxbridge-high-street-228-229@51.54435,-0.47495": {
+"area": "London Borough of Hillingdon"
+},
+"council/hillingdon/victoria-road-56-58@51.57325,-0.41300": {
+"area": "London Borough of Hillingdon",
+"postcode": "HA4",
+"street": "Victoria Road"
+},
+"council/hillingdon/windsor-street-50-51@51.54568,-0.48015": {
+"area": "Cowley",
+"city": "London Borough of Hillingdon",
+"postcode": "UB8",
+"street": "Windsor Street"
+},
+"council/islington/aberdeen-road-54137@51.55430,-0.09505": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Aberdeen Road"
+},
+"council/islington/alexander-road-54155@51.56214,-0.12301": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/archibald-road-54177@51.55557,-0.13209": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/arthur-road-54097@51.55828,-0.11340": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hornsey Road"
+},
+"council/islington/ashley-road-54110@51.57216,-0.12051": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Ashley Road"
+},
+"council/islington/aubert-road-54104@51.55576,-0.09957": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/axminster-road-54098@51.56000,-0.11709": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/baltic-street-west-54049@51.52329,-0.09691": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/bardolph-road-54178@51.55603,-0.12396": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Cardwell Terrace"
+},
+"council/islington/baring-street-n1-3ds@51.53706,-0.08785": {
+"area": "Islington",
+"city": "London",
+"postcode": "N1",
+"street": "Baring Street"
+},
+"council/islington/barnsbury-road-54072@51.53631,-0.11089": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Barnsbury Road"
+},
+"council/islington/benwell-road-54091@51.55260,-0.10958": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Bryantwood Road"
+},
+"council/islington/beresford-road-54167@51.55012,-0.08961": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N5",
+"street": "Beresford Road"
+},
+"council/islington/berriman-road-54099@51.56018,-0.11134": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N7",
+"street": "Berriman Road"
+},
+"council/islington/bewdley-street-54073@51.54227,-0.10947": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Bewdley Street"
+},
+"council/islington/bride-street-54127@51.54612,-0.11199": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "Westbourne Road"
+},
+"council/islington/bridgeman-road-54074@51.54085,-0.11567": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Bridgeman Road"
+},
+"council/islington/briset-street-54052@51.52146,-0.10368": {
+"area": "Clerkenwell Green",
+"city": "London",
+"postcode": "EC1M",
+"street": "Britton Street"
+},
+"council/islington/calabria-road-54092@51.54782,-0.10212": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Place"
+},
+"council/islington/caledonian-road-54128@51.54521,-0.11774": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/calverley-grove-54195@51.56858,-0.12773": {
+"area": "Elthorne Estate",
+"city": "London",
+"postcode": "N19",
+"street": "Mulkern Road"
+},
+"council/islington/campdale-road-54160@51.55822,-0.13234": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/cardozo-road-54188@51.55208,-0.11854": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/carleton-road-54179@51.55694,-0.12697": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "St George's Avenue"
+},
+"council/islington/catherall-road-54138@51.55801,-0.09126": {
+"area": "Highbury Quadrant Estate",
+"city": "London",
+"postcode": "N5",
+"street": "Catherall Road"
+},
+"council/islington/chambers-road-54180@51.55550,-0.12233": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Parkhurst Road"
+},
+"council/islington/chillingworth-road-54129@51.55023,-0.11160": {
+"area": "Papworth Gardens",
+"city": "London",
+"postcode": "N7",
+"street": "Chillingworth Road"
+},
+"council/islington/clifton-road-54149@51.54553,-0.09128": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/cloudesley-street-54075@51.53686,-0.10831": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Cloudesley Square"
+},
+"council/islington/compton-road-54121@51.54571,-0.10009": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Compton Road"
+},
+"council/islington/corinne-road-54145@51.55535,-0.13401": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Corinne Road"
+},
+"council/islington/dalmeny-road-54181@51.55507,-0.12929": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Dalmeny Road"
+},
+"council/islington/dalmeny-road-54182@51.55738,-0.13031": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Tufnell Park Road"
+},
+"council/islington/dingley-road-54055@51.52862,-0.09398": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/donegal-street-54036@51.53262,-0.11190": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/eden-grove-54130@51.55157,-0.11239": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hartnoll Street"
+},
+"council/islington/elfort-road-54105@51.55759,-0.10597": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/elia-street-54038@51.53245,-0.10332": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/elizabeth-avenue-54122@51.53929,-0.09174": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Elizabeth Avenue"
+},
+"council/islington/ella-road-54112@51.57522,-0.12006": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N8",
+"street": "Ella Road"
+},
+"council/islington/essex-road-54150@51.54485,-0.08865": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Essex Road"
+},
+"council/islington/fergus-road-54094@51.54901,-0.10024": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N5",
+"street": "Liberia Road"
+},
+"council/islington/finsbury-square-54059@51.52061,-0.08585": {
+"area": "Finsbury",
+"city": "London",
+"postcode": "EC2A",
+"street": "Finsbury Square"
+},
+"council/islington/freegrove-road-54189@51.55238,-0.11984": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/frome-street-54039@51.53395,-0.09763": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/gibson-square-54077@51.53768,-0.10589": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Gibson Square"
+},
+"council/islington/grantbridge-street-54040@51.53486,-0.09952": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/grenville-road-54113@51.56867,-0.12106": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N19",
+"street": "Grenville Road"
+},
+"council/islington/grosvenor-avenue-54168@51.54927,-0.08743": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Newington Green Road"
+},
+"council/islington/hargrave-road-54132@51.56389,-0.13324": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Hargrave Road"
+},
+"council/islington/hartham-road-54067@51.55084,-0.12253": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/haverstock-street-54041@51.53054,-0.09890": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/heathville-road-54114@51.57276,-0.12051": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Heathville Road"
+},
+"council/islington/highbury-grange-54139@51.55486,-0.09612": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/highbury-hill-54106@51.55679,-0.10393": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Hill"
+},
+"council/islington/highbury-quadrant-54140@51.55830,-0.09248": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury New Park"
+},
+"council/islington/highbury-station-road-54096@51.54563,-0.10516": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Highbury Station Road"
+},
+"council/islington/highgate-hill-54119@51.56768,-0.13897": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/hilldrop-crescent-54183@51.55062,-0.13003": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Crescent"
+},
+"council/islington/hilldrop-crescent-54184@51.55198,-0.12747": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Road"
+},
+"council/islington/hilldrop-road-54185@51.55167,-0.12633": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Road"
+},
+"council/islington/hornsey-rise-gardens-54115@51.57369,-0.12641": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Hornsey Rise Gardens"
+},
+"council/islington/hornsey-road-54101@51.55865,-0.11341": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hornsey Road"
+},
+"council/islington/huddleston-road-54146@51.55837,-0.13529": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Huddleston Road"
+},
+"council/islington/hungerford-road-54068@51.55224,-0.12223": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hungerford Road"
+},
+"council/islington/hungerford-road-54069@51.54898,-0.12662": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hungerford Road"
+},
+"council/islington/kelross-road-54141@51.55572,-0.09479": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/kelvin-road-54142@51.55388,-0.09614": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/killick-street-54043@51.53404,-0.11881": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Killick Street"
+},
+"council/islington/king-henry-s-walk-54169@51.54681,-0.08253": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Balls Pond Road"
+},
+"council/islington/lady-margaret-road-54147@51.55590,-0.13605": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Lady Margaret Road"
+},
+"council/islington/lambton-road-54116@51.56962,-0.12212": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N19",
+"street": "Nugent Road"
+},
+"council/islington/landseer-road-54157@51.56198,-0.12446": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Holloway Road"
+},
+"council/islington/legard-road-54109@51.55744,-0.09934": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Loxford Gardens"
+},
+"council/islington/lofting-road-54078@51.54101,-0.10935": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Lofting Road"
+},
+"council/islington/manor-gardens-54102@51.56018,-0.12264": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Holloway Road"
+},
+"council/islington/maygood-street-54044@51.53443,-0.11164": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Barnsbury Road"
+},
+"council/islington/mercers-road-54162@51.55849,-0.12803": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/middleton-grove-54070@51.55103,-0.12529": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Middleton Grove"
+},
+"council/islington/mildmay-grove-north-54171@51.54893,-0.08316": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/mildmay-grove-north-54172@51.54901,-0.08507": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove North"
+},
+"council/islington/mildmay-grove-south-54173@51.54855,-0.08288": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove South"
+},
+"council/islington/mildmay-grove-south-54174@51.54873,-0.08550": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove South"
+},
+"council/islington/mitford-road-54158@51.56401,-0.11989": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N19",
+"street": "Mitford Road"
+},
+"council/islington/monnery-road-54133@51.56060,-0.13523": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Goddard Place"
+},
+"council/islington/mount-pleasant-54015@51.52406,-0.11175": {
+"area": "Angel",
+"city": "London",
+"postcode": "WC1X",
+"street": "Mount Pleasant"
+},
+"council/islington/myddelton-square-54018@51.52981,-0.10741": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1R",
+"street": "Myddelton Square"
+},
+"council/islington/napier-terrace-54079@51.53970,-0.10435": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Almeida Street"
+},
+"council/islington/north-road-54071@51.54948,-0.11991": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "North Road"
+},
+"council/islington/northolme-road-54143@51.55664,-0.09348": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Northolme Road"
+},
+"council/islington/offord-road-54080@51.54255,-0.11585": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-road-54081@51.54306,-0.11403": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-road-54082@51.54224,-0.11692": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-street-54083@51.54294,-0.11586": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Street"
+},
+"council/islington/parolles-road-54199@51.56855,-0.13420": {
+"area": "Miranda Estate",
+"city": "London",
+"postcode": "N19",
+"street": "Miranda Road"
+},
+"council/islington/pemberton-gardens-54134@51.56231,-0.13370": {
+"area": "Archway",
+"city": "London"
+},
+"council/islington/penn-road-54190@51.55372,-0.11948": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Penn Road"
+},
+"council/islington/penn-road-54191@51.55309,-0.12087": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Penn Road"
+},
+"council/islington/petherton-road-54175@51.55347,-0.09055": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Petherton Road"
+},
+"council/islington/poets-road-54176@51.55186,-0.08812": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N5",
+"street": "Poet's Road"
+},
+"council/islington/popham-road-54086@51.53918,-0.09503": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Popham Road"
+},
+"council/islington/quemerford-road-54192@51.55319,-0.11593": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Widdenham Road"
+},
+"council/islington/ramsey-walk-54154@51.54615,-0.08933": {
+"area": "Marquess Estate",
+"city": "London",
+"postcode": "N1",
+"street": "Ramsey Walk"
+},
+"council/islington/richmond-avenue-54087@51.53889,-0.10713": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Richmond Avenue"
+},
+"council/islington/roseleigh-avenue-54107@51.55440,-0.10008": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/rotherfield-street-54125@51.53914,-0.09061": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Rotherfield Street"
+},
+"council/islington/sebbon-street-54088@51.54090,-0.10049": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Tressel Close"
+},
+"council/islington/sekforde-street-54025@51.52404,-0.10466": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1R",
+"street": "Sekforde Street"
+},
+"council/islington/sotheby-road-54144@51.55754,-0.09792": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Park"
+},
+"council/islington/st-clements-street-54089@51.54396,-0.11146": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "St Clements Street"
+},
+"council/islington/st-john-s-villas-54135@51.56571,-0.12938": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "St John's Villas"
+},
+"council/islington/st-paul-s-road-54126@51.54706,-0.09060": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "St. Paul's Road"
+},
+"council/islington/stavordale-road-54108@51.55537,-0.10460": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Aubert Park"
+},
+"council/islington/stock-orchard-street-54193@51.55039,-0.11761": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/sunnyside-road-54200@51.57165,-0.12714": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/sussex-way-54103@51.56007,-0.11580": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/tavistock-terrace-54163@51.56070,-0.12621": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/tremlett-grove-54136@51.56256,-0.13802": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Bickerton Road"
+},
+"council/islington/tufnell-park-road-54186@51.55808,-0.12379": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Tufnell Park Road"
+},
+"council/islington/upper-street-54045@51.53460,-0.10497": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Upper Street"
+},
+"council/islington/upper-street-54046@51.53443,-0.10516": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Upper Street"
+},
+"council/islington/warlters-close-54194@51.55609,-0.11923": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/weston-rise-54047@51.53021,-0.11595": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "WC1X",
+"street": "Weston Rise"
+},
+"council/islington/woodbridge-street-54029@51.52437,-0.10430": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1V",
+"street": "St. John Street"
+},
+"council/islington/yerbury-road-54166@51.55903,-0.12607": {
+"area": "London Borough of Islington",
+"city": "London"
+},
 "node/10003989317@51.38058,-2.36223": {
 "area": "Kingsmead",
 "city": "Bath",

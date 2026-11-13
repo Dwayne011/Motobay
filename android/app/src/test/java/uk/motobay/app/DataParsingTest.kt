@@ -39,6 +39,40 @@ class DataParsingTest {
         assertEquals(data.count, data.bays.size)
         assertTrue(data.bays.size > 1000)
         assertTrue(data.bays.all { it.lat in 49.0..61.5 && it.lon in -9.0..2.5 })
+        // Council bays from traffic orders: free, with the order's own description. Hillingdon confirmed
+        // there are no charges or permits, so its bays aren't marked unconfirmed.
+        val council = data.bays.filter { it.isCouncil }
+        assertTrue(council.isNotEmpty())
+        assertTrue(council.all { it.source != null && !it.isOsm && (it.note != null || it.rules != null) })
+        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") || it.id.startsWith("council/bromley/") }.all { it.fee == Fee.Free })
+        // Camden's open data: paid bays with the daily tariff, plus one bay whose price it doesn't give.
+        val camden = data.bays.filter { it.source?.contains("Camden") == true }
+        assertEquals(333, camden.size)
+        assertTrue(camden.count { it.fee == Fee.Paid } >= 320)
+        assertTrue(camden.filter { it.isCouncil && it.fee == Fee.Paid }.all { "£1.30 a day" in it.rules!! })
+        // Islington's bays are paid, with spaces and charging hours; ones OpenStreetMap already had keep their id.
+        val islington = data.bays.filter { it.source?.contains("Islington") == true }
+        assertEquals(199, islington.size)
+        assertTrue(islington.all { it.fee == Fee.Paid && it.capacity != null && it.rules!!.startsWith("Paid ") })
+        assertTrue(islington.any { it.isOsm } && islington.any { it.isCouncil })
+        // Hillingdon and Bromley both say their bays are free; only Bromley gives space counts.
+        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") }.none { it.feeUnconfirmed || it.capacity != null })
+        assertEquals(40, council.single { it.id == "council/bromley/edison-road" }.capacity)
+    }
+
+    @Test fun decodesCouncilBay() {
+        val body = """
+            {"generated":"2026-11-03T00:00:00Z","attribution":"x","count":1,"bays":[
+              {"id":"council/hillingdon/joel-street-65-67","lat":51.60036,"lon":-0.40985,"name":"Motorcycle parking","fee":"free",
+               "feeUnconfirmed":true,"street":"Joel Street","lengthMetres":5.0,"openingHours":"Any time","note":"West side.",
+               "source":"Hillingdon Council traffic orders (FOI 06397)","approximate":true}
+            ]}
+        """.trimIndent()
+        val bay = Json { ignoreUnknownKeys = true }.decodeFromString(BayDataset.serializer(), body).bays.single()
+        assertTrue(bay.isCouncil && bay.feeUnconfirmed && bay.approximate)
+        assertEquals("Joel Street", bay.title)
+        assertEquals(5.0, bay.lengthMetres!!, 0.0)
+        assertEquals("West side.", bay.note)
     }
 
     /** A real Photon response for "camden", recorded on 2026-10-25. */
@@ -79,9 +113,22 @@ class BayTitleTest {
         assertEquals("Manchester M3", b.locality)
     }
 
+    @Test fun noStreetFallsBackToTheAreaWithoutRepeatingIt() {
+        // Never just "Motorcycle parking": every bay is one.
+        val b = bay("Motorcycle parking", area = "Hove", city = "Brighton and Hove", postcode = "BN3")
+        assertEquals("Hove", b.title)
+        assertEquals("Brighton and Hove BN3", b.locality)
+    }
+
+    @Test fun noStreetOrAreaFallsBackToTheTown() {
+        val b = bay("Motorbike parking", city = "Stroud")
+        assertEquals("Stroud", b.title)
+        assertNull(b.locality)
+    }
+
     @Test fun nothingKnownGivesNoLocality() {
         val b = bay("Motorcycle parking")
-        assertEquals("Motorcycle parking", b.title)
+        assertEquals("Unnamed bay", b.title)
         assertNull(b.locality)
     }
 }

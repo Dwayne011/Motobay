@@ -42,6 +42,10 @@ val Fee.label: String
         Fee.Unknown -> "Price unknown"
     }
 
+/** The bay's price as riders read it: "Free (unconfirmed)" when the source hasn't confirmed it. */
+val Bay.feeText: String
+    get() = if (feeUnconfirmed && fee != Fee.Unknown) "${fee.label} (unconfirmed)" else fee.label
+
 /** Container / content colours for a price, used by chips and map pins. */
 @Composable
 fun feeColors(fee: Fee): Pair<Color, Color> = when (fee) {
@@ -73,11 +77,11 @@ fun BayPin(fee: Fee, size: Dp = 32.dp) {
 
 /** Small tonal label showing the price. */
 @Composable
-fun FeeLabel(fee: Fee, modifier: Modifier = Modifier) {
+fun FeeLabel(fee: Fee, modifier: Modifier = Modifier, text: String = fee.label) {
     val (container, content) = feeColors(fee)
     Surface(color = container, contentColor = content, shape = MaterialTheme.shapes.small, modifier = modifier) {
         Text(
-            fee.label,
+            text,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
         )
@@ -92,7 +96,7 @@ fun BayFacts(bay: Bay) {
         val (container, content) = feeColors(bay.fee)
         AssistChip(
             onClick = {},
-            label = { Text(bay.fee.label) },
+            label = { Text(bay.feeText) },
             colors = AssistChipDefaults.assistChipColors(containerColor = container, labelColor = content),
             border = null,
         )
@@ -128,7 +132,7 @@ fun BayListItem(bay: Bay, distance: String?, selected: Boolean = false, onClick:
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 bay.locality?.let { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    FeeLabel(bay.fee)
+                    FeeLabel(bay.fee, text = bay.feeText)
                     val facts = listOfNotNull(
                         bay.capacity?.let { "$it spaces" },
                         bay.covered?.takeIf { it }?.let { "Covered" },

@@ -1,7 +1,8 @@
 name: Update bay data
 
-# Rebuilds data/uk-bays.json from OpenStreetMap once a week, and whenever the
-# script changes. The apps download that file.
+# Rebuilds data/uk-bays.json from OpenStreetMap (plus council bays from
+# data/council-bays.json) once a week, and whenever the scripts or council file
+# change. The apps download that file.
 on:
   schedule:
     - cron: "17 3 * * 1" # Mondays 03:17 UTC
@@ -11,6 +12,7 @@ on:
     paths:
       - scripts/fetch_uk_bays.py
       - scripts/enrich_bays.py
+      - data/council-bays.json
       - .github/workflows/update-bay-data.yml
 
 permissions:

@@ -1,28 +1,41 @@
 package uk.motobay.app
 
 import android.app.Application
+import com.google.firebase.appcheck.FirebaseAppCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.StateFlow
+import uk.motobay.app.data.AuthRepository
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
 import uk.motobay.app.data.combinedBays
 import uk.motobay.app.data.CommunityRepository
+import uk.motobay.app.data.DisplayNames
+import uk.motobay.app.data.FirebaseAuthRepository
+import uk.motobay.app.data.FirestoreDisplayNames
+import uk.motobay.app.data.FirestoreCommunityRepository
 import uk.motobay.app.data.PlaceSearch
 import uk.motobay.app.data.UserRepository
 import uk.motobay.app.location.LocationProvider
+import uk.motobay.app.util.CrashLog
 
 /** Holds the app's single instances (manual dependency injection). */
-class MotoBayApplication : Application() {
+open class MotoBayApplication : Application() {
     val appScope = CoroutineScope(SupervisorJob())
 
     lateinit var bays: BayRepository
         private set
+    lateinit var auth: AuthRepository
+        private set
     lateinit var community: CommunityRepository
+        private set
+    lateinit var displayNames: DisplayNames
         private set
     lateinit var user: UserRepository
         private set
     lateinit var location: LocationProvider
+        private set
+    lateinit var crashLog: CrashLog
         private set
     /** OpenStreetMap bays plus approved rider additions and corrections. */
     lateinit var allBays: StateFlow<Map<String, Bay>>
@@ -32,10 +45,33 @@ class MotoBayApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = BuildConfig.SAMPLE_DATA)
-        community = CommunityRepository(this, appScope)
+        crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install(); it.collectSystemExitReason(this) }
+        installAppCheck()
+        bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
+        auth = createAuth()
+        community = createCommunity(auth)
+        displayNames = createDisplayNames(auth)
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
         allBays = combinedBays(bays.bays, community.data, appScope)
     }
+
+    /**
+     * App Check: Firestore, Storage and Auth only answer requests that carry a token
+     * proving they came from this app (Play Integrity in release, a registered debug
+     * token in debug). Enforcement is switched on per service in the Firebase console.
+     */
+    protected open fun installAppCheck() {
+        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(appCheckProviderFactory())
+    }
+
+    // Overridden in tests so they don't need Firebase or the network.
+    protected open fun useSampleData(): Boolean = BuildConfig.SAMPLE_DATA
+
+    protected open fun createAuth(): AuthRepository = FirebaseAuthRepository(this, appScope)
+
+    protected open fun createCommunity(auth: AuthRepository): CommunityRepository =
+        FirestoreCommunityRepository(this, auth, appScope)
+
+    protected open fun createDisplayNames(auth: AuthRepository): DisplayNames = FirestoreDisplayNames(auth)
 }
