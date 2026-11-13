@@ -233,6 +233,32 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         viewModelScope.launch { _messages.send("Location is off. Search for a town, street or postcode instead.") }
     }
 
+    /**
+     * Once per launch, take the map to the rider. With location already allowed
+     * that happens straight away. Otherwise, on the first launch only (and once
+     * the opening notice has been read), returns true so the screen can ask for
+     * permission; a rider who says no isn't asked again and starts where they left off.
+     */
+    fun centreOnLaunch(): Boolean {
+        if (app.centredOnLaunch) return false
+        if (app.location.hasPermission()) {
+            app.centredOnLaunch = true
+            viewModelScope.launch {
+                locating.value = true
+                val pos = app.location.locate()
+                locating.value = false
+                // No complaint if there's no fix: the rider didn't ask, and the map is still where they left it.
+                if (pos != null && selectedId.value == null && !addingBay.value) command.value = MapCommand.Fly(pos.lat, pos.lon, zoom = 15.0)
+            }
+            return false
+        }
+        val settings = app.user.settings.value
+        if (!settings.disclaimerAccepted || settings.locationAsked) return false
+        app.centredOnLaunch = true
+        app.user.updateSettings { it.copy(locationAsked = true) }
+        return true
+    }
+
     /** Called after location permission is granted. */
     fun locate() {
         search.update { it.copy(expanded = false) }
