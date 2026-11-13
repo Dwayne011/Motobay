@@ -47,7 +47,7 @@ class DataParsingTest {
         assertTrue(council.filter { it.id.startsWith("council/hillingdon/") || it.id.startsWith("council/bromley/") }.all { it.fee == Fee.Free })
         // Camden's open data: paid bays with the daily tariff, plus one bay whose price it doesn't give.
         val camden = data.bays.filter { it.source?.contains("Camden") == true }
-        assertEquals(324, camden.size)
+        assertEquals(333, camden.size)
         assertTrue(camden.count { it.fee == Fee.Paid } >= 320)
         assertTrue(camden.filter { it.isCouncil && it.fee == Fee.Paid }.all { "£1.30 a day" in it.rules!! })
         // Islington's bays are paid, with spaces and charging hours; ones OpenStreetMap already had keep their id.

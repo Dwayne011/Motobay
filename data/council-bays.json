@@ -4765,7 +4765,7 @@
    "street": "Oval Road",
    "lengthMetres": 4.0,
    "fee": "unknown",
-   "rules": "Motorcycles only at all times. Camden's data lists no charge for this bay, but doesn't say it's free. Controlled zone CA-F."
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-F."
   },
   {
    "id": "council/camden/park-village-east-46047588",
@@ -5656,6 +5656,96 @@
    "lengthMetres": 5.0,
    "fee": "paid",
    "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051346. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/agar-grove-estate-46135938",
+   "source": "camden",
+   "lat": 51.54207,
+   "lon": -0.134157,
+   "street": "Agar Grove Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-N."
+  },
+  {
+   "id": "council/camden/ampthill-square-estate-46135958",
+   "source": "camden",
+   "lat": 51.531849,
+   "lon": -0.136701,
+   "street": "Ampthill Square Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/bourne-estate-46135926",
+   "source": "camden",
+   "lat": 51.52093,
+   "lon": -0.110529,
+   "street": "Bourne Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/harben-road-estate-1-46135950",
+   "source": "camden",
+   "lat": 51.544528,
+   "lon": -0.176967,
+   "street": "Harben Road Estate 1",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/ossulston-estate-1-46135934",
+   "source": "camden",
+   "lat": 51.531502,
+   "lon": -0.131303,
+   "street": "Ossulston Estate 1",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/ossulston-estate-2-46135930",
+   "source": "camden",
+   "lat": 51.529867,
+   "lon": -0.129017,
+   "street": "Ossulston Estate 2",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/russell-nurseries-estate-46135946",
+   "source": "camden",
+   "lat": 51.551774,
+   "lon": -0.163784,
+   "street": "Russell Nurseries Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/south-end-close-estate-46135954",
+   "source": "camden",
+   "lat": 51.554923,
+   "lon": -0.164176,
+   "street": "South End Close Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/west-end-sidings-estate-46135942",
+   "source": "camden",
+   "lat": 51.54922,
+   "lon": -0.20046,
+   "street": "West End Sidings Estate",
+   "lengthMetres": 1.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-Q."
   }
  ],
  "unplaced": [
@@ -5728,51 +5818,6 @@
    "source": "bromley",
    "description": "Petts Wood Road, Petts Wood",
    "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "camden",
-   "description": "Agar Grove Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Ampthill Square Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Bourne Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Harben Road Estate 1: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Ossulston Estate 1: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Ossulston Estate 2: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "Russell Nurseries Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "South End Close Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
-  },
-  {
-   "source": "camden",
-   "description": "West End Sidings Estate: motorcycle bay on a housing estate.",
-   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
   }
  ]
 }

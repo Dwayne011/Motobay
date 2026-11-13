@@ -36,6 +36,10 @@
 "postcode": "NW6",
 "street": "Abbot's Place"
 },
+"council/camden/agar-grove-estate-46135938@51.54207,-0.13416": {
+"area": "London Borough of Camden",
+"city": "London"
+},
 "council/camden/ajax-road-46043872@51.55411,-0.19693": {
 "area": "London Borough of Camden",
 "city": "London"
@@ -57,6 +61,12 @@
 "city": "London",
 "postcode": "NW3",
 "street": "Alvanley Gardens"
+},
+"council/camden/ampthill-square-estate-46135958@51.53185,-0.13670": {
+"area": "St Pancras",
+"city": "London",
+"postcode": "NW1",
+"street": "Eversholt Street"
 },
 "council/camden/ampton-street-46127768@51.52743,-0.11744": {
 "area": "King's Cross",
@@ -207,6 +217,12 @@
 "city": "London",
 "postcode": "WC1A",
 "street": "Bloomsbury Square"
+},
+"council/camden/bourne-estate-46135926@51.52093,-0.11053": {
+"area": "Bourne Estate",
+"city": "London",
+"postcode": "EC1N",
+"street": "Portpool Lane"
 },
 "council/camden/broadhurst-gardens-46046539@51.54665,-0.18106": {
 "area": "Swiss Cottage",
@@ -631,6 +647,10 @@
 "city": "London",
 "postcode": "NW3",
 "street": "Vane Close"
+},
+"council/camden/harben-road-estate-1-46135950@51.54453,-0.17697": {
+"area": "London Borough of Camden",
+"city": "London"
 },
 "council/camden/harrington-square-46047562@51.53354,-0.13883": {
 "area": "Fitzrovia",
@@ -1060,6 +1080,16 @@
 "postcode": "NW5",
 "street": "Ospringe Road"
 },
+"council/camden/ossulston-estate-1-46135934@51.53150,-0.13130": {
+"area": "Somers Town",
+"city": "London"
+},
+"council/camden/ossulston-estate-2-46135930@51.52987,-0.12902": {
+"area": "Somers Town",
+"city": "London",
+"postcode": "NW1",
+"street": "Church Way"
+},
 "council/camden/oval-road-46137766@51.54022,-0.14803": {
 "area": "Primrose Hill",
 "city": "London",
@@ -1190,6 +1220,12 @@
 "area": "London Borough of Camden",
 "city": "London"
 },
+"council/camden/russell-nurseries-estate-46135946@51.55177,-0.16378": {
+"area": "Russell Nurseries Estate",
+"city": "London",
+"postcode": "NW3",
+"street": "Russell Place"
+},
 "council/camden/sandwell-crescent-46044339@51.54943,-0.19187": {
 "area": "West Hampstead",
 "city": "London",
@@ -1237,6 +1273,10 @@
 "city": "London",
 "postcode": "NW6",
 "street": "Solent Road"
+},
+"council/camden/south-end-close-estate-46135954@51.55492,-0.16418": {
+"area": "London Borough of Camden",
+"city": "London"
 },
 "council/camden/south-grove-46044874@51.57047,-0.14855": {
 "area": "Highgate",
@@ -1365,6 +1405,12 @@
 "city": "London",
 "postcode": "NW6",
 "street": "West End Lane"
+},
+"council/camden/west-end-sidings-estate-46135942@51.54922,-0.20046": {
+"area": "Kilburn",
+"city": "London",
+"postcode": "NW6",
+"street": "Barlow Road"
 },
 "council/camden/wicklow-street-46043224@51.52952,-0.11775": {
 "area": "King's Cross",
