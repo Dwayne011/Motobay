@@ -479,6 +479,23 @@ class ScreenshotTest {
         shot("phone-dark-council-bay")
     }
 
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_paid_council_bay_detail() {
+        val bay = uk.motobay.app.data.Bay(
+            id = "council/islington/aberdeen-road-54137", lat = 51.554299, lon = -0.095052, name = "Motorcycle parking",
+            fee = uk.motobay.app.data.Fee.Paid, street = "Aberdeen Road", area = "Highbury", postcode = "N5", capacity = 6, openingHours = "Any time",
+            rules = "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54137. Controlled zone Q.",
+            source = "Islington Council motorcycle bay list (FOI 8652875)",
+        )
+        compose.setContent { DetailHost(bay) }
+        compose.onNodeWithText("Paid").assertExists()
+        compose.onNodeWithText("6 spaces").assertExists()
+        compose.onNodeWithText("Charges").assertExists()
+        compose.onNodeWithText("Pay by RingGo, location 54137", substring = true).assertExists()
+        compose.onNodeWithText("says it's free", substring = true).assertDoesNotExist()
+        shot("phone-paid-council-bay")
+    }
+
     @Composable
     private fun DetailHost(bay: uk.motobay.app.data.Bay = SampleBays.all[0]) {
         val settings by app.user.settings.collectAsStateWithLifecycle()

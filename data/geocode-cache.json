@@ -104,6 +104,698 @@
 "postcode": "UB8",
 "street": "Windsor Street"
 },
+"council/islington/aberdeen-road-54137@51.55430,-0.09505": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Aberdeen Road"
+},
+"council/islington/alexander-road-54155@51.56214,-0.12301": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/archibald-road-54177@51.55557,-0.13209": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/arthur-road-54097@51.55828,-0.11340": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hornsey Road"
+},
+"council/islington/ashley-road-54110@51.57216,-0.12051": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Ashley Road"
+},
+"council/islington/aubert-road-54104@51.55576,-0.09957": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/axminster-road-54098@51.56000,-0.11709": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/baltic-street-west-54049@51.52329,-0.09691": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/bardolph-road-54178@51.55603,-0.12396": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Cardwell Terrace"
+},
+"council/islington/baring-street-n1-3ds@51.53706,-0.08785": {
+"area": "Islington",
+"city": "London",
+"postcode": "N1",
+"street": "Baring Street"
+},
+"council/islington/barnsbury-road-54072@51.53631,-0.11089": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Barnsbury Road"
+},
+"council/islington/benwell-road-54091@51.55260,-0.10958": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Bryantwood Road"
+},
+"council/islington/beresford-road-54167@51.55012,-0.08961": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N5",
+"street": "Beresford Road"
+},
+"council/islington/berriman-road-54099@51.56018,-0.11134": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N7",
+"street": "Berriman Road"
+},
+"council/islington/bewdley-street-54073@51.54227,-0.10947": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Bewdley Street"
+},
+"council/islington/bride-street-54127@51.54612,-0.11199": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "Westbourne Road"
+},
+"council/islington/bridgeman-road-54074@51.54085,-0.11567": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Bridgeman Road"
+},
+"council/islington/briset-street-54052@51.52146,-0.10368": {
+"area": "Clerkenwell Green",
+"city": "London",
+"postcode": "EC1M",
+"street": "Britton Street"
+},
+"council/islington/calabria-road-54092@51.54782,-0.10212": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Place"
+},
+"council/islington/caledonian-road-54128@51.54521,-0.11774": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/calverley-grove-54195@51.56858,-0.12773": {
+"area": "Elthorne Estate",
+"city": "London",
+"postcode": "N19",
+"street": "Mulkern Road"
+},
+"council/islington/campdale-road-54160@51.55822,-0.13234": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/cardozo-road-54188@51.55208,-0.11854": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/carleton-road-54179@51.55694,-0.12697": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "St George's Avenue"
+},
+"council/islington/catherall-road-54138@51.55801,-0.09126": {
+"area": "Highbury Quadrant Estate",
+"city": "London",
+"postcode": "N5",
+"street": "Catherall Road"
+},
+"council/islington/chambers-road-54180@51.55550,-0.12233": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Parkhurst Road"
+},
+"council/islington/chillingworth-road-54129@51.55023,-0.11160": {
+"area": "Papworth Gardens",
+"city": "London",
+"postcode": "N7",
+"street": "Chillingworth Road"
+},
+"council/islington/clifton-road-54149@51.54553,-0.09128": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/cloudesley-street-54075@51.53686,-0.10831": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Cloudesley Square"
+},
+"council/islington/compton-road-54121@51.54571,-0.10009": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Compton Road"
+},
+"council/islington/corinne-road-54145@51.55535,-0.13401": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Corinne Road"
+},
+"council/islington/dalmeny-road-54181@51.55507,-0.12929": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Dalmeny Road"
+},
+"council/islington/dalmeny-road-54182@51.55738,-0.13031": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Tufnell Park Road"
+},
+"council/islington/dingley-road-54055@51.52862,-0.09398": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/donegal-street-54036@51.53262,-0.11190": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/eden-grove-54130@51.55157,-0.11239": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hartnoll Street"
+},
+"council/islington/elfort-road-54105@51.55759,-0.10597": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/elia-street-54038@51.53245,-0.10332": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/elizabeth-avenue-54122@51.53929,-0.09174": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Elizabeth Avenue"
+},
+"council/islington/ella-road-54112@51.57522,-0.12006": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N8",
+"street": "Ella Road"
+},
+"council/islington/essex-road-54150@51.54485,-0.08865": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Essex Road"
+},
+"council/islington/fergus-road-54094@51.54901,-0.10024": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N5",
+"street": "Liberia Road"
+},
+"council/islington/finsbury-square-54059@51.52061,-0.08585": {
+"area": "Finsbury",
+"city": "London",
+"postcode": "EC2A",
+"street": "Finsbury Square"
+},
+"council/islington/freegrove-road-54189@51.55238,-0.11984": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/frome-street-54039@51.53395,-0.09763": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/gibson-square-54077@51.53768,-0.10589": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Gibson Square"
+},
+"council/islington/grantbridge-street-54040@51.53486,-0.09952": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/grenville-road-54113@51.56867,-0.12106": {
+"area": "Finsbury Park",
+"city": "London",
+"postcode": "N19",
+"street": "Grenville Road"
+},
+"council/islington/grosvenor-avenue-54168@51.54927,-0.08743": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Newington Green Road"
+},
+"council/islington/hargrave-road-54132@51.56389,-0.13324": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Hargrave Road"
+},
+"council/islington/hartham-road-54067@51.55084,-0.12253": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/haverstock-street-54041@51.53054,-0.09890": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/heathville-road-54114@51.57276,-0.12051": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Heathville Road"
+},
+"council/islington/highbury-grange-54139@51.55486,-0.09612": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/highbury-hill-54106@51.55679,-0.10393": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Hill"
+},
+"council/islington/highbury-quadrant-54140@51.55830,-0.09248": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury New Park"
+},
+"council/islington/highbury-station-road-54096@51.54563,-0.10516": {
+"area": "Canonbury",
+"city": "London",
+"postcode": "N1",
+"street": "Highbury Station Road"
+},
+"council/islington/highgate-hill-54119@51.56768,-0.13897": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/hilldrop-crescent-54183@51.55062,-0.13003": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Crescent"
+},
+"council/islington/hilldrop-crescent-54184@51.55198,-0.12747": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Road"
+},
+"council/islington/hilldrop-road-54185@51.55167,-0.12633": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Hilldrop Road"
+},
+"council/islington/hornsey-rise-gardens-54115@51.57369,-0.12641": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Hornsey Rise Gardens"
+},
+"council/islington/hornsey-road-54101@51.55865,-0.11341": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hornsey Road"
+},
+"council/islington/huddleston-road-54146@51.55837,-0.13529": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Huddleston Road"
+},
+"council/islington/hungerford-road-54068@51.55224,-0.12223": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hungerford Road"
+},
+"council/islington/hungerford-road-54069@51.54898,-0.12662": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Hungerford Road"
+},
+"council/islington/kelross-road-54141@51.55572,-0.09479": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/kelvin-road-54142@51.55388,-0.09614": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/killick-street-54043@51.53404,-0.11881": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Killick Street"
+},
+"council/islington/king-henry-s-walk-54169@51.54681,-0.08253": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Balls Pond Road"
+},
+"council/islington/lady-margaret-road-54147@51.55590,-0.13605": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Lady Margaret Road"
+},
+"council/islington/lambton-road-54116@51.56962,-0.12212": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N19",
+"street": "Nugent Road"
+},
+"council/islington/landseer-road-54157@51.56198,-0.12446": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N19",
+"street": "Holloway Road"
+},
+"council/islington/legard-road-54109@51.55744,-0.09934": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Loxford Gardens"
+},
+"council/islington/lofting-road-54078@51.54101,-0.10935": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Lofting Road"
+},
+"council/islington/manor-gardens-54102@51.56018,-0.12264": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Holloway Road"
+},
+"council/islington/maygood-street-54044@51.53443,-0.11164": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "N1",
+"street": "Barnsbury Road"
+},
+"council/islington/mercers-road-54162@51.55849,-0.12803": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/middleton-grove-54070@51.55103,-0.12529": {
+"area": "Tufnell Park",
+"city": "London",
+"postcode": "N7",
+"street": "Middleton Grove"
+},
+"council/islington/mildmay-grove-north-54171@51.54893,-0.08316": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/mildmay-grove-north-54172@51.54901,-0.08507": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove North"
+},
+"council/islington/mildmay-grove-south-54173@51.54855,-0.08288": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove South"
+},
+"council/islington/mildmay-grove-south-54174@51.54873,-0.08550": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N1",
+"street": "Mildmay Grove South"
+},
+"council/islington/mitford-road-54158@51.56401,-0.11989": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N19",
+"street": "Mitford Road"
+},
+"council/islington/monnery-road-54133@51.56060,-0.13523": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Goddard Place"
+},
+"council/islington/mount-pleasant-54015@51.52406,-0.11175": {
+"area": "Angel",
+"city": "London",
+"postcode": "WC1X",
+"street": "Mount Pleasant"
+},
+"council/islington/myddelton-square-54018@51.52981,-0.10741": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1R",
+"street": "Myddelton Square"
+},
+"council/islington/napier-terrace-54079@51.53970,-0.10435": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Almeida Street"
+},
+"council/islington/north-road-54071@51.54948,-0.11991": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "North Road"
+},
+"council/islington/northolme-road-54143@51.55664,-0.09348": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Northolme Road"
+},
+"council/islington/offord-road-54080@51.54255,-0.11585": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-road-54081@51.54306,-0.11403": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-road-54082@51.54224,-0.11692": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Road"
+},
+"council/islington/offord-street-54083@51.54294,-0.11586": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N1",
+"street": "Offord Street"
+},
+"council/islington/parolles-road-54199@51.56855,-0.13420": {
+"area": "Miranda Estate",
+"city": "London",
+"postcode": "N19",
+"street": "Miranda Road"
+},
+"council/islington/pemberton-gardens-54134@51.56231,-0.13370": {
+"area": "Archway",
+"city": "London"
+},
+"council/islington/penn-road-54190@51.55372,-0.11948": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Penn Road"
+},
+"council/islington/penn-road-54191@51.55309,-0.12087": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Penn Road"
+},
+"council/islington/petherton-road-54175@51.55347,-0.09055": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Petherton Road"
+},
+"council/islington/poets-road-54176@51.55186,-0.08812": {
+"area": "Newington Green",
+"city": "London",
+"postcode": "N5",
+"street": "Poet's Road"
+},
+"council/islington/popham-road-54086@51.53918,-0.09503": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Popham Road"
+},
+"council/islington/quemerford-road-54192@51.55319,-0.11593": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Widdenham Road"
+},
+"council/islington/ramsey-walk-54154@51.54615,-0.08933": {
+"area": "Marquess Estate",
+"city": "London",
+"postcode": "N1",
+"street": "Ramsey Walk"
+},
+"council/islington/richmond-avenue-54087@51.53889,-0.10713": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Richmond Avenue"
+},
+"council/islington/roseleigh-avenue-54107@51.55440,-0.10008": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/rotherfield-street-54125@51.53914,-0.09061": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Rotherfield Street"
+},
+"council/islington/sebbon-street-54088@51.54090,-0.10049": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Tressel Close"
+},
+"council/islington/sekforde-street-54025@51.52404,-0.10466": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1R",
+"street": "Sekforde Street"
+},
+"council/islington/sotheby-road-54144@51.55754,-0.09792": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Highbury Park"
+},
+"council/islington/st-clements-street-54089@51.54396,-0.11146": {
+"area": "Barnsbury",
+"city": "London",
+"postcode": "N7",
+"street": "St Clements Street"
+},
+"council/islington/st-john-s-villas-54135@51.56571,-0.12938": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "St John's Villas"
+},
+"council/islington/st-paul-s-road-54126@51.54706,-0.09060": {
+"area": "Mildmay Park",
+"city": "London",
+"postcode": "N1",
+"street": "St. Paul's Road"
+},
+"council/islington/stavordale-road-54108@51.55537,-0.10460": {
+"area": "Taverner Square",
+"city": "London",
+"postcode": "N5",
+"street": "Aubert Park"
+},
+"council/islington/stock-orchard-street-54193@51.55039,-0.11761": {
+"area": "Lower Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Caledonian Road"
+},
+"council/islington/sunnyside-road-54200@51.57165,-0.12714": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/sussex-way-54103@51.56007,-0.11580": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/tavistock-terrace-54163@51.56070,-0.12621": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/tremlett-grove-54136@51.56256,-0.13802": {
+"area": "Archway",
+"city": "London",
+"postcode": "N19",
+"street": "Bickerton Road"
+},
+"council/islington/tufnell-park-road-54186@51.55808,-0.12379": {
+"area": "Holloway",
+"city": "London",
+"postcode": "N7",
+"street": "Tufnell Park Road"
+},
+"council/islington/upper-street-54045@51.53460,-0.10497": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Upper Street"
+},
+"council/islington/upper-street-54046@51.53443,-0.10516": {
+"area": "Angel",
+"city": "London",
+"postcode": "N1",
+"street": "Upper Street"
+},
+"council/islington/warlters-close-54194@51.55609,-0.11923": {
+"area": "London Borough of Islington",
+"city": "London"
+},
+"council/islington/weston-rise-54047@51.53021,-0.11595": {
+"area": "Pentonville",
+"city": "London",
+"postcode": "WC1X",
+"street": "Weston Rise"
+},
+"council/islington/woodbridge-street-54029@51.52437,-0.10430": {
+"area": "Angel",
+"city": "London",
+"postcode": "EC1V",
+"street": "St. John Street"
+},
+"council/islington/yerbury-road-54166@51.55903,-0.12607": {
+"area": "London Borough of Islington",
+"city": "London"
+},
 "node/10003989317@51.38058,-2.36223": {
 "area": "Kingsmead",
 "city": "Bath",

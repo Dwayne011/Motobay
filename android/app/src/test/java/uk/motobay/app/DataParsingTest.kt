@@ -43,7 +43,13 @@ class DataParsingTest {
         // there are no charges or permits, so its bays aren't marked unconfirmed.
         val council = data.bays.filter { it.isCouncil }
         assertTrue(council.isNotEmpty())
-        assertTrue(council.all { it.fee == Fee.Free && it.note != null && it.source != null && !it.isOsm })
+        assertTrue(council.all { it.source != null && !it.isOsm && (it.note != null || it.rules != null) })
+        assertTrue(council.filter { !it.id.startsWith("council/islington/") }.all { it.fee == Fee.Free })
+        // Islington's bays are paid, with spaces and charging hours; ones OpenStreetMap already had keep their id.
+        val islington = data.bays.filter { it.source?.contains("Islington") == true }
+        assertEquals(199, islington.size)
+        assertTrue(islington.all { it.fee == Fee.Paid && it.capacity != null && it.rules!!.startsWith("Paid ") })
+        assertTrue(islington.any { it.isOsm } && islington.any { it.isCouncil })
         // Hillingdon and Bromley both say their bays are free; only Bromley gives space counts.
         assertTrue(council.filter { it.id.startsWith("council/hillingdon/") }.none { it.feeUnconfirmed || it.capacity != null })
         assertEquals(40, council.single { it.id == "council/bromley/edison-road" }.capacity)

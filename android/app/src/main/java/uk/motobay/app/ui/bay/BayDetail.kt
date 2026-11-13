@@ -219,6 +219,14 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             bay.openingHours?.let { AuroraTag(it, palette) }
             bay.maxStay?.let { AuroraTag("Max stay $it", palette) }
         }
+        // When it's charged and how to pay, from the council.
+        bay.rules?.let { rules ->
+            AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
+                Text("Charges", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
+                VSpace(2)
+                Text(rules, style = auroraStyle(12.sp, color = palette.cardSubtext))
+            }
+        }
         // Where exactly, in the source's own words (a council traffic order, say).
         bay.note?.let { note ->
             AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
@@ -299,8 +307,10 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     bay.isSample -> "This is a development sample, not a real bay."
                     bay.isRiderAdded -> "Added by ${bay.addedBy ?: "a rider"}."
                     bay.source != null && bay.feeUnconfirmed -> "From ${bay.source}. The council hasn't confirmed charges or the number of spaces."
-                    bay.source != null -> "From ${bay.source}. The council says it's free" +
+                    bay.source != null && bay.fee == Fee.Free -> "From ${bay.source}. The council says it's free" +
                         if (bay.capacity == null) ", but it doesn't say how many bikes it holds." else "."
+                    bay.source != null && bay.isOsm -> "Charges and spaces from ${bay.source}. Position \u00a9 OpenStreetMap contributors, under the Open Database Licence."
+                    bay.source != null -> "From ${bay.source}."
                     else -> "Bay data \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                 },
                 style = auroraStyle(10.sp, color = palette.cardSubtext),

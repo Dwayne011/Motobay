@@ -1,293 +1,2487 @@
 {
-  "about": "Motorcycle bays from council traffic orders, merged into uk-bays.json by scripts/fetch_uk_bays.py. Positions were placed from each order's description using OpenStreetMap addresses and junctions; 'approximate' marks those placed from a nearby address or postcode rather than the exact reference point. Fee is 'free'; it is marked unconfirmed unless the source's feeConfirmed is true. Capacity is left out, since councils do not record it.",
-  "sources": {
-    "hillingdon": {
-      "name": "Hillingdon Council traffic orders (FOI 06397)",
-      "feeConfirmed": true,
-      "confirmation": "Hillingdon Council confirmed in its follow-up to FOI 06397 (November 2026) that no parking charges or permits apply to any designated on-street motorcycle parking place in the borough, and that it holds no record of how many motorcycles each place holds."
-    },
-    "bromley": {
-      "name": "Bromley Council motorcycle parking page",
-      "feeConfirmed": true,
-      "confirmation": "bromley.gov.uk/parking/motorcycle-parking (read November 2026): 'A number of free marked parking bays are available exclusively for motor scooter, moped and motorcycle riders.' Space counts are given for the town centre bays only."
-    }
+ "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay.",
+ "sources": {
+  "hillingdon": {
+   "name": "Hillingdon Council traffic orders (FOI 06397)",
+   "feeConfirmed": true,
+   "confirmation": "Hillingdon Council confirmed in its follow-up to FOI 06397 (November 2026) that no parking charges or permits apply to any designated on-street motorcycle parking place in the borough, and that it holds no record of how many motorcycles each place holds."
   },
-  "bays": [
-    {
-      "id": "council/hillingdon/cowley-high-street",
-      "source": "hillingdon",
-      "lat": 51.53028,
-      "lon": -0.48188,
-      "street": "High Street",
-      "approximate": true,
-      "lengthMetres": 6.0,
-      "openingHours": "Any time",
-      "note": "Service road on the east side of High Street, Cowley: south-west side, from 13.2 m west of the boundary of Nos. 3 and 5 Station Road, north-west for 6 m."
-    },
-    {
-      "id": "council/hillingdon/field-end-road-morford-way",
-      "source": "hillingdon",
-      "lat": 51.5783,
-      "lon": -0.39926,
-      "street": "Field End Road",
-      "lengthMetres": 6.21,
-      "openingHours": "Any time",
-      "note": "South-west side, from 43.85 m north-west of Morford Way, north-west for 6.21 m."
-    },
-    {
-      "id": "council/hillingdon/coldharbour-lane-19-21",
-      "source": "hillingdon",
-      "lat": 51.50812,
-      "lon": -0.41685,
-      "street": "Coldharbour Lane",
-      "approximate": true,
-      "lengthMetres": 6.0,
-      "openingHours": "Any time",
-      "note": "North-west side, from 1.3 m north-east of the boundary of Nos. 19 and 21, north-east for 6 m."
-    },
-    {
-      "id": "council/hillingdon/station-road-hayes-42a",
-      "source": "hillingdon",
-      "lat": 51.50588,
-      "lon": -0.41926,
-      "street": "Station Road",
-      "lengthMetres": 5.0,
-      "openingHours": "Any time",
-      "note": "West side, from 1 m south of the north wall of No. 42a, south for 5 m."
-    },
-    {
-      "id": "council/hillingdon/eastbury-road-3",
-      "source": "hillingdon",
-      "lat": 51.61158,
-      "lon": -0.42363,
-      "street": "Eastbury Road",
-      "approximate": true,
-      "lengthMetres": 6.0,
-      "openingHours": "Any time",
-      "note": "East side, from 2.4 m north of the south wall of No. 3, north for 6 m."
-    },
-    {
-      "id": "council/hillingdon/joel-street-65-67",
-      "source": "hillingdon",
-      "lat": 51.60036,
-      "lon": -0.40985,
-      "street": "Joel Street",
-      "lengthMetres": 5.0,
-      "openingHours": "Any time",
-      "note": "West side, opposite a point 15.8 m north of the boundary of Nos. 65 and 67, north for 5 m."
-    },
-    {
-      "id": "council/hillingdon/ruislip-high-street-144",
-      "source": "hillingdon",
-      "lat": 51.57311,
-      "lon": -0.42354,
-      "street": "High Street",
-      "lengthMetres": 7.7,
-      "openingHours": "Any time",
-      "maxStay": "20 minutes, no return within 1 hour",
-      "note": "South-west side, from 10.9 m north-west of the south-east wall of No. 144, south-east for 7.7 m."
-    },
-    {
-      "id": "council/hillingdon/ruislip-high-street-midcroft",
-      "source": "hillingdon",
-      "lat": 51.57493,
-      "lon": -0.42537,
-      "street": "High Street",
-      "lengthMetres": 7.9,
-      "openingHours": "Any time",
-      "note": "North-east side, from 39.6 m north-west of Midcroft, north-west for 7.9 m."
-    },
-    {
-      "id": "council/hillingdon/victoria-road-56-58",
-      "source": "hillingdon",
-      "lat": 51.57325,
-      "lon": -0.413,
-      "street": "Victoria Road",
-      "approximate": true,
-      "lengthMetres": 6.5,
-      "openingHours": "Any time",
-      "note": "South-west side, from 4.6 m south-east of the boundary of Nos. 56 and 58, south-east for 6.5 m."
-    },
-    {
-      "id": "council/hillingdon/belmont-road",
-      "source": "hillingdon",
-      "lat": 51.5472,
-      "lon": -0.48017,
-      "street": "Belmont Road",
-      "lengthMetres": 5.0,
-      "openingHours": "Mon–Sat 8am–6.30pm",
-      "note": "South-east side, from 15 m north-east of High Street, for 5 m. Motorcycles only Monday to Saturday, 8am to 6.30pm."
-    },
-    {
-      "id": "council/hillingdon/uxbridge-high-street-228-229",
-      "source": "hillingdon",
-      "lat": 51.54435,
-      "lon": -0.47495,
-      "street": "High Street",
-      "approximate": true,
-      "lengthMetres": 5.0,
-      "openingHours": "Any time",
-      "note": "South-west side, opposite a point 15.4 m north-west of the boundary of Nos. 228 and 229, north-west for 5 m."
-    },
-    {
-      "id": "council/hillingdon/uxbridge-high-street-124-125",
-      "source": "hillingdon",
-      "lat": 51.54836,
-      "lon": -0.48095,
-      "street": "High Street",
-      "lengthMetres": 12.0,
-      "openingHours": "Any time",
-      "maxStay": "20 minutes, no return within 1 hour",
-      "note": "North-east side, from 1.4 m north-west of the south-east boundary of Nos. 124 and 125, north-west for 12 m."
-    },
-    {
-      "id": "council/hillingdon/windsor-street-50-51",
-      "source": "hillingdon",
-      "lat": 51.54568,
-      "lon": -0.48015,
-      "street": "Windsor Street",
-      "lengthMetres": 6.3,
-      "openingHours": "Any time",
-      "maxStay": "20 minutes, no return within 1 hour",
-      "note": "North-west side, from the boundary of Nos. 50 and 51, north-east for 6.3 m."
-    },
-    {
-      "id": "council/hillingdon/bentinck-road",
-      "source": "hillingdon",
-      "lat": 51.5107,
-      "lon": -0.47372,
-      "street": "Bentinck Road",
-      "lengthMetres": 6.0,
-      "openingHours": "Any time",
-      "note": "South-west side, from 10 m north-west of High Street, Yiewsley, north-west for 6 m."
-    },
-    {
-      "id": "council/bromley/edison-road",
-      "source": "bromley",
-      "lat": 51.4059,
-      "lon": 0.0119,
-      "street": "Edison Road",
-      "approximate": true,
-      "capacity": 40,
-      "note": "By the pedestrian entrance to The Hill car park. Room for 40 bikes, with a rail to lock them to."
-    },
-    {
-      "id": "council/bromley/churchill-way",
-      "source": "bromley",
-      "lat": 51.4028,
-      "lon": 0.01478,
-      "street": "Churchill Way",
-      "approximate": true,
-      "capacity": 6,
-      "note": "Behind the Evans shop on the High Street. Room for 6 bikes."
-    },
-    {
-      "id": "council/bromley/ringers-road",
-      "source": "bromley",
-      "lat": 51.40182,
-      "lon": 0.01568,
-      "street": "Ringers Road",
-      "capacity": 12,
-      "note": "At the mouth of Ringers Road, where it meets the High Street. Room for 12 bikes."
-    },
-    {
-      "id": "council/bromley/ravensbourne-road",
-      "source": "bromley",
-      "lat": 51.40096,
-      "lon": 0.0165,
-      "street": "Ravensbourne Road",
-      "capacity": 12,
-      "note": "At the mouth of Ravensbourne Road, where it meets the High Street. Room for 12 bikes."
-    },
-    {
-      "id": "council/bromley/berwick-way",
-      "source": "bromley",
-      "lat": 51.37575,
-      "lon": 0.09824,
-      "street": "Berwick Way",
-      "approximate": true,
-      "note": "Somewhere on Berwick Way, Orpington; the council doesn't say exactly where."
-    },
-    {
-      "id": "council/bromley/walnuts-road",
-      "source": "bromley",
-      "lat": 51.37551,
-      "lon": 0.10361,
-      "street": "Walnuts Road",
-      "approximate": true,
-      "note": "Somewhere on Walnuts Road, Orpington; the council doesn't say exactly where."
-    }
-  ],
-  "unplaced": [
-    {
-      "source": "hillingdon",
-      "description": "FIELD END ROAD, the service road fronting Nos. 202-214, south-west side, from 4 m north-west of the boundary of Nos. 214 and 216, south-east for 5 m.",
-      "why": "No house numbers on this stretch in OpenStreetMap."
-    },
-    {
-      "source": "hillingdon",
-      "description": "KINGSHILL AVENUE, north-west side, from 1.7 m north-east of the boundary of Nos. 314 and 312, north-east for 5 m.",
-      "why": "No house numbers on Kingshill Avenue in OpenStreetMap; the road is about 2 km long."
-    },
-    {
-      "source": "hillingdon",
-      "description": "WINDMILL HILL, south-west side, opposite 6.0 m north-west to 10.5 m south-east of the south-east boundary of Crown Apartments.",
-      "why": "Crown Apartments is not in OpenStreetMap."
-    },
-    {
-      "source": "hillingdon",
-      "description": "HIGH STREET, north-east side, from 2 m north-west of the north-west boundary of No. 133a, south-east for 6.2 m.",
-      "why": "The order does not name the town; Ruislip and Uxbridge both have a 133 High Street."
-    },
-    {
-      "source": "bromley",
-      "description": "Park Road, Bromley, opposite the old Police station (6 spaces).",
-      "why": "The old police station isn't in OpenStreetMap, and Park Road is about 480 m long."
-    },
-    {
-      "source": "bromley",
-      "description": "Beckenham Road, Beckenham",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Bloomfield Road, Bromley",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Walpole Road, Bromley",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Hayes Street, Hayes",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Station Approach, Hayes (first of two locations)",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Station Approach, Hayes (second of two locations)",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "High Street, Orpington",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Homefield Rise, Orpington",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    },
-    {
-      "source": "bromley",
-      "description": "Petts Wood Road, Petts Wood",
-      "why": "The council gives only the street name, and the street is too long to place a pin from that."
-    }
-  ]
+  "bromley": {
+   "name": "Bromley Council motorcycle parking page",
+   "feeConfirmed": true,
+   "confirmation": "bromley.gov.uk/parking/motorcycle-parking (read November 2026): 'A number of free marked parking bays are available exclusively for motor scooter, moped and motorcycle riders.' Space counts are given for the town centre bays only."
+  },
+  "islington": {
+   "name": "Islington Council motorcycle bay list (FOI 8652875)",
+   "feeConfirmed": true,
+   "confirmation": "Islington Council's response to FOI 8652875 (November 2026): a list of solo motorcycle bays with coordinates, spaces, parking times, charged times, RingGo location and controlled zone."
+  }
+ },
+ "bays": [
+  {
+   "id": "council/hillingdon/cowley-high-street",
+   "source": "hillingdon",
+   "lat": 51.53028,
+   "lon": -0.48188,
+   "street": "High Street",
+   "approximate": true,
+   "lengthMetres": 6.0,
+   "openingHours": "Any time",
+   "note": "Service road on the east side of High Street, Cowley: south-west side, from 13.2 m west of the boundary of Nos. 3 and 5 Station Road, north-west for 6 m."
+  },
+  {
+   "id": "council/hillingdon/field-end-road-morford-way",
+   "source": "hillingdon",
+   "lat": 51.5783,
+   "lon": -0.39926,
+   "street": "Field End Road",
+   "lengthMetres": 6.21,
+   "openingHours": "Any time",
+   "note": "South-west side, from 43.85 m north-west of Morford Way, north-west for 6.21 m."
+  },
+  {
+   "id": "council/hillingdon/coldharbour-lane-19-21",
+   "source": "hillingdon",
+   "lat": 51.50812,
+   "lon": -0.41685,
+   "street": "Coldharbour Lane",
+   "approximate": true,
+   "lengthMetres": 6.0,
+   "openingHours": "Any time",
+   "note": "North-west side, from 1.3 m north-east of the boundary of Nos. 19 and 21, north-east for 6 m."
+  },
+  {
+   "id": "council/hillingdon/station-road-hayes-42a",
+   "source": "hillingdon",
+   "lat": 51.50588,
+   "lon": -0.41926,
+   "street": "Station Road",
+   "lengthMetres": 5.0,
+   "openingHours": "Any time",
+   "note": "West side, from 1 m south of the north wall of No. 42a, south for 5 m."
+  },
+  {
+   "id": "council/hillingdon/eastbury-road-3",
+   "source": "hillingdon",
+   "lat": 51.61158,
+   "lon": -0.42363,
+   "street": "Eastbury Road",
+   "approximate": true,
+   "lengthMetres": 6.0,
+   "openingHours": "Any time",
+   "note": "East side, from 2.4 m north of the south wall of No. 3, north for 6 m."
+  },
+  {
+   "id": "council/hillingdon/joel-street-65-67",
+   "source": "hillingdon",
+   "lat": 51.60036,
+   "lon": -0.40985,
+   "street": "Joel Street",
+   "lengthMetres": 5.0,
+   "openingHours": "Any time",
+   "note": "West side, opposite a point 15.8 m north of the boundary of Nos. 65 and 67, north for 5 m."
+  },
+  {
+   "id": "council/hillingdon/ruislip-high-street-144",
+   "source": "hillingdon",
+   "lat": 51.57311,
+   "lon": -0.42354,
+   "street": "High Street",
+   "lengthMetres": 7.7,
+   "openingHours": "Any time",
+   "maxStay": "20 minutes, no return within 1 hour",
+   "note": "South-west side, from 10.9 m north-west of the south-east wall of No. 144, south-east for 7.7 m."
+  },
+  {
+   "id": "council/hillingdon/ruislip-high-street-midcroft",
+   "source": "hillingdon",
+   "lat": 51.57493,
+   "lon": -0.42537,
+   "street": "High Street",
+   "lengthMetres": 7.9,
+   "openingHours": "Any time",
+   "note": "North-east side, from 39.6 m north-west of Midcroft, north-west for 7.9 m."
+  },
+  {
+   "id": "council/hillingdon/victoria-road-56-58",
+   "source": "hillingdon",
+   "lat": 51.57325,
+   "lon": -0.413,
+   "street": "Victoria Road",
+   "approximate": true,
+   "lengthMetres": 6.5,
+   "openingHours": "Any time",
+   "note": "South-west side, from 4.6 m south-east of the boundary of Nos. 56 and 58, south-east for 6.5 m."
+  },
+  {
+   "id": "council/hillingdon/belmont-road",
+   "source": "hillingdon",
+   "lat": 51.5472,
+   "lon": -0.48017,
+   "street": "Belmont Road",
+   "lengthMetres": 5.0,
+   "openingHours": "Mon–Sat 8am–6.30pm",
+   "note": "South-east side, from 15 m north-east of High Street, for 5 m. Motorcycles only Monday to Saturday, 8am to 6.30pm."
+  },
+  {
+   "id": "council/hillingdon/uxbridge-high-street-228-229",
+   "source": "hillingdon",
+   "lat": 51.54435,
+   "lon": -0.47495,
+   "street": "High Street",
+   "approximate": true,
+   "lengthMetres": 5.0,
+   "openingHours": "Any time",
+   "note": "South-west side, opposite a point 15.4 m north-west of the boundary of Nos. 228 and 229, north-west for 5 m."
+  },
+  {
+   "id": "council/hillingdon/uxbridge-high-street-124-125",
+   "source": "hillingdon",
+   "lat": 51.54836,
+   "lon": -0.48095,
+   "street": "High Street",
+   "lengthMetres": 12.0,
+   "openingHours": "Any time",
+   "maxStay": "20 minutes, no return within 1 hour",
+   "note": "North-east side, from 1.4 m north-west of the south-east boundary of Nos. 124 and 125, north-west for 12 m."
+  },
+  {
+   "id": "council/hillingdon/windsor-street-50-51",
+   "source": "hillingdon",
+   "lat": 51.54568,
+   "lon": -0.48015,
+   "street": "Windsor Street",
+   "lengthMetres": 6.3,
+   "openingHours": "Any time",
+   "maxStay": "20 minutes, no return within 1 hour",
+   "note": "North-west side, from the boundary of Nos. 50 and 51, north-east for 6.3 m."
+  },
+  {
+   "id": "council/hillingdon/bentinck-road",
+   "source": "hillingdon",
+   "lat": 51.5107,
+   "lon": -0.47372,
+   "street": "Bentinck Road",
+   "lengthMetres": 6.0,
+   "openingHours": "Any time",
+   "note": "South-west side, from 10 m north-west of High Street, Yiewsley, north-west for 6 m."
+  },
+  {
+   "id": "council/bromley/edison-road",
+   "source": "bromley",
+   "lat": 51.4059,
+   "lon": 0.0119,
+   "street": "Edison Road",
+   "approximate": true,
+   "capacity": 40,
+   "note": "By the pedestrian entrance to The Hill car park. Room for 40 bikes, with a rail to lock them to."
+  },
+  {
+   "id": "council/bromley/churchill-way",
+   "source": "bromley",
+   "lat": 51.4028,
+   "lon": 0.01478,
+   "street": "Churchill Way",
+   "approximate": true,
+   "capacity": 6,
+   "note": "Behind the Evans shop on the High Street. Room for 6 bikes."
+  },
+  {
+   "id": "council/bromley/ringers-road",
+   "source": "bromley",
+   "lat": 51.40182,
+   "lon": 0.01568,
+   "street": "Ringers Road",
+   "capacity": 12,
+   "note": "At the mouth of Ringers Road, where it meets the High Street. Room for 12 bikes."
+  },
+  {
+   "id": "council/bromley/ravensbourne-road",
+   "source": "bromley",
+   "lat": 51.40096,
+   "lon": 0.0165,
+   "street": "Ravensbourne Road",
+   "capacity": 12,
+   "note": "At the mouth of Ravensbourne Road, where it meets the High Street. Room for 12 bikes."
+  },
+  {
+   "id": "council/bromley/berwick-way",
+   "source": "bromley",
+   "lat": 51.37575,
+   "lon": 0.09824,
+   "street": "Berwick Way",
+   "approximate": true,
+   "note": "Somewhere on Berwick Way, Orpington; the council doesn't say exactly where."
+  },
+  {
+   "id": "council/bromley/walnuts-road",
+   "source": "bromley",
+   "lat": 51.37551,
+   "lon": 0.10361,
+   "street": "Walnuts Road",
+   "approximate": true,
+   "note": "Somewhere on Walnuts Road, Orpington; the council doesn't say exactly where."
+  },
+  {
+   "id": "council/islington/aberdeen-road-54137",
+   "source": "islington",
+   "lat": 51.554299,
+   "lon": -0.095052,
+   "street": "Aberdeen Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54137. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/alexander-road-54155",
+   "source": "islington",
+   "lat": 51.56214,
+   "lon": -0.12301,
+   "street": "Alexander Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54155. Controlled zone TW."
+  },
+  {
+   "id": "council/islington/alwyne-square-54120",
+   "source": "islington",
+   "lat": 51.54656,
+   "lon": -0.095714,
+   "street": "Alwyne Square",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54120. Controlled zone L."
+  },
+  {
+   "id": "council/islington/archibald-road-54177",
+   "source": "islington",
+   "lat": 51.555572,
+   "lon": -0.132085,
+   "street": "Archibald Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54177. Controlled zone W."
+  },
+  {
+   "id": "council/islington/arthur-road-54097",
+   "source": "islington",
+   "lat": 51.558276,
+   "lon": -0.113403,
+   "street": "Arthur Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54097. Controlled zone F."
+  },
+  {
+   "id": "council/islington/ashley-road-54110",
+   "source": "islington",
+   "lat": 51.572165,
+   "lon": -0.120509,
+   "street": "Ashley Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54110. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/aubert-road-54104",
+   "source": "islington",
+   "lat": 51.55576,
+   "lon": -0.099575,
+   "street": "Aubert Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. On match days: Mon–Fri 10am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54104. Controlled zone G."
+  },
+  {
+   "id": "council/islington/axminster-road-54098",
+   "source": "islington",
+   "lat": 51.56,
+   "lon": -0.117089,
+   "street": "Axminster Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54098. Controlled zone F."
+  },
+  {
+   "id": "council/islington/aylesbury-street-54000",
+   "source": "islington",
+   "lat": 51.523345,
+   "lon": -0.104293,
+   "street": "Aylesbury Street",
+   "fee": "paid",
+   "capacity": 13,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54000. Controlled zone A."
+  },
+  {
+   "id": "council/islington/baldwin-street-54048",
+   "source": "islington",
+   "lat": 51.526907,
+   "lon": -0.088872,
+   "street": "Baldwin Street",
+   "fee": "paid",
+   "capacity": 13,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54048. Controlled zone C."
+  },
+  {
+   "id": "council/islington/balfe-street-54030",
+   "source": "islington",
+   "lat": 51.532149,
+   "lon": -0.120867,
+   "street": "Balfe Street",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54030. Controlled zone B."
+  },
+  {
+   "id": "council/islington/baltic-street-west-54049",
+   "source": "islington",
+   "lat": 51.523285,
+   "lon": -0.096909,
+   "street": "Baltic Street West",
+   "fee": "paid",
+   "capacity": 19,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54049. Controlled zone C."
+  },
+  {
+   "id": "council/islington/bardolph-road-54178",
+   "source": "islington",
+   "lat": 51.556033,
+   "lon": -0.123956,
+   "street": "Bardolph Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54178. Controlled zone W."
+  },
+  {
+   "id": "council/islington/baring-street-n1-3ds",
+   "source": "islington",
+   "lat": 51.537058,
+   "lon": -0.087849,
+   "street": "Baring Street",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo. Controlled zone L."
+  },
+  {
+   "id": "council/islington/barnsbury-road-54072",
+   "source": "islington",
+   "lat": 51.536311,
+   "lon": -0.110889,
+   "street": "Barnsbury Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54072. Controlled zone E."
+  },
+  {
+   "id": "council/islington/bath-street-54050",
+   "source": "islington",
+   "lat": 51.527475,
+   "lon": -0.091471,
+   "street": "Bath Street",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54050. Controlled zone C."
+  },
+  {
+   "id": "council/islington/benwell-road-54091",
+   "source": "islington",
+   "lat": 51.552605,
+   "lon": -0.10958,
+   "street": "Benwell Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54091. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/beresford-road-54167",
+   "source": "islington",
+   "lat": 51.550117,
+   "lon": -0.089614,
+   "street": "Beresford Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54167. Controlled zone V."
+  },
+  {
+   "id": "council/islington/berriman-road-54099",
+   "source": "islington",
+   "lat": 51.560176,
+   "lon": -0.111336,
+   "street": "Berriman Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54099. Controlled zone F."
+  },
+  {
+   "id": "council/islington/berry-street-54001",
+   "source": "islington",
+   "lat": 51.524077,
+   "lon": -0.100778,
+   "street": "Berry Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54001. Controlled zone A."
+  },
+  {
+   "id": "council/islington/bewdley-street-54073",
+   "source": "islington",
+   "lat": 51.542265,
+   "lon": -0.109468,
+   "street": "Bewdley Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54073. Controlled zone E."
+  },
+  {
+   "id": "council/islington/biddestone-road-54187",
+   "source": "islington",
+   "lat": 51.555402,
+   "lon": -0.117627,
+   "street": "Biddestone Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54187. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/birnam-road-54117",
+   "source": "islington",
+   "lat": 51.564015,
+   "lon": -0.117842,
+   "street": "Birnam Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–6.30pm Sun Noon–4.30pm. Pay by RingGo, location 54117. Controlled zone J."
+  },
+  {
+   "id": "council/islington/bonhill-street-54051",
+   "source": "islington",
+   "lat": 51.522663,
+   "lon": -0.084823,
+   "street": "Bonhill Street",
+   "fee": "paid",
+   "capacity": 41,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54051. Controlled zone C."
+  },
+  {
+   "id": "council/islington/bowling-green-lane-54002",
+   "source": "islington",
+   "lat": 51.524283,
+   "lon": -0.108116,
+   "street": "Bowling Green Lane",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54002. Controlled zone A."
+  },
+  {
+   "id": "council/islington/bride-street-54127",
+   "source": "islington",
+   "lat": 51.546116,
+   "lon": -0.111988,
+   "street": "Bride Street",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54127. Controlled zone N."
+  },
+  {
+   "id": "council/islington/bridgeman-road-54074",
+   "source": "islington",
+   "lat": 51.540849,
+   "lon": -0.115665,
+   "street": "Bridgeman Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54074. Controlled zone E."
+  },
+  {
+   "id": "council/islington/briset-street-54052",
+   "source": "islington",
+   "lat": 51.521459,
+   "lon": -0.103675,
+   "street": "Briset Street",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54052. Controlled zone C."
+  },
+  {
+   "id": "council/islington/bunhill-row-54053",
+   "source": "islington",
+   "lat": 51.522144,
+   "lon": -0.089763,
+   "street": "Bunhill Row",
+   "fee": "paid",
+   "capacity": 15,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54053. Controlled zone C."
+  },
+  {
+   "id": "council/islington/bunhill-row-54054",
+   "source": "islington",
+   "lat": 51.523743,
+   "lon": -0.090066,
+   "street": "Bunhill Row",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54054. Controlled zone C."
+  },
+  {
+   "id": "council/islington/calabria-road-54092",
+   "source": "islington",
+   "lat": 51.547822,
+   "lon": -0.102122,
+   "street": "Calabria Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54092. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/caledonian-road-54031",
+   "source": "islington",
+   "lat": 51.534543,
+   "lon": -0.117173,
+   "street": "Caledonian Road",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54031. Controlled zone B."
+  },
+  {
+   "id": "council/islington/caledonian-road-54128",
+   "source": "islington",
+   "lat": 51.545214,
+   "lon": -0.117739,
+   "street": "Caledonian Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54128. Controlled zone N."
+  },
+  {
+   "id": "council/islington/calverley-grove-54195",
+   "source": "islington",
+   "lat": 51.568578,
+   "lon": -0.127729,
+   "street": "Calverley Grove",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54195. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/campdale-road-54160",
+   "source": "islington",
+   "lat": 51.558218,
+   "lon": -0.132338,
+   "street": "Campdale Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54160. Controlled zone U."
+  },
+  {
+   "id": "council/islington/canonbury-square-54093",
+   "source": "islington",
+   "lat": 51.543368,
+   "lon": -0.101175,
+   "street": "Canonbury Square",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54093. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/cardozo-road-54188",
+   "source": "islington",
+   "lat": 51.552077,
+   "lon": -0.118538,
+   "street": "Cardozo Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54188. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/carleton-road-54179",
+   "source": "islington",
+   "lat": 51.556941,
+   "lon": -0.126973,
+   "street": "Carleton Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54179. Controlled zone W."
+  },
+  {
+   "id": "council/islington/catherall-road-54138",
+   "source": "islington",
+   "lat": 51.558013,
+   "lon": -0.091265,
+   "street": "Catherall Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54138. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/chambers-road-54180",
+   "source": "islington",
+   "lat": 51.555499,
+   "lon": -0.122335,
+   "street": "Chambers Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54180. Controlled zone W."
+  },
+  {
+   "id": "council/islington/charteris-road-54118",
+   "source": "islington",
+   "lat": 51.566672,
+   "lon": -0.108845,
+   "street": "Charteris Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–6.30pm Sun Noon–4.30pm. Pay by RingGo, location 54118. Controlled zone J."
+  },
+  {
+   "id": "council/islington/chillingworth-road-54129",
+   "source": "islington",
+   "lat": 51.550226,
+   "lon": -0.111596,
+   "street": "Chillingworth Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54129. Controlled zone N."
+  },
+  {
+   "id": "council/islington/clerkenwell-close-54003",
+   "source": "islington",
+   "lat": 51.524103,
+   "lon": -0.107371,
+   "street": "Clerkenwell Close",
+   "fee": "paid",
+   "capacity": 19,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54003. Controlled zone A."
+  },
+  {
+   "id": "council/islington/clerkenwell-close-54004",
+   "source": "islington",
+   "lat": 51.523374,
+   "lon": -0.106291,
+   "street": "Clerkenwell Close",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54004. Controlled zone A."
+  },
+  {
+   "id": "council/islington/clifton-road-54149",
+   "source": "islington",
+   "lat": 51.545532,
+   "lon": -0.09128,
+   "street": "Clifton Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54149. Controlled zone T."
+  },
+  {
+   "id": "council/islington/cloudesley-street-54075",
+   "source": "islington",
+   "lat": 51.536863,
+   "lon": -0.108314,
+   "street": "Cloudesley Street",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54075. Controlled zone E."
+  },
+  {
+   "id": "council/islington/colebrooke-row-54032",
+   "source": "islington",
+   "lat": 51.534096,
+   "lon": -0.102596,
+   "street": "Colebrooke Row",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54032. Controlled zone B."
+  },
+  {
+   "id": "council/islington/colebrooke-row-54033",
+   "source": "islington",
+   "lat": 51.535756,
+   "lon": -0.101581,
+   "street": "Colebrooke Row",
+   "fee": "paid",
+   "capacity": 14,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54033. Controlled zone B."
+  },
+  {
+   "id": "council/islington/collier-street-54034",
+   "source": "islington",
+   "lat": 51.53211,
+   "lon": -0.119032,
+   "street": "Collier Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54034. Controlled zone B."
+  },
+  {
+   "id": "council/islington/compton-road-54121",
+   "source": "islington",
+   "lat": 51.545709,
+   "lon": -0.100087,
+   "street": "Compton Road",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54121. Controlled zone L."
+  },
+  {
+   "id": "council/islington/corinne-road-54145",
+   "source": "islington",
+   "lat": 51.555349,
+   "lon": -0.134013,
+   "street": "Corinne Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54145. Controlled zone R."
+  },
+  {
+   "id": "council/islington/crawford-passage-54006",
+   "source": "islington",
+   "lat": 51.523794,
+   "lon": -0.109678,
+   "street": "Crawford Passage",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54006. Controlled zone A."
+  },
+  {
+   "id": "council/islington/crinan-street-54035",
+   "source": "islington",
+   "lat": 51.534448,
+   "lon": -0.121626,
+   "street": "Crinan Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54035. Controlled zone B."
+  },
+  {
+   "id": "council/islington/crouch-hill-54111",
+   "source": "islington",
+   "lat": 51.574483,
+   "lon": -0.121464,
+   "street": "Crouch Hill",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54111. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/dalmeny-road-54182",
+   "source": "islington",
+   "lat": 51.557384,
+   "lon": -0.130309,
+   "street": "Dalmeny Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54182. Controlled zone W."
+  },
+  {
+   "id": "council/islington/dalmeny-road-54181",
+   "source": "islington",
+   "lat": 51.55507,
+   "lon": -0.129286,
+   "street": "Dalmeny Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54181. Controlled zone W."
+  },
+  {
+   "id": "council/islington/dingley-road-54055",
+   "source": "islington",
+   "lat": 51.528621,
+   "lon": -0.093977,
+   "street": "Dingley Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54055. Controlled zone C."
+  },
+  {
+   "id": "council/islington/donegal-street-54036",
+   "source": "islington",
+   "lat": 51.532617,
+   "lon": -0.111903,
+   "street": "Donegal Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54036. Controlled zone B."
+  },
+  {
+   "id": "council/islington/dresden-road-54196",
+   "source": "islington",
+   "lat": 51.572004,
+   "lon": -0.130262,
+   "street": "Dresden Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54196. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/duncan-terrace-54037",
+   "source": "islington",
+   "lat": 51.531675,
+   "lon": -0.104638,
+   "street": "Duncan Terrace",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54037. Controlled zone B."
+  },
+  {
+   "id": "council/islington/dunford-road-54100",
+   "source": "islington",
+   "lat": 51.554648,
+   "lon": -0.113335,
+   "street": "Dunford Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54100. Controlled zone F."
+  },
+  {
+   "id": "council/islington/eden-grove-54130",
+   "source": "islington",
+   "lat": 51.551574,
+   "lon": -0.112386,
+   "street": "Eden Grove",
+   "fee": "paid",
+   "capacity": 13,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54130. Controlled zone N."
+  },
+  {
+   "id": "council/islington/elfort-road-54105",
+   "source": "islington",
+   "lat": 51.557588,
+   "lon": -0.105973,
+   "street": "Elfort Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. On match days: Mon–Fri 10am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54105. Controlled zone G."
+  },
+  {
+   "id": "council/islington/elia-street-54038",
+   "source": "islington",
+   "lat": 51.532447,
+   "lon": -0.103316,
+   "street": "Elia Street",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54038. Controlled zone B."
+  },
+  {
+   "id": "council/islington/elizabeth-avenue-54122",
+   "source": "islington",
+   "lat": 51.539289,
+   "lon": -0.091743,
+   "street": "Elizabeth Avenue",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54122. Controlled zone L. The bay is on the pavement."
+  },
+  {
+   "id": "council/islington/ella-road-54112",
+   "source": "islington",
+   "lat": 51.57522,
+   "lon": -0.120058,
+   "street": "Ella Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54112. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/epworth-street-54056",
+   "source": "islington",
+   "lat": 51.523281,
+   "lon": -0.086883,
+   "street": "Epworth Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54056. Controlled zone C."
+  },
+  {
+   "id": "council/islington/essex-road-54150",
+   "source": "islington",
+   "lat": 51.544847,
+   "lon": -0.088653,
+   "street": "Essex Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Mon–Sat 10.30am–3.30pm",
+   "rules": "Paid Mon–Sat 10.30am–3.30pm; free outside those hours. Pay by RingGo, location 54150. Controlled zone T."
+  },
+  {
+   "id": "council/islington/fairmead-road-54161",
+   "source": "islington",
+   "lat": 51.560579,
+   "lon": -0.124595,
+   "street": "Fairmead Road",
+   "fee": "paid",
+   "capacity": 14,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54161. Controlled zone U."
+  },
+  {
+   "id": "council/islington/fergus-road-54094",
+   "source": "islington",
+   "lat": 51.549011,
+   "lon": -0.10024,
+   "street": "Fergus Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54094. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/finsbury-square-54057",
+   "source": "islington",
+   "lat": 51.520403,
+   "lon": -0.08615,
+   "street": "Finsbury Square",
+   "fee": "paid",
+   "capacity": 21,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54057. Controlled zone C."
+  },
+  {
+   "id": "council/islington/finsbury-square-54060",
+   "source": "islington",
+   "lat": 51.520323,
+   "lon": -0.08595,
+   "street": "Finsbury Square",
+   "fee": "paid",
+   "capacity": 33,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54060. Controlled zone C."
+  },
+  {
+   "id": "council/islington/finsbury-square-54058",
+   "source": "islington",
+   "lat": 51.521274,
+   "lon": -0.08559,
+   "street": "Finsbury Square",
+   "fee": "paid",
+   "capacity": 18,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54058. Controlled zone C."
+  },
+  {
+   "id": "council/islington/finsbury-square-54059",
+   "source": "islington",
+   "lat": 51.520614,
+   "lon": -0.085846,
+   "street": "Finsbury Square",
+   "fee": "paid",
+   "capacity": 30,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54059. Controlled zone C."
+  },
+  {
+   "id": "council/islington/finsbury-square-54061",
+   "source": "islington",
+   "lat": 51.521479,
+   "lon": -0.085571,
+   "street": "Finsbury Square",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54061. Controlled zone C."
+  },
+  {
+   "id": "council/islington/florence-street-54076",
+   "source": "islington",
+   "lat": 51.540925,
+   "lon": -0.102481,
+   "street": "Florence Street",
+   "fee": "paid",
+   "capacity": 15,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54076. Controlled zone E."
+  },
+  {
+   "id": "council/islington/freegrove-road-54189",
+   "source": "islington",
+   "lat": 51.552378,
+   "lon": -0.119843,
+   "street": "Freegrove Road",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54189. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/frome-street-54039",
+   "source": "islington",
+   "lat": 51.533945,
+   "lon": -0.097634,
+   "street": "Frome Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54039. Controlled zone B."
+  },
+  {
+   "id": "council/islington/gibson-square-54077",
+   "source": "islington",
+   "lat": 51.537678,
+   "lon": -0.105887,
+   "street": "Gibson Square",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54077. Controlled zone E."
+  },
+  {
+   "id": "council/islington/giesbach-road-54131",
+   "source": "islington",
+   "lat": 51.565316,
+   "lon": -0.133505,
+   "street": "Giesbach Road",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54131. Controlled zone P."
+  },
+  {
+   "id": "council/islington/gladsmuir-road-54197",
+   "source": "islington",
+   "lat": 51.569506,
+   "lon": -0.135324,
+   "street": "Gladsmuir Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54197. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/goswell-road-54007",
+   "source": "islington",
+   "lat": 51.528197,
+   "lon": -0.100953,
+   "street": "Goswell Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54007. Controlled zone A."
+  },
+  {
+   "id": "council/islington/grantbridge-street-54040",
+   "source": "islington",
+   "lat": 51.534861,
+   "lon": -0.099516,
+   "street": "Grantbridge Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54040. Controlled zone B."
+  },
+  {
+   "id": "council/islington/granville-street-54008",
+   "source": "islington",
+   "lat": 51.528041,
+   "lon": -0.114209,
+   "street": "Granville Street",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54008. Controlled zone A."
+  },
+  {
+   "id": "council/islington/granville-street-54009",
+   "source": "islington",
+   "lat": 51.527244,
+   "lon": -0.112962,
+   "street": "Granville Street",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54009. Controlled zone A."
+  },
+  {
+   "id": "council/islington/great-sutton-street-54010",
+   "source": "islington",
+   "lat": 51.523575,
+   "lon": -0.099954,
+   "street": "Great Sutton Street",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54010. Controlled zone A."
+  },
+  {
+   "id": "council/islington/grenville-road-54113",
+   "source": "islington",
+   "lat": 51.568668,
+   "lon": -0.12106,
+   "street": "Grenville Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54113. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/gresley-road-54198",
+   "source": "islington",
+   "lat": 51.571904,
+   "lon": -0.132363,
+   "street": "Gresley Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54198. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/grosvenor-avenue-54168",
+   "source": "islington",
+   "lat": 51.549274,
+   "lon": -0.087434,
+   "street": "Grosvenor Avenue",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54168. Controlled zone V."
+  },
+  {
+   "id": "council/islington/halliford-street-54123",
+   "source": "islington",
+   "lat": 51.542099,
+   "lon": -0.09249,
+   "street": "Halliford Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54123. Controlled zone L."
+  },
+  {
+   "id": "council/islington/hardwick-street-54011",
+   "source": "islington",
+   "lat": 51.527863,
+   "lon": -0.107957,
+   "street": "Hardwick Street",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54011. Controlled zone A."
+  },
+  {
+   "id": "council/islington/harecourt-road-54124",
+   "source": "islington",
+   "lat": 51.547501,
+   "lon": -0.094308,
+   "street": "Harecourt Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54124. Controlled zone L."
+  },
+  {
+   "id": "council/islington/hargrave-road-54132",
+   "source": "islington",
+   "lat": 51.563894,
+   "lon": -0.133239,
+   "street": "Hargrave Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54132. Controlled zone P."
+  },
+  {
+   "id": "council/islington/hartham-road-54067",
+   "source": "islington",
+   "lat": 51.550839,
+   "lon": -0.122534,
+   "street": "Hartham Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 9.30am–4.30pm; free outside those hours. Pay by RingGo, location 54067. Controlled zone D."
+  },
+  {
+   "id": "council/islington/hatchard-road-54156",
+   "source": "islington",
+   "lat": 51.56612,
+   "lon": -0.125626,
+   "street": "Hatchard Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54156. Controlled zone TW."
+  },
+  {
+   "id": "council/islington/haverstock-street-54041",
+   "source": "islington",
+   "lat": 51.530545,
+   "lon": -0.098896,
+   "street": "Haverstock Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54041. Controlled zone B."
+  },
+  {
+   "id": "council/islington/heathville-road-54114",
+   "source": "islington",
+   "lat": 51.572764,
+   "lon": -0.120507,
+   "street": "Heathville Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54114. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/highbury-crescent-54095",
+   "source": "islington",
+   "lat": 51.547097,
+   "lon": -0.103888,
+   "street": "Highbury Crescent",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid at all times. Pay by RingGo, location 54095. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/highbury-grange-54139",
+   "source": "islington",
+   "lat": 51.554858,
+   "lon": -0.096115,
+   "street": "Highbury Grange",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54139. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/highbury-hill-54106",
+   "source": "islington",
+   "lat": 51.556789,
+   "lon": -0.103932,
+   "street": "Highbury Hill",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. On match days: Mon–Fri 10am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54106. Controlled zone G."
+  },
+  {
+   "id": "council/islington/highbury-quadrant-54140",
+   "source": "islington",
+   "lat": 51.5583,
+   "lon": -0.092482,
+   "street": "Highbury Quadrant",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54140. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/highbury-station-road-54096",
+   "source": "islington",
+   "lat": 51.545628,
+   "lon": -0.105165,
+   "street": "Highbury Station Road",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54096. Controlled zone E (MD)."
+  },
+  {
+   "id": "council/islington/highgate-hill-54119",
+   "source": "islington",
+   "lat": 51.567684,
+   "lon": -0.13897,
+   "street": "Highgate Hill",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid at all times. Pay by RingGo, location 54119. Controlled zone K."
+  },
+  {
+   "id": "council/islington/hilldrop-crescent-54183",
+   "source": "islington",
+   "lat": 51.550616,
+   "lon": -0.130025,
+   "street": "Hilldrop Crescent",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54183. Controlled zone W."
+  },
+  {
+   "id": "council/islington/hilldrop-crescent-54184",
+   "source": "islington",
+   "lat": 51.551982,
+   "lon": -0.127471,
+   "street": "Hilldrop Crescent",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54184. Controlled zone W."
+  },
+  {
+   "id": "council/islington/hilldrop-road-54185",
+   "source": "islington",
+   "lat": 51.551668,
+   "lon": -0.126326,
+   "street": "Hilldrop Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54185. Controlled zone W."
+  },
+  {
+   "id": "council/islington/hornsey-rise-gardens-54115",
+   "source": "islington",
+   "lat": 51.573694,
+   "lon": -0.126415,
+   "street": "Hornsey Rise Gardens",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54115. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/hornsey-road-54101",
+   "source": "islington",
+   "lat": 51.558654,
+   "lon": -0.113412,
+   "street": "Hornsey Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54101. Controlled zone F."
+  },
+  {
+   "id": "council/islington/huddleston-road-54146",
+   "source": "islington",
+   "lat": 51.558365,
+   "lon": -0.135286,
+   "street": "Huddleston Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54146. Controlled zone R."
+  },
+  {
+   "id": "council/islington/hungerford-road-54068",
+   "source": "islington",
+   "lat": 51.552235,
+   "lon": -0.12223,
+   "street": "Hungerford Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 9.30am–4.30pm; free outside those hours. Pay by RingGo, location 54068. Controlled zone D."
+  },
+  {
+   "id": "council/islington/hungerford-road-54069",
+   "source": "islington",
+   "lat": 51.548976,
+   "lon": -0.126615,
+   "street": "Hungerford Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 9.30am–4.30pm; free outside those hours. Pay by RingGo, location 54069. Controlled zone D."
+  },
+  {
+   "id": "council/islington/islington-high-street-54042",
+   "source": "islington",
+   "lat": 51.534393,
+   "lon": -0.104707,
+   "street": "Islington High Street",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54042. Controlled zone B."
+  },
+  {
+   "id": "council/islington/kelross-road-54141",
+   "source": "islington",
+   "lat": 51.55572,
+   "lon": -0.094789,
+   "street": "Kelross Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54141. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/kelvin-road-54142",
+   "source": "islington",
+   "lat": 51.553879,
+   "lon": -0.096143,
+   "street": "Kelvin Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54142. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/killick-street-54043",
+   "source": "islington",
+   "lat": 51.534044,
+   "lon": -0.118812,
+   "street": "Killick Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54043. Controlled zone B."
+  },
+  {
+   "id": "council/islington/king-henry-s-walk-54169",
+   "source": "islington",
+   "lat": 51.546812,
+   "lon": -0.082529,
+   "street": "King Henry's Walk",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54169. Controlled zone V."
+  },
+  {
+   "id": "council/islington/kingsbury-road-54170",
+   "source": "islington",
+   "lat": 51.546607,
+   "lon": -0.079218,
+   "street": "Kingsbury Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54170. Controlled zone V."
+  },
+  {
+   "id": "council/islington/lady-margaret-road-54147",
+   "source": "islington",
+   "lat": 51.555899,
+   "lon": -0.136051,
+   "street": "Lady Margaret Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54147. Controlled zone R."
+  },
+  {
+   "id": "council/islington/lambton-road-54116",
+   "source": "islington",
+   "lat": 51.569619,
+   "lon": -0.122125,
+   "street": "Lambton Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54116. Controlled zone HE."
+  },
+  {
+   "id": "council/islington/landseer-road-54157",
+   "source": "islington",
+   "lat": 51.561984,
+   "lon": -0.124463,
+   "street": "Landseer Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54157. Controlled zone TW."
+  },
+  {
+   "id": "council/islington/legard-road-54109",
+   "source": "islington",
+   "lat": 51.55744,
+   "lon": -0.099343,
+   "street": "Legard Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–6.30pm Sun Noon–4.30pm. Pay by RingGo, location 54109. Controlled zone H."
+  },
+  {
+   "id": "council/islington/lofting-road-54078",
+   "source": "islington",
+   "lat": 51.541013,
+   "lon": -0.109349,
+   "street": "Lofting Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54078. Controlled zone E."
+  },
+  {
+   "id": "council/islington/ludlow-street-54012",
+   "source": "islington",
+   "lat": 51.524512,
+   "lon": -0.09802,
+   "street": "Ludlow Street",
+   "fee": "paid",
+   "capacity": 11,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54012. Controlled zone A."
+  },
+  {
+   "id": "council/islington/manor-gardens-54102",
+   "source": "islington",
+   "lat": 51.560178,
+   "lon": -0.122638,
+   "street": "Manor Gardens",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54102. Controlled zone F."
+  },
+  {
+   "id": "council/islington/maygood-street-54044",
+   "source": "islington",
+   "lat": 51.534432,
+   "lon": -0.111644,
+   "street": "Maygood Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54044. Controlled zone B."
+  },
+  {
+   "id": "council/islington/mercers-road-54162",
+   "source": "islington",
+   "lat": 51.558489,
+   "lon": -0.128026,
+   "street": "Mercers Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54162. Controlled zone U."
+  },
+  {
+   "id": "council/islington/meredith-street-54013",
+   "source": "islington",
+   "lat": 51.527112,
+   "lon": -0.104937,
+   "street": "Meredith Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54013. Controlled zone A."
+  },
+  {
+   "id": "council/islington/merlin-street-54014",
+   "source": "islington",
+   "lat": 51.527466,
+   "lon": -0.109412,
+   "street": "Merlin Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54014. Controlled zone A."
+  },
+  {
+   "id": "council/islington/middleton-grove-54070",
+   "source": "islington",
+   "lat": 51.551026,
+   "lon": -0.125295,
+   "street": "Middleton Grove",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 9.30am–4.30pm; free outside those hours. Pay by RingGo, location 54070. Controlled zone D."
+  },
+  {
+   "id": "council/islington/mildmay-grove-north-54171",
+   "source": "islington",
+   "lat": 51.548932,
+   "lon": -0.083158,
+   "street": "Mildmay Grove North",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54171. Controlled zone V."
+  },
+  {
+   "id": "council/islington/mildmay-grove-north-54172",
+   "source": "islington",
+   "lat": 51.549011,
+   "lon": -0.08507,
+   "street": "Mildmay Grove North",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54172. Controlled zone V."
+  },
+  {
+   "id": "council/islington/mildmay-grove-south-54173",
+   "source": "islington",
+   "lat": 51.548548,
+   "lon": -0.082879,
+   "street": "Mildmay Grove South",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54173. Controlled zone V."
+  },
+  {
+   "id": "council/islington/mildmay-grove-south-54174",
+   "source": "islington",
+   "lat": 51.548733,
+   "lon": -0.085498,
+   "street": "Mildmay Grove South",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54174. Controlled zone V."
+  },
+  {
+   "id": "council/islington/mitchison-road-54151",
+   "source": "islington",
+   "lat": 51.545047,
+   "lon": -0.088177,
+   "street": "Mitchison Road",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54151. Controlled zone T."
+  },
+  {
+   "id": "council/islington/mitford-road-54158",
+   "source": "islington",
+   "lat": 51.564014,
+   "lon": -0.119889,
+   "street": "Mitford Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54158. Controlled zone TW."
+  },
+  {
+   "id": "council/islington/monnery-road-54133",
+   "source": "islington",
+   "lat": 51.560597,
+   "lon": -0.135229,
+   "street": "Monnery Road",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54133. Controlled zone P."
+  },
+  {
+   "id": "council/islington/mount-pleasant-54015",
+   "source": "islington",
+   "lat": 51.524064,
+   "lon": -0.111752,
+   "street": "Mount Pleasant",
+   "fee": "paid",
+   "capacity": 28,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54015. Controlled zone A."
+  },
+  {
+   "id": "council/islington/myddelton-square-54016",
+   "source": "islington",
+   "lat": 51.530675,
+   "lon": -0.107793,
+   "street": "Myddelton Square",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54016. Controlled zone A."
+  },
+  {
+   "id": "council/islington/myddelton-square-54017",
+   "source": "islington",
+   "lat": 51.530359,
+   "lon": -0.107641,
+   "street": "Myddelton Square",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54017. Controlled zone A."
+  },
+  {
+   "id": "council/islington/myddelton-square-54018",
+   "source": "islington",
+   "lat": 51.529812,
+   "lon": -0.107411,
+   "street": "Myddelton Square",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54018. Controlled zone A."
+  },
+  {
+   "id": "council/islington/napier-terrace-54079",
+   "source": "islington",
+   "lat": 51.539701,
+   "lon": -0.104348,
+   "street": "Napier Terrace",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54079. Controlled zone E."
+  },
+  {
+   "id": "council/islington/north-road-54071",
+   "source": "islington",
+   "lat": 51.549475,
+   "lon": -0.119915,
+   "street": "North Road",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 9.30am–4.30pm; free outside those hours. Pay by RingGo, location 54071. Controlled zone D."
+  },
+  {
+   "id": "council/islington/northampton-square-54019",
+   "source": "islington",
+   "lat": 51.52719,
+   "lon": -0.103005,
+   "street": "Northampton Square",
+   "fee": "paid",
+   "capacity": 19,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54019. Controlled zone A."
+  },
+  {
+   "id": "council/islington/northchurch-road-54152",
+   "source": "islington",
+   "lat": 51.541984,
+   "lon": -0.086111,
+   "street": "Northchurch Road",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54152. Controlled zone T."
+  },
+  {
+   "id": "council/islington/northolme-road-54143",
+   "source": "islington",
+   "lat": 51.556643,
+   "lon": -0.093483,
+   "street": "Northolme Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54143. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/ockendon-road-54153",
+   "source": "islington",
+   "lat": 51.544555,
+   "lon": -0.088817,
+   "street": "Ockendon Road",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54153. Controlled zone T."
+  },
+  {
+   "id": "council/islington/offord-road-54080",
+   "source": "islington",
+   "lat": 51.542554,
+   "lon": -0.115853,
+   "street": "Offord Road",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54080. Controlled zone E."
+  },
+  {
+   "id": "council/islington/offord-road-54081",
+   "source": "islington",
+   "lat": 51.543055,
+   "lon": -0.114029,
+   "street": "Offord Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54081. Controlled zone E."
+  },
+  {
+   "id": "council/islington/offord-road-54082",
+   "source": "islington",
+   "lat": 51.542239,
+   "lon": -0.11692,
+   "street": "Offord Road",
+   "fee": "paid",
+   "capacity": 17,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54082. Controlled zone E. The bay is on the pavement."
+  },
+  {
+   "id": "council/islington/offord-street-54083",
+   "source": "islington",
+   "lat": 51.542936,
+   "lon": -0.115861,
+   "street": "Offord Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54083. Controlled zone E."
+  },
+  {
+   "id": "council/islington/old-street-54062",
+   "source": "islington",
+   "lat": 51.525424,
+   "lon": -0.090232,
+   "street": "Old Street",
+   "fee": "paid",
+   "capacity": 31,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54062. Controlled zone C."
+  },
+  {
+   "id": "council/islington/packington-street-54084",
+   "source": "islington",
+   "lat": 51.536648,
+   "lon": -0.098024,
+   "street": "Packington Street",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54084. Controlled zone E."
+  },
+  {
+   "id": "council/islington/parolles-road-54199",
+   "source": "islington",
+   "lat": 51.568553,
+   "lon": -0.134195,
+   "street": "Parolles Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54199. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/pemberton-gardens-54134",
+   "source": "islington",
+   "lat": 51.562314,
+   "lon": -0.133698,
+   "street": "Pemberton Gardens",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54134. Controlled zone P."
+  },
+  {
+   "id": "council/islington/penn-road-54190",
+   "source": "islington",
+   "lat": 51.553718,
+   "lon": -0.119478,
+   "street": "Penn Road",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54190. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/penn-road-54191",
+   "source": "islington",
+   "lat": 51.553086,
+   "lon": -0.120875,
+   "street": "Penn Road",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54191. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/percival-street-54020",
+   "source": "islington",
+   "lat": 51.525906,
+   "lon": -0.103695,
+   "street": "Percival Street",
+   "fee": "paid",
+   "capacity": 11,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54020. Controlled zone A."
+  },
+  {
+   "id": "council/islington/percy-circus-54021",
+   "source": "islington",
+   "lat": 51.52905,
+   "lon": -0.114581,
+   "street": "Percy Circus",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54021. Controlled zone A."
+  },
+  {
+   "id": "council/islington/petherton-road-54175",
+   "source": "islington",
+   "lat": 51.553469,
+   "lon": -0.090547,
+   "street": "Petherton Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54175. Controlled zone V."
+  },
+  {
+   "id": "council/islington/pine-street-54022",
+   "source": "islington",
+   "lat": 51.525281,
+   "lon": -0.10994,
+   "street": "Pine Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54022. Controlled zone A."
+  },
+  {
+   "id": "council/islington/pleasant-place-54085",
+   "source": "islington",
+   "lat": 51.539589,
+   "lon": -0.098596,
+   "street": "Pleasant Place",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54085. Controlled zone E."
+  },
+  {
+   "id": "council/islington/pleshey-road-54148",
+   "source": "islington",
+   "lat": 51.55366,
+   "lon": -0.132431,
+   "street": "Pleshey Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54148. Controlled zone R."
+  },
+  {
+   "id": "council/islington/poets-road-54176",
+   "source": "islington",
+   "lat": 51.551864,
+   "lon": -0.088118,
+   "street": "Poets Road",
+   "fee": "paid",
+   "capacity": 2,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54176. Controlled zone V."
+  },
+  {
+   "id": "council/islington/popham-road-54086",
+   "source": "islington",
+   "lat": 51.539179,
+   "lon": -0.095028,
+   "street": "Popham Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54086. Controlled zone E."
+  },
+  {
+   "id": "council/islington/quemerford-road-54192",
+   "source": "islington",
+   "lat": 51.553191,
+   "lon": -0.115929,
+   "street": "Quemerford Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54192. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/ramsey-walk-54154",
+   "source": "islington",
+   "lat": 51.546155,
+   "lon": -0.089328,
+   "street": "Ramsey Walk",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54154. Controlled zone T."
+  },
+  {
+   "id": "council/islington/ray-street-bridge-54023",
+   "source": "islington",
+   "lat": 51.52314,
+   "lon": -0.107604,
+   "street": "Ray Street Bridge",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54023. Controlled zone A."
+  },
+  {
+   "id": "council/islington/richmond-avenue-54087",
+   "source": "islington",
+   "lat": 51.538892,
+   "lon": -0.107133,
+   "street": "Richmond Avenue",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54087. Controlled zone E."
+  },
+  {
+   "id": "council/islington/roscoe-street-54063",
+   "source": "islington",
+   "lat": 51.523115,
+   "lon": -0.094756,
+   "street": "Roscoe Street",
+   "fee": "paid",
+   "capacity": 21,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54063. Controlled zone C."
+  },
+  {
+   "id": "council/islington/roseleigh-avenue-54107",
+   "source": "islington",
+   "lat": 51.554397,
+   "lon": -0.100077,
+   "street": "Roseleigh Avenue",
+   "fee": "paid",
+   "capacity": 3,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. On match days: Mon–Fri 10am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54107. Controlled zone G."
+  },
+  {
+   "id": "council/islington/rosoman-place-54024",
+   "source": "islington",
+   "lat": 51.526009,
+   "lon": -0.107811,
+   "street": "Rosoman Place",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54024. Controlled zone A."
+  },
+  {
+   "id": "council/islington/rotherfield-street-54125",
+   "source": "islington",
+   "lat": 51.539142,
+   "lon": -0.090613,
+   "street": "Rotherfield Street",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54125. Controlled zone L."
+  },
+  {
+   "id": "council/islington/sebbon-street-54088",
+   "source": "islington",
+   "lat": 51.540896,
+   "lon": -0.100488,
+   "street": "Sebbon Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54088. Controlled zone E."
+  },
+  {
+   "id": "council/islington/sekforde-street-54025",
+   "source": "islington",
+   "lat": 51.524044,
+   "lon": -0.104664,
+   "street": "Sekforde Street",
+   "fee": "paid",
+   "capacity": 9,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54025. Controlled zone A."
+  },
+  {
+   "id": "council/islington/seward-street-54026",
+   "source": "islington",
+   "lat": 51.525893,
+   "lon": -0.099325,
+   "street": "Seward Street",
+   "fee": "paid",
+   "capacity": 4,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54026. Controlled zone A."
+  },
+  {
+   "id": "council/islington/sotheby-road-54144",
+   "source": "islington",
+   "lat": 51.557545,
+   "lon": -0.097917,
+   "street": "Sotheby Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54144. Controlled zone Q."
+  },
+  {
+   "id": "council/islington/spencer-street-54027",
+   "source": "islington",
+   "lat": 51.528379,
+   "lon": -0.101527,
+   "street": "Spencer Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54027. Controlled zone A."
+  },
+  {
+   "id": "council/islington/st-clements-street-54089",
+   "source": "islington",
+   "lat": 51.543958,
+   "lon": -0.111456,
+   "street": "St Clements Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54089. Controlled zone E."
+  },
+  {
+   "id": "council/islington/st-helena-street-54028",
+   "source": "islington",
+   "lat": 51.527868,
+   "lon": -0.110244,
+   "street": "St Helena Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54028. Controlled zone A."
+  },
+  {
+   "id": "council/islington/st-john-s-villas-54135",
+   "source": "islington",
+   "lat": 51.565705,
+   "lon": -0.12938,
+   "street": "St John's Villas",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54135. Controlled zone P."
+  },
+  {
+   "id": "council/islington/st-paul-street-54090",
+   "source": "islington",
+   "lat": 51.53739,
+   "lon": -0.092264,
+   "street": "St Paul Street",
+   "fee": "paid",
+   "capacity": 10,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54090. Controlled zone E."
+  },
+  {
+   "id": "council/islington/st-paul-s-road-54126",
+   "source": "islington",
+   "lat": 51.547055,
+   "lon": -0.090599,
+   "street": "St Paul's Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54126. Controlled zone L."
+  },
+  {
+   "id": "council/islington/stavordale-road-54108",
+   "source": "islington",
+   "lat": 51.555373,
+   "lon": -0.104598,
+   "street": "Stavordale Road",
+   "fee": "paid",
+   "capacity": 11,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. On match days: Mon–Fri 10am–8.30pm Sat–Sun Noon–4.30pm. Pay by RingGo, location 54108. Controlled zone G."
+  },
+  {
+   "id": "council/islington/stock-orchard-street-54193",
+   "source": "islington",
+   "lat": 51.550386,
+   "lon": -0.117608,
+   "street": "Stock Orchard Street",
+   "fee": "paid",
+   "capacity": 8,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54193. Controlled zone Y."
+  },
+  {
+   "id": "council/islington/sunnyside-road-54200",
+   "source": "islington",
+   "lat": 51.57165,
+   "lon": -0.127142,
+   "street": "Sunnyside Road",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54200. Controlled zone Z."
+  },
+  {
+   "id": "council/islington/sussex-way-54103",
+   "source": "islington",
+   "lat": 51.560068,
+   "lon": -0.115799,
+   "street": "Sussex Way",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54103. Controlled zone F."
+  },
+  {
+   "id": "council/islington/tabernacle-street-54066",
+   "source": "islington",
+   "lat": 51.525225,
+   "lon": -0.085063,
+   "street": "Tabernacle Street",
+   "fee": "paid",
+   "capacity": 15,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Sat at any time; free outside those hours. Pay by RingGo, location 54066. Controlled zone C."
+  },
+  {
+   "id": "council/islington/tavistock-terrace-54163",
+   "source": "islington",
+   "lat": 51.560697,
+   "lon": -0.126208,
+   "street": "Tavistock Terrace",
+   "fee": "paid",
+   "capacity": 11,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54163. Controlled zone U."
+  },
+  {
+   "id": "council/islington/tremlett-grove-54136",
+   "source": "islington",
+   "lat": 51.562559,
+   "lon": -0.138016,
+   "street": "Tremlett Grove",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54136. Controlled zone P."
+  },
+  {
+   "id": "council/islington/tufnell-park-road-54186",
+   "source": "islington",
+   "lat": 51.55808,
+   "lon": -0.123785,
+   "street": "Tufnell Park Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. Pay by RingGo, location 54186. Controlled zone W."
+  },
+  {
+   "id": "council/islington/tytherton-road-54164",
+   "source": "islington",
+   "lat": 51.559465,
+   "lon": -0.130208,
+   "street": "Tytherton Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54164. Controlled zone U."
+  },
+  {
+   "id": "council/islington/upper-street-54045",
+   "source": "islington",
+   "lat": 51.534595,
+   "lon": -0.104966,
+   "street": "Upper Street",
+   "fee": "paid",
+   "capacity": 13,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54045. Controlled zone B. Park at a right angle to the kerb."
+  },
+  {
+   "id": "council/islington/upper-street-54046",
+   "source": "islington",
+   "lat": 51.534427,
+   "lon": -0.105158,
+   "street": "Upper Street",
+   "fee": "paid",
+   "capacity": 12,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54046. Controlled zone B. Park at a right angle to the kerb."
+  },
+  {
+   "id": "council/islington/warlters-close-54194",
+   "source": "islington",
+   "lat": 51.556089,
+   "lon": -0.119228,
+   "street": "Warlters Close",
+   "fee": "paid",
+   "capacity": 5,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. On match days: Mon–Fri 8.30am–8.30pm Sat 8.30am–4.30pm Sun Noon–4.30pm. Pay by RingGo, location 54194. Controlled zone Y. The bay is half on the pavement."
+  },
+  {
+   "id": "council/islington/wedmore-street-54165",
+   "source": "islington",
+   "lat": 51.561337,
+   "lon": -0.126894,
+   "street": "Wedmore Street",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54165. Controlled zone U."
+  },
+  {
+   "id": "council/islington/weston-rise-54047",
+   "source": "islington",
+   "lat": 51.53021,
+   "lon": -0.115949,
+   "street": "Weston Rise",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54047. Controlled zone B."
+  },
+  {
+   "id": "council/islington/whewell-road-54159",
+   "source": "islington",
+   "lat": 51.564155,
+   "lon": -0.121181,
+   "street": "Whewell Road",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–2pm; free outside those hours. Pay by RingGo, location 54159. Controlled zone TW."
+  },
+  {
+   "id": "council/islington/woodbridge-street-54029",
+   "source": "islington",
+   "lat": 51.524375,
+   "lon": -0.104303,
+   "street": "Woodbridge Street",
+   "fee": "paid",
+   "capacity": 6,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm Sat 8.30am–1.30pm; free outside those hours. Pay by RingGo, location 54029. Controlled zone A."
+  },
+  {
+   "id": "council/islington/yerbury-road-54166",
+   "source": "islington",
+   "lat": 51.559026,
+   "lon": -0.126065,
+   "street": "Yerbury Road",
+   "fee": "paid",
+   "capacity": 7,
+   "openingHours": "Any time",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54166. Controlled zone U."
+  }
+ ],
+ "unplaced": [
+  {
+   "source": "hillingdon",
+   "description": "FIELD END ROAD, the service road fronting Nos. 202-214, south-west side, from 4 m north-west of the boundary of Nos. 214 and 216, south-east for 5 m.",
+   "why": "No house numbers on this stretch in OpenStreetMap."
+  },
+  {
+   "source": "hillingdon",
+   "description": "KINGSHILL AVENUE, north-west side, from 1.7 m north-east of the boundary of Nos. 314 and 312, north-east for 5 m.",
+   "why": "No house numbers on Kingshill Avenue in OpenStreetMap; the road is about 2 km long."
+  },
+  {
+   "source": "hillingdon",
+   "description": "WINDMILL HILL, south-west side, opposite 6.0 m north-west to 10.5 m south-east of the south-east boundary of Crown Apartments.",
+   "why": "Crown Apartments is not in OpenStreetMap."
+  },
+  {
+   "source": "hillingdon",
+   "description": "HIGH STREET, north-east side, from 2 m north-west of the north-west boundary of No. 133a, south-east for 6.2 m.",
+   "why": "The order does not name the town; Ruislip and Uxbridge both have a 133 High Street."
+  },
+  {
+   "source": "bromley",
+   "description": "Park Road, Bromley, opposite the old Police station (6 spaces).",
+   "why": "The old police station isn't in OpenStreetMap, and Park Road is about 480 m long."
+  },
+  {
+   "source": "bromley",
+   "description": "Beckenham Road, Beckenham",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Bloomfield Road, Bromley",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Walpole Road, Bromley",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Hayes Street, Hayes",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Station Approach, Hayes (first of two locations)",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Station Approach, Hayes (second of two locations)",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "High Street, Orpington",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Homefield Rise, Orpington",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "bromley",
+   "description": "Petts Wood Road, Petts Wood",
+   "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  }
+ ]
 }

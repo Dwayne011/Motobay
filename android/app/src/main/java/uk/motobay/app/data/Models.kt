@@ -38,6 +38,8 @@ data class Bay(
     val source: String? = null,
     /** The source's own description of where the bay is, e.g. a traffic order's wording. */
     val note: String? = null,
+    /** When it is charged and how to pay, in plain words, when the source gives it. */
+    val rules: String? = null,
     /** Length of the bay along the kerb, when the source gives it. */
     val lengthMetres: Double? = null,
     /** The price is a best guess the source hasn't confirmed. */

@@ -139,30 +139,70 @@ OSM_ATTRIBUTION = "© OpenStreetMap contributors, ODbL 1.0"
 
 # What a council bay carries into the published file. "approximate" marks a
 # position placed from a nearby address rather than the exact reference point.
-COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "approximate")
+COUNCIL_FIELDS = ("id", "lat", "lon", "street", "capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules", "approximate")
+# What an OpenStreetMap bay takes from the council bay it matches: the council's
+# facts, but not its id or position, so riders' ratings and comments stay attached.
+OVERLAY_FIELDS = ("capacity", "openingHours", "maxStay", "lengthMetres", "note", "rules")
 
 
 def council_bays(council, osm_bays):
-    """Bays from council traffic orders, minus any OpenStreetMap already has
-    (within SPACE_MERGE_METRES). They go in as free, marked unconfirmed until the
-    council confirms it, with a capacity only where the council gives one."""
+    """Merges council bays into [osm_bays] and returns the ones to add.
+
+    A council bay within SPACE_MERGE_METRES of an OpenStreetMap bay is the same
+    bay: the OpenStreetMap one keeps its id and position and takes the council's
+    details (each OpenStreetMap bay is matched once, by the nearest council bay
+    to claim it). The rest are returned as new bays. A bay is free unless it
+    says otherwise, marked unconfirmed until its source confirms the price."""
     sources = council.get("sources", {})
-    out = []
+    out, claimed = [], set()
     for c in council.get("bays", []):
-        if any(metres(c, b) <= SPACE_MERGE_METRES for b in osm_bays):
-            continue
-        # A source is a plain name, or {"name": ..., "feeConfirmed": true} once the council confirms it's free.
+        # A source is a plain name, or {"name": ..., "feeConfirmed": true} once the council confirms prices.
         src = sources.get(c["source"], c["source"])
         if isinstance(src, str):
             src = {"name": src}
+        fee = c.get("fee", "free")
+        unconfirmed = not src.get("feeConfirmed")
+        near = [b for b in osm_bays if b["id"] not in claimed and metres(c, b) <= SPACE_MERGE_METRES]
+        if near:
+            match = min(near, key=lambda b: metres(c, b))
+            claimed.add(match["id"])
+            before = dict(match)
+            for k in OVERLAY_FIELDS:
+                if k in c:
+                    match[k] = c[k]
+            if not unconfirmed or match.get("fee", "unknown") == "unknown":
+                match["fee"] = fee
+                match.pop("feeUnconfirmed", None)
+                if unconfirmed:
+                    match["feeUnconfirmed"] = True
+            match["source"] = src["name"]
+            # Remember what OpenStreetMap said, so the council details can be taken off again (see without_council).
+            match["osm"] = {k: before.get(k) for k in match if k != "osm" and match[k] != before.get(k)}
+            continue
         bay = {k: c[k] for k in COUNCIL_FIELDS if k in c}
         bay["lat"], bay["lon"] = round(c["lat"], 6), round(c["lon"], 6)
         bay["name"] = "Motorcycle parking"
-        bay["fee"] = "free"
-        if not src.get("feeConfirmed"):
+        bay["fee"] = fee
+        if unconfirmed:
             bay["feeUnconfirmed"] = True
         bay["source"] = src["name"]
         out.append(bay)
+    return out
+
+
+def without_council(bays):
+    """The OpenStreetMap bays of a published file, as they were before council details were merged in."""
+    out = []
+    for b in bays:
+        if b["id"].startswith("council/"):
+            continue
+        b = dict(b)
+        for k, v in (b.pop("osm", None) or {}).items():
+            if v is None:
+                b.pop(k, None)
+            else:
+                b[k] = v
+        out.append(b)
     return out
 
 
@@ -171,8 +211,9 @@ def with_council(osm_bays, council):
     extra = council_bays(council, osm_bays) if council else []
     bays = sorted(osm_bays + extra, key=lambda b: b["id"])
     attribution = OSM_ATTRIBUTION
-    if extra:
-        attribution += "; " + "; ".join(sorted(set(b["source"] for b in extra)))
+    credited = sorted(set(b["source"] for b in bays if b.get("source")))
+    if credited:
+        attribution += "; " + "; ".join(credited)
     return {
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "attribution": attribution,
@@ -208,7 +249,7 @@ def main():
     council = load_council(out)
     if "--merge-only" in sys.argv:
         with open(out, encoding="utf-8") as f:
-            osm = [b for b in json.load(f)["bays"] if not b["id"].startswith("council/")]
+            osm = without_council(json.load(f)["bays"])
         data = with_council(osm, council)
     else:
         data = build(fetch(), council)

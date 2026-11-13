@@ -1,6 +1,6 @@
 import unittest
 
-from fetch_uk_bays import build, to_bay, with_council
+from fetch_uk_bays import build, to_bay, with_council, without_council
 
 
 class ToBayTest(unittest.TestCase):
@@ -98,10 +98,44 @@ class CouncilBaysTest(unittest.TestCase):
             {"id": "council/bromley/x", "source": "bromley", "lat": 51.4, "lon": 0.01, "capacity": 12, "note": "Mouth of the road."}]}
         self.assertEqual(with_council([], council)["bays"][0]["capacity"], 12)
 
-    def test_bays_openstreetmap_already_has_are_skipped(self):
+    def test_a_bay_openstreetmap_already_has_keeps_its_id_and_takes_the_council_details(self):
         osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "Motorcycle parking", "fee": "unknown"}]
         data = with_council(osm, self.COUNCIL)
         self.assertEqual([b["id"] for b in data["bays"]], ["council/hillingdon/b", "node/1"])
+        node = data["bays"][1]
+        self.assertEqual((node["lat"], node["lon"]), (51.57312, -0.42352))
+        self.assertEqual(node["note"], "South-west side.")
+        self.assertEqual(node["maxStay"], "20 minutes")
+        self.assertEqual(node["fee"], "free")
+        self.assertTrue(node["feeUnconfirmed"])
+        self.assertIn("Hillingdon", data["attribution"])
+
+    def test_an_unconfirmed_council_price_does_not_override_openstreetmap(self):
+        osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "x", "fee": "paid"}]
+        node = [b for b in with_council(osm, self.COUNCIL)["bays"] if b["id"] == "node/1"][0]
+        self.assertEqual(node["fee"], "paid")
+        self.assertNotIn("feeUnconfirmed", node)
+
+    def test_paid_council_bays_carry_their_rules(self):
+        council = {"sources": {"islington": {"name": "Islington", "feeConfirmed": True}}, "bays": [
+            {"id": "council/islington/a-1", "source": "islington", "lat": 51.55, "lon": -0.1, "fee": "paid", "capacity": 6, "rules": "Paid Mon–Fri."},
+            {"id": "council/islington/a-2", "source": "islington", "lat": 51.55001, "lon": -0.1, "fee": "paid", "capacity": 9, "rules": "Paid Sat."}]}
+        osm = [{"id": "node/7", "lat": 51.55, "lon": -0.10001, "name": "x", "fee": "free", "capacity": 2}]
+        bays = {b["id"]: b for b in with_council(osm, council)["bays"]}
+        # The confirmed council price wins; one OpenStreetMap bay is matched once, the second council bay is added.
+        self.assertEqual(bays["node/7"]["fee"], "paid")
+        self.assertEqual(bays["node/7"]["capacity"], 6)
+        self.assertEqual(bays["node/7"]["rules"], "Paid Mon–Fri.")
+        self.assertEqual(bays["council/islington/a-2"]["fee"], "paid")
+        self.assertNotIn("feeUnconfirmed", bays["council/islington/a-2"])
+
+    def test_council_details_can_be_taken_off_again(self):
+        osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "Motorcycle parking", "fee": "unknown", "capacity": 3}]
+        original = [dict(b) for b in osm]
+        merged = with_council(osm, self.COUNCIL)["bays"]
+        self.assertEqual(without_council(merged), original)
+        # Merging again from the restored bays gives the same file.
+        self.assertEqual(with_council(without_council(merged), self.COUNCIL)["bays"], merged)
 
     def test_no_council_file_leaves_osm_alone(self):
         osm = [{"id": "node/1", "lat": 51.5, "lon": -0.1, "name": "x", "fee": "free"}]
