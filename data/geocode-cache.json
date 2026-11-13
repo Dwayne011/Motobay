@@ -7036,6 +7036,12 @@
 "postcode": "SW6",
 "street": "The Boulevard"
 },
+"node/14362896452@50.99728,0.01304": {
+"area": "Fletching",
+"city": "Wealden",
+"postcode": "TN22",
+"street": "Aucklandii Walk"
+},
 "node/1443454124@55.82038,-4.02231": {
 "area": "Hattonrigg",
 "city": "Bellshill",
@@ -18715,6 +18721,11 @@
 "city": "Kettering",
 "postcode": "NN14",
 "street": "Cockerel Rise"
+},
+"way/1577940716@51.43256,-2.18678": {
+"area": "Corsham",
+"postcode": "SN13",
+"street": "Post Office Lane"
 },
 "way/168875609@55.94247,-3.06702": {
 "area": "East Lothian"
