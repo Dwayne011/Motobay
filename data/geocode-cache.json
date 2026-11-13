@@ -1434,6 +1434,24 @@
 "area": "London Borough of Camden",
 "city": "London"
 },
+"council/enfield/church-street@51.65226,-0.08528": {
+"area": "Southbury",
+"city": "London",
+"postcode": "EN2",
+"street": "Church Street"
+},
+"council/enfield/russell-road@51.61138,-0.11540": {
+"area": "Bowes Park",
+"city": "London",
+"postcode": "N13",
+"street": "Russell Road"
+},
+"council/enfield/the-town@51.65208,-0.08195": {
+"area": "Southbury",
+"city": "London",
+"postcode": "EN2",
+"street": "The Town"
+},
 "council/hillingdon/belmont-road@51.54720,-0.48017": {
 "area": "Hillingdon",
 "city": "London Borough of Hillingdon",

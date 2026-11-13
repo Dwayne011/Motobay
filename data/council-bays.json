@@ -1,5 +1,5 @@
 {
- "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it.",
+ "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions (and Enfield's, which the council gave as approximate coordinates) were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it.",
  "sources": {
   "hillingdon": {
    "name": "Hillingdon Council traffic orders (FOI 06397)",
@@ -20,6 +20,11 @@
    "name": "Camden Council Parking Bays open data (Open Government Licence v3.0)",
    "feeConfirmed": true,
    "confirmation": "Camden's Parking Bays dataset on opendata.camden.gov.uk, downloaded 13 November 2026: restriction type, times of operation, tariff, cashless location, zone, bay length and coordinates for each bay. Contains public sector information licensed under the Open Government Licence v3.0."
+  },
+  "enfield": {
+   "name": "Enfield Council traffic orders (FOI 1772)",
+   "feeConfirmed": true,
+   "confirmation": "Enfield Council's response to FOI/EIR 1772 (November 2026): three free solo motorcycle bays, each 'Solo motorcycles only. Free parking', with 'No permit or payment required' stated for Russell Road and Church Street. Positions are from the response's second sheet, checked against OpenStreetMap addresses; the first sheet's coordinates and postcodes did not match the addresses and were not used, nor was its 'Approx. Spaces' column."
   }
  },
  "bays": [
@@ -6268,6 +6273,36 @@
    "lengthMetres": 1.0,
    "fee": "unknown",
    "rules": "Motorcycles only at all times. Camden's data lists no charge or permit for this bay. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/enfield/the-town",
+   "source": "enfield",
+   "lat": 51.652079,
+   "lon": -0.081952,
+   "street": "The Town",
+   "lengthMetres": 11.0,
+   "openingHours": "Any time",
+   "note": "South side, from 5 m west of No. 9 The Town, eastward for 11 m."
+  },
+  {
+   "id": "council/enfield/russell-road",
+   "source": "enfield",
+   "lat": 51.611379,
+   "lon": -0.115404,
+   "street": "Russell Road",
+   "lengthMetres": 5.75,
+   "openingHours": "Any time",
+   "note": "South-east side, next to Elm Church and No. 62 Russell Road."
+  },
+  {
+   "id": "council/enfield/church-street",
+   "source": "enfield",
+   "lat": 51.652263,
+   "lon": -0.085285,
+   "street": "Church Street",
+   "lengthMetres": 12.0,
+   "openingHours": "Any time",
+   "note": "South side, 0.8 m east of Nos. 52–54 Church Street."
   }
  ],
  "unplaced": [
