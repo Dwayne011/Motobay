@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * [price] is the store's own formatted price ("£3.99"), or null while the
+ * [price] is the store's own formatted price ("£2.99"), or null while the
  * store can't be reached or the product isn't set up. [pending] is a payment
  * Google hasn't confirmed yet (some payment methods take a while).
  */

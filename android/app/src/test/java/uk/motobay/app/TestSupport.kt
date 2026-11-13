@@ -157,9 +157,9 @@ class TestMotoBayApplication : MotoBayApplication() {
 }
 
 
-/** Stands in for Google Play: Supporter costs £3.99 and buying it succeeds at once. */
+/** Stands in for Google Play: Supporter costs £2.99 and buying it succeeds at once. */
 class FakeSupporter : Supporter {
-    private val _state = MutableStateFlow(SupporterState(price = "£3.99"))
+    private val _state = MutableStateFlow(SupporterState(price = "£2.99"))
     override val state: StateFlow<SupporterState> = _state.asStateFlow()
     var refreshes = 0
     override fun refresh() { refreshes++ }

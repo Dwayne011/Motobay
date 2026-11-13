@@ -488,7 +488,7 @@ class ScreenshotTest {
         compose.onNodeWithText("Free now").performScrollTo().performClick()
         compose.waitForIdle()
         compose.onNodeWithText("MotoBays Supporter").assertExists()
-        compose.onNodeWithText("Become a Supporter \u00b7 £3.99").assertExists()
+        compose.onNodeWithText("Become a Supporter \u00b7 £2.99").assertExists()
         shot("phone-supporter")
         compose.onNodeWithTag("supporter-buy").performClick()
         compose.waitForIdle()
