@@ -26,6 +26,7 @@ import uk.motobay.app.data.LatLon
 import uk.motobay.app.data.RecentPlace
 import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.data.friendlyMessage
+import uk.motobay.app.data.isFreeAt
 import uk.motobay.app.util.distanceMetres
 
 enum class PriceFilter(val label: String) { All("All"), Free("Free"), Paid("Paid"), Unknown("Unknown") }
@@ -36,6 +37,8 @@ data class BayWithDistance(val bay: Bay, val distanceMetres: Double?)
 data class ExploreFilters(
     val price: PriceFilter = PriceFilter.All,
     val coveredOnly: Boolean = false,
+    /** Supporter extra: only bays that are free to park in at this moment. */
+    val freeNow: Boolean = false,
 )
 
 data class SearchUiState(
@@ -90,9 +93,11 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     /** Every bay matching the filters. The map clusters them, so it shows the whole UK. */
     val mapBays: StateFlow<List<Bay>> = combine(allBays, filters) { all, f ->
+        val now = app.now()
         all.values.filter { bay ->
             (f.price == PriceFilter.All || bay.fee == f.price.fee) &&
-                (!f.coveredOnly || bay.covered == true)
+                (!f.coveredOnly || bay.covered == true) &&
+                (!f.freeNow || bay.isFreeAt(now))
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -118,7 +123,8 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     val counts: StateFlow<Map<PriceFilter, Int>> =
         combine(allBays, viewport, filters) { all, vp, f ->
             if (vp == null) return@combine emptyMap()
-            val inView = all.values.filter { it in vp.box && (!f.coveredOnly || it.covered == true) }
+            val now = app.now()
+            val inView = all.values.filter { it in vp.box && (!f.coveredOnly || it.covered == true) && (!f.freeNow || it.isFreeAt(now)) }
             PriceFilter.entries.associateWith { p -> inView.count { p == PriceFilter.All || it.fee == p.fee } }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
@@ -251,4 +257,5 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     fun setPrice(p: PriceFilter) = filters.update { it.copy(price = p) }
     fun toggleCovered() = filters.update { it.copy(coveredOnly = !it.coveredOnly) }
+    fun toggleFreeNow() = filters.update { it.copy(freeNow = !it.freeNow) }
 }

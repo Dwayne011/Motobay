@@ -15,6 +15,7 @@ import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -477,6 +478,48 @@ class ScreenshotTest {
         compose.onNodeWithText("Where to look").assertExists()
         compose.onNodeWithText("Edit on OpenStreetMap").assertDoesNotExist()
         shot("phone-dark-council-bay")
+    }
+
+    /** The locked chip explains Supporter; buying unlocks the filter and the live status. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_supporter_unlocks_free_now() {
+        setApp()
+        // Not a supporter: the chip leads to the Supporter page instead of filtering.
+        compose.onNodeWithText("Free now").performScrollTo().performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("MotoBays Supporter").assertExists()
+        compose.onNodeWithText("Become a Supporter \u00b7 £3.99").assertExists()
+        shot("phone-supporter")
+        compose.onNodeWithTag("supporter-buy").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("supporter-unlocked").assertExists()
+        assertTrue(app.supporter.state.value.isSupporter)
+        compose.onNodeWithContentDescription("Back").performClick()
+        compose.waitForIdle()
+        // Now the chip is a real filter.
+        compose.onNodeWithText("Free now").performScrollTo().performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("MotoBays Supporter").assertDoesNotExist()
+        compose.onNodeWithText("Free now").assertIsSelected()
+        // Settings shows it as unlocked.
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Unlocked. Thank you for supporting the app.").assertExists()
+    }
+
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_live_charge_status_is_for_supporters() {
+        val bay = uk.motobay.app.data.Bay(
+            id = "council/camden/x-1", lat = 51.54, lon = -0.19, name = "Motorcycle parking", fee = uk.motobay.app.data.Fee.Paid,
+            street = "Abbot's Place", rules = "Paid Mon–Fri 8.30am–6.30pm; free outside those hours.", charged = "1-5 08:30-18:30",
+            source = "Camden Council Parking Bays open data (Open Government Licence v3.0)",
+        )
+        compose.setContent { DetailHost(bay) }
+        compose.onNodeWithTag("charge-status").assertDoesNotExist()
+        app.supporter.setForTesting(true)
+        compose.waitForIdle()
+        // The test clock is a Tuesday at 10.30am, inside the charged hours.
+        compose.onNodeWithText("Charged now \u00b7 free from 6.30pm").assertExists()
+        shot("phone-charge-status")
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")

@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import uk.motobay.app.data.RatingSummary
 import uk.motobay.app.data.ratingBy
+import uk.motobay.app.data.chargeStatus
 import uk.motobay.app.data.ratingSummary
 import java.util.Locale
 import androidx.compose.foundation.BorderStroke
@@ -223,6 +224,14 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
         bay.rules?.let { rules ->
             AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
                 Text("Charges", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
+                // Supporter extra: whether it's charged at this moment, and when that changes.
+                val supporter by app.supporter.state.collectAsStateWithLifecycle()
+                val status = if (supporter.isSupporter) bay.chargeStatus(app.now()) else null
+                status?.let {
+                    VSpace(4)
+                    Text(it, style = auroraStyle(13.sp, FontWeight.Bold, palette.searchIconActive), modifier = Modifier.testTag("charge-status"))
+                    Text("Bank holidays and match days may differ.", style = auroraStyle(10.sp, color = palette.cardSubtext))
+                }
                 VSpace(2)
                 Text(rules, style = auroraStyle(12.sp, color = palette.cardSubtext))
             }

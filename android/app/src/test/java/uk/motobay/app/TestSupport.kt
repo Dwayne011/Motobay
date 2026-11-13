@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import uk.motobay.app.data.AuthRepository
+import java.time.LocalDateTime
+import uk.motobay.app.data.SupporterState
+import uk.motobay.app.data.Supporter
 import uk.motobay.app.data.AuthUser
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayComment
@@ -146,4 +149,20 @@ class TestMotoBayApplication : MotoBayApplication() {
     override fun useSampleData() = true
     override fun createAuth(): AuthRepository = FakeAuthRepository()
     override fun createCommunity(auth: AuthRepository): CommunityRepository = FakeCommunityRepository(auth)
+    override fun createSupporter(): Supporter = FakeSupporter()
+
+    /** Tests set the time on the street; by default a Tuesday morning, inside most charging hours. */
+    var fixedNow: LocalDateTime = LocalDateTime.of(2026, 11, 10, 10, 30)
+    override fun now(): LocalDateTime = fixedNow
+}
+
+
+/** Stands in for Google Play: Supporter costs £3.99 and buying it succeeds at once. */
+class FakeSupporter : Supporter {
+    private val _state = MutableStateFlow(SupporterState(price = "£3.99"))
+    override val state: StateFlow<SupporterState> = _state.asStateFlow()
+    var refreshes = 0
+    override fun refresh() { refreshes++ }
+    override fun buy(activity: Activity): Boolean { _state.update { it.copy(isSupporter = true) }; return true }
+    override fun setForTesting(on: Boolean) = _state.update { it.copy(isSupporter = on) }
 }

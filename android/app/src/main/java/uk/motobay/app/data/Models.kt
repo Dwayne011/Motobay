@@ -40,6 +40,8 @@ data class Bay(
     val note: String? = null,
     /** When it is charged and how to pay, in plain words, when the source gives it. */
     val rules: String? = null,
+    /** Charged hours in the form [ChargedHours] parses, for paid bays whose hours are known. */
+    val charged: String? = null,
     /** Length of the bay along the kerb, when the source gives it. */
     val lengthMetres: Double? = null,
     /** The price is a best guess the source hasn't confirmed. */

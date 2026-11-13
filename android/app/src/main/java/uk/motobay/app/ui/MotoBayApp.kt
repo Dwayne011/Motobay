@@ -55,6 +55,7 @@ import uk.motobay.app.ui.bay.BayDetailRoute
 import uk.motobay.app.ui.explore.ExploreScreen
 import uk.motobay.app.ui.review.ReviewScreen
 import uk.motobay.app.ui.saved.SavedScreen
+import uk.motobay.app.ui.settings.SupporterScreen
 import uk.motobay.app.ui.settings.DisclaimerDialog
 import uk.motobay.app.ui.settings.LegalScreen
 import uk.motobay.app.ui.settings.Policy
@@ -68,6 +69,7 @@ import kotlin.reflect.KClass
 @Serializable object SettingsDest
 @Serializable object MySubmissionsDest
 @Serializable object LegalDest
+@Serializable object SupporterDest
 @Serializable data class PolicyDest(val policy: String)
 @Serializable data class BayDest(val id: String)
 
@@ -134,7 +136,7 @@ fun MotoBayApp(app: MotoBayApplication) {
             Box(Modifier.fillMaxSize()) {
             NavHost(nav, startDestination = ExploreDest) {
                 composable<ExploreDest> {
-                    ExploreScreen(onOpenBay = { nav.navigate(BayDest(it)) })
+                    ExploreScreen(onOpenBay = { nav.navigate(BayDest(it)) }, onOpenSupporter = { nav.navigate(SupporterDest) })
                 }
                 composable<BayDest> { entry ->
                     BayDetailRoute(id = entry.toRoute<BayDest>().id, onBack = { nav.popBackStack() })
@@ -144,10 +146,12 @@ fun MotoBayApp(app: MotoBayApplication) {
                 composable<SettingsDest> {
                     SettingsScreen(
                         onOpenSubmissions = { nav.navigate(MySubmissionsDest) },
+                        onOpenSupporter = { nav.navigate(SupporterDest) },
                         onOpenLegal = { nav.navigate(LegalDest) },
                         onOpenPolicy = { nav.navigate(PolicyDest(it.name)) },
                     )
                 }
+                composable<SupporterDest> { SupporterScreen(onBack = { nav.popBackStack() }) }
                 composable<LegalDest> { LegalScreen(onBack = { nav.popBackStack() }, onOpenPolicy = { nav.navigate(PolicyDest(it.name)) }) }
                 composable<PolicyDest> { entry ->
                     PolicyScreen(policy = Policy.valueOf(entry.toRoute<PolicyDest>().policy), onBack = { nav.popBackStack() })

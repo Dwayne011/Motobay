@@ -15,9 +15,13 @@ import uk.motobay.app.data.FirebaseAuthRepository
 import uk.motobay.app.data.FirestoreDisplayNames
 import uk.motobay.app.data.FirestoreCommunityRepository
 import uk.motobay.app.data.PlaceSearch
+import uk.motobay.app.data.PlayBillingSupporter
+import uk.motobay.app.data.Supporter
 import uk.motobay.app.data.UserRepository
 import uk.motobay.app.location.LocationProvider
 import uk.motobay.app.util.CrashLog
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 /** Holds the app's single instances (manual dependency injection). */
 open class MotoBayApplication : Application() {
@@ -37,6 +41,9 @@ open class MotoBayApplication : Application() {
         private set
     lateinit var crashLog: CrashLog
         private set
+    /** The one-off Supporter purchase and what it unlocks. */
+    lateinit var supporter: Supporter
+        private set
     /** OpenStreetMap bays plus approved rider additions and corrections. */
     lateinit var allBays: StateFlow<Map<String, Bay>>
         private set
@@ -54,7 +61,13 @@ open class MotoBayApplication : Application() {
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
         allBays = combinedBays(bays.bays, community.data, appScope)
+        supporter = createSupporter()
     }
+
+    /** The time on the street: every bay is in the UK, wherever the phone's clock is set. Fixed in tests. */
+    open fun now(): LocalDateTime = LocalDateTime.now(ZoneId.of("Europe/London"))
+
+    protected open fun createSupporter(): Supporter = PlayBillingSupporter(this)
 
     /**
      * App Check: Firestore, Storage and Auth only answer requests that carry a token
