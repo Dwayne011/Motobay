@@ -19,7 +19,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 ## 2. Summary
 
 - You can use the app without an account. Browsing bays, searching and getting directions involve no account and no data about you other than what the services in section 6 receive to answer a request.
-- If you allow location, the app uses it to centre the map on you when it opens and when you tap the "my location" button. It never stores or uploads it.
+- If you allow it, the app uses your location to find bays close to you. It never stores or uploads it.
 - If you sign in (Google or Apple) and post photos, comments, star ratings or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
 - There are no adverts, no analytics and no tracking in the app.
 - MotoBays is free. An optional one-off "Supporter" purchase is handled entirely by Google Play; we never see your payment details.
@@ -33,7 +33,7 @@ If you are not satisfied with how we handle your personal data, you have the rig
 | **Profile** | The display name you choose | When you save a display name |
 | **Content you post** | Photos, comments, star ratings, new bays and corrections to existing bays, each with the date, time and your user ID | When you submit them |
 | **Reports** | The item reported, the reason you pick, any note you add, and your user ID | When you report another rider's content |
-| **Location** | Your device's current position (precise or approximate, your choice) | Only if you allow it: when the app opens, when you use the "my location" button, and when you search. It stays on the device and is never sent to us. |
+| **Location** | Your device's current position (precise or approximate, your choice) | Only if you allow it, to find bays close to you. It stays on the device and is never sent to us. |
 | **Purchase** | Whether your Google account has bought the optional Supporter upgrade. Google Play tells the app yes or no; we receive no name, card or billing details, and the answer is kept on your phone only. | When you open the app or buy Supporter |
 | **Device data on request** | Device model, Android version, app version and a technical trace | Only if the app closes unexpectedly and you choose to send us the report by email |
 | **Stored on your phone only** | Saved bays, settings, blocked riders, recent searches, last map position | As you use the app. This data never leaves your device except through Android's own backup, if you have it enabled. |
