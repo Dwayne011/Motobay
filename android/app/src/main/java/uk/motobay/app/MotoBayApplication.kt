@@ -47,6 +47,9 @@ open class MotoBayApplication : Application() {
     /** OpenStreetMap bays plus approved rider additions and corrections. */
     lateinit var allBays: StateFlow<Map<String, Bay>>
         private set
+    /** The map has already gone to the rider (or asked to) since the app was started; it happens once per launch. */
+    var centredOnLaunch = false
+
     /** Replaced with recorded responses in tests. */
     var placeSearch = PlaceSearch()
 

@@ -18,7 +18,9 @@ data class Settings(
     val displayName: String = "",
     /** The first-launch "guidance only, no PCN liability" notice has been read. */
     val disclaimerAccepted: Boolean = false,
-    /** Last map position, so the app reopens where the rider left it. */
+    /** The first-launch request for location has been made; it is never repeated unprompted. */
+    val locationAsked: Boolean = false,
+    /** Last map position, shown at launch until (or instead of) the rider's own position. */
     val lastMap: CameraSnapshot? = null,
     /** Places picked from search, newest first. */
     val recentPlaces: List<RecentPlace> = emptyList(),
