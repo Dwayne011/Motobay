@@ -129,6 +129,17 @@ class CouncilBaysTest(unittest.TestCase):
         self.assertEqual(bays["council/islington/a-2"]["fee"], "paid")
         self.assertNotIn("feeUnconfirmed", bays["council/islington/a-2"])
 
+    def test_a_council_bay_with_no_known_price_leaves_openstreetmaps_price_alone(self):
+        council = {"sources": {"camden": {"name": "Camden", "feeConfirmed": True}}, "bays": [
+            {"id": "council/camden/a", "source": "camden", "lat": 51.54, "lon": -0.148, "fee": "unknown", "rules": "No charge listed."},
+            {"id": "council/camden/b", "source": "camden", "lat": 51.56, "lon": -0.148, "fee": "unknown"}]}
+        osm = [{"id": "node/9", "lat": 51.54, "lon": -0.14801, "name": "x", "fee": "free"}]
+        bays = {b["id"]: b for b in with_council(osm, council)["bays"]}
+        self.assertEqual(bays["node/9"]["fee"], "free")
+        self.assertEqual(bays["node/9"]["rules"], "No charge listed.")
+        self.assertEqual(bays["council/camden/b"]["fee"], "unknown")
+        self.assertNotIn("feeUnconfirmed", bays["council/camden/b"])
+
     def test_council_details_can_be_taken_off_again(self):
         osm = [{"id": "node/1", "lat": 51.57312, "lon": -0.42352, "name": "Motorcycle parking", "fee": "unknown", "capacity": 3}]
         original = [dict(b) for b in osm]

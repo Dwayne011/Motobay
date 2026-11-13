@@ -36,6 +36,12 @@ object Legal {
             "https://www.openstreetmap.org/copyright",
         ),
         Attribution(
+            "Council bay details",
+            "Prices, spaces and charging hours for some bays come from Camden, Islington, Hillingdon and Bromley councils. " +
+                "Contains public sector information licensed under the Open Government Licence v3.0.",
+            "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+        ),
+        Attribution(
             "Map tiles",
             "Map tiles by OpenFreeMap, rendered from OpenStreetMap data. © OpenStreetMap contributors.",
             "https://openfreemap.org",

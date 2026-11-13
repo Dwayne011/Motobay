@@ -1,5 +1,5 @@
 {
- "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay.",
+ "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay.",
  "sources": {
   "hillingdon": {
    "name": "Hillingdon Council traffic orders (FOI 06397)",
@@ -15,6 +15,11 @@
    "name": "Islington Council motorcycle bay list (FOI 8652875)",
    "feeConfirmed": true,
    "confirmation": "Islington Council's response to FOI 8652875 (November 2026): a list of solo motorcycle bays with coordinates, spaces, parking times, charged times, RingGo location and controlled zone."
+  },
+  "camden": {
+   "name": "Camden Council Parking Bays open data (Open Government Licence v3.0)",
+   "feeConfirmed": true,
+   "confirmation": "Camden's Parking Bays dataset on opendata.camden.gov.uk, downloaded 13 November 2026: restriction type, times of operation, tariff, cashless location, zone, bay length and coordinates for each bay. Contains public sector information licensed under the Open Government Licence v3.0."
   }
  },
  "bays": [
@@ -2410,6 +2415,3247 @@
    "capacity": 7,
    "openingHours": "Any time",
    "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. Pay by RingGo, location 54166. Controlled zone U."
+  },
+  {
+   "id": "council/camden/abbot-s-place-46043513",
+   "source": "camden",
+   "lat": 51.540656,
+   "lon": -0.191016,
+   "street": "Abbot's Place",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051369. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/ajax-road-46043872",
+   "source": "camden",
+   "lat": 51.554109,
+   "lon": -0.196934,
+   "street": "Ajax Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051368. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/aldred-road-46043864",
+   "source": "camden",
+   "lat": 51.552471,
+   "lon": -0.19596,
+   "street": "Aldred Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051305. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/alvanley-gardens-46044358",
+   "source": "camden",
+   "lat": 51.551393,
+   "lon": -0.187039,
+   "street": "Alvanley Gardens",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051424. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/alvanley-gardens-46044359",
+   "source": "camden",
+   "lat": 51.552287,
+   "lon": -0.188069,
+   "street": "Alvanley Gardens",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051391. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/ampton-street-46127768",
+   "source": "camden",
+   "lat": 51.527433,
+   "lon": -0.117442,
+   "street": "Ampton Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051133. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/anglers-lane-46045325",
+   "source": "camden",
+   "lat": 51.546876,
+   "lon": -0.143297,
+   "street": "Anglers Lane",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051230. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/antrim-grove-46046998",
+   "source": "camden",
+   "lat": 51.54843,
+   "lon": -0.162106,
+   "street": "Antrim Grove",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051114. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/argyle-square-46135975",
+   "source": "camden",
+   "lat": 51.52931,
+   "lon": -0.1222,
+   "street": "Argyle Square",
+   "lengthMetres": 18.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/argyle-street-46043153",
+   "source": "camden",
+   "lat": 51.528675,
+   "lon": -0.120899,
+   "street": "Argyle Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051217. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/argyle-street-46043154",
+   "source": "camden",
+   "lat": 51.529185,
+   "lon": -0.123684,
+   "street": "Argyle Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051372. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/ariel-road-46044293",
+   "source": "camden",
+   "lat": 51.547315,
+   "lon": -0.198227,
+   "street": "Ariel Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051264. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/arlington-road-46047839",
+   "source": "camden",
+   "lat": 51.537254,
+   "lon": -0.142736,
+   "street": "Arlington Road",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051355. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/arlington-road-46047858",
+   "source": "camden",
+   "lat": 51.538951,
+   "lon": -0.144382,
+   "street": "Arlington Road",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051250. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/back-hill-46042529",
+   "source": "camden",
+   "lat": 51.522818,
+   "lon": -0.109372,
+   "street": "Back Hill",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051128. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/back-hill-46042780",
+   "source": "camden",
+   "lat": 51.522295,
+   "lon": -0.109477,
+   "street": "Back Hill",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051278. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/barter-street-46042365",
+   "source": "camden",
+   "lat": 51.51756,
+   "lon": -0.123179,
+   "street": "Barter Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051313. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/bartholomew-road-46045421",
+   "source": "camden",
+   "lat": 51.549687,
+   "lon": -0.134805,
+   "street": "Bartholomew Road",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051353. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/bartholomew-villas-46048622",
+   "source": "camden",
+   "lat": 51.54655,
+   "lon": -0.140222,
+   "street": "Bartholomew Villas",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051274. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/bassett-street-46045617",
+   "source": "camden",
+   "lat": 51.548669,
+   "lon": -0.151428,
+   "street": "Bassett Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051385. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/bayham-place-46127136",
+   "source": "camden",
+   "lat": 51.535168,
+   "lon": -0.137419,
+   "street": "Bayham Place",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051419. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/bayley-street-46134531",
+   "source": "camden",
+   "lat": 51.518897,
+   "lon": -0.131319,
+   "street": "Bayley Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051188. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/bedford-place-46035876",
+   "source": "camden",
+   "lat": 51.519694,
+   "lon": -0.123626,
+   "street": "Bedford Place",
+   "lengthMetres": 24.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051148. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/bedford-row-46042946",
+   "source": "camden",
+   "lat": 51.519151,
+   "lon": -0.114744,
+   "street": "Bedford Row",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051175. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/bedford-square-46134539",
+   "source": "camden",
+   "lat": 51.518703,
+   "lon": -0.130886,
+   "street": "Bedford Square",
+   "lengthMetres": 25.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051309. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/bedford-square-46134542",
+   "source": "camden",
+   "lat": 51.518317,
+   "lon": -0.130569,
+   "street": "Bedford Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051167. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/belmont-street-46045633",
+   "source": "camden",
+   "lat": 51.543739,
+   "lon": -0.151293,
+   "street": "Belmont Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051350. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/belsize-avenue-46047016",
+   "source": "camden",
+   "lat": 51.549968,
+   "lon": -0.168629,
+   "street": "Belsize Avenue",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051157. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-grove-46046986",
+   "source": "camden",
+   "lat": 51.549061,
+   "lon": -0.163854,
+   "street": "Belsize Grove",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051267. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-lane-46035124",
+   "source": "camden",
+   "lat": 51.549007,
+   "lon": -0.171868,
+   "street": "Belsize Lane",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051428. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-park-46035075",
+   "source": "camden",
+   "lat": 51.545717,
+   "lon": -0.174681,
+   "street": "Belsize Park",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051394. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-park-46035531",
+   "source": "camden",
+   "lat": 51.546166,
+   "lon": -0.173894,
+   "street": "Belsize Park",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051275. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-square-46047010",
+   "source": "camden",
+   "lat": 51.547161,
+   "lon": -0.169114,
+   "street": "Belsize Square",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051234. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/belsize-terrace-46047095",
+   "source": "camden",
+   "lat": 51.548933,
+   "lon": -0.171082,
+   "street": "Belsize Terrace",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051212. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/berkley-road-46047947",
+   "source": "camden",
+   "lat": 51.541779,
+   "lon": -0.156276,
+   "street": "Berkley Road",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051246. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/bernard-street-46035907",
+   "source": "camden",
+   "lat": 51.523434,
+   "lon": -0.123529,
+   "street": "Bernard Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051282. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/bidborough-street-46043127",
+   "source": "camden",
+   "lat": 51.528322,
+   "lon": -0.126409,
+   "street": "Bidborough Street",
+   "lengthMetres": 17.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051389. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/bidborough-street-46043147",
+   "source": "camden",
+   "lat": 51.528072,
+   "lon": -0.127145,
+   "street": "Bidborough Street",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051335. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/bisham-gardens-46044907",
+   "source": "camden",
+   "lat": 51.57033,
+   "lon": -0.146434,
+   "street": "Bisham Gardens",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051106. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/blackburn-road-46044245",
+   "source": "camden",
+   "lat": 51.547074,
+   "lon": -0.190748,
+   "street": "Blackburn Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051291. Also valid with a CA-R or CA-K permit. Controlled zone CA-R."
+  },
+  {
+   "id": "council/camden/bloomsbury-square-46128347",
+   "source": "camden",
+   "lat": 51.519072,
+   "lon": -0.123745,
+   "street": "Bloomsbury Square",
+   "lengthMetres": 14.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051434. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/broadhurst-gardens-46046539",
+   "source": "camden",
+   "lat": 51.54665,
+   "lon": -0.181058,
+   "street": "Broadhurst Gardens",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051421. Also valid with a CA-R or CA-K permit. Controlled zone CA-R."
+  },
+  {
+   "id": "council/camden/brunswick-square-46043105",
+   "source": "camden",
+   "lat": 51.525,
+   "lon": -0.121598,
+   "street": "Brunswick Square",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051119. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/buck-street-46048315",
+   "source": "camden",
+   "lat": 51.540278,
+   "lon": -0.142981,
+   "street": "Buck Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051202. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/burrard-road-46043845",
+   "source": "camden",
+   "lat": 51.554106,
+   "lon": -0.195841,
+   "street": "Burrard Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051382. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/burton-street-46043297",
+   "source": "camden",
+   "lat": 51.526178,
+   "lon": -0.127718,
+   "street": "Burton Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051324. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/camden-square-46048333",
+   "source": "camden",
+   "lat": 51.544264,
+   "lon": -0.132257,
+   "street": "Camden Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051343. Controlled zone CA-N."
+  },
+  {
+   "id": "council/camden/cantelowes-road-46133199",
+   "source": "camden",
+   "lat": 51.546248,
+   "lon": -0.131786,
+   "street": "Cantelowes Road",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051364. Controlled zone CA-N."
+  },
+  {
+   "id": "council/camden/carol-street-46047906",
+   "source": "camden",
+   "lat": 51.539304,
+   "lon": -0.140617,
+   "street": "Carol Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051412. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/cartwright-gardens-46133033",
+   "source": "camden",
+   "lat": 51.527252,
+   "lon": -0.126811,
+   "street": "Cartwright Gardens",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051384. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/castle-road-46045381",
+   "source": "camden",
+   "lat": 51.545214,
+   "lon": -0.141915,
+   "street": "Castle Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051153. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/castlehaven-road-46048321",
+   "source": "camden",
+   "lat": 51.542522,
+   "lon": -0.144821,
+   "street": "Castlehaven Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051381. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/castlehaven-road-46138041",
+   "source": "camden",
+   "lat": 51.545828,
+   "lon": -0.143901,
+   "street": "Castlehaven Road",
+   "lengthMetres": 5.0,
+   "maxStay": "2 hours",
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051359. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/chalton-street-46136971",
+   "source": "camden",
+   "lat": 51.535054,
+   "lon": -0.133203,
+   "street": "Chalton Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051206. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/charlotte-street-46137651",
+   "source": "camden",
+   "lat": 51.519796,
+   "lon": -0.136167,
+   "street": "Charlotte Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051402. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/chenies-street-46129422",
+   "source": "camden",
+   "lat": 51.520674,
+   "lon": -0.133274,
+   "street": "Chenies Street",
+   "lengthMetres": 15.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051108. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/chesterford-gardens-46035103",
+   "source": "camden",
+   "lat": 51.556112,
+   "lon": -0.185505,
+   "street": "Chesterford Gardens",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051322. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/chitty-street-46036273",
+   "source": "camden",
+   "lat": 51.520992,
+   "lon": -0.136506,
+   "street": "Chitty Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051131. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/cleveland-street-46036041",
+   "source": "camden",
+   "lat": 51.523425,
+   "lon": -0.142281,
+   "street": "Cleveland Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051409. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/constantine-road-46046284",
+   "source": "camden",
+   "lat": 51.554246,
+   "lon": -0.164412,
+   "street": "Constantine Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051334. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/constantine-road-46046386",
+   "source": "camden",
+   "lat": 51.554777,
+   "lon": -0.162707,
+   "street": "Constantine Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051225. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/cotleigh-road-46043435",
+   "source": "camden",
+   "lat": 51.543529,
+   "lon": -0.193059,
+   "street": "Cotleigh Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051425. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/courthope-road-46046053",
+   "source": "camden",
+   "lat": 51.555706,
+   "lon": -0.156562,
+   "street": "Courthope Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051398. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/courthope-road-46046325",
+   "source": "camden",
+   "lat": 51.554875,
+   "lon": -0.156117,
+   "street": "Courthope Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051356. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/crediton-hill-46044362",
+   "source": "camden",
+   "lat": 51.552508,
+   "lon": -0.189554,
+   "street": "Crediton Hill",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051180. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/cromer-street-46043149",
+   "source": "camden",
+   "lat": 51.527977,
+   "lon": -0.121248,
+   "street": "Cromer Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051302. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/daleham-gardens-46035085",
+   "source": "camden",
+   "lat": 51.549913,
+   "lon": -0.1741,
+   "street": "Daleham Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051129. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/dartmouth-park-road-46044692",
+   "source": "camden",
+   "lat": 51.557184,
+   "lon": -0.146827,
+   "street": "Dartmouth Park Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051366. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/dennington-park-road-46044371",
+   "source": "camden",
+   "lat": 51.550107,
+   "lon": -0.192405,
+   "street": "Dennington Park Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051383. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/doric-way-46136931",
+   "source": "camden",
+   "lat": 51.529371,
+   "lon": -0.131031,
+   "street": "Doric Way",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051378. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/doughty-street-46042528",
+   "source": "camden",
+   "lat": 51.523881,
+   "lon": -0.116857,
+   "street": "Doughty Street",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051211. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/doughty-street-46042841",
+   "source": "camden",
+   "lat": 51.522964,
+   "lon": -0.116098,
+   "street": "Doughty Street",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051214. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/drummond-crescent-46049339",
+   "source": "camden",
+   "lat": 51.529791,
+   "lon": -0.132535,
+   "street": "Drummond Crescent",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051185. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/drummond-crescent-46135393",
+   "source": "camden",
+   "lat": 51.529809,
+   "lon": -0.131978,
+   "street": "Drummond Crescent",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051171. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/duke-s-road-46043288",
+   "source": "camden",
+   "lat": 51.526934,
+   "lon": -0.128982,
+   "street": "Duke's Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051247. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/elsworthy-road-46046644",
+   "source": "camden",
+   "lat": 51.541227,
+   "lon": -0.164895,
+   "street": "Elsworthy Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051163. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/endell-street-46132346",
+   "source": "camden",
+   "lat": 51.515599,
+   "lon": -0.126165,
+   "street": "Endell Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051310. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/endsleigh-street-46036259",
+   "source": "camden",
+   "lat": 51.526386,
+   "lon": -0.131209,
+   "street": "Endsleigh Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051141. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/england-s-lane-46047461",
+   "source": "camden",
+   "lat": 51.546677,
+   "lon": -0.161066,
+   "street": "England's Lane",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051374. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/estelle-road-46046052",
+   "source": "camden",
+   "lat": 51.555559,
+   "lon": -0.155514,
+   "street": "Estelle Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051347. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/eton-avenue-46047094",
+   "source": "camden",
+   "lat": 51.545514,
+   "lon": -0.163116,
+   "street": "Eton Avenue",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051251. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/eton-avenue-46047439",
+   "source": "camden",
+   "lat": 51.544296,
+   "lon": -0.173488,
+   "street": "Eton Avenue",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051162. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/eton-road-46045630",
+   "source": "camden",
+   "lat": 51.545387,
+   "lon": -0.157721,
+   "street": "Eton Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051255. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/eton-villas-46045631",
+   "source": "camden",
+   "lat": 51.54564,
+   "lon": -0.158572,
+   "street": "Eton Villas",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051194. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/euston-street-46047514",
+   "source": "camden",
+   "lat": 51.526879,
+   "lon": -0.135707,
+   "street": "Euston Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051147. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/eyre-street-hill-46042506",
+   "source": "camden",
+   "lat": 51.522698,
+   "lon": -0.110351,
+   "street": "Eyre Street Hill",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051390. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/fairhazel-gardens-46046528",
+   "source": "camden",
+   "lat": 51.546262,
+   "lon": -0.185403,
+   "street": "Fairhazel Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051208. Also valid with a CA-R or CA-K permit. Controlled zone CA-R."
+  },
+  {
+   "id": "council/camden/falkland-road-46045382",
+   "source": "camden",
+   "lat": 51.552132,
+   "lon": -0.140803,
+   "street": "Falkland Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051388. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/fawley-road-46044621",
+   "source": "camden",
+   "lat": 51.550176,
+   "lon": -0.191215,
+   "street": "Fawley Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051417. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/fellows-road-46047022",
+   "source": "camden",
+   "lat": 51.544647,
+   "lon": -0.16203,
+   "street": "Fellows Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051371. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/fellows-road-46047024",
+   "source": "camden",
+   "lat": 51.543991,
+   "lon": -0.167149,
+   "street": "Fellows Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051183. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/fellows-road-46047025",
+   "source": "camden",
+   "lat": 51.543437,
+   "lon": -0.171393,
+   "street": "Fellows Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051121. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/field-street-46043077",
+   "source": "camden",
+   "lat": 51.530251,
+   "lon": -0.119564,
+   "street": "Field Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051200. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/fitzroy-road-46048005",
+   "source": "camden",
+   "lat": 51.54017,
+   "lon": -0.154432,
+   "street": "Fitzroy Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051386. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/fitzroy-street-46036095",
+   "source": "camden",
+   "lat": 51.52354,
+   "lon": -0.13995,
+   "street": "Fitzroy Street",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051435. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/fitzroy-street-46036242",
+   "source": "camden",
+   "lat": 51.524066,
+   "lon": -0.140478,
+   "street": "Fitzroy Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051243. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/fitzroy-street-46036275",
+   "source": "camden",
+   "lat": 51.521632,
+   "lon": -0.138046,
+   "street": "Fitzroy Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051112. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/flask-walk-46048985",
+   "source": "camden",
+   "lat": 51.556762,
+   "lon": -0.1772,
+   "street": "Flask Walk",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051195. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/fordwych-road-46043765",
+   "source": "camden",
+   "lat": 51.548249,
+   "lon": -0.201901,
+   "street": "Fordwych Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051130. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/fordwych-road-46043777",
+   "source": "camden",
+   "lat": 51.551329,
+   "lon": -0.206474,
+   "street": "Fordwych Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051263. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/fortune-green-road-46043913",
+   "source": "camden",
+   "lat": 51.555222,
+   "lon": -0.196776,
+   "street": "Fortune Green Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051135. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/frederick-street-46043223",
+   "source": "camden",
+   "lat": 51.528142,
+   "lon": -0.116816,
+   "street": "Frederick Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051431. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/frognal-46035090",
+   "source": "camden",
+   "lat": 51.55125,
+   "lon": -0.180503,
+   "street": "Frognal",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051245. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/garnett-road-46046226",
+   "source": "camden",
+   "lat": 51.552168,
+   "lon": -0.161655,
+   "street": "Garnett Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051261. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/gascony-avenue-46043398",
+   "source": "camden",
+   "lat": 51.542252,
+   "lon": -0.19678,
+   "street": "Gascony Avenue",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051323. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/gascony-avenue-46043431",
+   "source": "camden",
+   "lat": 51.542623,
+   "lon": -0.195074,
+   "street": "Gascony Avenue",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051290. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/gate-street-46042466",
+   "source": "camden",
+   "lat": 51.517174,
+   "lon": -0.119695,
+   "street": "Gate Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051125. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/gate-street-46134860",
+   "source": "camden",
+   "lat": 51.516968,
+   "lon": -0.118927,
+   "street": "Gate Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051365. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/gate-street-46134861",
+   "source": "camden",
+   "lat": 51.517112,
+   "lon": -0.118945,
+   "street": "Gate Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051224. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/glenbrook-road-46044374",
+   "source": "camden",
+   "lat": 51.550568,
+   "lon": -0.197511,
+   "street": "Glenbrook Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051321. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/glenilla-road-46047051",
+   "source": "camden",
+   "lat": 51.548682,
+   "lon": -0.167952,
+   "street": "Glenilla Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051337. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/gloucester-avenue-46047830",
+   "source": "camden",
+   "lat": 51.542484,
+   "lon": -0.155168,
+   "street": "Gloucester Avenue",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051199. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/gloucester-avenue-46134887",
+   "source": "camden",
+   "lat": 51.541366,
+   "lon": -0.153431,
+   "street": "Gloucester Avenue",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051253. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/gondar-gardens-46043880",
+   "source": "camden",
+   "lat": 51.553815,
+   "lon": -0.200576,
+   "street": "Gondar Gardens",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051429. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/gondar-gardens-46043882",
+   "source": "camden",
+   "lat": 51.553407,
+   "lon": -0.202452,
+   "street": "Gondar Gardens",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051349. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/goodge-place-46035824",
+   "source": "camden",
+   "lat": 51.519391,
+   "lon": -0.136442,
+   "street": "Goodge Place",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051397. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/gordon-square-46036235",
+   "source": "camden",
+   "lat": 51.524,
+   "lon": -0.129917,
+   "street": "Gordon Square",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051380. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/gough-street-46042510",
+   "source": "camden",
+   "lat": 51.52377,
+   "lon": -0.113809,
+   "street": "Gough Street",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051300. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/gower-place-46036240",
+   "source": "camden",
+   "lat": 51.525634,
+   "lon": -0.133878,
+   "street": "Gower Place",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051363. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/grafton-terrace-46134844",
+   "source": "camden",
+   "lat": 51.549636,
+   "lon": -0.155865,
+   "street": "Grafton Terrace",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051216. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/grangeway-46043600",
+   "source": "camden",
+   "lat": 51.54292,
+   "lon": -0.198421,
+   "street": "Grangeway",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051345. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/great-russell-street-46126821",
+   "source": "camden",
+   "lat": 51.517583,
+   "lon": -0.128672,
+   "street": "Great Russell Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051113. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/greencroft-gardens-46046780",
+   "source": "camden",
+   "lat": 51.544138,
+   "lon": -0.182415,
+   "street": "Greencroft Gardens",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051281. Also valid with a CA-R or CA-K permit. Controlled zone CA-R."
+  },
+  {
+   "id": "council/camden/greenland-place-46047850",
+   "source": "camden",
+   "lat": 51.538879,
+   "lon": -0.141651,
+   "street": "Greenland Place",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051227. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/greenwood-place-46128544",
+   "source": "camden",
+   "lat": 51.553154,
+   "lon": -0.142995,
+   "street": "Greenwood Place",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051166. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/grenville-street-46130758",
+   "source": "camden",
+   "lat": 51.523121,
+   "lon": -0.121979,
+   "street": "Grenville Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051411. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/gresse-street-46035837",
+   "source": "camden",
+   "lat": 51.517562,
+   "lon": -0.133276,
+   "street": "Gresse Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051422. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/greville-road-46043454",
+   "source": "camden",
+   "lat": 51.536011,
+   "lon": -0.186968,
+   "street": "Greville Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051244. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/greville-street-46042571",
+   "source": "camden",
+   "lat": 51.519409,
+   "lon": -0.107877,
+   "street": "Greville Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051103. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/guilford-street-46042548",
+   "source": "camden",
+   "lat": 51.523647,
+   "lon": -0.118894,
+   "street": "Guilford Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051311. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/hammond-street-46045147",
+   "source": "camden",
+   "lat": 51.548791,
+   "lon": -0.138583,
+   "street": "Hammond Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051127. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/hampstead-high-street-46048712",
+   "source": "camden",
+   "lat": 51.555593,
+   "lon": -0.176266,
+   "street": "Hampstead High Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051280. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/hampstead-high-street-46048713",
+   "source": "camden",
+   "lat": 51.555239,
+   "lon": -0.174353,
+   "street": "Hampstead High Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051187. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/handel-street-46043106",
+   "source": "camden",
+   "lat": 51.525521,
+   "lon": -0.123024,
+   "street": "Handel Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051221. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/harrington-square-46047562",
+   "source": "camden",
+   "lat": 51.53354,
+   "lon": -0.138825,
+   "street": "Harrington Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051358. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/harrison-street-46131815",
+   "source": "camden",
+   "lat": 51.52783,
+   "lon": -0.119263,
+   "street": "Harrison Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051341. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/hatton-garden-46127524",
+   "source": "camden",
+   "lat": 51.520498,
+   "lon": -0.108444,
+   "street": "Hatton Garden",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051237. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/hawley-crescent-46048318",
+   "source": "camden",
+   "lat": 51.541102,
+   "lon": -0.142954,
+   "street": "Hawley Crescent",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051178. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/healey-street-46045295",
+   "source": "camden",
+   "lat": 51.545603,
+   "lon": -0.145413,
+   "street": "Healey Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051197. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/heath-street-46035109",
+   "source": "camden",
+   "lat": 51.555504,
+   "lon": -0.178588,
+   "street": "Heath Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051248. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/hemstal-road-46043412",
+   "source": "camden",
+   "lat": 51.544971,
+   "lon": -0.197033,
+   "street": "Hemstal Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051168. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/hemstal-road-46044323",
+   "source": "camden",
+   "lat": 51.54452,
+   "lon": -0.195379,
+   "street": "Hemstal Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051102. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/hemstal-road-46044324",
+   "source": "camden",
+   "lat": 51.544422,
+   "lon": -0.194076,
+   "street": "Hemstal Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051284. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/herbrand-street-46035870",
+   "source": "camden",
+   "lat": 51.524397,
+   "lon": -0.126004,
+   "street": "Herbrand Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051392. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/herbrand-street-46035887",
+   "source": "camden",
+   "lat": 51.522934,
+   "lon": -0.124836,
+   "street": "Herbrand Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051269. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/hillfield-road-46043868",
+   "source": "camden",
+   "lat": 51.552626,
+   "lon": -0.197093,
+   "street": "Hillfield Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051370. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/hillfield-road-46043869",
+   "source": "camden",
+   "lat": 51.551849,
+   "lon": -0.200521,
+   "street": "Hillfield Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051289. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/hillfield-road-46043870",
+   "source": "camden",
+   "lat": 51.551731,
+   "lon": -0.201231,
+   "street": "Hillfield Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051401. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/hillfield-road-46043871",
+   "source": "camden",
+   "lat": 51.55142,
+   "lon": -0.200722,
+   "street": "Hillfield Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051226. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/hilltop-road-46044325",
+   "source": "camden",
+   "lat": 51.545068,
+   "lon": -0.193121,
+   "street": "Hilltop Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051314. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/holmdale-road-46044348",
+   "source": "camden",
+   "lat": 51.551102,
+   "lon": -0.194738,
+   "street": "Holmdale Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051159. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/holmdale-road-46044349",
+   "source": "camden",
+   "lat": 51.550498,
+   "lon": -0.193941,
+   "street": "Holmdale Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051191. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/holmdale-road-46044350",
+   "source": "camden",
+   "lat": 51.550019,
+   "lon": -0.193603,
+   "street": "Holmdale Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051430. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/honeybourne-road-46044369",
+   "source": "camden",
+   "lat": 51.552045,
+   "lon": -0.19064,
+   "street": "Honeybourne Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051361. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/howitt-road-46046983",
+   "source": "camden",
+   "lat": 51.548122,
+   "lon": -0.166117,
+   "street": "Howitt Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051315. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/howland-street-46036051",
+   "source": "camden",
+   "lat": 51.521804,
+   "lon": -0.136988,
+   "street": "Howland Street",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051328. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/huntley-street-46035885",
+   "source": "camden",
+   "lat": 51.522909,
+   "lon": -0.134576,
+   "street": "Huntley Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051272. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/huntley-street-46036057",
+   "source": "camden",
+   "lat": 51.521924,
+   "lon": -0.133512,
+   "street": "Huntley Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051150. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/inglewood-road-46044375",
+   "source": "camden",
+   "lat": 51.550815,
+   "lon": -0.191615,
+   "street": "Inglewood Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051134. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/iverson-road-46044276",
+   "source": "camden",
+   "lat": 51.547239,
+   "lon": -0.196086,
+   "street": "Iverson Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051254. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/jockey-s-fields-46042563",
+   "source": "camden",
+   "lat": 51.52063,
+   "lon": -0.115598,
+   "street": "Jockey's Fields",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051111. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/john-street-46042525",
+   "source": "camden",
+   "lat": 51.521951,
+   "lon": -0.115264,
+   "street": "John Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051400. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/john-street-46042526",
+   "source": "camden",
+   "lat": 51.521984,
+   "lon": -0.115194,
+   "street": "John Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051283. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/john-s-mews-46042524",
+   "source": "camden",
+   "lat": 51.521763,
+   "lon": -0.116025,
+   "street": "John's Mews",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051198. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/kilburn-priory-46138059",
+   "source": "camden",
+   "lat": 51.535807,
+   "lon": -0.189876,
+   "street": "Kilburn Priory",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051204. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/kilburn-vale-46043508",
+   "source": "camden",
+   "lat": 51.538316,
+   "lon": -0.1914,
+   "street": "Kilburn Vale",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051357. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/king-s-college-road-46047027",
+   "source": "camden",
+   "lat": 51.543807,
+   "lon": -0.169727,
+   "street": "King's College Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051294. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/kingdon-road-46044342",
+   "source": "camden",
+   "lat": 51.549392,
+   "lon": -0.19317,
+   "street": "Kingdon Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051317. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/kingdon-road-46044343",
+   "source": "camden",
+   "lat": 51.549665,
+   "lon": -0.19279,
+   "street": "Kingdon Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051306. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/kingsgate-road-46043403",
+   "source": "camden",
+   "lat": 51.542747,
+   "lon": -0.195529,
+   "street": "Kingsgate Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051354. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/kingsgate-road-46043409",
+   "source": "camden",
+   "lat": 51.544205,
+   "lon": -0.196374,
+   "street": "Kingsgate Road",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051396. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/kingsgate-road-46043426",
+   "source": "camden",
+   "lat": 51.541516,
+   "lon": -0.195305,
+   "street": "Kingsgate Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051232. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/kingsgate-road-46043427",
+   "source": "camden",
+   "lat": 51.541623,
+   "lon": -0.1954,
+   "street": "Kingsgate Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051270. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/kirby-street-46042607",
+   "source": "camden",
+   "lat": 51.519629,
+   "lon": -0.107205,
+   "street": "Kirby Street",
+   "lengthMetres": 14.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051205. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/kirby-street-46127813",
+   "source": "camden",
+   "lat": 51.519895,
+   "lon": -0.107288,
+   "street": "Kirby Street",
+   "lengthMetres": 34.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051138. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/lady-margaret-road-46045364",
+   "source": "camden",
+   "lat": 51.551038,
+   "lon": -0.138013,
+   "street": "Lady Margaret Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051177. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/lady-margaret-road-46045365",
+   "source": "camden",
+   "lat": 51.554322,
+   "lon": -0.136958,
+   "street": "Lady Margaret Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051116. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/lady-margaret-road-46045368",
+   "source": "camden",
+   "lat": 51.551127,
+   "lon": -0.138002,
+   "street": "Lady Margaret Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051260. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/lady-somerset-road-46045505",
+   "source": "camden",
+   "lat": 51.554327,
+   "lon": -0.144055,
+   "street": "Lady Somerset Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051192. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/lambolle-place-46047425",
+   "source": "camden",
+   "lat": 51.545683,
+   "lon": -0.165495,
+   "street": "Lambolle Place",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051256. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/lambolle-road-46047364",
+   "source": "camden",
+   "lat": 51.546444,
+   "lon": -0.166371,
+   "street": "Lambolle Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051352. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/lancaster-grove-46047389",
+   "source": "camden",
+   "lat": 51.545816,
+   "lon": -0.167774,
+   "street": "Lancaster Grove",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051207. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/lansdowne-terrace-46130825",
+   "source": "camden",
+   "lat": 51.52387,
+   "lon": -0.120964,
+   "street": "Lansdowne Terrace",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051152. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/lawford-road-46048370",
+   "source": "camden",
+   "lat": 51.546315,
+   "lon": -0.135713,
+   "street": "Lawford Road",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051426. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/lawn-road-46131114",
+   "source": "camden",
+   "lat": 51.553283,
+   "lon": -0.16141,
+   "street": "Lawn Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051146. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/leeke-street-46043078",
+   "source": "camden",
+   "lat": 51.530089,
+   "lon": -0.119144,
+   "street": "Leeke Street",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051406. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/leigh-street-46043126",
+   "source": "camden",
+   "lat": 51.52665,
+   "lon": -0.12481,
+   "street": "Leigh Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051348. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/lincoln-s-inn-fields-46042465",
+   "source": "camden",
+   "lat": 51.516372,
+   "lon": -0.11487,
+   "street": "Lincoln's Inn Fields",
+   "lengthMetres": 17.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051239. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/lincoln-s-inn-fields-46126815",
+   "source": "camden",
+   "lat": 51.51625,
+   "lon": -0.118214,
+   "street": "Lincoln's Inn Fields",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051105. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/lindfield-gardens-46035108",
+   "source": "camden",
+   "lat": 51.55148,
+   "lon": -0.182241,
+   "street": "Lindfield Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051413. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/lissenden-gardens-46044900",
+   "source": "camden",
+   "lat": 51.557493,
+   "lon": -0.148121,
+   "street": "Lissenden Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051273. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/lissenden-gardens-46044908",
+   "source": "camden",
+   "lat": 51.556803,
+   "lon": -0.149616,
+   "street": "Lissenden Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051233. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/longford-street-46047504",
+   "source": "camden",
+   "lat": 51.525658,
+   "lon": -0.143299,
+   "street": "Longford Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051172. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/loudoun-road-46046646",
+   "source": "camden",
+   "lat": 51.541076,
+   "lon": -0.17916,
+   "street": "Loudoun Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051132. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/loveridge-road-46044298",
+   "source": "camden",
+   "lat": 51.547318,
+   "lon": -0.199213,
+   "street": "Loveridge Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051336. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/lowfield-road-46044313",
+   "source": "camden",
+   "lat": 51.545602,
+   "lon": -0.195957,
+   "street": "Lowfield Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051161. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/lowfield-road-46044315",
+   "source": "camden",
+   "lat": 51.545265,
+   "lon": -0.196164,
+   "street": "Lowfield Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051351. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/lymington-road-46044357",
+   "source": "camden",
+   "lat": 51.549265,
+   "lon": -0.190731,
+   "street": "Lymington Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051367. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/maiden-lane-46131232",
+   "source": "camden",
+   "lat": 51.541897,
+   "lon": -0.128724,
+   "street": "Maiden Lane",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid at all times. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone. Controlled zone CA-N."
+  },
+  {
+   "id": "council/camden/malden-road-46045712",
+   "source": "camden",
+   "lat": 51.546615,
+   "lon": -0.151281,
+   "street": "Malden Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051100. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/malet-street-46036040",
+   "source": "camden",
+   "lat": 51.522324,
+   "lon": -0.13112,
+   "street": "Malet Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051222. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/malet-street-46036314",
+   "source": "camden",
+   "lat": 51.520619,
+   "lon": -0.129266,
+   "street": "Malet Street",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051109. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/manstone-road-46043791",
+   "source": "camden",
+   "lat": 51.553013,
+   "lon": -0.209022,
+   "street": "Manstone Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051174. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/manstone-road-46043794",
+   "source": "camden",
+   "lat": 51.552506,
+   "lon": -0.210036,
+   "street": "Manstone Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051156. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/maple-place-46036012",
+   "source": "camden",
+   "lat": 51.521954,
+   "lon": -0.137528,
+   "street": "Maple Place",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051393. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/maresfield-gardens-46035660",
+   "source": "camden",
+   "lat": 51.549418,
+   "lon": -0.177681,
+   "street": "Maresfield Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051117. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/maygrove-road-46043704",
+   "source": "camden",
+   "lat": 51.548001,
+   "lon": -0.199759,
+   "street": "Maygrove Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051298. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/maygrove-road-46044286",
+   "source": "camden",
+   "lat": 51.547861,
+   "lon": -0.19644,
+   "street": "Maygrove Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051325. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/maygrove-road-46044310",
+   "source": "camden",
+   "lat": 51.547647,
+   "lon": -0.200995,
+   "street": "Maygrove Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051293. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/mecklenburgh-square-46043114",
+   "source": "camden",
+   "lat": 51.525849,
+   "lon": -0.11838,
+   "street": "Mecklenburgh Square",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051110. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/mecklenburgh-square-46043118",
+   "source": "camden",
+   "lat": 51.524724,
+   "lon": -0.117732,
+   "street": "Mecklenburgh Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051308. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/merton-rise-46047029",
+   "source": "camden",
+   "lat": 51.544497,
+   "lon": -0.166802,
+   "street": "Merton Rise",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051326. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/messina-avenue-46043385",
+   "source": "camden",
+   "lat": 51.542301,
+   "lon": -0.198198,
+   "street": "Messina Avenue",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051432. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/midhope-street-46043084",
+   "source": "camden",
+   "lat": 51.527857,
+   "lon": -0.122613,
+   "street": "Midhope Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051316. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/mill-lane-46043900",
+   "source": "camden",
+   "lat": 51.551165,
+   "lon": -0.201354,
+   "street": "Mill Lane",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051124. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/mill-lane-46043909",
+   "source": "camden",
+   "lat": 51.551118,
+   "lon": -0.203037,
+   "street": "Mill Lane",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051408. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/miller-street-46047565",
+   "source": "camden",
+   "lat": 51.535708,
+   "lon": -0.140232,
+   "street": "Miller Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051375. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/minster-road-46043830",
+   "source": "camden",
+   "lat": 51.551285,
+   "lon": -0.208315,
+   "street": "Minster Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051414. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/minster-road-46043889",
+   "source": "camden",
+   "lat": 51.553652,
+   "lon": -0.203268,
+   "street": "Minster Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051210. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/mornington-crescent-46047570",
+   "source": "camden",
+   "lat": 51.53433,
+   "lon": -0.13965,
+   "street": "Mornington Crescent",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051433. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/mornington-terrace-46047577",
+   "source": "camden",
+   "lat": 51.533785,
+   "lon": -0.142158,
+   "street": "Mornington Terrace",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051249. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/mortimer-market-46036082",
+   "source": "camden",
+   "lat": 51.522767,
+   "lon": -0.135883,
+   "street": "Mortimer Market",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051285. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/mount-pleasant-46042507",
+   "source": "camden",
+   "lat": 51.523441,
+   "lon": -0.112435,
+   "street": "Mount Pleasant",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051252. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/mount-pleasant-46042508",
+   "source": "camden",
+   "lat": 51.523393,
+   "lon": -0.112497,
+   "street": "Mount Pleasant",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051252. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/nassington-road-46049189",
+   "source": "camden",
+   "lat": 51.556548,
+   "lon": -0.160845,
+   "street": "Nassington Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051118. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/netherhall-gardens-46035089",
+   "source": "camden",
+   "lat": 51.552211,
+   "lon": -0.176176,
+   "street": "Netherhall Gardens",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051437. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/netherhall-gardens-46035618",
+   "source": "camden",
+   "lat": 51.549373,
+   "lon": -0.179169,
+   "street": "Netherhall Gardens",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051265. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/new-compton-street-46042415",
+   "source": "camden",
+   "lat": 51.514343,
+   "lon": -0.128401,
+   "street": "New Compton Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051262. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/new-compton-street-46042600",
+   "source": "camden",
+   "lat": 51.514611,
+   "lon": -0.12812,
+   "street": "New Compton Street",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051423. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/new-oxford-street-46042328",
+   "source": "camden",
+   "lat": 51.517219,
+   "lon": -0.123671,
+   "street": "New Oxford Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051144. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/new-oxford-street-46042462",
+   "source": "camden",
+   "lat": 51.51718,
+   "lon": -0.124119,
+   "street": "New Oxford Street",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051160. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/oakley-square-46047558",
+   "source": "camden",
+   "lat": 51.533405,
+   "lon": -0.137141,
+   "street": "Oakley Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051231. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/ospringe-road-46045224",
+   "source": "camden",
+   "lat": 51.553834,
+   "lon": -0.136669,
+   "street": "Ospringe Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051145. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/ospringe-road-46045376",
+   "source": "camden",
+   "lat": 51.553927,
+   "lon": -0.138085,
+   "street": "Ospringe Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051331. Controlled zone CA-M."
+  },
+  {
+   "id": "council/camden/oval-road-46137766",
+   "source": "camden",
+   "lat": 51.540215,
+   "lon": -0.148028,
+   "street": "Oval Road",
+   "lengthMetres": 4.0,
+   "fee": "unknown",
+   "rules": "Motorcycles only at all times. Camden's data lists no charge for this bay, but doesn't say it's free. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/park-village-east-46047588",
+   "source": "camden",
+   "lat": 51.534289,
+   "lon": -0.143961,
+   "street": "Park Village East",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051301. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/parker-street-46042398",
+   "source": "camden",
+   "lat": 51.51614,
+   "lon": -0.121146,
+   "street": "Parker Street",
+   "lengthMetres": 14.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051271. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/parliament-hill-46049171",
+   "source": "camden",
+   "lat": 51.556844,
+   "lon": -0.163118,
+   "street": "Parliament Hill",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051436. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/percy-street-46036269",
+   "source": "camden",
+   "lat": 51.518598,
+   "lon": -0.132927,
+   "street": "Percy Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051235. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/pilgrim-s-lane-46049024",
+   "source": "camden",
+   "lat": 51.555732,
+   "lon": -0.171877,
+   "street": "Pilgrim's Lane",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051379. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/polygon-road-46135632",
+   "source": "camden",
+   "lat": 51.531376,
+   "lon": -0.133508,
+   "street": "Polygon Road",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051184. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/portpool-lane-46042572",
+   "source": "camden",
+   "lat": 51.520787,
+   "lon": -0.112316,
+   "street": "Portpool Lane",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051142. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/portpool-lane-46128679",
+   "source": "camden",
+   "lat": 51.520994,
+   "lon": -0.111486,
+   "street": "Portpool Lane",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051139. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/pratt-street-46049450",
+   "source": "camden",
+   "lat": 51.53786,
+   "lon": -0.139182,
+   "street": "Pratt Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051218. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/pratt-street-46127408",
+   "source": "camden",
+   "lat": 51.538575,
+   "lon": -0.137559,
+   "street": "Pratt Street",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051438. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/prince-of-wales-road-46045642",
+   "source": "camden",
+   "lat": 51.545939,
+   "lon": -0.149768,
+   "street": "Prince Of Wales Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051320. Controlled zone CA-F."
+  },
+  {
+   "id": "council/camden/princess-road-46048127",
+   "source": "camden",
+   "lat": 51.539256,
+   "lon": -0.15205,
+   "street": "Princess Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051123. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/provost-road-46045627",
+   "source": "camden",
+   "lat": 51.544653,
+   "lon": -0.15856,
+   "street": "Provost Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051333. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/queen-square-46042523",
+   "source": "camden",
+   "lat": 51.521535,
+   "lon": -0.121926,
+   "street": "Queen Square",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051176. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/queen-square-46042672",
+   "source": "camden",
+   "lat": 51.522109,
+   "lon": -0.123033,
+   "street": "Queen Square",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051193. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/queen-square-46043052",
+   "source": "camden",
+   "lat": 51.521122,
+   "lon": -0.122251,
+   "street": "Queen Square",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051120. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/queen-s-crescent-46045658",
+   "source": "camden",
+   "lat": 51.548005,
+   "lon": -0.154007,
+   "street": "Queen's Crescent",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051339. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/raglan-street-46045301",
+   "source": "camden",
+   "lat": 51.548473,
+   "lon": -0.1429,
+   "street": "Raglan Street",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051330. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/raglan-street-46045303",
+   "source": "camden",
+   "lat": 51.548003,
+   "lon": -0.142399,
+   "street": "Raglan Street",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051259. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/ravenshaw-street-46043863",
+   "source": "camden",
+   "lat": 51.550963,
+   "lon": -0.200784,
+   "street": "Ravenshaw Street",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051327. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/red-lion-square-46042505",
+   "source": "camden",
+   "lat": 51.519188,
+   "lon": -0.11949,
+   "street": "Red Lion Square",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051376. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/red-lion-square-46042562",
+   "source": "camden",
+   "lat": 51.519278,
+   "lon": -0.118231,
+   "street": "Red Lion Square",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051173. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/red-lion-square-46042781",
+   "source": "camden",
+   "lat": 51.519463,
+   "lon": -0.118368,
+   "street": "Red Lion Square",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051136. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/red-lion-square-46042947",
+   "source": "camden",
+   "lat": 51.518889,
+   "lon": -0.119283,
+   "street": "Red Lion Square",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051307. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/regent-s-park-road-46047955",
+   "source": "camden",
+   "lat": 51.541783,
+   "lon": -0.156505,
+   "street": "Regent's Park Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051295. Controlled zone CA-J."
+  },
+  {
+   "id": "council/camden/regent-s-park-road-46048141",
+   "source": "camden",
+   "lat": 51.543529,
+   "lon": -0.153541,
+   "street": "Regent's Park Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051158. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/richborough-road-46043753",
+   "source": "camden",
+   "lat": 51.555076,
+   "lon": -0.212878,
+   "street": "Richborough Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051268. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/ridgmount-street-46036251",
+   "source": "camden",
+   "lat": 51.521021,
+   "lon": -0.13198,
+   "street": "Ridgmount Street",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051416. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/rochester-square-46048351",
+   "source": "camden",
+   "lat": 51.543464,
+   "lon": -0.136195,
+   "street": "Rochester Square",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051410. Controlled zone CA-N."
+  },
+  {
+   "id": "council/camden/roger-street-46042527",
+   "source": "camden",
+   "lat": 51.522832,
+   "lon": -0.115448,
+   "street": "Roger Street",
+   "lengthMetres": 10.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051140. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/rona-road-46046051",
+   "source": "camden",
+   "lat": 51.555527,
+   "lon": -0.154356,
+   "street": "Rona Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051241. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/rondu-road-46043805",
+   "source": "camden",
+   "lat": 51.553296,
+   "lon": -0.210758,
+   "street": "Rondu Road",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051190. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/rosemont-road-46044403",
+   "source": "camden",
+   "lat": 51.549127,
+   "lon": -0.183505,
+   "street": "Rosemont Road",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051360. Also valid with a CA-R or CA-K permit. Controlled zone CA-R."
+  },
+  {
+   "id": "council/camden/royal-college-street-46047814",
+   "source": "camden",
+   "lat": 51.542108,
+   "lon": -0.138576,
+   "street": "Royal College Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051101. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/royal-college-street-46126607",
+   "source": "camden",
+   "lat": 51.537847,
+   "lon": -0.13505,
+   "street": "Royal College Street",
+   "lengthMetres": 19.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051287. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/russell-square-46035987",
+   "source": "camden",
+   "lat": 51.522661,
+   "lon": -0.126277,
+   "street": "Russell Square",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051344. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/russell-square-46035991",
+   "source": "camden",
+   "lat": 51.521658,
+   "lon": -0.127739,
+   "street": "Russell Square",
+   "lengthMetres": 18.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051277. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/russell-square-46035997",
+   "source": "camden",
+   "lat": 51.520712,
+   "lon": -0.125917,
+   "street": "Russell Square",
+   "lengthMetres": 22.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051143. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/saffron-hill-46042530",
+   "source": "camden",
+   "lat": 51.521715,
+   "lon": -0.107835,
+   "street": "Saffron Hill",
+   "lengthMetres": 13.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051170. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/saffron-street-46042519",
+   "source": "camden",
+   "lat": 51.521551,
+   "lon": -0.106916,
+   "street": "Saffron Street",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051304. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/sandland-street-46042779",
+   "source": "camden",
+   "lat": 51.518955,
+   "lon": -0.11612,
+   "street": "Sandland Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051377. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/sandwell-crescent-46044339",
+   "source": "camden",
+   "lat": 51.549428,
+   "lon": -0.19187,
+   "street": "Sandwell Crescent",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051340. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/savernake-road-46046048",
+   "source": "camden",
+   "lat": 51.555796,
+   "lon": -0.155308,
+   "street": "Savernake Road",
+   "lengthMetres": 1.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051179. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/shelton-street-46127616",
+   "source": "camden",
+   "lat": 51.513511,
+   "lon": -0.125932,
+   "street": "Shelton Street",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051122. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/sherriff-road-46044453",
+   "source": "camden",
+   "lat": 51.546078,
+   "lon": -0.191545,
+   "street": "Sherriff Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051154. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/shirlock-road-46046056",
+   "source": "camden",
+   "lat": 51.555479,
+   "lon": -0.157446,
+   "street": "Shirlock Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051387. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/sidmouth-street-46043150",
+   "source": "camden",
+   "lat": 51.527035,
+   "lon": -0.119298,
+   "street": "Sidmouth Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051318. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/skardu-road-46043819",
+   "source": "camden",
+   "lat": 51.554302,
+   "lon": -0.210998,
+   "street": "Skardu Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051228. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/skardu-road-46043822",
+   "source": "camden",
+   "lat": 51.553965,
+   "lon": -0.211629,
+   "street": "Skardu Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051219. Controlled zone CA-Q."
+  },
+  {
+   "id": "council/camden/solent-road-46044354",
+   "source": "camden",
+   "lat": 51.5499,
+   "lon": -0.196146,
+   "street": "Solent Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051242. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/south-grove-46044874",
+   "source": "camden",
+   "lat": 51.570466,
+   "lon": -0.148548,
+   "street": "South Grove",
+   "lengthMetres": 3.505,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051338. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/south-hill-park-46048988",
+   "source": "camden",
+   "lat": 51.558872,
+   "lon": -0.163684,
+   "street": "South Hill Park",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051395. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/south-hill-park-46049166",
+   "source": "camden",
+   "lat": 51.555897,
+   "lon": -0.165247,
+   "street": "South Hill Park",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051137. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/south-hill-park-46049280",
+   "source": "camden",
+   "lat": 51.558209,
+   "lon": -0.164219,
+   "street": "South Hill Park",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051288. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/southampton-road-46046364",
+   "source": "camden",
+   "lat": 51.5518,
+   "lon": -0.157411,
+   "street": "Southampton Road",
+   "lengthMetres": 6.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051238. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/southampton-road-46130226",
+   "source": "camden",
+   "lat": 51.550605,
+   "lon": -0.156671,
+   "street": "Southampton Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051203. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/spring-place-46045407",
+   "source": "camden",
+   "lat": 51.549065,
+   "lon": -0.146496,
+   "street": "Spring Place",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051276. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/st-cross-street-46042518",
+   "source": "camden",
+   "lat": 51.520979,
+   "lon": -0.106922,
+   "street": "St Cross Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051332. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/st-cross-street-46128749",
+   "source": "camden",
+   "lat": 51.520683,
+   "lon": -0.108245,
+   "street": "St Cross Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051196. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/stanhope-street-46047505",
+   "source": "camden",
+   "lat": 51.526385,
+   "lon": -0.140923,
+   "street": "Stanhope Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051292. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/steele-s-road-46045620",
+   "source": "camden",
+   "lat": 51.54515,
+   "lon": -0.160119,
+   "street": "Steele's Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051427. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/store-street-46036006",
+   "source": "camden",
+   "lat": 51.51938,
+   "lon": -0.132697,
+   "street": "Store Street",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051201. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/store-street-46036009",
+   "source": "camden",
+   "lat": 51.520263,
+   "lon": -0.130658,
+   "street": "Store Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051319. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/sumatra-road-46044330",
+   "source": "camden",
+   "lat": 51.548855,
+   "lon": -0.192667,
+   "street": "Sumatra Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051155. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/sumatra-road-46044331",
+   "source": "camden",
+   "lat": 51.548956,
+   "lon": -0.194279,
+   "street": "Sumatra Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051189. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/swain-s-lane-46045009",
+   "source": "camden",
+   "lat": 51.561809,
+   "lon": -0.15004,
+   "street": "Swain's Lane",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051286. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/tankerton-street-46043085",
+   "source": "camden",
+   "lat": 51.527961,
+   "lon": -0.122064,
+   "street": "Tankerton Street",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051407. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/tanza-road-46049183",
+   "source": "camden",
+   "lat": 51.55666,
+   "lon": -0.160147,
+   "street": "Tanza Road",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051362. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/tavistock-square-46036263",
+   "source": "camden",
+   "lat": 51.525605,
+   "lon": -0.129467,
+   "street": "Tavistock Square",
+   "lengthMetres": 12.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051209. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/taviton-street-46036258",
+   "source": "camden",
+   "lat": 51.526042,
+   "lon": -0.132196,
+   "street": "Taviton Street",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051169. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/templewood-avenue-46035201",
+   "source": "camden",
+   "lat": 51.559519,
+   "lon": -0.187704,
+   "street": "Templewood Avenue",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 12.30pm–2.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051303. Controlled zone CA-S."
+  },
+  {
+   "id": "council/camden/tottenham-street-46131549",
+   "source": "camden",
+   "lat": 51.520446,
+   "lon": -0.135543,
+   "street": "Tottenham Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051115. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/tower-street-46134547",
+   "source": "camden",
+   "lat": 51.513037,
+   "lon": -0.127474,
+   "street": "Tower Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051104. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/twisden-road-46044906",
+   "source": "camden",
+   "lat": 51.557853,
+   "lon": -0.143399,
+   "street": "Twisden Road",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051213. Controlled zone CA-U."
+  },
+  {
+   "id": "council/camden/university-street-46129405",
+   "source": "camden",
+   "lat": 51.523332,
+   "lon": -0.135877,
+   "street": "University Street",
+   "lengthMetres": 19.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051220. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/upper-park-road-46046036",
+   "source": "camden",
+   "lat": 51.549465,
+   "lon": -0.161188,
+   "street": "Upper Park Road",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051240. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/vale-of-health-46048990",
+   "source": "camden",
+   "lat": 51.562215,
+   "lon": -0.176485,
+   "street": "Vale Of Health",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051149. Controlled zone CA-H."
+  },
+  {
+   "id": "council/camden/vicar-s-road-46127504",
+   "source": "camden",
+   "lat": 51.552465,
+   "lon": -0.152005,
+   "street": "Vicar's Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051297. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/warren-street-46036278",
+   "source": "camden",
+   "lat": 51.52431,
+   "lon": -0.13865,
+   "street": "Warren Street",
+   "lengthMetres": 9.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051403. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/weedington-road-46046015",
+   "source": "camden",
+   "lat": 51.550671,
+   "lon": -0.151101,
+   "street": "Weedington Road",
+   "lengthMetres": 8.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051257. Controlled zone CA-L."
+  },
+  {
+   "id": "council/camden/west-end-lane-46043521",
+   "source": "camden",
+   "lat": 51.539439,
+   "lon": -0.191827,
+   "street": "West End Lane",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051223. Controlled zone CA-K."
+  },
+  {
+   "id": "council/camden/west-end-lane-46043837",
+   "source": "camden",
+   "lat": 51.552184,
+   "lon": -0.191952,
+   "street": "West End Lane",
+   "lengthMetres": 2.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051418. Controlled zone CA-P."
+  },
+  {
+   "id": "council/camden/whetstone-park-46042390",
+   "source": "camden",
+   "lat": 51.517188,
+   "lon": -0.117586,
+   "street": "Whetstone Park",
+   "lengthMetres": 3.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051415. Controlled zone CA-C."
+  },
+  {
+   "id": "council/camden/whitfield-street-46035773",
+   "source": "camden",
+   "lat": 51.519684,
+   "lon": -0.134421,
+   "street": "Whitfield Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051236. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/whitfield-street-46036053",
+   "source": "camden",
+   "lat": 51.520786,
+   "lon": -0.135574,
+   "street": "Whitfield Street",
+   "lengthMetres": 4.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051266. Controlled zone CA-E."
+  },
+  {
+   "id": "council/camden/wicklow-street-46043224",
+   "source": "camden",
+   "lat": 51.529521,
+   "lon": -0.117753,
+   "street": "Wicklow Street",
+   "lengthMetres": 7.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051164. Controlled zone CA-D."
+  },
+  {
+   "id": "council/camden/william-road-46047509",
+   "source": "camden",
+   "lat": 51.527147,
+   "lon": -0.140043,
+   "street": "William Road",
+   "lengthMetres": 11.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051151. Controlled zone CA-G."
+  },
+  {
+   "id": "council/camden/winchester-road-46046955",
+   "source": "camden",
+   "lat": 51.542391,
+   "lon": -0.171592,
+   "street": "Winchester Road",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051296. Controlled zone CA-B."
+  },
+  {
+   "id": "council/camden/york-rise-46044998",
+   "source": "camden",
+   "lat": 51.558805,
+   "lon": -0.143843,
+   "street": "York Rise",
+   "lengthMetres": 5.0,
+   "fee": "paid",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051346. Controlled zone CA-U."
   }
  ],
  "unplaced": [
@@ -2482,6 +5728,51 @@
    "source": "bromley",
    "description": "Petts Wood Road, Petts Wood",
    "why": "The council gives only the street name, and the street is too long to place a pin from that."
+  },
+  {
+   "source": "camden",
+   "description": "Agar Grove Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Ampthill Square Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Bourne Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Harben Road Estate 1: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Ossulston Estate 1: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Ossulston Estate 2: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "Russell Nurseries Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "South End Close Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
+  },
+  {
+   "source": "camden",
+   "description": "West End Sidings Estate: motorcycle bay on a housing estate.",
+   "why": "Left out: the data lists no charge, and estate parking normally needs an estate permit."
   }
  ]
 }

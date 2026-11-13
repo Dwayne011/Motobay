@@ -170,7 +170,7 @@ def council_bays(council, osm_bays):
             for k in OVERLAY_FIELDS:
                 if k in c:
                     match[k] = c[k]
-            if not unconfirmed or match.get("fee", "unknown") == "unknown":
+            if fee != "unknown" and (not unconfirmed or match.get("fee", "unknown") == "unknown"):
                 match["fee"] = fee
                 match.pop("feeUnconfirmed", None)
                 if unconfirmed:
@@ -183,7 +183,7 @@ def council_bays(council, osm_bays):
         bay["lat"], bay["lon"] = round(c["lat"], 6), round(c["lon"], 6)
         bay["name"] = "Motorcycle parking"
         bay["fee"] = fee
-        if unconfirmed:
+        if unconfirmed and fee != "unknown":
             bay["feeUnconfirmed"] = True
         bay["source"] = src["name"]
         out.append(bay)
