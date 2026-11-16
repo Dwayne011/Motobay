@@ -67,6 +67,8 @@ import uk.motobay.app.ui.settings.LegalScreen
 import uk.motobay.app.ui.settings.Policy
 import uk.motobay.app.ui.settings.PolicyScreen
 import uk.motobay.app.ui.settings.SettingsScreen
+import uk.motobay.app.ui.settings.SettingsPage
+import uk.motobay.app.ui.settings.SettingsPageScreen
 import kotlin.reflect.KClass
 
 @Serializable object ExploreDest
@@ -76,6 +78,7 @@ import kotlin.reflect.KClass
 @Serializable object MySubmissionsDest
 @Serializable object LegalDest
 @Serializable object SupporterDest
+@Serializable data class SettingsPageDest(val page: String)
 @Serializable data class PolicyDest(val policy: String)
 @Serializable data class BayDest(val id: String)
 
@@ -140,9 +143,12 @@ fun MotoBayApp(app: MotoBayApplication) {
             restoreState = true
         }
     }
+    // Pages opened from Settings keep the Settings tab lit, as the bay page does for Explore.
+    val settingsPages = listOf(SettingsPageDest::class, SupporterDest::class, LegalDest::class, PolicyDest::class, MySubmissionsDest::class)
     val isSelected: (TopLevel) -> Boolean = { d ->
         current?.hierarchy?.any { it.hasRoute(d.routeClass) } == true ||
-            (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true)
+            (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true) ||
+            (d.route == SettingsDest && settingsPages.any { current?.hasRoute(it) == true })
     }
     val content: @Composable () -> Unit = {
             // The colour pools sit behind every screen; the map covers them on Explore.
@@ -172,7 +178,11 @@ fun MotoBayApp(app: MotoBayApplication) {
                         onOpenSupporter = { nav.navigate(SupporterDest) },
                         onOpenLegal = { nav.navigate(LegalDest) },
                         onOpenPolicy = { nav.navigate(PolicyDest(it.name)) },
+                        onOpenPage = { nav.navigate(SettingsPageDest(it.name)) },
                     ) }
+                }
+                composable<SettingsPageDest> { entry ->
+                    AboveNav { SettingsPageScreen(SettingsPage.valueOf(entry.toRoute<SettingsPageDest>().page), onBack = { nav.popBackStack() }) }
                 }
                 composable<SupporterDest> { AboveNav { SupporterScreen(onBack = { nav.popBackStack() }) } }
                 composable<LegalDest> { AboveNav { LegalScreen(onBack = { nav.popBackStack() }, onOpenPolicy = { nav.navigate(PolicyDest(it.name)) }) } }

@@ -1,19 +1,15 @@
 package uk.motobay.app.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.materialkolor.ktx.harmonize
@@ -57,13 +53,16 @@ fun isAppInDarkTheme(mode: ThemeMode): Boolean = when (mode) {
     ThemeMode.Dark -> true
 }
 
+/** The Frost accent, the seed for the Material colour scheme. */
+private val FrostSeed = Color(0xFF3B5B92)
+
 /**
  * Material 3 theme.
  *
- * Colour: every role (primary, secondary, tertiary, surfaces) is generated
- * from one source colour with the M3 "tonal spot" scheme. Dark mode uses the
- * inverted tones of the same palettes. On Android 12+ riders can opt into
- * wallpaper-based dynamic colour instead.
+ * Colour: the app's own screens use the fixed Frost palette (see AuroraPalette).
+ * Material parts such as dialogs, sheets and snackbars use a "tonal spot" scheme
+ * generated from the Frost accent, so they match. Dark mode uses the inverted
+ * tones of the same palettes.
  *
  * Elevation: Compose M3 components use tonal elevation (surface blended with
  * the primary tint via `tonalElevation` and the surfaceContainer roles), so no
@@ -75,15 +74,10 @@ fun isAppInDarkTheme(mode: ThemeMode): Boolean = when (mode) {
 @Composable
 fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
     val dark = isAppInDarkTheme(settings.themeMode)
-    val context = LocalContext.current
-    val useWallpaper = settings.wallpaperColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-    val scheme: ColorScheme = when {
-        useWallpaper && dark -> dynamicDarkColorScheme(context)
-        useWallpaper -> dynamicLightColorScheme(context)
-        else -> remember(settings.sourceColor, dark) {
-            dynamicColorScheme(seedColor = Color(settings.sourceColor), isDark = dark, style = PaletteStyle.TonalSpot)
-        }
+    // The Frost look has fixed colours, so the Material scheme (dialogs, sheets, snackbars)
+    // comes from the Frost accent rather than a chosen colour or the wallpaper.
+    val scheme: ColorScheme = remember(dark) {
+        dynamicColorScheme(seedColor = FrostSeed, isDark = dark, style = PaletteStyle.TonalSpot)
     }
 
     val extended = remember(scheme.primary, dark) {

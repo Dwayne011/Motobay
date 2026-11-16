@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -277,19 +278,59 @@ fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette, modifier: Modif
     }
 }
 
-/** A Frost page header: a round back button, the 22sp title, and optional actions on the right. */
+/** A Frost page header: a round back button, an optional overline over the 22sp title, and optional actions on the right. */
 @Composable
 fun FrostPageHeader(
     title: String,
     palette: AuroraPalette,
     onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    overline: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         if (onBack != null) FrostRoundIcon(Icons.AutoMirrored.Filled.ArrowBack, "Back", palette, onBack)
-        AuroraHeader(title, palette, Modifier.weight(1f))
+        Column(Modifier.weight(1f).padding(start = if (onBack == null) 6.dp else 0.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            if (overline != null) Text(overline.uppercase(), style = frostOverline(palette.cardSubtext), maxLines = 1)
+            AuroraHeader(title, palette)
+        }
         actions()
+    }
+}
+
+/**
+ * A Frost menu row, as on the first Settings page: a 38dp tinted icon tile, the title, its
+ * current value underneath, and a chevron (or [trailing] instead).
+ */
+@Composable
+fun FrostMenuRow(
+    icon: ImageVector,
+    tone: Pair<Color, Color>,
+    title: String,
+    caption: String?,
+    palette: AuroraPalette,
+    onClick: (() -> Unit)?,
+    titleColor: Color = palette.cardTitleText,
+    trailing: (@Composable () -> Unit)? = null,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = 64.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick, role = Role.Button) else Modifier)
+            .padding(horizontal = 10.dp, vertical = 11.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(Modifier.size(38.dp).clip(RoundedCornerShape(12.dp)).background(tone.first), contentAlignment = Alignment.Center) {
+            Icon(icon, contentDescription = null, tint = tone.second, modifier = Modifier.size(19.dp))
+        }
+        AuroraRowText(title, caption, palette, titleColor)
+        when {
+            trailing != null -> trailing()
+            onClick != null -> Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = palette.muted, modifier = Modifier.size(20.dp))
+        }
     }
 }
 
