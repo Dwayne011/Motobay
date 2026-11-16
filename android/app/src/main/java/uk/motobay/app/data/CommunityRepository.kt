@@ -9,20 +9,30 @@ data class CommunityData(
     val photos: List<BayPhoto> = emptyList(),
     val comments: List<BayComment> = emptyList(),
     val bays: List<BaySubmission> = emptyList(),
+    /** The signed-in rider's own ratings. Other riders' ratings are private; only [summaries] are public. */
     val ratings: List<BayRating> = emptyList(),
+    /** Each rated bay's totals, by bay id, kept by the Cloud Function in functions/. */
+    val summaries: Map<String, RatingSummary> = emptyMap(),
 )
 
 /**
- * One rider's 1 to 5 star rating of a bay. A rider has at most one per bay,
- * and it is public straight away: there is no text to moderate.
+ * One rider's 1 to 5 star rating of a bay. A rider has at most one per bay. It counts
+ * towards the bay's public average straight away (there is no text to moderate), but
+ * who gave which rating is private.
  */
 @Serializable
 data class BayRating(val bayId: String, val stars: Int, val authorUid: String, val updatedAt: Long)
 
 /** A bay's average star rating and how many riders gave one. */
+@Serializable
 data class RatingSummary(val average: Double, val count: Int)
 
+/**
+ * The bay's public totals. Until the Cloud Function has counted a bay (a second or so
+ * after its first rating), falls back to the ratings this phone can see.
+ */
 fun CommunityData.ratingSummary(bayId: String): RatingSummary? {
+    summaries[bayId]?.let { return it }
     val stars = ratings.filter { it.bayId == bayId }.map { it.stars }
     return if (stars.isEmpty()) null else RatingSummary(stars.average(), stars.size)
 }

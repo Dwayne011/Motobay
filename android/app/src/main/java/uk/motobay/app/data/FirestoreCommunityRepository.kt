@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
@@ -51,14 +52,17 @@ class FirestoreCommunityRepository(
                 listen(PHOTOS, viewer, ::photoFrom),
                 listen(COMMENTS, viewer, ::commentFrom),
                 listen(BAYS, viewer, ::baySubmissionFrom),
-                // Ratings are public and unmoderated, so everyone reads them all.
-                db.collection(RATINGS).snapshotFlow(::ratingFrom),
-            ) { photos, comments, bays, ratings ->
+                // Ratings are private: a rider reads only their own, and everyone reads the per-bay totals.
+                if (viewer == null) flowOf(emptyMap<String, BayRating>())
+                else db.collection(RATINGS).whereEqualTo("authorUid", viewer.uid).snapshotFlow(::ratingFrom),
+                db.collection(RATING_SUMMARIES).snapshotFlow(::ratingSummaryFrom),
+            ) { photos, comments, bays, ratings, summaries ->
                 CommunityData(
                     photos = photos.sortedByDescending { it.createdAt },
                     comments = comments.sortedByDescending { it.createdAt },
                     bays = bays.sortedByDescending { it.createdAt },
                     ratings = ratings.values.toList(),
+                    summaries = summaries.values.toMap(),
                 )
             }
         }

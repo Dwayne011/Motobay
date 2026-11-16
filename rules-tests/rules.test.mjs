@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { after, before, beforeEach, describe, test } from 'node:test';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import assert from 'node:assert/strict';
-import { deleteDoc, deleteField, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, deleteField, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { ref, uploadBytes, getBytes, deleteObject } from 'firebase/storage';
 
 const ADMIN_EMAIL = 'dwayne.edwards89@googlemail.com';
@@ -265,9 +265,26 @@ describe('ratings', () => {
     await assertFails(setDoc(doc(rider().firestore(), path()), rating('rider1', { updatedAt: new Date(2020, 1, 1) })));
     await assertFails(setDoc(doc(rider().firestore(), path()), { ...rating(), comment: 'hi' }));
   });
-  test('anyone, even signed out, can read ratings', async () => {
+  test('a rating is private to the rider who gave it and the admin', async () => {
     await seed(path('rider2'), { bayId: 'node/1', stars: 5, authorUid: 'rider2', updatedAt: new Date() });
-    await assertSucceeds(getDoc(doc(anon().firestore(), path('rider2'))));
+    await assertSucceeds(getDoc(doc(rider('rider2').firestore(), path('rider2'))));
+    await assertSucceeds(getDoc(doc(admin().firestore(), path('rider2'))));
+    await assertFails(getDoc(doc(rider('rider1').firestore(), path('rider2'))));
+    await assertFails(getDoc(doc(anon().firestore(), path('rider2'))));
+  });
+  test('a rider can list their own ratings but not everyone\'s', async () => {
+    await seed(path('rider2'), { bayId: 'node/1', stars: 5, authorUid: 'rider2', updatedAt: new Date() });
+    await assertSucceeds(getDocs(query(collection(rider('rider2').firestore(), 'ratings'), where('authorUid', '==', 'rider2'))));
+    await assertFails(getDocs(collection(rider('rider1').firestore(), 'ratings')));
+    await assertFails(getDocs(query(collection(rider('rider1').firestore(), 'ratings'), where('authorUid', '==', 'rider2'))));
+    await assertFails(getDocs(query(collection(anon().firestore(), 'ratings'), where('bayId', '==', 'node/1'))));
+  });
+  test('rating totals are public and only the Cloud Function writes them', async () => {
+    await seed('ratingSummaries/node_1', { bayId: 'node/1', count: 2, total: 9 });
+    await assertSucceeds(getDoc(doc(anon().firestore(), 'ratingSummaries/node_1')));
+    await assertSucceeds(getDocs(collection(anon().firestore(), 'ratingSummaries')));
+    await assertFails(setDoc(doc(rider().firestore(), 'ratingSummaries/node_1'), { bayId: 'node/1', count: 99, total: 495 }));
+    await assertFails(setDoc(doc(admin().firestore(), 'ratingSummaries/node_2'), { bayId: 'node/2', count: 1, total: 5 }));
   });
   test('the rider and the admin can delete a rating; other riders cannot', async () => {
     await seed(path('rider1'), { bayId: 'node/1', stars: 5, authorUid: 'rider1', updatedAt: new Date() });
