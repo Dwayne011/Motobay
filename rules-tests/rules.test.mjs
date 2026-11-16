@@ -324,6 +324,9 @@ describe('storage', () => {
   test('only jpegs under 5 MB are accepted', async () => {
     await assertFails(uploadBytes(at(rider('rider1'), 'photos/rider1/p1.png'), jpeg(), { contentType: 'image/png' }));
     await assertFails(uploadBytes(at(rider('rider1'), 'photos/rider1/big.jpg'), new Uint8Array(5 * 1024 * 1024 + 1), meta));
+    // Only plain names ending .jpg, as the app writes them.
+    await assertFails(uploadBytes(at(rider('rider1'), 'photos/rider1/p1.jpg.html'), jpeg(), meta));
+    await assertFails(uploadBytes(at(rider('rider1'), 'photos/rider1/a b.jpg'), jpeg(), meta));
   });
   test('uploads outside photos/ are refused', async () => {
     await assertFails(uploadBytes(at(rider('rider1'), 'other/rider1/p1.jpg'), jpeg(), meta));
