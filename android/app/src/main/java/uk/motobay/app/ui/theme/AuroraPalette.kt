@@ -72,7 +72,7 @@ data class AuroraPalette(
     val tile: Color,
     /** Hairlines between rows inside a panel. */
     val divider: Color,
-    /** The light top edge of a glass panel. */
+    /** The top edge of a glass panel; the same as the border, so no highlight. */
     val hi: Color,
     /** Selected state: a wash of the accent, with [selectedBorder]. */
     val selected: Color,
@@ -86,7 +86,7 @@ data class AuroraPalette(
     val tonePaid: Pair<Color, Color>,
     val toneBlue: Pair<Color, Color>,
     val toneViolet: Pair<Color, Color>,
-    /** The colour pools behind the content screens: (colour, x, y, radius as a fraction of the width). */
+    /** Optional colour pools behind the content screens: (colour, x, y, radius as a fraction of the width). None for now: a plain background. */
     val pools: List<Pool>,
 ) {
     @Immutable
@@ -98,8 +98,8 @@ data class AuroraPalette(
         val StatusPaid = Color(0xFFF59E0B)
         val StatusUnknown = Color(0xFFEF4444)
 
-        private val DarkGlass = Color(0xB8181D2E) // over the map: 72%
-        private val DarkPanel = Color(0x94181D2E) // over the colour pools: 58%
+        private val DarkGlass = Color(0xC7181D2E) // 78%, as in the original Frost mockup
+        private val DarkPanel = DarkGlass
         private val DarkBorder = Color(0x1AFFFFFF)
         private val DarkAccent = Color(0xFFC9D8FF)
         private val DarkOnAccent = Color(0xFF0E1A3A)
@@ -152,7 +152,7 @@ data class AuroraPalette(
             muted = Color(0xFF8E97AB),
             tile = Color(0x1AFFFFFF),
             divider = Color(0x0FFFFFFF),
-            hi = Color(0x1FFFFFFF),
+            hi = DarkBorder,
             selected = Color(0x2EC9D8FF),
             selectedBorder = Color(0x66C9D8FF),
             free = Color(0xFF8FE3B5),
@@ -162,16 +162,11 @@ data class AuroraPalette(
             tonePaid = Color(0x29FFE2C2) to Color(0xFFFFE2C2),
             toneBlue = Color(0x29C9D8FF) to Color(0xFFC9D8FF),
             toneViolet = Color(0x29E2D4FF) to Color(0xFFE2D4FF),
-            pools = listOf(
-                Pool(Color(0x616E82FF), 0.85f, 0.04f, 0.78f), // periwinkle, top right
-                Pool(Color(0x383CBEAA), 0.04f, 0.40f, 0.52f), // teal, left
-                Pool(Color(0x2EFFBE78), 0.96f, 0.70f, 0.54f), // amber, right
-                Pool(Color(0x47A06EFF), 0.20f, 0.98f, 0.72f), // violet, bottom left
-            ),
+            pools = emptyList(),
         )
 
-        private val LightGlass = Color(0xCCFBFCFE) // over the map: 80%
-        private val LightPanel = Color(0x9EFBFCFE) // over the colour pools: 62%
+        private val LightGlass = Color(0xD6FBFCFE) // 84%, as in the original Frost mockup
+        private val LightPanel = LightGlass
         private val LightBorder = Color(0x140B1A3A)
         private val LightAccent = Color(0xFF3B5B92)
 
@@ -223,7 +218,7 @@ data class AuroraPalette(
             muted = Color(0xFF6B7385),
             tile = Color(0x121B2A4A),
             divider = Color(0x0F0B1A3A),
-            hi = Color(0xD9FFFFFF),
+            hi = LightBorder,
             selected = Color(0x1F3B5B92),
             selectedBorder = Color(0x593B5B92),
             free = Color(0xFF1F7A47),
@@ -233,12 +228,7 @@ data class AuroraPalette(
             tonePaid = Color(0x249A5300) to Color(0xFF9A5300),
             toneBlue = Color(0x1F3B5B92) to Color(0xFF3B5B92),
             toneViolet = Color(0x1F6A4FB0) to Color(0xFF6A4FB0),
-            pools = listOf(
-                Pool(Color(0x476E82FF), 0.85f, 0.04f, 0.78f),
-                Pool(Color(0x2E3CBEAA), 0.04f, 0.40f, 0.52f),
-                Pool(Color(0x2EFFB46E), 0.96f, 0.70f, 0.54f),
-                Pool(Color(0x38A06EFF), 0.20f, 0.98f, 0.72f),
-            ),
+            pools = emptyList(),
         )
     }
 }

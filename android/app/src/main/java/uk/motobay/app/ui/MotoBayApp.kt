@@ -1,6 +1,9 @@
 package uk.motobay.app.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.asPaddingValues
@@ -144,7 +147,16 @@ fun MotoBayApp(app: MotoBayApplication) {
     val content: @Composable () -> Unit = {
             // The colour pools sit behind every screen; the map covers them on Explore.
             Box(Modifier.fillMaxSize().frostBackdrop(palette)) {
-            NavHost(nav, startDestination = ExploreDest) {
+            // A quick fade between pages. The library default is a 700ms crossfade, which felt
+            // like a delay, and with see-through screens both pages showed at once.
+            NavHost(
+                nav,
+                startDestination = ExploreDest,
+                enterTransition = { fadeIn(tween(180)) },
+                exitTransition = { fadeOut(tween(120)) },
+                popEnterTransition = { fadeIn(tween(180)) },
+                popExitTransition = { fadeOut(tween(120)) },
+            ) {
                 // Explore runs under the floating navigation; the other screens stop above it.
                 composable<ExploreDest> {
                     ExploreScreen(onOpenBay = { nav.navigate(BayDest(it)) }, onOpenSupporter = { nav.navigate(SupporterDest) })

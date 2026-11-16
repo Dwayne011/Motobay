@@ -55,6 +55,6 @@ fun Modifier.frostBackdrop(palette: AuroraPalette): Modifier = drawBehind {
     }
 }
 
-/** A glass panel's 1dp edge: the light highlight along the top fading into the hairline border. */
+/** A panel's 1dp edge: [AuroraPalette.hi] along the top fading into the hairline border (the same colour unless a highlight is set). */
 fun frostEdge(palette: AuroraPalette, border: Color = palette.cardBorder): BorderStroke =
     BorderStroke(1.dp, Brush.verticalGradient(0f to palette.hi, 0.35f to border, 1f to border))

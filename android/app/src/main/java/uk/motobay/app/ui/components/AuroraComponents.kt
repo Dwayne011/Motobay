@@ -76,7 +76,7 @@ fun frostOverline(color: Color): TextStyle =
     TextStyle(fontFamily = FrostFont, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 0.06.em, color = color)
 
 /**
- * A Frost glass panel: translucent fill, 1dp edge that is light along the top,
+ * A Frost panel: a mostly solid fill with a 1dp hairline edge,
  * rounded 28dp by default. [elevation] adds a soft shadow and is for opaque
  * fills only, since a shadow shows through glass.
  */
