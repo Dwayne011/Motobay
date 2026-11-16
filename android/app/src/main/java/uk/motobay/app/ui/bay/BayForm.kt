@@ -1,5 +1,18 @@
 package uk.motobay.app.ui.bay
 
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import uk.motobay.app.ui.components.AuroraOutlinedButton
+import uk.motobay.app.ui.components.AuroraPillTabs
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.AuroraSectionHeader
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,38 +66,55 @@ fun BayFormSheet(
     var covered by rememberSaveable { mutableStateOf(editing?.covered) }
     var notes by rememberSaveable { mutableStateOf("") }
 
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+    val palette = auroraPalette()
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = palette.tile, unfocusedContainerColor = palette.tile,
+        focusedBorderColor = palette.selectedBorder, unfocusedBorderColor = Color.Transparent,
+        focusedLabelColor = palette.accent, unfocusedLabelColor = palette.muted,
+        focusedTextColor = palette.cardTitleText, unfocusedTextColor = palette.cardTitleText,
+        focusedSupportingTextColor = palette.muted, unfocusedSupportingTextColor = palette.muted,
+        cursorColor = palette.accent,
+    )
+    val fieldShape = RoundedCornerShape(18.dp)
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = palette.searchSurface,
+    ) {
         Column(
             Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 24.dp).padding(bottom = 24.dp)
                 .navigationBarsPadding().imePadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(if (editing == null) "Add a bay" else "Suggest an edit", style = MaterialTheme.typography.headlineSmall)
+            Text(if (editing == null) "Add a bay" else "Suggest an edit", style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp))
             Text(
                 if (editing == null) "Tell other riders about this bay. It's checked before it appears on the map."
                 else "Know something we don't? Corrections are checked before they're published.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext),
             )
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it.take(60) },
                 label = { Text("Name or street (optional)") },
                 singleLine = true,
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            Text("Price", style = MaterialTheme.typography.titleSmall)
+            AuroraSectionHeader("Price", palette)
             Choice(
                 options = listOf(Fee.Free to "Free", Fee.Paid to "Paid", Fee.Unknown to "Not sure"),
                 selected = fee,
+                palette = palette,
                 onSelect = { fee = it },
             )
 
-            Text("Covered", style = MaterialTheme.typography.titleSmall)
+            AuroraSectionHeader("Covered", palette)
             Choice(
                 options = listOf(true to "Yes", false to "No", null to "Not sure"),
                 selected = covered,
+                palette = palette,
                 onSelect = { covered = it },
             )
 
@@ -94,6 +124,8 @@ fun BayFormSheet(
                 label = { Text("Number of spaces (optional)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
@@ -102,11 +134,13 @@ fun BayFormSheet(
                 label = { Text("Anything else? (optional)") },
                 supportingText = { Text("For example: paid 8am–6:30pm, pay by app, often full") },
                 minLines = 2,
+                shape = fieldShape,
+                colors = fieldColors,
                 modifier = Modifier.fillMaxWidth(),
             )
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp, androidx.compose.ui.Alignment.End)) {
-                TextButton(onClick = onDismiss) { Text("Cancel") }
-                Button(onClick = {
+                AuroraOutlinedButton("Cancel", palette, onClick = onDismiss, modifier = Modifier.heightIn(min = 48.dp))
+                AuroraPrimaryButton(if (editing == null) "Add bay" else "Send", palette, modifier = Modifier.heightIn(min = 48.dp), onClick = {
                     onSubmit(
                         BaySubmission(
                             id = "", editOf = editing?.id,
@@ -117,23 +151,18 @@ fun BayFormSheet(
                             author = "", createdAt = 0, status = ModerationStatus.Pending,
                         ),
                     )
-                }) { Text(if (editing == null) "Add bay" else "Send") }
+                })
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun <T> Choice(options: List<Pair<T, String>>, selected: T, onSelect: (T) -> Unit) {
-    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-        options.forEachIndexed { i, (value, label) ->
-            SegmentedButton(
-                selected = selected == value,
-                onClick = { onSelect(value) },
-                shape = SegmentedButtonDefaults.itemShape(i, options.size),
-                label = { Text(label) },
-            )
-        }
-    }
+private fun <T> Choice(options: List<Pair<T, String>>, selected: T, palette: AuroraPalette, onSelect: (T) -> Unit) {
+    AuroraPillTabs(
+        labels = options.map { it.second },
+        selected = options.indexOfFirst { it.first == selected },
+        palette = palette,
+        onSelect = { onSelect(options[it].first) },
+    )
 }

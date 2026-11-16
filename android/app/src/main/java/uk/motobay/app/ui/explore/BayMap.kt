@@ -214,7 +214,9 @@ fun BayMap(
 ) {
     // Previews and JVM screenshot tests can't load MapLibre's native code.
     if (LocalInspectionMode.current) {
-        Box(modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh))
+        val snapshot = LocalMapSnapshot.current
+        if (snapshot != null) SnapshotMap(snapshot, bays, selected, colors, onViewportChange, modifier)
+        else Box(modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh))
         return
     }
     val context = LocalContext.current

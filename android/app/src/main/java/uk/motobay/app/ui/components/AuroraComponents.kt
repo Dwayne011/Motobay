@@ -9,9 +9,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -125,7 +127,8 @@ fun AuroraPillTabs(
         border = frostEdge(palette, palette.segmentedContainerBorder),
         modifier = modifier.fillMaxWidth().heightIn(min = 40.dp),
     ) {
-        Row(Modifier.padding(3.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
+        // Intrinsic height: the segments fill the row's height, not whatever the parent offers.
+        Row(Modifier.height(IntrinsicSize.Min).padding(3.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
             labels.forEachIndexed { i, label ->
                 val active = i == selected
                 Row(
@@ -272,4 +275,61 @@ fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette, modifier: Modif
             }
         }
     }
+}
+
+/** A Frost page header: a round back button, the 22sp title, and optional actions on the right. */
+@Composable
+fun FrostPageHeader(
+    title: String,
+    palette: AuroraPalette,
+    onBack: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
+    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (onBack != null) FrostRoundIcon(Icons.AutoMirrored.Filled.ArrowBack, "Back", palette, onBack)
+        AuroraHeader(title, palette, Modifier.weight(1f))
+        actions()
+    }
+}
+
+/** A 44dp round tile button with a 20dp icon. */
+@Composable
+fun FrostRoundIcon(icon: ImageVector, description: String, palette: AuroraPalette, onClick: () -> Unit) {
+    Surface(onClick = onClick, shape = CircleShape, color = palette.tile, modifier = Modifier.size(44.dp)) {
+        Box(contentAlignment = Alignment.Center) { Icon(icon, contentDescription = description, tint = palette.text2, modifier = Modifier.size(20.dp)) }
+    }
+}
+
+/** A row inside a Frost panel: title, optional subtitle, optional trailing icon; tappable when [onClick] is set. */
+@Composable
+fun FrostListRow(
+    title: String,
+    subtitle: String?,
+    palette: AuroraPalette,
+    trailing: ImageVector? = null,
+    trailingDescription: String? = null,
+    onClick: (() -> Unit)? = null,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = 60.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        AuroraRowText(title, subtitle, palette)
+        if (trailing != null) {
+            HSpace(10)
+            Icon(trailing, contentDescription = trailingDescription, tint = palette.muted, modifier = Modifier.size(20.dp))
+        }
+    }
+}
+
+/** A hairline between rows inside a Frost panel. */
+@Composable
+fun FrostDivider(palette: AuroraPalette) {
+    Box(Modifier.fillMaxWidth().padding(horizontal = 12.dp).height(1.dp).background(palette.divider))
 }

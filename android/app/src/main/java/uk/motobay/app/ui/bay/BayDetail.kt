@@ -263,7 +263,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             }
         }
 
-        // Action toolbar: Directions, Save, Share, Report; all 40dp with 12dp corners.
+        // Action toolbar: Directions, then round Save, Share, Report and Map buttons.
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             var menu by remember { mutableStateOf(false) }
             Box(Modifier.weight(1f)) {
@@ -279,6 +279,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     )
                 }
             }
+            // Save: a round star like the other actions, so Directions keeps its room on narrow phones.
             Surface(
                 onClick = {
                     app.user.toggleFavourite(bay)
@@ -287,14 +288,14 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 shape = CircleShape,
                 color = if (saved) palette.selected else palette.tile,
                 border = if (saved) BorderStroke(1.dp, palette.selectedBorder) else null,
-                modifier = Modifier.height(44.dp),
+                modifier = Modifier.size(44.dp),
             ) {
-                Row(Modifier.padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        if (saved) Icons.Filled.Star else Icons.Outlined.StarBorder, contentDescription = null,
-                        tint = if (saved) palette.paid else palette.text2, modifier = Modifier.size(17.dp),
+                        if (saved) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        contentDescription = if (saved) "Remove from saved" else "Save bay",
+                        tint = if (saved) palette.paid else palette.text2, modifier = Modifier.size(20.dp),
                     )
-                    Text(if (saved) "Saved" else "Save", style = auroraStyle(13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
                 }
             }
             ToolbarIcon(Icons.Filled.Share, "Share", palette) { shareBay(context, bay) }

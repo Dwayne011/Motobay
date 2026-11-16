@@ -1,6 +1,22 @@
 package uk.motobay.app.ui.settings
 
 import android.content.Intent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.sp
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.FrostPageHeader
+import uk.motobay.app.ui.components.FrostRoundIcon
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.components.frostOverline
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,28 +57,24 @@ enum class Policy(val asset: String, val title: String, val url: String) {
  * Shows a policy from the app's own copy of the docs folder's Markdown, so it works offline and
  * before the website is up. The same file is what GitHub Pages serves.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PolicyScreen(policy: Policy, onBack: () -> Unit) {
     val context = LocalContext.current
+    val palette = auroraPalette()
     val blocks = remember(policy) {
         parseMarkdown(context.assets.open(policy.asset).bufferedReader().use { it.readText() })
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(policy.title) },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
-                actions = {
-                    IconButton(onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(policy.url))) }) {
-                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open on the website")
-                    }
-                },
-            )
-        },
-    ) { padding ->
-        Column(Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 32.dp)) {
-            blocks.forEach { b -> MarkdownBlock(b) }
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        FrostPageHeader(policy.title, palette, onBack) {
+            FrostRoundIcon(Icons.AutoMirrored.Filled.OpenInNew, "Open on the website", palette) {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(policy.url)))
+            }
+        }
+        AuroraCard(palette, contentPadding = 18) {
+            blocks.forEach { b -> MarkdownBlock(b, palette) }
         }
     }
 }
@@ -125,43 +137,43 @@ fun inline(text: String): AnnotatedString = buildAnnotatedString {
 }
 
 @Composable
-private fun MarkdownBlock(block: Block) {
-    val t = MaterialTheme.typography
-    val muted = MaterialTheme.colorScheme.onSurfaceVariant
+private fun MarkdownBlock(block: Block, palette: AuroraPalette) {
+    val body = auroraStyle(13.sp, FontWeight.Medium, palette.text2).copy(lineHeight = 19.sp)
     when (block) {
         is Block.Heading -> Text(
             inline(block.text),
-            style = when (block.level) { 1 -> t.headlineSmall; 2 -> t.titleLarge; else -> t.titleMedium },
-            color = if (block.level == 2) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(top = if (block.level == 1) 16.dp else 24.dp, bottom = 8.dp),
+            style = when (block.level) {
+                1 -> auroraStyle(20.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 24.sp)
+                2 -> auroraStyle(16.sp, FontWeight.ExtraBold, palette.accent).copy(lineHeight = 20.sp)
+                else -> auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText)
+            },
+            modifier = Modifier.padding(top = if (block.level == 1) 0.dp else 16.dp, bottom = 6.dp),
         )
-        is Block.Paragraph -> Text(inline(block.text), style = t.bodyMedium, modifier = Modifier.padding(bottom = 12.dp))
-        is Block.Bullets -> Column(Modifier.padding(bottom = 12.dp)) {
+        is Block.Paragraph -> Text(inline(block.text), style = body, modifier = Modifier.padding(bottom = 10.dp))
+        is Block.Bullets -> Column(Modifier.padding(bottom = 10.dp)) {
             block.items.forEach { item ->
                 Row(Modifier.padding(bottom = 4.dp)) {
-                    Text("•", style = t.bodyMedium, modifier = Modifier.padding(end = 8.dp))
-                    Text(inline(item), style = t.bodyMedium)
+                    Text("\u2022", style = body.copy(color = palette.accent), modifier = Modifier.padding(end = 8.dp))
+                    Text(inline(item), style = body)
                 }
             }
         }
-        // Phone-width tables read better as one card per row, header as labels.
-        is Block.Table -> Column(Modifier.padding(bottom = 12.dp)) {
+        // Phone-width tables read better as one tile per row, header as labels.
+        is Block.Table -> Column(Modifier.padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             block.rows.forEach { row ->
-                OutlinedCard(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
-                    Column(Modifier.padding(12.dp)) {
-                        row.forEachIndexed { i, cell ->
-                            if (cell.isBlank()) return@forEachIndexed
-                            if (i == 0) {
-                                Text(inline(cell), style = t.titleSmall)
-                            } else {
-                                Text(block.header.getOrNull(i).orEmpty(), style = t.labelSmall, color = muted, modifier = Modifier.padding(top = 8.dp))
-                                Text(inline(cell), style = t.bodyMedium)
-                            }
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(palette.tile).padding(12.dp)) {
+                    row.forEachIndexed { i, cell ->
+                        if (cell.isBlank()) return@forEachIndexed
+                        if (i == 0) {
+                            Text(inline(cell), style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+                        } else {
+                            Text(block.header.getOrNull(i).orEmpty().uppercase(), style = frostOverline(palette.muted), modifier = Modifier.padding(top = 8.dp))
+                            Text(inline(cell), style = body)
                         }
                     }
                 }
             }
         }
-        Block.Rule -> HorizontalDivider(Modifier.padding(vertical = 12.dp))
+        Block.Rule -> Box(Modifier.fillMaxWidth().padding(vertical = 10.dp).height(1.dp).background(palette.divider))
     }
 }
