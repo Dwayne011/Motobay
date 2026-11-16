@@ -177,6 +177,7 @@ class ScreenshotTest {
         app.user.updateSettings { it.copy(displayName = "") }
         setApp()
         compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Profile").performClick()
         // Typing shows availability live, and a taken name can't be saved.
         compose.onNodeWithTag("display-name").performTextInput("RiderMike")
         compose.mainClock.advanceTimeBy(600)
@@ -216,7 +217,8 @@ class ScreenshotTest {
     fun phone_privacy_policy_in_app() {
         setApp()
         compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText("Privacy policy").performScrollTo().performClick()
+        compose.onNodeWithText("Legal & about").performScrollTo().performClick()
+        compose.onNodeWithText("Privacy policy").performClick()
         compose.onNodeWithText("MotoBays Privacy Policy").assertExists()
         compose.onNodeWithText("1. Who we are").assertExists()
         shot("phone-privacy-policy")
@@ -247,6 +249,7 @@ class ScreenshotTest {
         }
         setApp()
         compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Account").performClick()
         compose.onNodeWithText("Delete account & data").performScrollTo().performClick()
         compose.onNodeWithText("Delete your account?").assertExists()
         compose.onNodeWithText("Delete").performClick()
@@ -257,6 +260,23 @@ class ScreenshotTest {
         assertTrue(app.community.data.value.comments.any { it.text == "Someone else's comment" }) // other riders' content stays
         assertEquals(null, names.taken["dwayne"])
         assertEquals("", app.user.settings.value.displayName)
+    }
+
+    /** The Settings menu opens each section on its own page. */
+    @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")
+    fun phone_settings_menu_pages() {
+        setApp()
+        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithText("Appearance").performClick()
+        compose.onNodeWithText("Dark").performClick()
+        compose.waitForIdle()
+        assertEquals(ThemeMode.Dark, app.user.settings.value.themeMode)
+        shot("phone-settings-appearance")
+        compose.onNodeWithContentDescription("Back").performClick()
+        compose.onNodeWithText("Account").performClick()
+        compose.onNodeWithText("Sign out").assertExists()
+        compose.onNodeWithText("Delete account & data").assertExists()
+        shot("phone-settings-account")
     }
 
     @Test @Config(qualifiers = "w411dp-h891dp-xxhdpi")

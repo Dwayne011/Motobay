@@ -1,5 +1,19 @@
 package uk.motobay.app.ui.settings
 
+import uk.motobay.app.BuildConfig
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.Gavel
+import androidx.compose.material.icons.outlined.DeleteForever
+import androidx.compose.material.icons.automirrored.outlined.Logout
+import uk.motobay.app.data.ModerationStatus
+import uk.motobay.app.ui.components.FrostPageHeader
+import uk.motobay.app.ui.components.FrostMenuRow
+import uk.motobay.app.ui.components.FrostDivider
+import uk.motobay.app.ui.components.frostOverline
 import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -90,151 +104,181 @@ import uk.motobay.app.ui.LocalRequireSignIn
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
 
+/** The pages the Settings menu opens. */
+enum class SettingsPage(val title: String) { Appearance("Appearance"), Profile("Profile"), Account("Account"), Blocked("Blocked riders") }
+
+/**
+ * The first Settings page: a menu, as in Frost apps. One glass card per group, each row a
+ * tinted icon tile with its title and current value, opening its own page.
+ */
 @Composable
-fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit = {}, onOpenPolicy: (Policy) -> Unit = {}, onOpenSupporter: () -> Unit = {}) {
+fun SettingsScreen(
+    onOpenSubmissions: () -> Unit = {},
+    onOpenLegal: () -> Unit = {},
+    onOpenPolicy: (Policy) -> Unit = {},
+    onOpenSupporter: () -> Unit = {},
+    onOpenPage: (SettingsPage) -> Unit = {},
+) {
     val app = LocalApp.current
     val palette = auroraPalette()
     val settings by app.user.settings.collectAsStateWithLifecycle()
-    val update = app.user::updateSettings
+    val supporter by app.supporter.state.collectAsStateWithLifecycle()
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    val community by app.community.data.collectAsStateWithLifecycle()
 
     Column(
-        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        AuroraHeader("Settings", palette)
-
-        val supporter by app.supporter.state.collectAsStateWithLifecycle()
-        AuroraCard(palette, radius = 16, color = palette.searchSurface, onClick = onOpenSupporter) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Favorite, contentDescription = null, tint = palette.searchIconActive, modifier = Modifier.size(18.dp))
-                HSpace(10)
-                AuroraRowText(
-                    "MotoBays Supporter",
-                    if (supporter.isSupporter) "Unlocked. Thank you for supporting the app." else "Unlock the \"Free now\" filter and keep the app free of adverts",
-                    palette,
-                )
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
-            }
-        }
-
-        AuroraSectionHeader("Appearance", palette)
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            val modes = listOf(ThemeMode.Light to "Light", ThemeMode.System to "System", ThemeMode.Dark to "Dark")
-            AuroraPillTabs(
-                labels = modes.map { it.second },
-                selected = modes.indexOfFirst { it.first == settings.themeMode },
-                palette = palette,
-                onSelect = { i -> update { it.copy(themeMode = modes[i].first) } },
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                    AuroraRowText("Use wallpaper colours", "Match the colours of your phone's wallpaper", palette)
-                    Switch(
-                        checked = settings.wallpaperColors,
-                        onCheckedChange = { on -> update { it.copy(wallpaperColors = on) } },
-                        colors = SwitchDefaults.colors(checkedTrackColor = palette.searchIconActive, checkedThumbColor = palette.onAccent),
-                    )
-                }
-            }
-            if (!settings.wallpaperColors || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                Column(Modifier.padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Colour", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardTitleText))
-                    Text("Every colour in the app is generated from this one.", style = auroraStyle(10.sp, color = palette.cardSubtext))
-                    SeedSwatches(settings.sourceColor) { c -> update { it.copy(sourceColor = c) } }
-                }
-            }
-        }
-
-        AuroraSectionHeader("Profile", palette)
-        DisplayNameField(settings.displayName, palette)
-
-        AuroraSectionHeader("Account", palette)
-        val account by app.auth.user.collectAsStateWithLifecycle()
-        val signedIn = account
-        if (signedIn == null) {
-            AuroraCard(palette, radius = 16) {
-                Text("Sign in to add photos, comments and bays. Browsing needs no account.", style = auroraStyle(12.sp, color = palette.cardSubtext))
-                VSpace(12)
-                SignInButtons()
-            }
-        } else {
-            AuroraCard(palette, radius = 16) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(signedIn.email ?: "Signed in", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        if (signedIn.isModerator) {
-                            AuroraTag("Moderator", palette)
-                            Text("You can review submissions", style = auroraStyle(10.sp, color = palette.cardSubtext))
-                        } else {
-                            Text("Your submissions are reviewed before they're published", style = auroraStyle(10.sp, color = palette.cardSubtext))
-                        }
-                    }
-                    AuroraTextAction("Sign out", Coral, onClick = app.auth::signOut)
-                }
-            }
-            DeleteAccountRow(palette)
-            AuroraCard(palette, radius = 16, onClick = onOpenSubmissions) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AuroraRowText("My submissions", "Your photos, comments and bay changes, and whether they've been approved", palette)
-                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
-                }
-            }
-        }
-
-        if (settings.blocked.isNotEmpty()) {
-            AuroraSectionHeader("Blocked riders", palette)
-            AuroraCard(palette, radius = 16) {
-                settings.blocked.forEachIndexed { i, b ->
-                    if (i > 0) VSpace(12)
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        AuroraRowText(b.name, "Their photos and comments are hidden on this phone", palette)
-                        AuroraTextAction("Unblock", palette.searchIconActive, onClick = { app.user.unblock(b.uid) })
-                    }
-                }
-            }
-        }
-
-        AuroraSectionHeader("About", palette)
-        AuroraCard(palette, radius = 16, onClick = onOpenLegal) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AuroraRowText("Legal & about", "Guidance-only notice, data licences (\u00a9 OpenStreetMap contributors and others), app version", palette)
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
-            }
-        }
-        AuroraCard(palette, radius = 16, onClick = { onOpenPolicy(Policy.Privacy) }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AuroraRowText("Privacy policy", "What the app collects, why, and your rights", palette)
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, Modifier.size(16.dp), tint = palette.cardSubtext)
-            }
-        }
+        FrostPageHeader("Settings", palette, onBack = null, overline = "MotoBays ${BuildConfig.VERSION_NAME}")
         CrashReportBanner(palette)
-        VSpace(8)
+
+        AuroraCard(palette, contentPadding = 4) {
+            FrostMenuRow(
+                Icons.Filled.Favorite, palette.toneViolet, "MotoBays Supporter",
+                if (supporter.isSupporter) "Unlocked. Thank you for supporting the app."
+                else "Unlock \"Free now\" and live charge times" + (supporter.price?.let { " \u00B7 $it once" } ?: ""),
+                palette, onClick = onOpenSupporter,
+            )
+        }
+
+        AuroraCard(palette, contentPadding = 4) {
+            val theme = when (settings.themeMode) { ThemeMode.Light -> "Light"; ThemeMode.Dark -> "Dark"; ThemeMode.System -> "Same as your phone" }
+            FrostMenuRow(Icons.Outlined.Palette, palette.toneBlue, "Appearance", theme, palette, onClick = { onOpenPage(SettingsPage.Appearance) })
+            FrostDivider(palette)
+            FrostMenuRow(
+                Icons.Outlined.Badge, palette.toneFree, "Profile",
+                if (settings.displayName.isBlank()) "No display name yet" else "Shown as ${settings.displayName} on your posts",
+                palette, onClick = { onOpenPage(SettingsPage.Profile) },
+            )
+            FrostDivider(palette)
+            val signedIn = account
+            FrostMenuRow(
+                Icons.Outlined.AccountCircle, palette.toneViolet, "Account",
+                when {
+                    signedIn == null -> "Not signed in. Sign in to post photos and comments"
+                    signedIn.isModerator -> "${signedIn.email ?: "Signed in"} \u00B7 Moderator"
+                    else -> signedIn.email ?: "Signed in"
+                },
+                palette, onClick = { onOpenPage(SettingsPage.Account) },
+            )
+            if (signedIn != null) {
+                val mine = community.photos.filter { it.authorUid == signedIn.uid }.map { it.status } +
+                    community.comments.filter { it.authorUid == signedIn.uid }.map { it.status } +
+                    community.bays.filter { it.authorUid == signedIn.uid }.map { it.status }
+                val waiting = mine.count { it == ModerationStatus.Pending }
+                val approved = mine.count { it == ModerationStatus.Approved }
+                FrostDivider(palette)
+                FrostMenuRow(
+                    Icons.Outlined.Inventory2, palette.tonePaid, "My submissions",
+                    if (mine.isEmpty()) "Nothing yet" else "$waiting waiting \u00B7 $approved approved",
+                    palette, onClick = onOpenSubmissions,
+                )
+            }
+            if (settings.blocked.isNotEmpty()) {
+                FrostDivider(palette)
+                FrostMenuRow(
+                    Icons.Outlined.Block, palette.tile to palette.text2, "Blocked riders",
+                    "${settings.blocked.size} hidden on this phone", palette, onClick = { onOpenPage(SettingsPage.Blocked) },
+                )
+            }
+            FrostDivider(palette)
+            FrostMenuRow(
+                Icons.Outlined.Gavel, palette.tile to palette.text2, "Legal & about",
+                "Privacy policy, data sources, licences", palette, onClick = onOpenLegal,
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+/** One of the pages the Settings menu opens. */
 @Composable
-private fun SeedSwatches(selected: Long, onSelect: (Long) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Settings.PRESETS.forEach { argb ->
-            val isSelected = argb == selected
-            Box(
-                Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .then(if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape) else Modifier)
-                    .clickable { onSelect(argb) }
-                    .semantics {
-                        role = Role.RadioButton
-                        this.selected = isSelected
-                        contentDescription = "Colour #%06X".format(argb and 0xFFFFFF)
-                    },
-                contentAlignment = Alignment.Center,
-            ) {
-                Surface(color = Color(argb), shape = CircleShape, modifier = Modifier.size(if (isSelected) 38.dp else 48.dp)) {
-                    if (isSelected) Box(contentAlignment = Alignment.Center) { Icon(Icons.Filled.Check, null, tint = Color.White) }
-                }
+fun SettingsPageScreen(page: SettingsPage, onBack: () -> Unit) {
+    val palette = auroraPalette()
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        FrostPageHeader(page.title, palette, onBack, overline = "Settings")
+        when (page) {
+            SettingsPage.Appearance -> AppearancePage(palette)
+            SettingsPage.Profile -> {
+                val app = LocalApp.current
+                val settings by app.user.settings.collectAsStateWithLifecycle()
+                DisplayNameField(settings.displayName, palette)
             }
+            SettingsPage.Account -> AccountPage(palette)
+            SettingsPage.Blocked -> BlockedPage(palette)
+        }
+    }
+}
+
+@Composable
+private fun AppearancePage(palette: AuroraPalette) {
+    val app = LocalApp.current
+    val settings by app.user.settings.collectAsStateWithLifecycle()
+    AuroraSectionHeader("Theme", palette, Modifier.padding(start = 10.dp))
+    AuroraCard(palette, contentPadding = 12) {
+        val modes = listOf(ThemeMode.Light to "Light", ThemeMode.System to "System", ThemeMode.Dark to "Dark")
+        AuroraPillTabs(
+            labels = modes.map { it.second },
+            selected = modes.indexOfFirst { it.first == settings.themeMode },
+            palette = palette,
+            onSelect = { i -> app.user.updateSettings { it.copy(themeMode = modes[i].first) } },
+        )
+        VSpace(8)
+        Text(
+            "System follows your phone's light or dark mode.",
+            style = auroraStyle(11.sp, FontWeight.SemiBold, palette.cardSubtext),
+            modifier = Modifier.padding(horizontal = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun AccountPage(palette: AuroraPalette) {
+    val app = LocalApp.current
+    val account by app.auth.user.collectAsStateWithLifecycle()
+    val signedIn = account
+    if (signedIn == null) {
+        AuroraCard(palette) {
+            Text("Sign in to add photos, comments and bays. Browsing needs no account.", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
+            VSpace(12)
+            SignInButtons()
+        }
+        return
+    }
+    AuroraCard(palette, contentPadding = 4) {
+        FrostMenuRow(
+            Icons.Outlined.AccountCircle, palette.toneViolet, signedIn.email ?: "Signed in",
+            if (signedIn.isModerator) "Moderator: you can review submissions" else "Your submissions are reviewed before they're published",
+            palette, onClick = null,
+        )
+        FrostDivider(palette)
+        FrostMenuRow(
+            Icons.AutoMirrored.Outlined.Logout, palette.tile to palette.text2, "Sign out", null, palette,
+            onClick = app.auth::signOut, trailing = {},
+        )
+    }
+    AuroraSectionHeader("Danger zone", palette, Modifier.padding(start = 10.dp, top = 4.dp), color = Coral)
+    DeleteAccountRow(palette)
+}
+
+@Composable
+private fun BlockedPage(palette: AuroraPalette) {
+    val app = LocalApp.current
+    val settings by app.user.settings.collectAsStateWithLifecycle()
+    if (settings.blocked.isEmpty()) {
+        Text("You haven't blocked anyone.", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext), modifier = Modifier.padding(horizontal = 10.dp))
+        return
+    }
+    AuroraCard(palette, contentPadding = 4) {
+        settings.blocked.forEachIndexed { i, b ->
+            if (i > 0) FrostDivider(palette)
+            FrostMenuRow(
+                Icons.Outlined.Block, palette.tile to palette.text2, b.name, "Their photos and comments are hidden on this phone", palette,
+                onClick = null, trailing = { AuroraTextAction("Unblock", palette.accent, onClick = { app.user.unblock(b.uid) }) },
+            )
         }
     }
 }
@@ -247,7 +291,7 @@ private fun CrashReportBanner(palette: AuroraPalette) {
     var report by remember { mutableStateOf(app.crashLog.read()) }
     val text = report ?: return
     val summary = text.lineSequence().drop(1).firstOrNull { it.isNotBlank() } ?: "Report saved"
-    AuroraCard(palette, radius = 16, color = Color(0x40991B1B), border = Color(0x66EF4444), contentPadding = 12) {
+    AuroraCard(palette, color = Color(0x40991B1B), border = Color(0x66EF4444), contentPadding = 14) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Icon(Icons.Outlined.Shield, contentDescription = null, tint = Coral, modifier = Modifier.size(18.dp))
             Text("The app closed unexpectedly last time", style = auroraStyle(11.sp, FontWeight.Bold, Color(0xFFFEE2E2)), modifier = Modifier.weight(1f))
@@ -344,17 +388,15 @@ private fun DisplayNameField(saved: String, palette: AuroraPalette) {
         NameCheck.Taken, is NameCheck.Invalid -> Coral
         else -> palette.cardSubtext
     }
-    AuroraCard(palette, radius = 16) {
+    AuroraCard(palette) {
         if (!editing) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("Display name", style = auroraStyle(10.sp, color = palette.cardSubtext))
-                    Text(saved, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.testTag("display-name"))
-                    Text(hint, style = auroraStyle(10.sp, color = hintColor))
+                    Text("DISPLAY NAME", style = frostOverline(palette.cardSubtext))
+                    Text(saved, style = auroraStyle(17.sp, FontWeight.ExtraBold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.testTag("display-name"))
+                    Text(hint, style = auroraStyle(11.sp, FontWeight.SemiBold, hintColor))
                 }
-                Surface(onClick = { editing = true }, shape = RoundedCornerShape(8.dp), color = palette.searchSurface, border = BorderStroke(1.dp, palette.cardBorder)) {
-                    Text("Edit", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
-                }
+                AuroraOutlinedButton("Edit", palette, onClick = { editing = true })
             }
         } else {
             OutlinedTextField(
@@ -365,11 +407,13 @@ private fun DisplayNameField(saved: String, palette: AuroraPalette) {
                 isError = check == NameCheck.Taken || check is NameCheck.Invalid,
                 singleLine = true,
                 enabled = !busy,
+                shape = RoundedCornerShape(18.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = palette.cardTitleText, unfocusedTextColor = palette.cardTitleText,
-                    focusedBorderColor = palette.searchIconActive, unfocusedBorderColor = palette.cardBorder,
-                    focusedLabelColor = palette.searchIconActive, unfocusedLabelColor = palette.cardSubtext,
-                    cursorColor = palette.searchIconActive,
+                    focusedContainerColor = palette.tile, unfocusedContainerColor = palette.tile,
+                    focusedBorderColor = palette.selectedBorder, unfocusedBorderColor = Color.Transparent,
+                    focusedLabelColor = palette.accent, unfocusedLabelColor = palette.cardSubtext,
+                    cursorColor = palette.accent,
                 ),
                 modifier = Modifier.fillMaxWidth().testTag("display-name"),
             )
@@ -408,10 +452,12 @@ private fun DeleteAccountRow(palette: AuroraPalette) {
     var confirm by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
 
-    AuroraCard(palette, radius = 16, color = Color(0x1AEF4444), border = Color(0x40EF4444), onClick = { if (!busy) confirm = true }) {
-        Text("Delete account & data", style = auroraStyle(13.sp, FontWeight.Bold, Coral))
-        VSpace(2)
-        Text("Removes your account, display name, photos, comments and bay changes. This can't be undone.", style = auroraStyle(10.sp, color = palette.cardSubtext))
+    AuroraCard(palette, contentPadding = 4, border = Coral.copy(alpha = 0.35f)) {
+        FrostMenuRow(
+            Icons.Outlined.DeleteForever, Coral.copy(alpha = 0.16f) to Coral, "Delete account & data",
+            "Removes your account, display name, photos, comments, ratings and bay changes. This can't be undone.",
+            palette, onClick = { if (!busy) confirm = true }, titleColor = Coral, trailing = {},
+        )
     }
 
     if (confirm) {
