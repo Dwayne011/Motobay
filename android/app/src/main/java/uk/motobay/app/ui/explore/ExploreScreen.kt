@@ -215,6 +215,15 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
         if (granted.values.any { it }) vm.locate() else vm.locationDenied()
     }
+    // At launch, go to the rider: at once if location is allowed, or after asking on the very first launch.
+    // (Previews and screenshot tests have no location or permission dialog.)
+    val disclaimerAccepted = app.user.settings.collectAsStateWithLifecycle().value.disclaimerAccepted
+    val inspection = LocalInspectionMode.current
+    LaunchedEffect(disclaimerAccepted) {
+        if (!inspection && vm.centreOnLaunch()) {
+            permission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+        }
+    }
     val onLocate = {
         if (app.location.hasPermission()) vm.locate()
         else permission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
