@@ -150,7 +150,7 @@ fun ReviewScreen(onOpenBay: (String) -> Unit) {
     }
 
     LazyColumn(
-        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding(),
+        Modifier.fillMaxSize().statusBarsPadding(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {

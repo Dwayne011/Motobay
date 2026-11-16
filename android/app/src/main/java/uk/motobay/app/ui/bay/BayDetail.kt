@@ -40,7 +40,6 @@ import uk.motobay.app.ui.components.AuroraTag
 import uk.motobay.app.ui.components.AuroraTextAction
 import uk.motobay.app.ui.components.Coral
 import uk.motobay.app.ui.components.HSpace
-import uk.motobay.app.ui.components.Slate950
 import uk.motobay.app.ui.components.VSpace
 import uk.motobay.app.ui.components.auroraStyle
 import uk.motobay.app.ui.components.label
@@ -142,7 +141,7 @@ fun BayDetailRoute(id: String, onBack: () -> Unit) {
     val loadState by app.bays.state.collectAsStateWithLifecycle()
     LaunchedEffect(id) { if (allBays[id] == null) app.bays.load() }
 
-    Surface(color = palette.mapBackground, modifier = Modifier.fillMaxSize()) {
+    Surface(color = Color.Transparent, modifier = Modifier.fillMaxSize()) {
         Box(Modifier.fillMaxSize().statusBarsPadding()) {
             val bay = allBays[id]
             when {
@@ -198,14 +197,14 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = palette.cardTitleText) }
             }
             Column(Modifier.weight(1f)) {
-                Text(bay.title, style = auroraStyle(20.sp, FontWeight.Bold, palette.cardTitleText))
+                Text(bay.title, style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp))
                 VSpace(2)
                 val subtitle = listOfNotNull(
                     bay.locality,
                     bay.operator?.takeIf { it != bay.title },
                     position?.let { "${formatDistance(distanceMetres(it, bay))} away" },
                 ).joinToString(" \u2022 ")
-                if (subtitle.isNotEmpty()) Text(subtitle, style = auroraStyle(12.sp, color = palette.cardSubtext))
+                if (subtitle.isNotEmpty()) Text(subtitle, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext))
             }
             // The bay's average star rating, top right.
             RatingBadge(community.ratingSummary(bay.id), palette)
@@ -222,26 +221,26 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
         }
         // When it's charged and how to pay, from the council.
         bay.rules?.let { rules ->
-            AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
-                Text("Charges", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
+            AuroraCard(palette, radius = 18, contentPadding = 14) {
+                Text("Charges", style = auroraStyle(13.sp, FontWeight.ExtraBold, palette.accent))
                 // Supporter extra: whether it's charged at this moment, and when that changes.
                 val supporter by app.supporter.state.collectAsStateWithLifecycle()
                 val status = if (supporter.isSupporter) bay.chargeStatus(app.now()) else null
                 status?.let {
                     VSpace(4)
-                    Text(it, style = auroraStyle(13.sp, FontWeight.Bold, palette.searchIconActive), modifier = Modifier.testTag("charge-status"))
-                    Text("Bank holidays and match days may differ.", style = auroraStyle(10.sp, color = palette.cardSubtext))
+                    Text(it, style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText), modifier = Modifier.testTag("charge-status"))
+                    Text("Bank holidays and match days may differ.", style = auroraStyle(11.sp, FontWeight.SemiBold, palette.cardSubtext))
                 }
-                VSpace(2)
-                Text(rules, style = auroraStyle(12.sp, color = palette.cardSubtext))
+                VSpace(4)
+                Text(rules, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
             }
         }
         // Where exactly, in the source's own words (a council traffic order, say).
         bay.note?.let { note ->
-            AuroraCard(palette, radius = 12, contentPadding = 12, color = palette.searchSurface) {
-                Text(if (bay.approximate) "Where to look (pin is approximate)" else "Where to look", style = auroraStyle(11.sp, FontWeight.Bold, palette.cardTitleText))
-                VSpace(2)
-                Text(note, style = auroraStyle(12.sp, color = palette.cardSubtext))
+            AuroraCard(palette, radius = 18, contentPadding = 14) {
+                Text(if (bay.approximate) "Where to look (pin is approximate)" else "Where to look", style = auroraStyle(13.sp, FontWeight.ExtraBold, palette.accent))
+                VSpace(4)
+                Text(note, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
             }
         }
 
@@ -251,7 +250,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
         )
         if (unknowns.isNotEmpty()) {
             // Crowdsourcing banner.
-            AuroraCard(palette, radius = 16, color = palette.searchSurface) {
+            AuroraCard(palette, radius = 18, contentPadding = 14) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         "Do you know if this bay is ${unknowns.joinToString(", or whether it's ")}?",
@@ -270,7 +269,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             Box(Modifier.weight(1f)) {
                 AuroraPrimaryButton(
                     "Directions", palette, onClick = { openDirections(context, bay) },
-                    icon = Icons.Filled.Navigation, modifier = Modifier.fillMaxWidth().height(40.dp),
+                    icon = Icons.Filled.Navigation, modifier = Modifier.fillMaxWidth().height(44.dp),
                 )
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(
@@ -285,17 +284,17 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     app.user.toggleFavourite(bay)
                     scope.launch { snackbar.showSnackbar(if (saved) "Removed from saved" else "Saved") }
                 },
-                shape = RoundedCornerShape(12.dp),
-                color = if (saved) Color(0x33F59E0B) else Color.Transparent,
-                border = BorderStroke(1.dp, if (saved) Color(0x80F59E0B) else palette.cardBorder),
-                modifier = Modifier.height(40.dp),
+                shape = CircleShape,
+                color = if (saved) palette.selected else palette.tile,
+                border = if (saved) BorderStroke(1.dp, palette.selectedBorder) else null,
+                modifier = Modifier.height(44.dp),
             ) {
-                Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     Icon(
                         if (saved) Icons.Filled.Star else Icons.Outlined.StarBorder, contentDescription = null,
-                        tint = if (saved) AuroraPalette.StatusPaid else palette.cardSubtext, modifier = Modifier.size(16.dp),
+                        tint = if (saved) palette.paid else palette.text2, modifier = Modifier.size(17.dp),
                     )
-                    Text(if (saved) "Saved" else "Save", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText), maxLines = 1, softWrap = false)
+                    Text(if (saved) "Saved" else "Save", style = auroraStyle(13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
                 }
             }
             ToolbarIcon(Icons.Filled.Share, "Share", palette) { shareBay(context, bay) }
@@ -303,10 +302,10 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             ToolbarIcon(Icons.Filled.Map, "Open in another maps app", palette) { menu = true }
         }
 
-        RateBay(bay, palette)
-
-        PhotosSection(bay, moderator, palette)
-        CommentsSection(bay, moderator, palette)
+        // Rating, photos and comments each sit in their own glass panel.
+        AuroraCard(palette) { RateBay(bay, palette) }
+        AuroraCard(palette) { PhotosSection(bay, moderator, palette) }
+        AuroraCard(palette) { CommentsSection(bay, moderator, palette) }
 
         HorizontalDivider(color = palette.cardBorder)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -461,7 +460,7 @@ private fun RateBay(bay: Bay, palette: AuroraPalette) {
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(if ((pending ?: mine) == null) "Rate this bay" else "Your rating", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+        Text(if ((pending ?: mine) == null) "Rate this bay" else "Your rating", style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText))
         Row(verticalAlignment = Alignment.CenterVertically) {
             for (n in 1..5) {
                 val filled = n <= shown
@@ -499,17 +498,16 @@ private fun RateBay(bay: Bay, palette: AuroraPalette) {
     }
 }
 
-/** 40dp bordered icon button for the action toolbar. */
+/** 44dp round tile button for the action toolbar. */
 @Composable
 private fun ToolbarIcon(icon: ImageVector, description: String, palette: AuroraPalette, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
-        color = Color.Transparent,
-        border = BorderStroke(1.dp, palette.cardBorder),
-        modifier = Modifier.size(40.dp),
+        shape = CircleShape,
+        color = palette.tile,
+        modifier = Modifier.size(44.dp),
     ) {
-        Box(contentAlignment = Alignment.Center) { Icon(icon, contentDescription = description, tint = palette.cardSubtext, modifier = Modifier.size(16.dp)) }
+        Box(contentAlignment = Alignment.Center) { Icon(icon, contentDescription = description, tint = palette.text2, modifier = Modifier.size(19.dp)) }
     }
 }
 
@@ -543,7 +541,7 @@ private fun PhotosSection(bay: Bay, moderator: Boolean, palette: AuroraPalette) 
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Photos", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), modifier = Modifier.weight(1f))
+            Text("Photos", style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText), modifier = Modifier.weight(1f))
             Surface(
                 onClick = { requireSignIn { chooser = true } },
                 shape = CircleShape,
@@ -724,7 +722,7 @@ private fun CommentsSection(bay: Bay, moderator: Boolean, palette: AuroraPalette
     val dateFormat = remember { DateFormat.getDateInstance(DateFormat.MEDIUM) }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Comments", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+        Text("Comments", style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText))
         if (approved.isEmpty()) {
             Text("No comments yet. Is it easy to find? Is it usually full?", style = auroraStyle(12.sp, color = palette.cardSubtext))
         }
@@ -823,7 +821,7 @@ private fun CommentsSection(bay: Bay, moderator: Boolean, palette: AuroraPalette
                         modifier = Modifier.height(32.dp),
                     ) {
                         Box(Modifier.padding(horizontal = 14.dp), contentAlignment = Alignment.Center) {
-                            Text("Post", style = auroraStyle(11.sp, FontWeight.SemiBold, if (canPost) Slate950 else palette.cardSubtext))
+                            Text("Post", style = auroraStyle(11.sp, FontWeight.SemiBold, if (canPost) palette.onAccent else palette.cardSubtext))
                         }
                     }
                 }

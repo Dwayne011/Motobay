@@ -1,5 +1,8 @@
 package uk.motobay.app
 
+import uk.motobay.app.ui.theme.frostBackdrop
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.foundation.layout.padding
@@ -376,7 +379,8 @@ class ScreenshotTest {
         compose.onNodeWithText("Sample bay 1").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("bay-preview").assertExists()
-        compose.onNodeWithText("Go").assertExists()
+        compose.onNodeWithText("Directions").assertExists()
+        compose.onNodeWithContentDescription("Share bay").assertExists()
         // The bay's star rating sits in the card's top-right corner.
         compose.onNodeWithContentDescription("Rated 4.5 out of 5 by 2 riders").assertExists()
         // Still on Explore: the search bar is there, no "Bay details" app bar.
@@ -543,7 +547,10 @@ class ScreenshotTest {
     private fun DetailHost(bay: uk.motobay.app.data.Bay = SampleBays.all[0]) {
         val settings by app.user.settings.collectAsStateWithLifecycle()
         CompositionLocalProvider(LocalInspectionMode provides true, LocalApp provides app, LocalSnackbar provides SnackbarHostState()) {
-            MotoBayTheme(settings) { Surface { BayDetailContent(bay) } }
+            MotoBayTheme(settings) {
+                // In the app the bay page sits on the Frost backdrop the app frame draws.
+                androidx.compose.foundation.layout.Box(Modifier.fillMaxSize().frostBackdrop(uk.motobay.app.ui.theme.auroraPalette())) { BayDetailContent(bay) }
+            }
         }
     }
 }

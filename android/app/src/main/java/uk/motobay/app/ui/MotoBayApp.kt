@@ -1,9 +1,15 @@
 package uk.motobay.app.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.runtime.compositionLocalOf
+import uk.motobay.app.ui.theme.frostBackdrop
 import androidx.compose.foundation.layout.BoxWithConstraints
 import uk.motobay.app.ui.theme.auroraPalette
 import androidx.compose.foundation.layout.size
@@ -73,6 +79,12 @@ import kotlin.reflect.KClass
 @Serializable data class PolicyDest(val policy: String)
 @Serializable data class BayDest(val id: String)
 
+/**
+ * How much of the bottom of the screen the floating navigation capsule covers,
+ * so the map's own controls can sit above it. Zero where there is a rail instead.
+ */
+val LocalNavClearance = compositionLocalOf { 0.dp }
+
 val LocalApp = staticCompositionLocalOf<MotoBayApplication> { error("No app") }
 val LocalSnackbar = staticCompositionLocalOf<SnackbarHostState> { error("No snackbar host") }
 
@@ -133,41 +145,56 @@ fun MotoBayApp(app: MotoBayApplication) {
             (d.route == ExploreDest && current?.hasRoute(BayDest::class) == true)
     }
     val content: @Composable () -> Unit = {
-            Box(Modifier.fillMaxSize()) {
-            NavHost(nav, startDestination = ExploreDest) {
+            // The colour pools sit behind every screen; the map covers them on Explore.
+            Box(Modifier.fillMaxSize().frostBackdrop(palette)) {
+            // A quick fade between pages. The library default is a 700ms crossfade, which felt
+            // like a delay, and with see-through screens both pages showed at once.
+            NavHost(
+                nav,
+                startDestination = ExploreDest,
+                enterTransition = { fadeIn(tween(180)) },
+                exitTransition = { fadeOut(tween(120)) },
+                popEnterTransition = { fadeIn(tween(180)) },
+                popExitTransition = { fadeOut(tween(120)) },
+            ) {
+                // Explore runs under the floating navigation; the other screens stop above it.
                 composable<ExploreDest> {
                     ExploreScreen(onOpenBay = { nav.navigate(BayDest(it)) }, onOpenSupporter = { nav.navigate(SupporterDest) })
                 }
                 composable<BayDest> { entry ->
-                    BayDetailRoute(id = entry.toRoute<BayDest>().id, onBack = { nav.popBackStack() })
+                    AboveNav { BayDetailRoute(id = entry.toRoute<BayDest>().id, onBack = { nav.popBackStack() }) }
                 }
-                composable<SavedDest> { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
-                composable<ReviewDest> { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) }
+                composable<SavedDest> { AboveNav { SavedScreen(onOpenBay = { nav.navigate(BayDest(it)) }) } }
+                composable<ReviewDest> { AboveNav { ReviewScreen(onOpenBay = { nav.navigate(BayDest(it)) }) } }
                 composable<SettingsDest> {
-                    SettingsScreen(
+                    AboveNav { SettingsScreen(
                         onOpenSubmissions = { nav.navigate(MySubmissionsDest) },
                         onOpenSupporter = { nav.navigate(SupporterDest) },
                         onOpenLegal = { nav.navigate(LegalDest) },
                         onOpenPolicy = { nav.navigate(PolicyDest(it.name)) },
-                    )
+                    ) }
                 }
-                composable<SupporterDest> { SupporterScreen(onBack = { nav.popBackStack() }) }
-                composable<LegalDest> { LegalScreen(onBack = { nav.popBackStack() }, onOpenPolicy = { nav.navigate(PolicyDest(it.name)) }) }
+                composable<SupporterDest> { AboveNav { SupporterScreen(onBack = { nav.popBackStack() }) } }
+                composable<LegalDest> { AboveNav { LegalScreen(onBack = { nav.popBackStack() }, onOpenPolicy = { nav.navigate(PolicyDest(it.name)) }) } }
                 composable<PolicyDest> { entry ->
-                    PolicyScreen(policy = Policy.valueOf(entry.toRoute<PolicyDest>().policy), onBack = { nav.popBackStack() })
+                    AboveNav { PolicyScreen(policy = Policy.valueOf(entry.toRoute<PolicyDest>().policy), onBack = { nav.popBackStack() }) }
                 }
                 composable<MySubmissionsDest> {
-                    MySubmissionsScreen(onBack = { nav.popBackStack() }, onOpenBay = { nav.navigate(BayDest(it)) })
+                    AboveNav { MySubmissionsScreen(onBack = { nav.popBackStack() }, onOpenBay = { nav.navigate(BayDest(it)) }) }
                 }
             }
-            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp + LocalNavClearance.current))
             }
     }
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // M3 adaptive rule: a bar on compact windows (phones, or anything short), a rail otherwise.
             if (maxWidth < 600.dp || maxHeight < 480.dp) {
-                Scaffold(
-                    bottomBar = {
+                val navInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                CompositionLocalProvider(LocalNavClearance provides navInset + NavCapsuleHeight + NavCapsuleMargin) {
+                Box(Modifier.fillMaxSize()) {
+                    content()
+                    // Floating glass capsule over the content (and the map on Explore).
+                    Box(Modifier.align(Alignment.BottomCenter)) {
                         AuroraNavigationBar(palette) {
                             destinations.forEach { d ->
                                 val selected = isSelected(d)
@@ -181,11 +208,9 @@ fun MotoBayApp(app: MotoBayApplication) {
                                 }
                             }
                         }
-                    },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    // Full screen: the map and each screen's own app bar run under the transparent status bar.
-                    contentWindowInsets = WindowInsets(0),
-                ) { inner -> Box(Modifier.padding(inner)) { content() } }
+                    }
+                }
+                }
             } else {
                 NavigationSuiteScaffold(
                     navigationSuiteItems = {
@@ -212,4 +237,10 @@ fun MotoBayApp(app: MotoBayApplication) {
         if (askToSignIn) SignInDialog(onDismiss = { askToSignIn = false })
         if (!settings.disclaimerAccepted) DisclaimerDialog(onAccept = { app.user.updateSettings { it.copy(disclaimerAccepted = true) } })
     }
+}
+
+/** A screen that stops above the floating navigation capsule. */
+@Composable
+private fun AboveNav(content: @Composable () -> Unit) {
+    Box(Modifier.fillMaxSize().padding(bottom = LocalNavClearance.current)) { content() }
 }

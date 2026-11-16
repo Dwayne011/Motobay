@@ -48,6 +48,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.FrostFont
+import uk.motobay.app.ui.theme.frostEdge
+import androidx.compose.ui.unit.em
 
 /** Tailwind's slate-950, the ink the spec puts on sky-blue surfaces. */
 val Slate950 = Color(0xFF020617)
@@ -55,26 +58,33 @@ val Coral = Color(0xFFEF4444)
 
 /** A text style of exactly [size] with a comfortable line height, as the spec sets every label by size and weight. */
 fun auroraStyle(size: TextUnit, weight: FontWeight = FontWeight.Normal, color: Color = Color.Unspecified, mono: Boolean = false): TextStyle =
-    TextStyle(fontSize = size, lineHeight = size * 1.4f, fontWeight = weight, color = color, fontFamily = if (mono) FontFamily.Monospace else null)
+    TextStyle(fontSize = size, lineHeight = size * 1.4f, fontWeight = weight, color = color, fontFamily = if (mono) FontFamily.Monospace else FrostFont)
 
-/** The 20sp bold page title the three tabs start with. */
+/** The 22sp extra-bold page title the tabs start with. */
 @Composable
 fun AuroraHeader(text: String, palette: AuroraPalette, modifier: Modifier = Modifier) {
-    Text(text, style = auroraStyle(20.sp, FontWeight.Bold, palette.cardTitleText), modifier = modifier)
+    Text(text, style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp), modifier = modifier)
 }
 
-/** 11sp bold uppercase section label in the accent colour. */
+/** Frost's overline: 11sp extra-bold capitals, slightly tracked, in the accent colour. */
 @Composable
-fun AuroraSectionHeader(text: String, palette: AuroraPalette, modifier: Modifier = Modifier) {
-    Text(text.uppercase(), style = auroraStyle(11.sp, FontWeight.Bold, palette.searchIconActive), modifier = modifier)
+fun AuroraSectionHeader(text: String, palette: AuroraPalette, modifier: Modifier = Modifier, color: Color = palette.accent) {
+    Text(text.uppercase(), style = frostOverline(color), modifier = modifier)
 }
 
-/** The spec's card: rounded, glass surface, 1dp border, optional shadow. */
+fun frostOverline(color: Color): TextStyle =
+    TextStyle(fontFamily = FrostFont, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 0.06.em, color = color)
+
+/**
+ * A Frost panel: a mostly solid fill with a 1dp hairline edge,
+ * rounded 28dp by default. [elevation] adds a soft shadow and is for opaque
+ * fills only, since a shadow shows through glass.
+ */
 @Composable
 fun AuroraCard(
     palette: AuroraPalette,
     modifier: Modifier = Modifier,
-    radius: Int = 18,
+    radius: Int = 28,
     elevation: Int = 0,
     color: Color = palette.cardSurface,
     border: Color = palette.cardBorder,
@@ -83,12 +93,13 @@ fun AuroraCard(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val shape = RoundedCornerShape(radius.dp)
+    val edge = frostEdge(palette, border)
     if (onClick != null) {
-        Surface(onClick = onClick, shape = shape, color = color, border = BorderStroke(1.dp, border), shadowElevation = elevation.dp, modifier = modifier.fillMaxWidth()) {
+        Surface(onClick = onClick, shape = shape, color = color, border = edge, shadowElevation = elevation.dp, modifier = modifier.fillMaxWidth()) {
             Column(Modifier.padding(contentPadding.dp), content = content)
         }
     } else {
-        Surface(shape = shape, color = color, border = BorderStroke(1.dp, border), shadowElevation = elevation.dp, modifier = modifier.fillMaxWidth()) {
+        Surface(shape = shape, color = color, border = edge, shadowElevation = elevation.dp, modifier = modifier.fillMaxWidth()) {
             Column(Modifier.padding(contentPadding.dp), content = content)
         }
     }
@@ -109,21 +120,21 @@ fun AuroraPillTabs(
     segmentModifier: (Int) -> Modifier = { Modifier },
 ) {
     Surface(
-        shape = RoundedCornerShape(18.dp),
-        color = palette.searchSurface,
-        border = BorderStroke(1.dp, palette.segmentedContainerBorder),
-        modifier = modifier.fillMaxWidth().heightIn(min = 36.dp),
+        shape = CircleShape,
+        color = palette.cardSurface,
+        border = frostEdge(palette, palette.segmentedContainerBorder),
+        modifier = modifier.fillMaxWidth().heightIn(min = 40.dp),
     ) {
-        Row(Modifier.padding(2.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.padding(3.dp).selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
             labels.forEachIndexed { i, label ->
                 val active = i == selected
                 Row(
                     Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .heightIn(min = 32.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(if (active) palette.searchIconActive else Color.Transparent)
+                        .heightIn(min = 34.dp)
+                        .clip(CircleShape)
+                        .background(if (active) palette.accent else Color.Transparent)
                         .clickable(onClick = { onSelect(i) }, role = Role.Tab)
                         .semantics { this.selected = active }
                         .then(segmentModifier(i))
@@ -133,7 +144,7 @@ fun AuroraPillTabs(
                 ) {
                     Text(
                         label,
-                        style = auroraStyle(13.sp, if (active) FontWeight.Bold else FontWeight.Medium, if (active) Slate950 else palette.cardSubtext),
+                        style = auroraStyle(13.sp, FontWeight.Bold, if (active) palette.onAccent else palette.cardSubtext),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false),
@@ -150,53 +161,51 @@ fun AuroraPillTabs(
     }
 }
 
-/** A 32dp status chip: filled slate when active, outlined otherwise. */
+/** A 36dp Frost chip: the accent when active, a soft tile otherwise. */
 @Composable
 fun AuroraChip(label: String, active: Boolean, palette: AuroraPalette, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = if (active) palette.segmentedActiveBg else Color.Transparent,
-        border = BorderStroke(1.dp, if (active) palette.segmentedActiveBg else palette.cardBorder),
-        modifier = modifier.heightIn(min = 32.dp).semantics { selected = active },
+        shape = CircleShape,
+        color = if (active) palette.accent else palette.tile,
+        modifier = modifier.heightIn(min = 36.dp).semantics { selected = active },
     ) {
-        Box(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), contentAlignment = Alignment.Center) {
-            Text(label, style = auroraStyle(12.sp, FontWeight.Medium, if (active) Color.White else palette.cardSubtext), maxLines = 1, softWrap = false)
+        Box(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), contentAlignment = Alignment.Center) {
+            Text(label, style = auroraStyle(13.sp, FontWeight.Bold, if (active) palette.onAccent else palette.text2), maxLines = 1, softWrap = false)
         }
     }
 }
 
-/** 36dp filled action button: accent background, slate ink, 12sp bold. */
+/** 40dp Frost pill button: the accent with its own ink, 13sp extra bold. */
 @Composable
 fun AuroraPrimaryButton(text: String, palette: AuroraPalette, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, icon: ImageVector? = null) {
-    val bg = if (palette.isDark) Color(0xFF93B4DB) else palette.searchIconActive
+    val bg = palette.accent
     Surface(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = CircleShape,
         color = if (enabled) bg else bg.copy(alpha = 0.4f),
-        modifier = modifier.heightIn(min = 36.dp),
+        modifier = modifier.heightIn(min = 40.dp),
     ) {
-        Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            if (icon != null) Icon(icon, contentDescription = null, tint = Slate950, modifier = Modifier.size(14.dp))
-            Text(text, style = auroraStyle(12.sp, FontWeight.Bold, Slate950), maxLines = 1, softWrap = false)
+        Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)) {
+            if (icon != null) Icon(icon, contentDescription = null, tint = palette.onAccent, modifier = Modifier.size(16.dp))
+            Text(text, style = auroraStyle(13.sp, FontWeight.ExtraBold, palette.onAccent), maxLines = 1, softWrap = false)
         }
     }
 }
 
-/** 36dp outlined action button: 1dp border, 12sp semibold. */
+/** 40dp secondary pill button: a soft tile, 13sp bold. */
 @Composable
 fun AuroraOutlinedButton(text: String, palette: AuroraPalette, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, color: Color = palette.cardTitleText) {
     Surface(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
-        color = Color.Transparent,
-        border = BorderStroke(1.dp, palette.cardBorder),
-        modifier = modifier.heightIn(min = 36.dp),
+        shape = CircleShape,
+        color = palette.tile,
+        modifier = modifier.heightIn(min = 40.dp),
     ) {
-        Box(Modifier.padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
-            Text(text, style = auroraStyle(12.sp, FontWeight.SemiBold, if (enabled) color else color.copy(alpha = 0.4f)), maxLines = 1, softWrap = false)
+        Box(Modifier.padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
+            Text(text, style = auroraStyle(13.sp, FontWeight.Bold, if (enabled) color else color.copy(alpha = 0.4f)), maxLines = 1, softWrap = false)
         }
     }
 }
@@ -214,8 +223,8 @@ fun AuroraTextAction(text: String, color: Color, onClick: () -> Unit, modifier: 
 /** Small capsule tag, e.g. the price on a saved bay. */
 @Composable
 fun AuroraTag(text: String, palette: AuroraPalette, modifier: Modifier = Modifier) {
-    Box(modifier.clip(CircleShape).background(palette.chipUnselectedBg).padding(horizontal = 8.dp, vertical = 2.dp)) {
-        Text(text, style = auroraStyle(11.sp, FontWeight.Medium, palette.chipUnselectedText), maxLines = 1, softWrap = false)
+    Box(modifier.clip(CircleShape).background(palette.tile).padding(horizontal = 9.dp, vertical = 3.dp)) {
+        Text(text, style = auroraStyle(11.sp, FontWeight.Bold, palette.text2), maxLines = 1, softWrap = false)
     }
 }
 
@@ -223,8 +232,8 @@ fun AuroraTag(text: String, palette: AuroraPalette, modifier: Modifier = Modifie
 @Composable
 fun RowScope.AuroraRowText(title: String, subtitle: String?, palette: AuroraPalette, titleColor: Color = palette.cardTitleText) {
     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(title, style = auroraStyle(13.sp, FontWeight.SemiBold, titleColor))
-        if (subtitle != null) Text(subtitle, style = auroraStyle(10.sp, FontWeight.Normal, palette.cardSubtext))
+        Text(title, style = auroraStyle(15.sp, FontWeight.Bold, titleColor).copy(lineHeight = 18.sp))
+        if (subtitle != null) Text(subtitle, style = auroraStyle(11.sp, FontWeight.SemiBold, palette.cardSubtext).copy(lineHeight = 14.sp))
     }
 }
 
@@ -245,8 +254,7 @@ fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette, modifier: Modif
     val icon = if (compact) 12.dp else 14.dp
     Surface(
         shape = CircleShape,
-        color = palette.chipUnselectedBg,
-        border = BorderStroke(1.dp, palette.chipUnselectedBorder),
+        color = palette.tile,
         modifier = modifier.clearAndSetSemantics { contentDescription = description }.testTag("rating-badge"),
     ) {
         Row(
@@ -258,8 +266,8 @@ fun RatingBadge(summary: RatingSummary?, palette: AuroraPalette, modifier: Modif
                 Icon(Icons.Outlined.StarBorder, contentDescription = null, tint = palette.cardSubtext, modifier = Modifier.size(icon))
                 Text("No ratings", style = auroraStyle(if (compact) 10.sp else 11.sp, FontWeight.Medium, palette.cardSubtext), maxLines = 1, softWrap = false)
             } else {
-                Icon(Icons.Filled.Star, contentDescription = null, tint = AuroraPalette.StatusPaid, modifier = Modifier.size(icon))
-                Text("%.1f".format(Locale.UK, summary.average), style = auroraStyle(if (compact) 12.sp else 13.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, softWrap = false)
+                Icon(Icons.Filled.Star, contentDescription = null, tint = palette.paid, modifier = Modifier.size(icon))
+                Text("%.1f".format(Locale.UK, summary.average), style = auroraStyle(if (compact) 12.sp else 13.sp, FontWeight.ExtraBold, palette.cardTitleText), maxLines = 1, softWrap = false)
                 Text("(${summary.count})", style = auroraStyle(if (compact) 10.sp else 11.sp, color = palette.cardSubtext), maxLines = 1, softWrap = false)
             }
         }

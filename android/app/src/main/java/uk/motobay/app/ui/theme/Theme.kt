@@ -111,7 +111,7 @@ fun MotoBayTheme(settings: Settings, content: @Composable () -> Unit) {
     }
 
     CompositionLocalProvider(LocalExtendedColors provides extended) {
-        MaterialTheme(colorScheme = scheme, typography = Typography(), content = content)
+        MaterialTheme(colorScheme = scheme, typography = frostTypography(), content = content)
     }
 }
 

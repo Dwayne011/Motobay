@@ -63,7 +63,7 @@ fun SupporterScreen(onBack: () -> Unit) {
     LaunchedEffect(Unit) { app.supporter.refresh() }
 
     Column(
-        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

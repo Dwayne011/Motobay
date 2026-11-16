@@ -22,7 +22,6 @@ import uk.motobay.app.ui.components.AuroraSectionHeader
 import uk.motobay.app.ui.components.AuroraTag
 import uk.motobay.app.ui.components.AuroraTextAction
 import uk.motobay.app.ui.components.Coral
-import uk.motobay.app.ui.components.Slate950
 import uk.motobay.app.ui.components.VSpace
 import uk.motobay.app.ui.components.HSpace
 import androidx.compose.material.icons.filled.Favorite
@@ -99,7 +98,7 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
     val update = app.user::updateSettings
 
     Column(
-        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         AuroraHeader("Settings", palette)
@@ -133,7 +132,7 @@ fun SettingsScreen(onOpenSubmissions: () -> Unit = {}, onOpenLegal: () -> Unit =
                     Switch(
                         checked = settings.wallpaperColors,
                         onCheckedChange = { on -> update { it.copy(wallpaperColors = on) } },
-                        colors = SwitchDefaults.colors(checkedTrackColor = palette.searchIconActive, checkedThumbColor = Slate950),
+                        colors = SwitchDefaults.colors(checkedTrackColor = palette.searchIconActive, checkedThumbColor = palette.onAccent),
                     )
                 }
             }
