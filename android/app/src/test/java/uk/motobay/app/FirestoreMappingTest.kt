@@ -16,6 +16,11 @@ import uk.motobay.app.data.commentFrom
 import uk.motobay.app.data.commentToMap
 import uk.motobay.app.data.photoFrom
 import uk.motobay.app.data.photoToMap
+import uk.motobay.app.data.BayRating
+import uk.motobay.app.data.CommunityData
+import uk.motobay.app.data.RatingSummary
+import uk.motobay.app.data.ratingSummary
+import uk.motobay.app.data.ratingSummaryFrom
 import java.util.Date
 
 class FirestoreMappingTest {
@@ -65,5 +70,20 @@ class FirestoreMappingTest {
         assertNull(commentFrom("c", mapOf("bayId" to "node/1", "text" to "x", "status" to "Bogus")))
         assertNull(baySubmissionFrom("b", mapOf("lat" to 1.0, "status" to "Pending")))
         assertTrue(photoFrom("p", mapOf("bayId" to "node/1", "url" to "u", "status" to "Rejected"))!!.status == ModerationStatus.Rejected)
+    }
+
+    @Test fun ratingSummaryReadsTheFunctionsTotals() {
+        assertEquals("node/1" to RatingSummary(4.5, 2), ratingSummaryFrom("node_1", mapOf("bayId" to "node/1", "count" to 2L, "total" to 9L)))
+        assertNull(ratingSummaryFrom("x", mapOf("bayId" to "node/1", "count" to 0L, "total" to 0L)))
+        assertNull(ratingSummaryFrom("x", mapOf("count" to 1L, "total" to 5L)))
+    }
+
+    @Test fun publicTotalsWinOverTheRidersOwnRatings() {
+        val mine = BayRating("node/1", 5, "me", 0)
+        // Totals from the Cloud Function include everyone's ratings.
+        assertEquals(RatingSummary(3.0, 4), CommunityData(ratings = listOf(mine), summaries = mapOf("node/1" to RatingSummary(3.0, 4))).ratingSummary("node/1"))
+        // Before the function has counted the bay, the rider still sees their own rating.
+        assertEquals(RatingSummary(5.0, 1), CommunityData(ratings = listOf(mine)).ratingSummary("node/1"))
+        assertNull(CommunityData().ratingSummary("node/1"))
     }
 }

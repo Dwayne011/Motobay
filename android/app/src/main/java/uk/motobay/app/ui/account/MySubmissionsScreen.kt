@@ -1,5 +1,21 @@
 package uk.motobay.app.ui.account
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.text.font.FontWeight
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.AuroraPillTabs
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.FrostDivider
+import uk.motobay.app.ui.components.FrostPageHeader
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.components.frostOverline
+import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.auroraPalette
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -97,6 +113,7 @@ fun MySubmissionsScreen(onBack: () -> Unit, onOpenBay: (String) -> Unit) {
     val app = LocalApp.current
     val account by app.auth.user.collectAsStateWithLifecycle()
     val data by app.community.data.collectAsStateWithLifecycle()
+    val palette = auroraPalette()
     val allBays by app.allBays.collectAsStateWithLifecycle()
     val dateFormat = remember { DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT) }
     val uid = account?.uid
@@ -127,130 +144,136 @@ fun MySubmissionsScreen(onBack: () -> Unit, onOpenBay: (String) -> Unit) {
     }.sortedByDescending { it.createdAt }
     val shown = mine.filter { it.status == tab && it.matches(query.trim()) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("My submissions") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
-            )
-        },
-    ) { padding ->
-        Column(Modifier.padding(top = padding.calculateTopPadding())) {
+    Column(Modifier.fillMaxSize().statusBarsPadding()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            FrostPageHeader("My submissions", palette, onBack)
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it.take(60) },
-                placeholder = { Text("Search bay, text or reason") },
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                placeholder = { Text("Search bay, text or reason", style = auroraStyle(14.sp, FontWeight.SemiBold, palette.muted)) },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = palette.muted) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                shape = CircleShape,
+                textStyle = auroraStyle(14.sp, FontWeight.SemiBold, palette.cardTitleText),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = palette.cardSurface, unfocusedContainerColor = palette.cardSurface,
+                    focusedBorderColor = palette.selectedBorder, unfocusedBorderColor = palette.cardBorder,
+                    cursorColor = palette.accent,
+                ),
+                modifier = Modifier.fillMaxWidth(),
             )
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
-                ModerationStatus.entries.forEachIndexed { i, s ->
-                    val count = mine.count { it.status == s }
-                    SegmentedButton(
-                        selected = tab == s,
-                        onClick = { tab = s },
-                        shape = SegmentedButtonDefaults.itemShape(i, ModerationStatus.entries.size),
-                        icon = {},
-                        label = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    s.tabLabel, maxLines = 1, softWrap = false,
-                                    autoSize = TextAutoSize.StepBased(minFontSize = 9.sp, maxFontSize = 14.sp, stepSize = 0.5.sp),
-                                    modifier = Modifier.weight(1f, fill = false),
-                                )
-                                if (count > 0) Badge(Modifier.padding(start = 4.dp)) { Text("$count") }
-                            }
-                        },
-                        modifier = Modifier.semantics { contentDescription = "${s.tabLabel}, $count" },
-                    )
-                }
-            }
-            if (shown.isEmpty()) {
-                Text(
-                    when {
-                        uid == null -> "Sign in to see what you've submitted."
-                        query.isNotBlank() -> "Nothing ${tab.tabLabel.lowercase()} matches \"${query.trim()}\"."
-                        tab == ModerationStatus.Pending -> "Nothing waiting for review."
-                        else -> "Nothing ${tab.tabLabel.lowercase()} yet."
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
-                )
-            }
-            LazyColumn(contentPadding = PaddingValues(bottom = 16.dp)) {
-                items(shown, key = { it.id }) { s ->
-                    ListItem(
-                        headlineContent = { Text(s.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                        overlineContent = { Text("${s.kind} · ${dateFormat.format(Date(s.createdAt))}") },
-                        supportingContent = {
-                            Text(
-                                if (s.status == ModerationStatus.Rejected && !s.reason.isNullOrBlank()) "Reason: ${s.reason}" else s.body,
-                                maxLines = 1, overflow = TextOverflow.Ellipsis,
-                            )
-                        },
-                        leadingContent = { Thumb(s) },
-                        modifier = Modifier.clickable { open = s },
-                    )
-                    HorizontalDivider()
+            val statuses = ModerationStatus.entries
+            AuroraPillTabs(
+                labels = statuses.map { it.tabLabel },
+                selected = statuses.indexOf(tab),
+                palette = palette,
+                onSelect = { tab = statuses[it] },
+                badge = { i -> mine.count { it.status == statuses[i] } },
+                segmentModifier = { i -> Modifier.semantics { contentDescription = "${statuses[i].tabLabel}, ${mine.count { it.status == statuses[i] }}" } },
+            )
+        }
+        if (shown.isEmpty()) {
+            Text(
+                when {
+                    uid == null -> "Sign in to see what you've submitted."
+                    query.isNotBlank() -> "Nothing ${tab.tabLabel.lowercase()} matches \"${query.trim()}\"."
+                    tab == ModerationStatus.Pending -> "Nothing waiting for review."
+                    else -> "Nothing ${tab.tabLabel.lowercase()} yet."
+                },
+                style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext),
+                modifier = Modifier.padding(horizontal = 26.dp, vertical = 24.dp),
+            )
+        } else {
+            LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
+                item {
+                    AuroraCard(palette, contentPadding = 4) {
+                        shown.forEachIndexed { i, s ->
+                            if (i > 0) FrostDivider(palette)
+                            SubmissionRow(s, dateFormat.format(Date(s.createdAt)), palette) { open = s }
+                        }
+                    }
                 }
             }
         }
     }
 
     open?.let { s ->
-        ModalBottomSheet(onDismissRequest = { open = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+        ModalBottomSheet(
+            onDismissRequest = { open = null },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            containerColor = palette.searchSurface,
+        ) {
             Column(
                 Modifier.padding(horizontal = 24.dp).padding(bottom = 24.dp).navigationBarsPadding().imePadding(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text("${s.kind} · ${dateFormat.format(Date(s.createdAt))}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(s.title, style = MaterialTheme.typography.headlineSmall)
+                Text("${s.kind} \u00B7 ${dateFormat.format(Date(s.createdAt))}".uppercase(), style = frostOverline(palette.cardSubtext))
+                Text(s.title, style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp))
                 s.imageUrl?.let {
                     AsyncImage(
                         model = it, contentDescription = "Your photo", contentScale = ContentScale.Fit,
-                        modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp).clip(MaterialTheme.shapes.medium),
+                        modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp).clip(RoundedCornerShape(18.dp)),
                     )
                 }
-                Text(s.body, style = MaterialTheme.typography.bodyLarge)
-                StatusLine(s.status, s.reason)
+                Text(s.body, style = auroraStyle(14.sp, FontWeight.Medium, palette.text2))
+                StatusLine(s.status, s.reason, palette)
                 s.bayId?.let { id ->
-                    Button(onClick = { open = null; onOpenBay(id) }, modifier = Modifier.fillMaxWidth()) {
-                        Text(if (s.status == ModerationStatus.Rejected) "Open bay and try again" else "View bay")
-                    }
+                    AuroraPrimaryButton(
+                        if (s.status == ModerationStatus.Rejected) "Open bay and try again" else "View bay", palette,
+                        onClick = { open = null; onOpenBay(id) },
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                    )
                 }
             }
+        }
+    }
+}
+
+/** One submission in the list: thumbnail, kind and date, the bay, and the text or rejection reason. */
+@Composable
+private fun SubmissionRow(s: Submission, date: String, palette: AuroraPalette, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().heightIn(min = 64.dp).clip(RoundedCornerShape(24.dp)).clickable(onClick = onClick).padding(horizontal = 10.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Thumb(s, palette)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text("${s.kind} \u00B7 $date".uppercase(), style = frostOverline(palette.muted), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(s.title, style = auroraStyle(15.sp, FontWeight.Bold, palette.cardTitleText).copy(lineHeight = 18.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                if (s.status == ModerationStatus.Rejected && !s.reason.isNullOrBlank()) "Reason: ${s.reason}" else s.body,
+                style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext), maxLines = 1, overflow = TextOverflow.Ellipsis,
+            )
         }
     }
 }
 
 /** A small photo, or an icon for the kind of submission. */
 @Composable
-private fun Thumb(s: Submission) {
+private fun Thumb(s: Submission, palette: AuroraPalette) {
     if (s.imageUrl != null) {
         AsyncImage(
             model = s.imageUrl, contentDescription = null, contentScale = ContentScale.Crop,
-            modifier = Modifier.size(56.dp).clip(MaterialTheme.shapes.small),
+            modifier = Modifier.size(44.dp).clip(RoundedCornerShape(13.dp)),
         )
     } else {
-        Surface(shape = MaterialTheme.shapes.small, color = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.size(56.dp)) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(s.icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
-            }
+        val (fill, ink) = palette.toneBlue
+        Box(Modifier.size(44.dp).clip(RoundedCornerShape(13.dp)).background(fill), contentAlignment = Alignment.Center) {
+            Icon(s.icon, contentDescription = null, tint = ink, modifier = Modifier.size(20.dp))
         }
     }
 }
 
 @Composable
-private fun StatusLine(status: ModerationStatus, reason: String?) {
+private fun StatusLine(status: ModerationStatus, reason: String?, palette: AuroraPalette) {
     val (icon, text, colour) = when (status) {
-        ModerationStatus.Pending -> Triple(Icons.Outlined.Schedule, "Waiting for review", MaterialTheme.colorScheme.onSurfaceVariant)
-        ModerationStatus.Approved -> Triple(Icons.Filled.CheckCircle, "Approved and public", MaterialTheme.colorScheme.primary)
-        ModerationStatus.Rejected -> Triple(Icons.Outlined.Cancel, if (reason.isNullOrBlank()) "Not approved, no reason given" else "Not approved: $reason", MaterialTheme.colorScheme.error)
+        ModerationStatus.Pending -> Triple(Icons.Outlined.Schedule, "Waiting for review", palette.cardSubtext)
+        ModerationStatus.Approved -> Triple(Icons.Filled.CheckCircle, "Approved and public", palette.free)
+        ModerationStatus.Rejected -> Triple(Icons.Outlined.Cancel, if (reason.isNullOrBlank()) "Not approved, no reason given" else "Not approved: $reason", palette.unknown)
     }
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Icon(icon, contentDescription = null, Modifier.size(18.dp), tint = colour)
-        Text(text, style = MaterialTheme.typography.bodyMedium, color = colour)
+        Text(text, style = auroraStyle(13.sp, FontWeight.Bold, colour))
     }
 }

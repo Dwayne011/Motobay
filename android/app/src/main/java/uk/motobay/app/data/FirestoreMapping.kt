@@ -9,6 +9,7 @@ internal const val COMMENTS = "comments"
 internal const val BAYS = "bays"
 internal const val REPORTS = "reports"
 internal const val RATINGS = "ratings"
+internal const val RATING_SUMMARIES = "ratingSummaries"
 
 private fun Map<String, Any?>.str(key: String) = this[key] as? String
 private fun Map<String, Any?>.num(key: String) = (this[key] as? Number)
@@ -118,6 +119,14 @@ internal fun ratingFrom(@Suppress("UNUSED_PARAMETER") id: String, m: Map<String,
         authorUid = m.str("authorUid") ?: return null,
         updatedAt = (m["updatedAt"] as? Timestamp)?.toDate()?.time ?: System.currentTimeMillis(),
     )
+}
+
+/** A bay's totals from functions/index.js: its bay id, how many ratings and the star total. */
+internal fun ratingSummaryFrom(@Suppress("UNUSED_PARAMETER") id: String, m: Map<String, Any?>): Pair<String, RatingSummary>? {
+    val bayId = m.str("bayId") ?: return null
+    val count = m.num("count")?.toInt()?.takeIf { it > 0 } ?: return null
+    val total = m.num("total")?.toDouble() ?: return null
+    return bayId to RatingSummary(total / count, count)
 }
 
 internal fun ratingToMap(bay: Bay, stars: Int, uid: String) = mapOf(

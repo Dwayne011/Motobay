@@ -55,7 +55,7 @@ We do not collect contacts, your photo library, your files, advertising identifi
 
 - **Approved** photos, comments and bay changes are public: anyone using the app can see them, with your display name (or "Anonymous rider" if you have not set one).
 - **Pending and rejected** items are visible only to you and the moderator.
-- **Star ratings** are published straight away, as there is no text to check. The app shows only each bay's average and how many riders rated it, never who gave which rating. Each rating is stored with your account ID, a random code that is not your name or email.
+- **Star ratings** count towards a bay's average straight away, as there is no text to check. Other riders see only each bay's average and how many riders rated it. Your individual ratings are private: only you and the moderator can see which bays you rated. Each rating is stored with your account ID, a random code that is not your name or email.
 - Your **email address** is never shown to other riders. Only the moderator can see it.
 - **Reports** are seen only by the moderator. The person you report is not told who reported them.
 
@@ -65,7 +65,7 @@ We do not sell personal data and we do not share it with advertisers. The app re
 
 | Provider | What they process | Role and location |
 |---|---|---|
-| **Google LLC – Firebase** (Authentication, Cloud Firestore, Cloud Storage, App Check) | Account, profile, content, reports, attestation tokens | Our processor. Firestore data is stored in Google's EU multi-region (`eur3`); Firebase Authentication is a global service. Google's commitments: https://firebase.google.com/support/privacy |
+| **Google LLC – Firebase** (Authentication, Cloud Firestore, Cloud Storage, Cloud Functions, App Check) | Account, profile, content, reports, attestation tokens | Our processor. Firestore data is stored in Google's EU multi-region (`eur3`); Firebase Authentication is a global service. Google's commitments: https://firebase.google.com/support/privacy |
 | **Google Play** (Google Play Billing) | Your Supporter purchase and payment, under your Google account | Independent controller for payments; Google's privacy policy: https://policies.google.com/privacy |
 | **OpenFreeMap** | The map tiles you request (which reveal the area you are looking at) and your IP address | Independent provider of map tiles: https://openfreemap.org |
 | **Photon by komoot** | The text you type into place search and your IP address | Independent provider of place search: https://photon.komoot.io |

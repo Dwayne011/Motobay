@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- Play Store feature graphic, 1024 x 500. Rendered by render_graphics.mjs. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; }
+  .art { position: relative; width: 1024px; height: 500px; overflow: hidden; font-family: Inter, sans-serif; color: #F2F4F8;
+    background:
+      radial-gradient(circle at 88% 10%, rgba(110,130,255,0.40), transparent 38%),
+      radial-gradient(circle at 8% 95%, rgba(60,190,170,0.22), transparent 36%),
+      radial-gradient(circle at 60% 110%, rgba(160,110,255,0.28), transparent 40%),
+      #0A0E18; }
+  .copy { position: absolute; left: 64px; top: 0; bottom: 0; width: 520px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand img { width: 76px; height: 76px; border-radius: 20px; }
+  .brand span { font-size: 44px; font-weight: 800; letter-spacing: -0.01em; }
+  h1 { margin: 0; font-size: 40px; line-height: 46px; font-weight: 800; letter-spacing: -0.01em; }
+  p { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; color: #B4BCCC; }
+  .chips { display: flex; gap: 10px; margin-top: 6px; }
+  .chip { height: 36px; padding: 0 16px; border-radius: 999px; background: rgba(24,29,46,0.9); border: 1px solid rgba(255,255,255,0.10);
+    display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; }
+  .dot { width: 9px; height: 9px; border-radius: 99px; }
+  .phone { position: absolute; right: 70px; top: 46px; width: 300px; height: 533px; border-radius: 40px; overflow: hidden;
+    border: 8px solid #1B2133; box-shadow: 0 30px 60px rgba(0,0,0,0.5); transform: rotate(-4deg); background: #000; }
+  .phone img { width: 100%; display: block; }
+</style></head>
+<body><div class="art">
+  <div class="copy">
+    <div class="brand"><img src="icon.png" alt=""><span>MotoBays</span></div>
+    <h1>Motorcycle parking across the UK</h1>
+    <p>Bays from OpenStreetMap and council data, with charging hours where councils publish them.</p>
+    <div class="chips">
+      <div class="chip"><span class="dot" style="background:#8FE3B5"></span>Free</div>
+      <div class="chip"><span class="dot" style="background:#FFD08A"></span>Paid</div>
+      <div class="chip"><span class="dot" style="background:#C9D8FF"></span>No adverts</div>
+    </div>
+  </div>
+  <div class="phone"><img src="screen.png" alt=""></div>
+</div></body></html>

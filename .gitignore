@@ -29,3 +29,6 @@ ios/*.xcodeproj/project.xcworkspace/xcuserdata/
 # Python
 __pycache__/
 *.pyc
+
+# Firebase emulator logs
+*-debug.log

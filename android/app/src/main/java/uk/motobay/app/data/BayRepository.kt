@@ -41,12 +41,22 @@ class BayRepository(
     val state: StateFlow<BayLoadState> = _state.asStateFlow()
 
     private val json = Json { ignoreUnknownKeys = true }
+
+    /** Tests only: a bay file to use instead of the sample bays or the download. */
+    @androidx.annotation.VisibleForTesting
+    var testDataset: String? = null
     private val cacheFile = File(dir, "uk-bays.json")
     private val etagFile = File(dir, "uk-bays.etag")
     private val mutex = Mutex()
 
     /** Shows the saved copy, then checks for a newer file. Safe to call again to retry. */
     suspend fun load() = mutex.withLock {
+        // Store screenshots: the real bay file, read from disk instead of downloaded.
+        testDataset?.let {
+            publish(it)
+            _state.value = BayLoadState.Ready
+            return@withLock
+        }
         if (useSampleData) {
             _bays.value = SampleBays.all.associateBy { it.id }
             _state.value = BayLoadState.Ready

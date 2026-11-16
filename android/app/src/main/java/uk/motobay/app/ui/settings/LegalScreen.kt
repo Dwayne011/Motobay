@@ -1,6 +1,20 @@
 package uk.motobay.app.ui.settings
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import uk.motobay.app.ui.components.AuroraCard
+import uk.motobay.app.ui.components.AuroraSectionHeader
+import uk.motobay.app.ui.components.FrostDivider
+import uk.motobay.app.ui.components.FrostListRow
+import uk.motobay.app.ui.components.FrostPageHeader
+import uk.motobay.app.ui.components.VSpace
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.theme.auroraPalette
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,66 +47,48 @@ import uk.motobay.app.BuildConfig
 import uk.motobay.app.data.Legal
 
 /** Disclaimer, data licences and the privacy policy, reachable from Settings. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LegalScreen(onBack: () -> Unit, onOpenPolicy: (Policy) -> Unit = {}) {
     val context = LocalContext.current
+    val palette = auroraPalette()
     fun open(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Legal & about") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
-            )
-        },
-    ) { padding ->
-        Column(Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(bottom = 24.dp)) {
-            Surface(
-                color = MaterialTheme.colorScheme.errorContainer,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            ) {
-                Column(Modifier.padding(16.dp)) {
-                    Text("Guidance only", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onErrorContainer)
-                    Text(Legal.DISCLAIMER, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.padding(top = 8.dp))
-                    Text(Legal.UGC_TERMS, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.padding(top = 8.dp))
-                }
-            }
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        FrostPageHeader("Legal & about", palette, onBack)
+        // The disclaimer in a warm-tinted panel, so it reads as a caution.
+        AuroraCard(palette, color = palette.tonePaid.first.copy(alpha = 0.22f).compositeOver(palette.cardSurface), border = palette.paid.copy(alpha = 0.35f)) {
+            Text("Guidance only", style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText))
+            VSpace(6)
+            Text(Legal.DISCLAIMER, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
+            VSpace(6)
+            Text(Legal.UGC_TERMS, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
+        }
 
-            ListItem(
-                headlineContent = { Text("Privacy policy") },
-                supportingContent = { Text("How MotoBays handles your account, photos and location (UK GDPR)") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
-                modifier = Modifier.clickable { onOpenPolicy(Policy.Privacy) },
+        AuroraCard(palette, contentPadding = 4) {
+            FrostListRow(
+                "Privacy policy", "How MotoBays handles your account, photos and location (UK GDPR)", palette,
+                trailing = Icons.AutoMirrored.Filled.KeyboardArrowRight, onClick = { onOpenPolicy(Policy.Privacy) },
             )
-            ListItem(
-                headlineContent = { Text("Delete your account") },
-                supportingContent = { Text("You can also delete it from Settings > Account. This page explains what is removed.") },
-                trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
-                modifier = Modifier.clickable { onOpenPolicy(Policy.DeleteAccount) },
+            FrostDivider(palette)
+            FrostListRow(
+                "Delete your account", "You can also delete it from Settings > Account. This page explains what is removed.", palette,
+                trailing = Icons.AutoMirrored.Filled.KeyboardArrowRight, onClick = { onOpenPolicy(Policy.DeleteAccount) },
             )
-            HorizontalDivider()
+        }
 
-            Text(
-                "Data sources and licences",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
-            )
-            Legal.ATTRIBUTIONS.forEach { a ->
-                ListItem(
-                    headlineContent = { Text(a.title) },
-                    supportingContent = { Text(a.text) },
-                    trailingContent = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "Open ${a.title} licence") },
-                    modifier = Modifier.clickable { open(a.url) },
-                )
+        AuroraSectionHeader("Data sources and licences", palette, Modifier.padding(start = 10.dp, top = 4.dp))
+        AuroraCard(palette, contentPadding = 4) {
+            Legal.ATTRIBUTIONS.forEachIndexed { i, a ->
+                if (i > 0) FrostDivider(palette)
+                FrostListRow(a.title, a.text, palette, trailing = Icons.AutoMirrored.Filled.OpenInNew, trailingDescription = "Open ${a.title} licence", onClick = { open(a.url) })
             }
-            HorizontalDivider()
-            ListItem(
-                headlineContent = { Text("MotoBays ${BuildConfig.VERSION_NAME}") },
-                supportingContent = { Text("Build ${BuildConfig.VERSION_CODE} · ${BuildConfig.APPLICATION_ID}") },
-            )
+        }
+
+        AuroraCard(palette, contentPadding = 4) {
+            FrostListRow("MotoBays ${BuildConfig.VERSION_NAME}", "Build ${BuildConfig.VERSION_CODE} \u00B7 ${BuildConfig.APPLICATION_ID}", palette)
         }
     }
 }

@@ -118,10 +118,11 @@ service cloud.firestore {
     }
 
     // Star ratings, 1 to 5. One per rider per bay: the document id is the rider's
-    // uid and the bay id, so a second rating replaces the first. Public straight
-    // away, since a star has no text to moderate.
+    // uid and the bay id, so a second rating replaces the first. Each rating is
+    // private to the rider who gave it (and the admin); everyone else sees only the
+    // per-bay totals in ratingSummaries, which the Cloud Function in functions/ keeps.
     match /ratings/{id} {
-      allow read: if true;
+      allow read: if signedIn() && (resource.data.authorUid == request.auth.uid || isAdmin());
       allow create, update: if signedIn()
         && (resource == null || resource.data.authorUid == request.auth.uid)
         && request.resource.data.keys().hasOnly(['bayId', 'stars', 'authorUid', 'updatedAt'])
@@ -134,6 +135,12 @@ service cloud.firestore {
         && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
         && request.resource.data.updatedAt == request.time;
       allow delete: if isAdmin() || isAuthor();
+    }
+
+    // Each bay's rating count and star total, written only by the Cloud Function. Public.
+    match /ratingSummaries/{id} {
+      allow read: if true;
+      allow write: if false;
     }
 
     // One document per display name, keyed by its lower-case form, so names are unique.
