@@ -98,8 +98,8 @@ data class AuroraPalette(
         val StatusPaid = Color(0xFFF59E0B)
         val StatusUnknown = Color(0xFFEF4444)
 
-        private val DarkGlass = Color(0xC7181D2E) // 78%, as in the original Frost mockup
-        private val DarkPanel = DarkGlass
+        private val DarkGlass = Color(0xFF181D2E) // over the map: solid, so the map does not show through
+        private val DarkPanel = Color(0xC7181D2E) // content screens: 78%, as in the original Frost mockup
         private val DarkBorder = Color(0x1AFFFFFF)
         private val DarkAccent = Color(0xFFC9D8FF)
         private val DarkOnAccent = Color(0xFF0E1A3A)
@@ -165,8 +165,8 @@ data class AuroraPalette(
             pools = emptyList(),
         )
 
-        private val LightGlass = Color(0xD6FBFCFE) // 84%, as in the original Frost mockup
-        private val LightPanel = LightGlass
+        private val LightGlass = Color(0xFFFBFCFE) // over the map: solid, so the map does not show through
+        private val LightPanel = Color(0xD6FBFCFE) // content screens: 84%, as in the original Frost mockup
         private val LightBorder = Color(0x140B1A3A)
         private val LightAccent = Color(0xFF3B5B92)
 
