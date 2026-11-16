@@ -19,7 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,24 +34,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import uk.motobay.app.ui.theme.AuroraPalette
+import uk.motobay.app.ui.theme.FrostFont
+import uk.motobay.app.ui.theme.frostEdge
+
+/** The capsule's height and its gap to the screen edge. */
+val NavCapsuleHeight = 68.dp
+val NavCapsuleMargin = 16.dp
 
 /**
- * The spec's bottom navigation bar for phones: 80dp over the gesture inset,
- * a 1dp top hairline, and a 56 x 30dp indicator pill behind the active 20dp
- * icon with an 11sp label 4dp below. The pill's colour and a small spring
- * scale animate as the selection moves.
+ * The Frost navigation for phones: a floating glass capsule, 68dp tall with
+ * 28dp corners, 16dp in from the screen edges and above the gesture inset.
+ * The active tab sits in a 56 x 30dp pill washed with the accent; the pill's
+ * colour and a small spring scale animate as the selection moves.
  */
 @Composable
 fun AuroraNavigationBar(palette: AuroraPalette, modifier: Modifier = Modifier, items: @Composable RowScope.() -> Unit) {
-    Column(modifier.fillMaxWidth().background(palette.navBarBg).navigationBarsPadding()) {
-        HorizontalDivider(thickness = 1.dp, color = palette.navBarBorder)
-        Row(
-            Modifier.fillMaxWidth().height(80.dp).padding(horizontal = 8.dp).selectableGroup(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            content = items,
-        )
-    }
+    val shape = RoundedCornerShape(28.dp)
+    Row(
+        modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(start = NavCapsuleMargin, end = NavCapsuleMargin, bottom = NavCapsuleMargin)
+            .height(NavCapsuleHeight)
+            .clip(shape)
+            .background(palette.navBarBg)
+            .border(frostEdge(palette, palette.navBarBorder), shape)
+            .padding(horizontal = 6.dp)
+            .selectableGroup(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        content = items,
+    )
 }
 
 @Composable
@@ -62,11 +76,13 @@ fun RowScope.AuroraNavigationItem(
     icon: @Composable (tint: Color) -> Unit,
 ) {
     val pill by animateColorAsState(if (selected) palette.navPillActiveBg else Color.Transparent, label = "NavPill")
+    val edge by animateColorAsState(if (selected) palette.selectedBorder else Color.Transparent, label = "NavPillEdge")
     val scale by animateFloatAsState(if (selected) 1f else 0.92f, spring(dampingRatio = 0.65f, stiffness = 400f), label = "NavPillScale")
     val tint = if (selected) palette.navIconActive else palette.navTextInactive
     Column(
         Modifier
             .weight(1f)
+            .clip(RoundedCornerShape(22.dp))
             .selectable(selected = selected, onClick = onClick, role = Role.Tab)
             .padding(vertical = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,19 +93,21 @@ fun RowScope.AuroraNavigationItem(
                 .width(56.dp)
                 .height(30.dp)
                 .graphicsLayer { scaleX = scale; scaleY = scale }
-                .clip(RoundedCornerShape(15.dp))
-                .background(pill),
+                .clip(CircleShape)
+                .background(pill)
+                .border(1.dp, edge, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
             Box(Modifier.size(20.dp)) { icon(tint) }
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(3.dp))
         Text(
             label,
             color = if (selected) palette.navTextActive else palette.navTextInactive,
+            fontFamily = FrostFont,
             fontSize = 11.sp,
             lineHeight = 14.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
             maxLines = 1,
         )
     }

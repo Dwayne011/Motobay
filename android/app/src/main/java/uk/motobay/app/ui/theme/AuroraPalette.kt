@@ -7,9 +7,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 
 /**
- * Fixed colours for the Explore screen chrome, from the "M3 Dynamic Aurora &
- * Telemetry" spec: a dark and a light palette, picked by the app theme. These
- * sit over the map as glass, so they do not follow the seed or wallpaper colour.
+ * Fixed colours for the app's chrome, in the Frost design language: frosted glass
+ * panels with a light top edge, a periwinkle accent, and soft colour pools behind
+ * the content screens. A dark and a light palette, picked by the app theme. They
+ * do not follow the seed or wallpaper colour.
+ *
+ * The older field names are kept so every screen picks the new look up at once:
+ * [searchIconActive] is the accent, [cardSubtext] the secondary text, and the
+ * search, chip, button and nav fills are the denser glass that sits over the map.
  */
 @Immutable
 data class AuroraPalette(
@@ -54,115 +59,186 @@ data class AuroraPalette(
     val auroraSweepColors: List<Color>,
     val outerAuraIdleAlpha: Float,
     val outerAuraBoostAlpha: Float,
+    // Frost additions.
+    /** The accent: selected chips, primary buttons, links and section labels. */
+    val accent: Color,
+    /** Ink on the accent. */
+    val onAccent: Color,
+    /** Body text one step softer than the titles. */
+    val text2: Color,
+    /** Hints, counts and inactive icons. */
+    val muted: Color,
+    /** Small filled tiles inside a panel (icon wells, round buttons, the rating chip). */
+    val tile: Color,
+    /** Hairlines between rows inside a panel. */
+    val divider: Color,
+    /** The light top edge of a glass panel. */
+    val hi: Color,
+    /** Selected state: a wash of the accent, with [selectedBorder]. */
+    val selected: Color,
+    val selectedBorder: Color,
+    /** Status colours for dots, tuned for the glass. */
+    val free: Color,
+    val paid: Color,
+    val unknown: Color,
+    /** Tinted icon wells: (fill, ink) for free, paid and other. */
+    val toneFree: Pair<Color, Color>,
+    val tonePaid: Pair<Color, Color>,
+    val toneBlue: Pair<Color, Color>,
+    val toneViolet: Pair<Color, Color>,
+    /** The colour pools behind the content screens: (colour, x, y, radius as a fraction of the width). */
+    val pools: List<Pool>,
 ) {
+    @Immutable
+    data class Pool(val color: Color, val x: Float, val y: Float, val radius: Float)
+
     companion object {
-        /** Semantic status dots, shared by both modes. */
+        /** Saturated status colours for the map pins, shared by both modes. */
         val StatusFree = Color(0xFF22C55E)
         val StatusPaid = Color(0xFFF59E0B)
         val StatusUnknown = Color(0xFFEF4444)
 
+        private val DarkGlass = Color(0xB8181D2E) // over the map: 72%
+        private val DarkPanel = Color(0x94181D2E) // over the colour pools: 58%
+        private val DarkBorder = Color(0x1AFFFFFF)
+        private val DarkAccent = Color(0xFFC9D8FF)
+        private val DarkOnAccent = Color(0xFF0E1A3A)
+
         val Dark = AuroraPalette(
             isDark = true,
-            mapBackground = Color(0xFF111315),
-            topVignetteStart = Color(0xE60C0E12),
-            searchSurface = Color(0xF21D2228),
-            searchPlaceholder = Color(0xFFCBD5E1),
-            searchIconIdle = Color(0xFFCBD5E1),
-            searchIconActive = Color(0xFF38BDF8),
-            chipSelectedBg = Color(0xFF4C617B),
-            chipSelectedBorder = Color(0xFF93B4DB),
-            chipSelectedText = Color(0xFFFFFFFF),
-            chipUnselectedBg = Color(0xE614171C),
-            chipUnselectedBorder = Color(0xFF475569),
-            chipUnselectedText = Color(0xFFE2E8F0),
-            chipBadgeSelectedBg = Color(0x40000000),
-            chipBadgeSelectedText = Color(0xFFE0F2FE),
-            chipBadgeUnselectedBg = Color(0xFF1E293B),
-            chipBadgeUnselectedText = Color(0xFF94A3B8),
-            cardSurface = Color(0xF2191E26),
-            cardBorder = Color(0x1AFFFFFF),
-            cardTitleText = Color(0xFFFFFFFF),
-            cardSubtext = Color(0xFF94A3B8),
-            segmentedContainerBg = Color(0xF21B1F26),
-            segmentedContainerBorder = Color(0xFF475569),
-            segmentedActiveBg = Color(0xFF3A495C),
-            segmentedActiveText = Color(0xFFFFFFFF),
-            segmentedInactiveText = Color(0xFFCBD5E1),
-            locateFabBg = Color(0xF21D222A),
-            locateFabIcon = Color(0xFFE2E8F0),
-            locateFabBorder = Color(0x1AFFFFFF),
-            addFabBg = Color(0xFF4C617B),
-            addFabIcon = Color(0xFFFFFFFF),
-            addFabBorder = Color(0x6693B4DB),
-            navBarBg = Color(0xFF181B20),
-            navBarBorder = Color(0x1AFFFFFF),
-            navPillActiveBg = Color(0xFF3F4E62),
-            navIconActive = Color(0xFFFFFFFF),
-            navTextActive = Color(0xFFFFFFFF),
-            navTextInactive = Color(0xFF94A3B8),
-            auroraSweepColors = listOf(
-                Color.Transparent,
-                Color.Transparent,
-                Color(0xFF38BDF8), // M3 Expressive Primary Sky
-                Color(0xFFC084FC), // M3 Tertiary Iris Violet
-                Color(0xFF2DD4BF), // M3 Secondary Teal
-                Color(0xFF818CF8), // M3 Expressive Indigo
-                Color.Transparent,
+            mapBackground = Color(0xFF0A0E18),
+            topVignetteStart = Color(0x990A0E18),
+            searchSurface = DarkGlass,
+            searchPlaceholder = Color(0xFF8E97AB),
+            searchIconIdle = Color(0xFF8E97AB),
+            searchIconActive = DarkAccent,
+            chipSelectedBg = DarkAccent,
+            chipSelectedBorder = DarkAccent,
+            chipSelectedText = DarkOnAccent,
+            chipUnselectedBg = DarkGlass,
+            chipUnselectedBorder = DarkBorder,
+            chipUnselectedText = Color(0xFFF2F4F8),
+            chipBadgeSelectedBg = Color(0x1F0E1A3A),
+            chipBadgeSelectedText = DarkOnAccent,
+            chipBadgeUnselectedBg = Color(0x1AFFFFFF),
+            chipBadgeUnselectedText = Color(0xFF8E97AB),
+            cardSurface = DarkPanel,
+            cardBorder = DarkBorder,
+            cardTitleText = Color(0xFFF2F4F8),
+            cardSubtext = Color(0xFFB4BCCC),
+            segmentedContainerBg = DarkGlass,
+            segmentedContainerBorder = DarkBorder,
+            segmentedActiveBg = DarkAccent,
+            segmentedActiveText = DarkOnAccent,
+            segmentedInactiveText = Color(0xFFB4BCCC),
+            locateFabBg = DarkGlass,
+            locateFabIcon = Color(0xFFDDE4F5),
+            locateFabBorder = DarkBorder,
+            addFabBg = DarkAccent,
+            addFabIcon = DarkOnAccent,
+            addFabBorder = Color.Transparent,
+            navBarBg = DarkGlass,
+            navBarBorder = DarkBorder,
+            navPillActiveBg = Color(0x2EC9D8FF),
+            navIconActive = DarkAccent,
+            navTextActive = DarkAccent,
+            navTextInactive = Color(0xFF8E97AB),
+            auroraSweepColors = listOf(Color.Transparent, Color.Transparent),
+            outerAuraIdleAlpha = 0f,
+            outerAuraBoostAlpha = 0f,
+            accent = DarkAccent,
+            onAccent = DarkOnAccent,
+            text2 = Color(0xFFDDE4F5),
+            muted = Color(0xFF8E97AB),
+            tile = Color(0x1AFFFFFF),
+            divider = Color(0x0FFFFFFF),
+            hi = Color(0x1FFFFFFF),
+            selected = Color(0x2EC9D8FF),
+            selectedBorder = Color(0x66C9D8FF),
+            free = Color(0xFF8FE3B5),
+            paid = Color(0xFFFFD08A),
+            unknown = Color(0xFFFFA3AE),
+            toneFree = Color(0x29C8F0D8) to Color(0xFFC8F0D8),
+            tonePaid = Color(0x29FFE2C2) to Color(0xFFFFE2C2),
+            toneBlue = Color(0x29C9D8FF) to Color(0xFFC9D8FF),
+            toneViolet = Color(0x29E2D4FF) to Color(0xFFE2D4FF),
+            pools = listOf(
+                Pool(Color(0x616E82FF), 0.85f, 0.04f, 0.78f), // periwinkle, top right
+                Pool(Color(0x383CBEAA), 0.04f, 0.40f, 0.52f), // teal, left
+                Pool(Color(0x2EFFBE78), 0.96f, 0.70f, 0.54f), // amber, right
+                Pool(Color(0x47A06EFF), 0.20f, 0.98f, 0.72f), // violet, bottom left
             ),
-            outerAuraIdleAlpha = 0.28f,
-            outerAuraBoostAlpha = 0.55f,
         )
+
+        private val LightGlass = Color(0xCCFBFCFE) // over the map: 80%
+        private val LightPanel = Color(0x9EFBFCFE) // over the colour pools: 62%
+        private val LightBorder = Color(0x140B1A3A)
+        private val LightAccent = Color(0xFF3B5B92)
 
         val Light = AuroraPalette(
             isDark = false,
-            mapBackground = Color(0xFFEBF0F5),
-            topVignetteStart = Color(0xD9F8FAFC),
-            searchSurface = Color(0xF2FFFFFF),
-            searchPlaceholder = Color(0xFF334155),
-            searchIconIdle = Color(0xFF475569),
-            searchIconActive = Color(0xFF0284C7),
-            chipSelectedBg = Color(0xFF3B526E),
-            chipSelectedBorder = Color(0xFF1E293B),
-            chipSelectedText = Color(0xFFFFFFFF),
-            chipUnselectedBg = Color(0xEBFFFFFF),
-            chipUnselectedBorder = Color(0xFFCBD5E1),
-            chipUnselectedText = Color(0xFF1E293B),
+            mapBackground = Color(0xFFE8ECF5),
+            topVignetteStart = Color(0x99E8ECF5),
+            searchSurface = LightGlass,
+            searchPlaceholder = Color(0xFF6B7385),
+            searchIconIdle = Color(0xFF6B7385),
+            searchIconActive = LightAccent,
+            chipSelectedBg = LightAccent,
+            chipSelectedBorder = LightAccent,
+            chipSelectedText = Color.White,
+            chipUnselectedBg = LightGlass,
+            chipUnselectedBorder = LightBorder,
+            chipUnselectedText = Color(0xFF141925),
             chipBadgeSelectedBg = Color(0x33FFFFFF),
-            chipBadgeSelectedText = Color(0xFFFFFFFF),
-            chipBadgeUnselectedBg = Color(0xFFF1F5F9),
-            chipBadgeUnselectedText = Color(0xFF475569),
-            cardSurface = Color(0xF2FFFFFF),
-            cardBorder = Color(0xFFCBD5E1),
-            cardTitleText = Color(0xFF0F172A),
-            cardSubtext = Color(0xFF475569),
-            segmentedContainerBg = Color(0xF2FFFFFF),
-            segmentedContainerBorder = Color(0xFFCBD5E1),
-            segmentedActiveBg = Color(0xFF3B526E),
-            segmentedActiveText = Color(0xFFFFFFFF),
-            segmentedInactiveText = Color(0xFF475569),
-            locateFabBg = Color(0xF2FFFFFF),
-            locateFabIcon = Color(0xFF1E293B),
-            locateFabBorder = Color(0xFFCBD5E1),
-            addFabBg = Color(0xFF3B526E),
-            addFabIcon = Color(0xFFFFFFFF),
-            addFabBorder = Color(0x8093B4DB),
-            navBarBg = Color(0xFFFFFFFF),
-            navBarBorder = Color(0xFFE2E8F0),
-            navPillActiveBg = Color(0xFFDCE7F5),
-            navIconActive = Color(0xFF1E3A5F),
-            navTextActive = Color(0xFF0F172A),
-            navTextInactive = Color(0xFF64748B),
-            auroraSweepColors = listOf(
-                Color.Transparent,
-                Color.Transparent,
-                Color(0xFF0284C7), // Vivid Daylight Sky
-                Color(0xFF9333EA), // Vivid Daylight Iris Purple
-                Color(0xFF0D9488), // Deep Daylight Teal
-                Color(0xFF4F46E5), // Royal Indigo
-                Color.Transparent,
+            chipBadgeSelectedText = Color.White,
+            chipBadgeUnselectedBg = Color(0x121B2A4A),
+            chipBadgeUnselectedText = Color(0xFF6B7385),
+            cardSurface = LightPanel,
+            cardBorder = LightBorder,
+            cardTitleText = Color(0xFF141925),
+            cardSubtext = Color(0xFF545C6C),
+            segmentedContainerBg = LightGlass,
+            segmentedContainerBorder = LightBorder,
+            segmentedActiveBg = LightAccent,
+            segmentedActiveText = Color.White,
+            segmentedInactiveText = Color(0xFF545C6C),
+            locateFabBg = LightGlass,
+            locateFabIcon = Color(0xFF2D3546),
+            locateFabBorder = LightBorder,
+            addFabBg = LightAccent,
+            addFabIcon = Color.White,
+            addFabBorder = Color.Transparent,
+            navBarBg = LightGlass,
+            navBarBorder = LightBorder,
+            navPillActiveBg = Color(0x1F3B5B92),
+            navIconActive = LightAccent,
+            navTextActive = LightAccent,
+            navTextInactive = Color(0xFF6B7385),
+            auroraSweepColors = listOf(Color.Transparent, Color.Transparent),
+            outerAuraIdleAlpha = 0f,
+            outerAuraBoostAlpha = 0f,
+            accent = LightAccent,
+            onAccent = Color.White,
+            text2 = Color(0xFF2D3546),
+            muted = Color(0xFF6B7385),
+            tile = Color(0x121B2A4A),
+            divider = Color(0x0F0B1A3A),
+            hi = Color(0xD9FFFFFF),
+            selected = Color(0x1F3B5B92),
+            selectedBorder = Color(0x593B5B92),
+            free = Color(0xFF1F7A47),
+            paid = Color(0xFF9A5300),
+            unknown = Color(0xFFB3261E),
+            toneFree = Color(0x241F7A47) to Color(0xFF1F7A47),
+            tonePaid = Color(0x249A5300) to Color(0xFF9A5300),
+            toneBlue = Color(0x1F3B5B92) to Color(0xFF3B5B92),
+            toneViolet = Color(0x1F6A4FB0) to Color(0xFF6A4FB0),
+            pools = listOf(
+                Pool(Color(0x476E82FF), 0.85f, 0.04f, 0.78f),
+                Pool(Color(0x2E3CBEAA), 0.04f, 0.40f, 0.52f),
+                Pool(Color(0x2EFFB46E), 0.96f, 0.70f, 0.54f),
+                Pool(Color(0x38A06EFF), 0.20f, 0.98f, 0.72f),
             ),
-            outerAuraIdleAlpha = 0.35f,
-            outerAuraBoostAlpha = 0.65f,
         )
     }
 }

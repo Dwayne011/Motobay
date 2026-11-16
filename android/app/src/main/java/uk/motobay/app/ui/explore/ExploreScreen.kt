@@ -9,6 +9,16 @@ import androidx.compose.ui.platform.LocalContext
 import uk.motobay.app.util.openDirections
 import uk.motobay.app.data.Fee
 import uk.motobay.app.ui.components.RatingBadge
+import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.ui.components.frostOverline
+import uk.motobay.app.ui.theme.FrostFont
+import uk.motobay.app.ui.theme.frostEdge
+import uk.motobay.app.ui.theme.frostBackdrop
+import uk.motobay.app.ui.LocalNavClearance
+import uk.motobay.app.data.chargeStatus
+import uk.motobay.app.util.shareBay
+import androidx.compose.foundation.border
+import androidx.compose.material.icons.filled.Share
 import uk.motobay.app.ui.components.feeText
 import uk.motobay.app.data.ratingSummary
 import uk.motobay.app.data.RatingSummary
@@ -231,6 +241,8 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
 
     val scheme = MaterialTheme.colorScheme
     val palette = auroraPalette()
+    // Room for the floating navigation capsule, which sits over the map.
+    val navClearance = LocalNavClearance.current
     val mapColors = PinColors(
         free = AuroraPalette.StatusFree,
         paid = AuroraPalette.StatusPaid,
@@ -274,23 +286,22 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                         LoadErrorBanner(
                             failed.message,
                             onRetry = vm::retryLoad,
-                            modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, end = 88.dp, bottom = 88.dp),
+                            modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, end = 88.dp, bottom = 88.dp + navClearance),
                         )
                     }
                     Column(
-                        Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 12.dp),
+                        Modifier.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 12.dp + navClearance),
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         if (!expanded && selectedId != null) return@Column
-                        // Locate mini-FAB: 44dp, 14dp corners, 1dp border, 20dp icon.
+                        // Locate: a 44dp round glass button with a 20dp icon.
                         Surface(
                             onClick = onLocate,
-                            shape = RoundedCornerShape(14.dp),
+                            shape = CircleShape,
                             color = palette.locateFabBg,
                             contentColor = palette.locateFabIcon,
-                            border = BorderStroke(1.dp, palette.locateFabBorder),
-                            shadowElevation = 6.dp,
+                            border = frostEdge(palette, palette.locateFabBorder),
                             modifier = Modifier.size(44.dp),
                         ) {
                             Box(contentAlignment = Alignment.Center) {
@@ -298,14 +309,13 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                 else Icon(Icons.Filled.MyLocation, contentDescription = "Show my location", Modifier.size(20.dp))
                             }
                         }
-                        // Add bay primary FAB: 52dp, 16dp corners, 1dp border, 22dp icon.
+                        // Add a bay: a 52dp round accent button with a 22dp icon.
                         Surface(
                             onClick = { requireSignIn { vm.startAddingBay() } },
-                            shape = RoundedCornerShape(16.dp),
+                            shape = CircleShape,
                             color = palette.addFabBg,
                             contentColor = palette.addFabIcon,
-                            border = BorderStroke(1.dp, palette.addFabBorder),
-                            shadowElevation = 8.dp,
+                            shadowElevation = 6.dp,
                             modifier = Modifier.size(52.dp),
                         ) {
                             Box(contentAlignment = Alignment.Center) {
@@ -427,8 +437,8 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                             .background(Brush.verticalGradient(listOf(palette.topVignetteStart, Color.Transparent))),
                     )
                     if (compactView == CompactView.List && !addingBay) {
-                        Surface(Modifier.fillMaxSize()) {
-                            listWith(pick, Modifier.fillMaxSize().padding(top = headerDp + 8.dp, bottom = 88.dp))
+                        Box(Modifier.fillMaxSize().frostBackdrop(palette)) {
+                            listWith(pick, Modifier.fillMaxSize().padding(top = headerDp + 8.dp, bottom = 88.dp + navClearance))
                         }
                     }
                     if (!addingBay) {
@@ -468,9 +478,12 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                             bay = bay,
                                             distanceMetres = userPosition?.let { distanceMetres(it, bay) },
                                             rating = community.ratingSummary(bay.id),
+                                            // Supporter extra: whether it's charged right now.
+                                            chargeStatus = if (supporter.isSupporter) bay.chargeStatus(app.now()) else null,
                                             isSaved = bay.id in favourites,
                                             palette = palette,
                                             onToggleSave = { app.user.toggleFavourite(bay) },
+                                            onShare = { shareBay(context, bay) },
                                             onGo = { openDirections(context, bay) },
                                             onOpen = { onOpenBay(bay.id) },
                                             onClose = vm::clearSelection,
@@ -483,7 +496,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                     countLabel = countLabel,
                                     palette = palette,
                                     onSelect = { vm.compactView.value = it },
-                                    modifier = Modifier.padding(bottom = 12.dp),
+                                    modifier = Modifier.padding(bottom = 12.dp + navClearance),
                                 )
                             }
                         }
@@ -511,33 +524,36 @@ private fun AddBayOverlay(onCancel: () -> Unit, onNext: () -> Unit) {
         Icon(
             Icons.Filled.Place,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = auroraPalette().accent,
             modifier = Modifier.align(Alignment.Center).size(48.dp).offset(y = (-24).dp),
         )
         Box(Modifier.align(Alignment.Center).size(6.dp).background(MaterialTheme.colorScheme.onSurface, CircleShape))
+        val palette = auroraPalette()
         Surface(
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            shape = MaterialTheme.shapes.large,
+            color = palette.searchSurface,
+            shape = RoundedCornerShape(28.dp),
+            border = frostEdge(palette),
             modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(16.dp).widthIn(max = 560.dp),
         ) {
-            Column(Modifier.padding(16.dp)) {
-                Text("Add a bay", style = MaterialTheme.typography.titleMedium)
-                Text(
-                    "Move the map until the pin sits on the bay, then tap Next.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("Add a bay", style = auroraStyle(17.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 22.sp))
+                Text("Move the map until the pin sits on the bay, then tap Next.", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext))
             }
         }
         Row(
-            Modifier.align(Alignment.BottomCenter).padding(16.dp),
+            Modifier.align(Alignment.BottomCenter).padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp + LocalNavClearance.current),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            OutlinedButton(
-                onClick = onCancel,
-                colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surface),
-            ) { Text("Cancel") }
-            Button(onClick = onNext) { Text("Next") }
+            Surface(onClick = onCancel, shape = CircleShape, color = palette.searchSurface, border = frostEdge(palette), modifier = Modifier.heightIn(min = 48.dp)) {
+                Box(Modifier.padding(horizontal = 22.dp), contentAlignment = Alignment.Center) {
+                    Text("Cancel", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+                }
+            }
+            Surface(onClick = onNext, shape = CircleShape, color = palette.accent, modifier = Modifier.heightIn(min = 48.dp)) {
+                Box(Modifier.padding(horizontal = 26.dp), contentAlignment = Alignment.Center) {
+                    Text("Next", style = auroraStyle(14.sp, FontWeight.ExtraBold, palette.onAccent))
+                }
+            }
         }
     }
 }
@@ -580,7 +596,7 @@ private fun SearchField(search: SearchUiState, vm: ExploreViewModel, mapMoving: 
     )
 }
 
-/** The collapsed search bar: 54dp capsule, 2dp aurora rim, 16dp inner padding, 20dp icon, 15sp text. */
+/** The collapsed search bar: a 52dp Frost glass pill, 18dp muted icon, 14sp semibold text. */
 @Composable
 private fun AuroraSearchCapsule(
     query: String,
@@ -592,30 +608,30 @@ private fun AuroraSearchCapsule(
     Box(
         Modifier
             .fillMaxWidth()
-            .height(54.dp)
-            .auroraGlow(palette, boosted = mapMoving)
-            .padding(2.dp)
+            .height(52.dp)
             .clip(CircleShape)
             .background(palette.searchSurface)
+            .border(frostEdge(palette), CircleShape)
             .clickable(onClick = onClick, role = Role.Button)
             .semantics { contentDescription = if (query.isEmpty()) "Search a town, street or postcode" else "Search: $query" }
-            .padding(horizontal = 16.dp),
+            .padding(start = 18.dp, end = 14.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 Icons.Filled.Search,
                 contentDescription = null,
-                tint = if (mapMoving) palette.searchIconActive else palette.searchIconIdle,
-                modifier = Modifier.size(20.dp),
+                tint = if (mapMoving) palette.accent else palette.searchIconIdle,
+                modifier = Modifier.size(18.dp),
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(10.dp))
             Text(
                 if (query.isEmpty()) "Search a town, street or postcode" else query,
-                color = palette.searchPlaceholder,
-                fontSize = 15.sp,
+                color = if (query.isEmpty()) palette.searchPlaceholder else palette.cardTitleText,
+                fontFamily = FrostFont,
+                fontSize = 14.sp,
                 lineHeight = 20.sp,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.SemiBold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
@@ -633,17 +649,18 @@ private fun AuroraSearchCapsule(
                     if (scanning) {
                         Text(
                             "Scanning",
-                            color = palette.searchIconActive,
-                            fontSize = 10.sp,
+                            color = palette.accent,
+                            fontFamily = FrostFont,
+                            fontSize = 11.sp,
                             lineHeight = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             softWrap = false,
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .height(22.dp)
                                 .clip(CircleShape)
-                                .background(palette.searchIconActive.copy(alpha = 0.15f))
+                                .background(palette.selected)
                                 .padding(horizontal = 8.dp)
                                 .wrapContentHeight(Alignment.CenterVertically),
                         )
@@ -903,14 +920,13 @@ private fun LoadErrorBanner(message: String, onRetry: () -> Unit, modifier: Modi
     }
 }
 
-/** The spec's status dot for each price pill; null for All. */
-private val PriceFilter.dot: Color?
-    get() = when (this) {
-        PriceFilter.All -> null
-        PriceFilter.Free -> AuroraPalette.StatusFree
-        PriceFilter.Paid -> AuroraPalette.StatusPaid
-        PriceFilter.Unknown -> AuroraPalette.StatusUnknown
-    }
+/** The status dot for each price pill; null for All. */
+private fun PriceFilter.dot(palette: AuroraPalette): Color? = when (this) {
+    PriceFilter.All -> null
+    PriceFilter.Free -> palette.free
+    PriceFilter.Paid -> palette.paid
+    PriceFilter.Unknown -> palette.unknown
+}
 
 /**
  * One scrollable row of 36dp chips over the map: price is a single choice
@@ -940,18 +956,19 @@ private fun Filters(
             Surface(
                 shape = CircleShape,
                 color = palette.searchSurface,
-                border = BorderStroke(1.dp, palette.searchIconActive.copy(alpha = 0.45f)),
+                border = BorderStroke(1.dp, palette.selectedBorder),
                 modifier = Modifier.heightIn(min = 36.dp).semantics { contentDescription = "Map moving, $label $count" },
             ) {
                 Row(Modifier.padding(horizontal = 14.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
-                    PulsingDot(palette.searchIconActive)
+                    PulsingDot(palette.accent)
                     Spacer(Modifier.width(8.dp))
                     Text(
                         "Telemetry Active \u2022 ${label.uppercase()} ($count ${if (count == 1) "bay" else "bays"})",
                         color = palette.chipUnselectedText,
+                        fontFamily = FrostFont,
                         fontSize = 12.sp,
                         lineHeight = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         softWrap = false,
                     )
@@ -971,7 +988,7 @@ private fun Filters(
                         count = counts[p] ?: 0,
                         palette = palette,
                         leading = {
-                            val dot = p.dot
+                            val dot = p.dot(palette)
                             if (dot != null) Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
                         },
                     )
@@ -1024,9 +1041,10 @@ private fun Odometer(count: Int, selected: Boolean, palette: AuroraPalette) {
         Text(
             n.toString(),
             color = if (selected) palette.chipBadgeSelectedText else palette.chipBadgeUnselectedText,
+            fontFamily = FrostFont,
             fontSize = 11.sp,
             lineHeight = 14.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             maxLines = 1,
             softWrap = false,
             modifier = Modifier
@@ -1051,7 +1069,7 @@ private fun Pill(
         onClick = onClick,
         shape = CircleShape,
         color = if (selected) palette.chipSelectedBg else palette.chipUnselectedBg,
-        border = BorderStroke(1.dp, if (selected) palette.chipSelectedBorder else palette.chipUnselectedBorder),
+        border = if (selected) null else frostEdge(palette, palette.chipUnselectedBorder),
         // 36dp by the spec; taller only when a large font scale needs it.
         modifier = Modifier.heightIn(min = 36.dp).semantics { this.selected = selected },
     ) {
@@ -1066,9 +1084,10 @@ private fun Pill(
             Text(
                 label,
                 color = if (selected) palette.chipSelectedText else palette.chipUnselectedText,
+                fontFamily = FrostFont,
                 fontSize = 13.sp,
                 lineHeight = 18.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 softWrap = false,
             )
@@ -1102,98 +1121,104 @@ private fun PulsingDot(color: Color) {
 private val PREVIEW_CLEARANCE = 200.dp
 
 /**
- * The spec's compact preview of the picked bay: status, spaces and distance on
- * top, the name and street below, a star to save it and a Go button for
- * directions. Tapping the card opens the full bay page.
+ * The Frost preview of the picked bay: a glass panel with status, spaces and
+ * distance as an overline, the name large below, the rating chip top right,
+ * the Supporter "free right now" line, then save, share and directions.
+ * Tapping the panel opens the full bay page.
  */
 @Composable
 private fun SelectedBayPreviewCard(
     bay: Bay,
     distanceMetres: Double?,
     rating: RatingSummary?,
+    chargeStatus: String?,
     isSaved: Boolean,
     palette: AuroraPalette,
     onToggleSave: () -> Unit,
+    onShare: () -> Unit,
     onGo: () -> Unit,
     onOpen: () -> Unit,
     onClose: () -> Unit,
 ) {
     val dot = when (bay.fee) {
-        Fee.Free -> AuroraPalette.StatusFree
-        Fee.Paid -> AuroraPalette.StatusPaid
-        Fee.Unknown -> AuroraPalette.StatusUnknown
+        Fee.Free -> palette.free
+        Fee.Paid -> palette.paid
+        Fee.Unknown -> palette.unknown
     }
     val typeLabel = when (bay.fee) {
         Fee.Free -> if (bay.feeUnconfirmed) "Free (unconfirmed)" else "Free"
         Fee.Paid -> "Paid"
         Fee.Unknown -> "Unknown rules"
     }
-    val meta = buildString {
-        bay.capacity?.let { append(" \u2022 $it ${if (it == 1) "space" else "spaces"}") }
-        distanceMetres?.let { append(" \u2022 ${formatDistance(it)}") }
-    }
+    val overline = buildString {
+        append(typeLabel)
+        bay.capacity?.let { append(" \u00B7 $it ${if (it == 1) "space" else "spaces"}") }
+        distanceMetres?.let { append(" \u00B7 ${formatDistance(it)}") }
+    }.uppercase()
     val subtitle = bay.locality
     Surface(
         onClick = onOpen,
-        shape = RoundedCornerShape(18.dp),
-        color = palette.cardSurface,
-        border = BorderStroke(1.dp, palette.cardBorder),
-        shadowElevation = 8.dp,
+        shape = RoundedCornerShape(28.dp),
+        color = palette.searchSurface,
+        border = frostEdge(palette),
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("bay-preview"),
     ) {
-        Column(Modifier.fillMaxWidth().padding(12.dp)) {
-            // Top line: status, spaces and distance, with the bay's star rating in the top-right corner.
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
-                Spacer(Modifier.width(6.dp))
-                Text(typeLabel, color = palette.cardTitleText, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                Text(meta, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-                Spacer(Modifier.width(8.dp))
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(verticalAlignment = Alignment.Top) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
+                        Spacer(Modifier.width(6.dp))
+                        Text(overline, style = frostOverline(palette.cardSubtext), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                    Text(bay.title, style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp), maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    subtitle?.let { Text(it, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext).copy(lineHeight = 16.sp), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                }
+                Spacer(Modifier.width(12.dp))
                 RatingBadge(rating, palette, compact = true)
             }
-            Spacer(Modifier.height(4.dp))
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(bay.title, color = palette.cardTitleText, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    subtitle?.let { Text(it, color = palette.cardSubtext, fontSize = 11.sp, lineHeight = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                }
-                Spacer(Modifier.width(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Surface(
-                        onClick = onToggleSave,
-                        shape = RoundedCornerShape(12.dp),
-                        color = if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.2f) else Color.Transparent,
-                        border = BorderStroke(1.dp, if (isSaved) AuroraPalette.StatusPaid.copy(alpha = 0.5f) else palette.cardBorder),
-                        modifier = Modifier.size(36.dp),
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                if (isSaved) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                                contentDescription = if (isSaved) "Remove from saved" else "Save bay",
-                                tint = if (isSaved) AuroraPalette.StatusPaid else palette.cardSubtext,
-                                modifier = Modifier.size(16.dp),
-                            )
-                        }
-                    }
-                    Surface(onClick = onGo, shape = RoundedCornerShape(12.dp), color = palette.addFabBg, modifier = Modifier.height(36.dp)) {
-                        Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Icon(Icons.Filled.Navigation, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
-                            Text("Go", color = Color.White, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold)
-                        }
-                    }
-                    Surface(
-                        onClick = onClose,
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color.Transparent,
-                        border = BorderStroke(1.dp, palette.cardBorder),
-                        modifier = Modifier.size(36.dp),
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(Icons.Filled.Close, contentDescription = "Close", tint = palette.cardSubtext, modifier = Modifier.size(16.dp))
-                        }
-                    }
+            chargeStatus?.let { status ->
+                Row(
+                    Modifier
+                        .clip(CircleShape)
+                        .background(palette.selected)
+                        .border(1.dp, palette.selectedBorder, CircleShape)
+                        .heightIn(min = 32.dp)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(7.dp),
+                ) {
+                    Icon(Icons.Outlined.Schedule, contentDescription = null, tint = palette.accent, modifier = Modifier.size(15.dp))
+                    Text(status, style = auroraStyle(12.sp, FontWeight.Bold, palette.accent).copy(lineHeight = 16.sp), modifier = Modifier.testTag("preview-charge-status"))
                 }
             }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                PreviewRoundButton(
+                    icon = if (isSaved) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                    description = if (isSaved) "Remove from saved" else "Save bay",
+                    tint = if (isSaved) palette.paid else palette.text2,
+                    palette = palette,
+                    onClick = onToggleSave,
+                )
+                PreviewRoundButton(Icons.Filled.Share, "Share bay", palette.text2, palette, onShare)
+                Surface(onClick = onGo, shape = CircleShape, color = palette.accent, modifier = Modifier.weight(1f).heightIn(min = 48.dp)) {
+                    Row(Modifier.padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
+                        Icon(Icons.Filled.Navigation, contentDescription = null, tint = palette.onAccent, modifier = Modifier.size(18.dp))
+                        Text("Directions", style = auroraStyle(14.sp, FontWeight.ExtraBold, palette.onAccent).copy(lineHeight = 18.sp), maxLines = 1)
+                    }
+                }
+                PreviewRoundButton(Icons.Filled.Close, "Close", palette.text2, palette, onClose)
+            }
+        }
+    }
+}
+
+/** A 48dp round tile button on the preview card. */
+@Composable
+private fun PreviewRoundButton(icon: ImageVector, description: String, tint: Color, palette: AuroraPalette, onClick: () -> Unit) {
+    Surface(onClick = onClick, shape = CircleShape, color = palette.tile, modifier = Modifier.size(48.dp)) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(icon, contentDescription = description, tint = tint, modifier = Modifier.size(20.dp))
         }
     }
 }

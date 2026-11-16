@@ -38,6 +38,13 @@ import uk.motobay.app.ui.components.AuroraTag
 import uk.motobay.app.ui.components.HSpace
 import uk.motobay.app.ui.components.VSpace
 import uk.motobay.app.ui.components.auroraStyle
+import uk.motobay.app.data.Fee
+import uk.motobay.app.ui.components.AuroraSectionHeader
+import uk.motobay.app.ui.components.frostOverline
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import uk.motobay.app.ui.components.feeText
 import uk.motobay.app.ui.theme.AuroraPalette
 import uk.motobay.app.ui.theme.auroraPalette
@@ -56,11 +63,16 @@ fun SavedScreen(onOpenBay: (String) -> Unit) {
         .sortedWith(compareBy({ it.second ?: 0.0 }, { it.first.title }))
 
     LazyColumn(
-        Modifier.fillMaxSize().background(palette.mapBackground).statusBarsPadding(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        Modifier.fillMaxSize().statusBarsPadding(),
+        contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        item { AuroraHeader("Saved", palette) }
+        item {
+            Column(Modifier.padding(start = 6.dp, end = 6.dp, top = 6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                if (items.isNotEmpty()) Text("YOUR BAYS \u00B7 ${items.size}", style = frostOverline(palette.cardSubtext))
+                AuroraHeader("Saved", palette)
+            }
+        }
         if (items.isEmpty()) {
             item {
                 Column(
@@ -69,52 +81,65 @@ fun SavedScreen(onOpenBay: (String) -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Icon(Icons.Outlined.StarBorder, contentDescription = null, Modifier.size(48.dp), tint = palette.cardSubtext)
-                    Text("No saved bays yet", style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText))
+                    Text("No saved bays yet", style = auroraStyle(15.sp, FontWeight.Bold, palette.cardTitleText))
                     Text(
                         "Save the bays you use most so you can get directions in one tap.",
-                        style = auroraStyle(12.sp, color = palette.cardSubtext),
+                        style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext),
                         textAlign = TextAlign.Center,
                     )
                 }
             }
         } else {
-            items(items, key = { it.first.id }) { (bay, d) ->
-                SavedBayCard(bay, d?.let(::formatDistance), palette) { onOpenBay(bay.id) }
+            // One glass panel per price group, nearest first within each.
+            listOf(Fee.Free to "Free", Fee.Paid to "Paid", Fee.Unknown to "Price unknown").forEach { (fee, label) ->
+                val group = items.filter { it.first.fee == fee }
+                if (group.isEmpty()) return@forEach
+                item(key = "header-$fee") {
+                    AuroraSectionHeader(label, palette, Modifier.padding(start = 10.dp, top = 4.dp))
+                }
+                item(key = "group-$fee") {
+                    AuroraCard(palette, contentPadding = 4) {
+                        group.forEachIndexed { i, (bay, d) ->
+                            if (i > 0) Box(Modifier.fillMaxWidth().padding(horizontal = 14.dp).height(1.dp).background(palette.divider))
+                            SavedBayRow(bay, d?.let(::formatDistance), palette) { onOpenBay(bay.id) }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
+/** A saved bay as a Frost row: a tinted star tile, the name, a summary line and the distance. */
 @Composable
-private fun SavedBayCard(bay: Bay, distance: String?, palette: AuroraPalette, onClick: () -> Unit) {
-    AuroraCard(palette, elevation = 4, onClick = onClick) {
-        Row(verticalAlignment = Alignment.Top) {
-            // 36dp amber star tile.
-            Box(
-                Modifier.size(36.dp).clip(RoundedCornerShape(12.dp)).background(Color(0x33F59E0B)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(Icons.Filled.Star, contentDescription = null, tint = AuroraPalette.StatusPaid, modifier = Modifier.size(18.dp))
-            }
-            HSpace(12)
-            Column(Modifier.weight(1f)) {
-                Text(bay.title, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                val where = bay.locality ?: bay.street
-                if (!where.isNullOrEmpty()) {
-                    VSpace(2)
-                    Text(where, style = auroraStyle(12.sp, color = palette.cardSubtext), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                }
-                VSpace(8)
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    AuroraTag(bay.feeText, palette)
-                    bay.capacity?.let { AuroraTag("$it spaces", palette) }
-                    if (bay.covered == true) AuroraTag("Covered", palette)
-                }
-            }
-            if (distance != null) {
-                HSpace(10)
-                Text(distance, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardTitleText), maxLines = 1, softWrap = false)
-            }
+private fun SavedBayRow(bay: Bay, distance: String?, palette: AuroraPalette, onClick: () -> Unit) {
+    val (fill, ink) = when (bay.fee) {
+        Fee.Free -> palette.toneFree
+        Fee.Paid -> palette.tonePaid
+        Fee.Unknown -> palette.tile to palette.text2
+    }
+    val summary = listOfNotNull(
+        bay.feeText,
+        bay.capacity?.let { "$it ${if (it == 1) "space" else "spaces"}" },
+        if (bay.covered == true) "Covered" else null,
+        bay.locality ?: bay.street,
+    ).joinToString(" \u00B7 ")
+    Row(
+        Modifier.fillMaxWidth().heightIn(min = 64.dp).clip(RoundedCornerShape(24.dp)).clickable(onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 11.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(40.dp).clip(RoundedCornerShape(13.dp)).background(fill), contentAlignment = Alignment.Center) {
+            Icon(Icons.Filled.Star, contentDescription = null, tint = ink, modifier = Modifier.size(18.dp))
+        }
+        HSpace(12)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Text(bay.title, style = auroraStyle(15.sp, FontWeight.Bold, palette.cardTitleText).copy(lineHeight = 18.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(summary, style = auroraStyle(11.sp, FontWeight.SemiBold, palette.cardSubtext).copy(lineHeight = 14.sp), maxLines = 2, overflow = TextOverflow.Ellipsis)
+        }
+        if (distance != null) {
+            HSpace(10)
+            Text(distance, style = auroraStyle(13.sp, FontWeight.Bold, palette.text2), maxLines = 1, softWrap = false)
         }
     }
 }
