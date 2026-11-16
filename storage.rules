@@ -20,6 +20,8 @@ service firebase.storage {
     match /photos/{uid}/{file} {
       allow create: if request.auth != null
         && request.auth.uid == uid
+        // The app names each photo after its Firestore document: letters, digits, '_' or '-', then .jpg.
+        && file.matches('[A-Za-z0-9_-]{1,64}[.]jpg')
         && request.resource.size < 5 * 1024 * 1024
         && request.resource.contentType == 'image/jpeg';
       allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
