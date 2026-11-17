@@ -42,6 +42,12 @@ object Legal {
             "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
         ),
         Attribution(
+            "Vehicle crime",
+            "Vehicle crime near each bay comes from police-recorded crime published at data.police.uk (England, Wales and Northern Ireland). " +
+                "Contains public sector information licensed under the Open Government Licence v3.0.",
+            "https://data.police.uk/about/",
+        ),
+        Attribution(
             "Map tiles",
             "Map tiles by OpenFreeMap, rendered from OpenStreetMap data. © OpenStreetMap contributors.",
             "https://openfreemap.org",

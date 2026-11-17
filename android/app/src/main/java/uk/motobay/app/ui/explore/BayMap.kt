@@ -1,5 +1,7 @@
 package uk.motobay.app.ui.explore
 
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.PointF
@@ -49,6 +51,18 @@ import org.maplibre.android.style.expressions.Expression.has
 import org.maplibre.android.style.expressions.Expression.not
 import org.maplibre.android.style.expressions.Expression.toColor
 import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.HeatmapLayer
+import org.maplibre.android.style.expressions.Expression.heatmapDensity
+import org.maplibre.android.style.expressions.Expression.interpolate
+import org.maplibre.android.style.expressions.Expression.linear
+import org.maplibre.android.style.expressions.Expression.rgba
+import org.maplibre.android.style.expressions.Expression.stop
+import org.maplibre.android.style.expressions.Expression.zoom
+import org.maplibre.android.style.layers.PropertyFactory.heatmapColor
+import org.maplibre.android.style.layers.PropertyFactory.heatmapIntensity
+import org.maplibre.android.style.layers.PropertyFactory.heatmapOpacity
+import org.maplibre.android.style.layers.PropertyFactory.heatmapRadius
+import org.maplibre.android.style.layers.PropertyFactory.heatmapWeight
 import org.maplibre.android.style.layers.Property
 import org.maplibre.android.style.layers.PropertyFactory.circleColor
 import org.maplibre.android.style.layers.PropertyFactory.circleOpacity
@@ -106,6 +120,28 @@ private const val SELECTED_PULSE = "selected-pulse"
 private const val SELECTED_PIN = "selected-pin"
 private const val USER_SOURCE = "user"
 private const val USER_LAYER = "user-dot"
+private const val CRIME_SOURCE = "vehicle-crime"
+private const val CRIME_LAYER = "vehicle-crime-heat"
+
+/**
+ * Vehicle crime as a soft heat layer: amber where a few crimes were reported, red where
+ * many were. Each location's weight is its count, capped so one busy point can't dominate.
+ */
+private fun crimeHeatLayer() = HeatmapLayer(CRIME_LAYER, CRIME_SOURCE).withProperties(
+    heatmapWeight(interpolate(linear(), get("n"), stop(0, 0), stop(6, 1))),
+    heatmapIntensity(interpolate(linear(), zoom(), stop(9, 0.5), stop(16, 1.4))),
+    heatmapRadius(interpolate(linear(), zoom(), stop(9, 6), stop(13, 18), stop(17, 44))),
+    heatmapOpacity(0.6f),
+    heatmapColor(
+        interpolate(
+            linear(), heatmapDensity(),
+            stop(0, rgba(255, 176, 64, 0)),
+            stop(0.2, rgba(255, 196, 96, 0.35)),
+            stop(0.55, rgba(255, 128, 64, 0.6)),
+            stop(1, rgba(229, 57, 70, 0.8)),
+        ),
+    ),
+)
 
 /**
  * Map styles (OpenStreetMap data, no API key). Light uses OpenFreeMap's
@@ -211,11 +247,13 @@ fun BayMap(
     onCommandHandled: () -> Unit,
     onLongPress: (LatLon) -> Unit,
     modifier: Modifier = Modifier,
+    /** Vehicle crime reports as [lat, lon, count], drawn as a heat layer under the pins; null hides it. */
+    crimePoints: List<List<Double>>? = null,
 ) {
     // Previews and JVM screenshot tests can't load MapLibre's native code.
     if (LocalInspectionMode.current) {
         val snapshot = LocalMapSnapshot.current
-        if (snapshot != null) SnapshotMap(snapshot, bays, selected, colors, onViewportChange, modifier)
+        if (snapshot != null) SnapshotMap(snapshot, bays, selected, colors, onViewportChange, modifier, crimePoints)
         else Box(modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh))
         return
     }
@@ -358,6 +396,9 @@ fun BayMap(
             loaded.addSource(GeoJsonSource(SELECTED_SOURCE))
             loaded.addSource(GeoJsonSource(USER_SOURCE))
             // Every marker is a pre-rendered bitmap (see PinImages), chosen per feature by its "icon" key.
+            // Vehicle crime heat, under every pin; empty until the rider turns the layer on.
+            loaded.addSource(GeoJsonSource(CRIME_SOURCE))
+            loaded.addLayer(crimeHeatLayer())
             loaded.addLayer(
                 SymbolLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
                     iconImage(get("icon")),
@@ -405,6 +446,16 @@ fun BayMap(
         s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
             circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
         )
+    }
+
+    LaunchedEffect(style, crimePoints) {
+        val s = style ?: return@LaunchedEffect
+        val features = withContext(Dispatchers.Default) {
+            crimePoints.orEmpty().filter { it.size >= 3 }.map { p ->
+                Feature.fromGeometry(Point.fromLngLat(p[1], p[0])).apply { addNumberProperty("n", p[2]) }
+            }
+        }
+        s.getSourceAs<GeoJsonSource>(CRIME_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }
 
     // Cluster the bays for the current zoom and animate between zoom levels.

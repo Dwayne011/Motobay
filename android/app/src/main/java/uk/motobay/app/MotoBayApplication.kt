@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import uk.motobay.app.data.AuthRepository
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
+import uk.motobay.app.data.VehicleCrimeRepository
 import uk.motobay.app.data.combinedBays
 import uk.motobay.app.data.CommunityRepository
 import uk.motobay.app.data.DisplayNames
@@ -28,6 +29,9 @@ open class MotoBayApplication : Application() {
     val appScope = CoroutineScope(SupervisorJob())
 
     lateinit var bays: BayRepository
+
+    /** Police-recorded vehicle crime near the bays, for the map layer and bay pages. */
+    lateinit var vehicleCrime: VehicleCrimeRepository
         private set
     lateinit var auth: AuthRepository
         private set
@@ -58,6 +62,7 @@ open class MotoBayApplication : Application() {
         crashLog = CrashLog(this, BuildConfig.VERSION_NAME).also { it.install(); it.collectSystemExitReason(this) }
         installAppCheck()
         bays = BayRepository(filesDir, BuildConfig.BAY_DATA_URL, useSampleData = useSampleData())
+        vehicleCrime = VehicleCrimeRepository(filesDir, BuildConfig.VEHICLE_CRIME_URL)
         auth = createAuth()
         community = createCommunity(auth)
         displayNames = createDisplayNames(auth)

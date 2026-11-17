@@ -2,7 +2,8 @@ name: Update bay data
 
 # Rebuilds data/uk-bays.json from OpenStreetMap (plus council bays from
 # data/council-bays.json) once a week, and whenever the scripts or council file
-# change. The apps download that file.
+# change, then data/vehicle-crime.json from data.police.uk (only when the police
+# have published a new month or the bays changed). The apps download both files.
 on:
   schedule:
     - cron: "17 3 * * 1" # Mondays 03:17 UTC
@@ -12,6 +13,7 @@ on:
     paths:
       - scripts/fetch_uk_bays.py
       - scripts/enrich_bays.py
+      - scripts/fetch_vehicle_crime.py
       - data/council-bays.json
       - .github/workflows/update-bay-data.yml
 
@@ -33,22 +35,26 @@ jobs:
           python-version: "3.12"
       - name: Test the parser
         working-directory: scripts
-        run: python -m unittest test_fetch_uk_bays.py test_enrich_bays.py
+        run: python -m unittest test_fetch_uk_bays.py test_enrich_bays.py test_fetch_vehicle_crime.py
       - name: Fetch UK bays from OpenStreetMap
         run: |
           mkdir -p data
           python scripts/fetch_uk_bays.py data/uk-bays.json
       - name: Add streets and areas (Photon reverse geocoding, cached)
         run: python scripts/enrich_bays.py data/uk-bays.json data/geocode-cache.json
+      - name: Vehicle crime near the bays (data.police.uk)
+        # If the police API is down, still publish the bays; the crime file is refreshed next week.
+        continue-on-error: true
+        run: python scripts/fetch_vehicle_crime.py data/uk-bays.json data/vehicle-crime.json
       - name: Commit if changed
         run: |
-          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json)" ]; then
             echo "No changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/uk-bays.json data/geocode-cache.json
+          git add data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json
           git commit -m "Update UK bay data"
           git pull --rebase origin main
           git push origin HEAD:main

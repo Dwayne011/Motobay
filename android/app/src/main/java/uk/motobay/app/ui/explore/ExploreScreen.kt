@@ -1,5 +1,7 @@
 package uk.motobay.app.ui.explore
 
+import uk.motobay.app.data.VehicleCrimeData
+import androidx.compose.material.icons.outlined.LocalPolice
 import android.Manifest
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -241,6 +243,8 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
 
     val scheme = MaterialTheme.colorScheme
     val palette = auroraPalette()
+    val crimeOn by vm.crimeLayer.collectAsStateWithLifecycle()
+    val crimeData by app.vehicleCrime.data.collectAsStateWithLifecycle()
     // Room for the floating navigation capsule, which sits over the map.
     val navClearance = LocalNavClearance.current
     val mapColors = PinColors(
@@ -275,6 +279,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                     onCommandHandled = { vm.command.value = null },
                     onLongPress = { requireSignIn { vm.startAddingBay(it) } },
                     modifier = Modifier.fillMaxSize(),
+                    crimePoints = if (crimeOn) crimeData?.points else null,
                 )
                 if (loadState == BayLoadState.Loading) {
                     LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
@@ -399,7 +404,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer)
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -460,8 +465,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer)
                                 }
+                                if (crimeOn && !mapMoving) CrimeLegend(crimeData, palette, Modifier.padding(horizontal = 16.dp))
                             }
                         }
                         if (!search.expanded) {
@@ -944,6 +950,8 @@ private fun Filters(
     onPrice: (PriceFilter) -> Unit,
     onCovered: () -> Unit,
     onFreeNow: () -> Unit,
+    crimeOn: Boolean = false,
+    onCrime: () -> Unit = {},
 ) {
     AnimatedContent(
         targetState = mapMoving,
@@ -1019,8 +1027,45 @@ private fun Filters(
                         Icon(Icons.Outlined.Roofing, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
                     },
                 )
+                // A map layer rather than a filter: shows reported vehicle crime as heat under the pins.
+                Pill(
+                    selected = crimeOn,
+                    onClick = onCrime,
+                    label = "Vehicle crime",
+                    count = null,
+                    palette = palette,
+                    leading = {
+                        Icon(Icons.Outlined.LocalPolice, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
+                    },
+                )
             }
         }
+    }
+}
+
+/**
+ * What the crime layer shows, under the filters while it's on: the months and the source,
+ * and that it covers England, Wales and Northern Ireland.
+ */
+@Composable
+private fun CrimeLegend(data: VehicleCrimeData?, palette: AuroraPalette, modifier: Modifier = Modifier) {
+    val text = if (data == null) "Loading vehicle crime\u2026"
+    else "Vehicle crime reported to police, ${data.period()} \u00B7 England, Wales and NI"
+    Row(
+        modifier
+            .clip(CircleShape)
+            .background(palette.searchSurface)
+            .border(frostEdge(palette), CircleShape)
+            .padding(horizontal = 12.dp, vertical = 7.dp)
+            .testTag("crime-legend"),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Box(
+            Modifier.size(width = 28.dp, height = 8.dp).clip(CircleShape)
+                .background(Brush.horizontalGradient(listOf(Color(0x66FFC460), Color(0xFFFF8040), Color(0xFFE53946)))),
+        )
+        Text(text, style = auroraStyle(11.sp, FontWeight.Bold, palette.text2), maxLines = 2)
     }
 }
 
