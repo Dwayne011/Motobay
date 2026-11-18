@@ -1,4 +1,70 @@
 {
+"council/barnet/bridge-lane-71773@51.58232,-0.19946": {
+"area": "Temple Fortune",
+"city": "London",
+"postcode": "NW11",
+"street": "Finchley Road"
+},
+"council/barnet/gillingham-road-11236@51.56087,-0.21012": {
+"area": "Childs Hill",
+"city": "London",
+"postcode": "NW2",
+"street": "Gillingham Road"
+},
+"council/barnet/golders-green-road-10950@51.57248,-0.19837": {
+"area": "Golders Green",
+"city": "London",
+"postcode": "NW11",
+"street": "Golders Green Road"
+},
+"council/barnet/golders-green-road-75149@51.57243,-0.19762": {
+"area": "Golders Green",
+"city": "London",
+"postcode": "NW11",
+"street": "Golders Green Road"
+},
+"council/barnet/hartley-avenue-74407@51.61522,-0.24336": {
+"area": "Mill Hill Village",
+"city": "London",
+"postcode": "NW7",
+"street": "Hartley Avenue"
+},
+"council/barnet/high-road-5786@51.58750,-0.16495": {
+"area": "Hampstead Garden Suburb",
+"city": "London",
+"postcode": "N2",
+"street": "The Causeway"
+},
+"council/barnet/longberrys-2955@51.56245,-0.20115": {
+"area": "Childs Hill",
+"city": "London",
+"postcode": "NW2",
+"street": "Cricklewood Lane"
+},
+"council/barnet/the-broadway-80003@51.61577,-0.24531": {
+"area": "Mill Hill Village",
+"city": "London",
+"postcode": "NW7",
+"street": "The Broadway"
+},
+"council/barnet/the-broadway-9233@51.61460,-0.24770": {
+"area": "The Hale",
+"city": "London",
+"postcode": "NW7",
+"street": "The Broadway"
+},
+"council/barnet/the-broadway-9248@51.61443,-0.24746": {
+"area": "The Hale",
+"city": "London",
+"postcode": "NW7",
+"street": "Brockenhurst Gardens"
+},
+"council/barnet/varley-parade-77336@51.58738,-0.25110": {
+"area": "The Hyde",
+"city": "London",
+"postcode": "NW9",
+"street": "Varley Parade"
+},
 "council/bromley/beckenham-road@51.40890,-0.04054": {
 "area": "Elmers End",
 "city": "London",

@@ -35,6 +35,11 @@
    "name": "MotoBays rider survey (City of London, November 2026)",
    "feeConfirmed": true,
    "confirmation": "Bays seen by a MotoBays rider walking the City of London in November 2026, positions recorded with a phone's GPS on a second visit to each bay. Tall buildings may have thrown some positions off, so new bays (ones OpenStreetMap doesn't have) are marked approximate until re-checked; bays OpenStreetMap already has keep its position. Spaces were not counted. Prices are from the City of London Corporation's FOI response (November 2026): 'All motorcycle bays in the Square Mile of the CoL are free of charge.' A point outside the City (High Holborn / Furnival Street) was left out."
+  },
+  "barnet": {
+   "name": "Barnet Council parking bay records (FOI 19081612)",
+   "feeConfirmed": true,
+   "confirmation": "Barnet Council's response to FOI 19081612 (November 2026): a list of motorcycle parking places with street, location, side of road, length and restriction, each marked 'Free of Charge: YES'. No coordinates were given, so positions were placed from OpenStreetMap house numbers ('approximate' where the exact house isn't mapped). Its 'No of spaces' column is the length divided by 5, an estimate, so it isn't used. Varley Parade service road appears five times with identical details and is added once."
   }
  },
  "areas": [
@@ -6807,6 +6812,126 @@
    "lon": -0.07555,
    "note": "Near Trinity Square / Minories. Seen by a rider in November 2026; spaces not counted yet. The bay here is covered and may be inside a car park, so its price is unknown until checked.",
    "fee": "unknown"
+  },
+  {
+   "id": "council/barnet/high-road-5786",
+   "source": "barnet",
+   "lat": 51.5875,
+   "lon": -0.16495,
+   "street": "High Road",
+   "note": "South-west side, outside No. 9 High Road, East Finchley N2. Motorcycles only Mon–Sat 8am–6.30pm.",
+   "lengthMetres": 11.1,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/the-broadway-9233",
+   "source": "barnet",
+   "lat": 51.614602,
+   "lon": -0.247702,
+   "street": "The Broadway",
+   "note": "North-west side, outside No. 39 The Broadway, Mill Hill NW7. Motorcycles only.",
+   "lengthMetres": 3.6,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/the-broadway-9248",
+   "source": "barnet",
+   "lat": 51.614433,
+   "lon": -0.247463,
+   "street": "The Broadway",
+   "note": "South-east side, outside No. 32 The Broadway, Mill Hill NW7. Motorcycles only.",
+   "lengthMetres": 5.0,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/the-broadway-80003",
+   "source": "barnet",
+   "lat": 51.615765,
+   "lon": -0.245306,
+   "street": "The Broadway",
+   "note": "North-west side, outside No. 111 The Broadway, Mill Hill NW7. Motorcycles only.",
+   "lengthMetres": 4.9,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/golders-green-road-10950",
+   "source": "barnet",
+   "lat": 51.572484,
+   "lon": -0.198375,
+   "street": "Golders Green Road",
+   "note": "South side, outside No. 61 Golders Green Road NW11. Motorcycles only.",
+   "lengthMetres": 5.1,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/golders-green-road-75149",
+   "source": "barnet",
+   "lat": 51.572431,
+   "lon": -0.197618,
+   "street": "Golders Green Road",
+   "note": "North-east side, outside No. 38 Golders Green Road NW11. Motorcycles only.",
+   "lengthMetres": 2.4,
+   "fee": "free"
+  },
+  {
+   "id": "council/barnet/gillingham-road-11236",
+   "source": "barnet",
+   "lat": 51.56087,
+   "lon": -0.210121,
+   "street": "Gillingham Road",
+   "note": "North-east side, outside No. 2 Gillingham Road, Cricklewood NW2. Motorcycles only.",
+   "lengthMetres": 5.3,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/bridge-lane-71773",
+   "source": "barnet",
+   "lat": 51.582322,
+   "lon": -0.19946,
+   "street": "Bridge Lane",
+   "note": "North-east side, outside Nos. 9–10 Temple Fortune Parade, Bridge Lane NW11. Motorcycles only.",
+   "lengthMetres": 6.6,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/varley-parade-77336",
+   "source": "barnet",
+   "lat": 51.587384,
+   "lon": -0.251101,
+   "street": "Varley Parade",
+   "note": "South-west side of the Varley Parade service road, Colindale NW9. Motorcycles only.",
+   "lengthMetres": 17.0,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/longberrys-2955",
+   "source": "barnet",
+   "lat": 51.56245,
+   "lon": -0.20115,
+   "street": "Longberrys",
+   "note": "South-east side of Longberrys NW2, opposite No. 320 Cricklewood Lane (Childs Hill Library). Motorcycles only.",
+   "lengthMetres": 8.4,
+   "fee": "free",
+   "approximate": true
+  },
+  {
+   "id": "council/barnet/hartley-avenue-74407",
+   "source": "barnet",
+   "lat": 51.615216,
+   "lon": -0.243361,
+   "street": "Hartley Avenue",
+   "note": "North side of Hartley Avenue, Mill Hill NW7, by the side of Athene House. Motorcycles only.",
+   "lengthMetres": 17.2,
+   "fee": "free",
+   "approximate": true
   }
  ],
  "unplaced": [
