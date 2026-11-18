@@ -37,7 +37,7 @@ object Legal {
         ),
         Attribution(
             "Council bay details",
-            "Prices, spaces and charging hours for some bays come from Camden, Islington, Hillingdon, Bromley and Enfield councils and the City of London Corporation. " +
+            "Prices, spaces and charging hours for some bays come from Camden, Islington, Hillingdon, Bromley, Enfield and Barnet councils and the City of London Corporation. " +
                 "Bay positions and descriptions for Edinburgh, Leeds and Nottingham come from their councils' open data. " +
                 "Contains public sector information licensed under the Open Government Licence v3.0. " +
                 "Copyright City of Edinburgh Council and Nottingham City Council, contains Ordnance Survey data \u00a9 Crown copyright and database right 2026.",

@@ -25,7 +25,7 @@ MotoBays shows motorcycle parking bays across the UK on one map, so you can find
 
 FIND A BAY
 • Thousands of motorcycle bays from OpenStreetMap, across the whole UK
-• Council details for Camden, Islington, Hillingdon, Bromley and Enfield, and free bays across the City of London: prices, charging hours, number of spaces and where exactly the bay is
+• Council details for Camden, Islington, Hillingdon, Bromley, Enfield and Barnet, and free bays across the City of London: prices, charging hours, number of spaces and where exactly the bay is
 • Filter by Free, Paid or Unknown, or show only covered bays
 • Search any town, street or postcode
 • Bays cluster together when you zoom out, so the map stays readable
