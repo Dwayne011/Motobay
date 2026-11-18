@@ -133,6 +133,11 @@ fun MotoBayApp(app: MotoBayApplication) {
     val current = backStack?.destination
     // For crash reports: which screen the rider was on.
     LaunchedEffect(current) { current?.route?.let { app.crashLog.noteScreen(it.substringAfterLast('.').substringBefore('/')) } }
+    // A charge alert or the widget was tapped: show that bay.
+    val bayRequest by app.openBayRequest.collectAsStateWithLifecycle()
+    LaunchedEffect(bayRequest) {
+        bayRequest?.let { nav.navigate(BayDest(it)) { launchSingleTop = true }; app.openBayRequest.value = null }
+    }
 
     val palette = auroraPalette()
     CompositionLocalProvider(LocalApp provides app, LocalSnackbar provides snackbar, LocalRequireSignIn provides requireSignIn) {

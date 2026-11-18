@@ -464,13 +464,14 @@ private fun DeleteAccountRow(palette: AuroraPalette) {
         AlertDialog(
             onDismissRequest = { if (!busy) confirm = false },
             title = { Text("Delete your account?") },
-            text = { Text("Your sign-in, display name and every photo, comment and bay change you've submitted will be deleted for good. Saved bays and settings on this phone are kept.") },
+            text = { Text("Your sign-in, display name and every photo, comment, rating, report and bay change you've submitted will be deleted for good. Saved bays and settings on this phone are kept.") },
             confirmButton = {
                 TextButton(enabled = !busy, onClick = {
                     busy = true
                     scope.launch {
                         val outcome = runCatching {
                             app.community.deleteEverythingByMe()
+                            app.bayStatus.deleteMine()
                             app.displayNames.release()
                             app.auth.deleteAccount()
                             app.user.updateSettings { it.copy(displayName = "") }

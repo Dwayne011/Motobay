@@ -295,6 +295,68 @@ describe('ratings', () => {
   });
 });
 
+describe('space reports and safety details', () => {
+  const space = (uid = 'rider1', over = {}) => ({ bayId: 'node/1', authorUid: uid, full: true, at: serverTimestamp(), ...over });
+  const features = (uid = 'rider1', over = {}) => ({ bayId: 'node/1', authorUid: uid, updatedAt: serverTimestamp(), anchor: true, ...over });
+  const spacePath = (uid = 'rider1', bayId = 'node/1') => `spaceReports/${uid}_${bayId.replace(/\//g, '_')}`;
+  const featuresPath = (uid = 'rider1', bayId = 'node/1') => `bayFeatures/${uid}_${bayId.replace(/\//g, '_')}`;
+
+  test('a signed-in rider can report space or full; signed-out users cannot', async () => {
+    await assertSucceeds(setDoc(doc(rider().firestore(), spacePath()), space()));
+    await assertFails(setDoc(doc(anon().firestore(), spacePath()), space()));
+  });
+  test('a new report replaces the old one, but at most once a minute', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), spacePath()), { bayId: 'node/1', authorUid: 'rider1', full: true, at: new Date(Date.now() - 5 * 60_000) }));
+    await assertSucceeds(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { full: false })));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { full: true })));
+  });
+  test('reports are checked: the id, the rider, the fields and the server time', async () => {
+    await assertFails(setDoc(doc(rider().firestore(), 'spaceReports/anything'), space()));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath('rider2')), space('rider2')));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath('rider1', 'node/2')), space()));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { full: 'yes' })));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { at: new Date() })));
+    await assertFails(setDoc(doc(rider().firestore(), spacePath()), { ...space(), lat: 51.5 }));
+    await assertSucceeds(setDoc(doc(rider().firestore(), spacePath('rider1', 'council/camden/a-1')), space('rider1', { bayId: 'council/camden/a-1' })));
+  });
+  test('a space report is private to the rider who sent it and the admin', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), spacePath('rider2')), { bayId: 'node/1', authorUid: 'rider2', full: true, at: new Date() }));
+    await assertSucceeds(getDoc(doc(rider('rider2').firestore(), spacePath('rider2'))));
+    await assertSucceeds(getDoc(doc(admin().firestore(), spacePath('rider2'))));
+    await assertFails(getDoc(doc(rider('rider1').firestore(), spacePath('rider2'))));
+    await assertFails(getDocs(query(collection(anon().firestore(), 'spaceReports'), where('bayId', '==', 'node/1'))));
+  });
+  test('safety details: yes, no, or taken back, and each must be true or false', async () => {
+    await assertSucceeds(setDoc(doc(rider().firestore(), featuresPath()), features()));
+    await assertSucceeds(setDoc(doc(rider().firestore(), featuresPath()), features('rider1', { cctv: false, anchor: deleteField() }), { merge: true }));
+    const saved = (await getDoc(doc(rider().firestore(), featuresPath()))).data();
+    assert.equal(saved.anchor, undefined);
+    assert.equal(saved.cctv, false);
+    await assertFails(setDoc(doc(rider().firestore(), featuresPath()), features('rider1', { lit: 'maybe' })));
+    await assertFails(setDoc(doc(rider().firestore(), featuresPath()), features('rider1', { cameras: true })));
+    await assertFails(setDoc(doc(rider().firestore(), featuresPath('rider2')), features('rider2')));
+    await assertFails(setDoc(doc(anon().firestore(), featuresPath()), features()));
+  });
+  test('safety answers are private too', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), featuresPath('rider2')), { bayId: 'node/1', authorUid: 'rider2', anchor: true, updatedAt: new Date() }));
+    await assertSucceeds(getDoc(doc(rider('rider2').firestore(), featuresPath('rider2'))));
+    await assertFails(getDoc(doc(rider('rider1').firestore(), featuresPath('rider2'))));
+  });
+  test('the rider and the admin can delete reports; other riders cannot', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), spacePath('rider1')), { bayId: 'node/1', authorUid: 'rider1', full: true, at: new Date() }));
+    await assertFails(deleteDoc(doc(rider('rider2').firestore(), spacePath('rider1'))));
+    await assertSucceeds(deleteDoc(doc(rider('rider1').firestore(), spacePath('rider1'))));
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), featuresPath('rider2')), { bayId: 'node/1', authorUid: 'rider2', anchor: true, updatedAt: new Date() }));
+    await assertSucceeds(deleteDoc(doc(admin().firestore(), featuresPath('rider2'))));
+  });
+  test('bay status is public and only the Cloud Function writes it', async () => {
+    await seed('bayStatus/node_1', { bayId: 'node/1', space: { full: true, at: new Date() }, features: {} });
+    await assertSucceeds(getDoc(doc(anon().firestore(), 'bayStatus/node_1')));
+    await assertFails(setDoc(doc(rider().firestore(), 'bayStatus/node_1'), { bayId: 'node/1' }));
+    await assertFails(setDoc(doc(admin().firestore(), 'bayStatus/node_2'), { bayId: 'node/2' }));
+  });
+});
+
 describe('reports', () => {
   const report = (over = {}) => ({
     targetType: 'comment', targetId: 'c1', targetAuthorUid: 'rider2', reporterUid: 'rider1',

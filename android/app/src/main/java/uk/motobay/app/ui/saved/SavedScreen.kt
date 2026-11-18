@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import uk.motobay.app.data.Bay
 import uk.motobay.app.ui.LocalApp
+import uk.motobay.app.ui.bay.ParkedCard
 import uk.motobay.app.ui.components.AuroraCard
 import uk.motobay.app.ui.components.AuroraHeader
 import uk.motobay.app.ui.components.AuroraTag
@@ -58,6 +59,7 @@ fun SavedScreen(onOpenBay: (String) -> Unit) {
     val palette = auroraPalette()
     val favourites by app.user.favourites.collectAsStateWithLifecycle()
     val position by app.location.position.collectAsStateWithLifecycle()
+    val parked by app.user.parked.collectAsStateWithLifecycle()
     val items = favourites.values
         .map { bay -> bay to position?.let { distanceMetres(it, bay) } }
         .sortedWith(compareBy({ it.second ?: 0.0 }, { it.first.title }))
@@ -73,6 +75,8 @@ fun SavedScreen(onOpenBay: (String) -> Unit) {
                 AuroraHeader("Saved", palette)
             }
         }
+        // Where the rider parked, with the charge reminder, above their saved bays.
+        parked?.let { p -> item(key = "parked") { ParkedCard(p, palette, onOpen = { onOpenBay(p.bayId) }) } }
         if (items.isEmpty()) {
             item {
                 Column(

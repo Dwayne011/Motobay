@@ -143,6 +143,52 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Live reports from signed-in riders: "space now" or "full" for a bay. One per rider per
+    // bay (the id is the rider's uid and the bay id); a new report replaces the old one, at
+    // most once a minute. Private to the rider, since it says where they were and when;
+    // everyone sees only the latest report per bay in bayStatus, kept by the Cloud Function.
+    match /spaceReports/{id} {
+      allow read: if signedIn() && (resource.data.authorUid == request.auth.uid || isAdmin());
+      allow create, update: if signedIn()
+        && (resource == null
+            || (resource.data.authorUid == request.auth.uid
+                && request.time > resource.data.at + duration.value(1, 'm')))
+        && request.resource.data.keys().hasOnly(['bayId', 'authorUid', 'full', 'at'])
+        && request.resource.data.keys().hasAll(['bayId', 'authorUid', 'full', 'at'])
+        && request.resource.data.authorUid == request.auth.uid
+        && isText(request.resource.data.bayId, 100)
+        && request.resource.data.bayId.size() > 0
+        && id == request.auth.uid + '_' + request.resource.data.bayId.replace('/', '_')
+        && request.resource.data.full is bool
+        && request.resource.data.at == request.time;
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    // Safety details a rider confirms for a bay (ground anchor, CCTV, lit at night): true,
+    // false, or left out. One document per rider per bay, private like spaceReports.
+    match /bayFeatures/{id} {
+      allow read: if signedIn() && (resource.data.authorUid == request.auth.uid || isAdmin());
+      allow create, update: if signedIn()
+        && (resource == null || resource.data.authorUid == request.auth.uid)
+        && request.resource.data.keys().hasOnly(['bayId', 'authorUid', 'updatedAt', 'anchor', 'cctv', 'lit'])
+        && request.resource.data.keys().hasAll(['bayId', 'authorUid', 'updatedAt'])
+        && request.resource.data.authorUid == request.auth.uid
+        && isText(request.resource.data.bayId, 100)
+        && request.resource.data.bayId.size() > 0
+        && id == request.auth.uid + '_' + request.resource.data.bayId.replace('/', '_')
+        && (!('anchor' in request.resource.data) || request.resource.data.anchor is bool)
+        && (!('cctv' in request.resource.data) || request.resource.data.cctv is bool)
+        && (!('lit' in request.resource.data) || request.resource.data.lit is bool)
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin() || isAuthor();
+    }
+
+    // Each bay's latest space report and safety totals, written only by the Cloud Function. Public.
+    match /bayStatus/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // One document per display name, keyed by its lower-case form, so names are unique.
     match /displayNames/{key} {
       allow read: if signedIn();

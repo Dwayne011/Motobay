@@ -1,6 +1,8 @@
 package uk.motobay.app
 
+import android.content.Intent
 import android.graphics.Color
+import uk.motobay.app.alerts.ChargeAlerts
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val app = application as MotoBayApplication
+        if (savedInstanceState == null) takeBayRequest(intent)
         setContent {
             CompositionLocalProvider(LocalMapHolder provides mapHolder) {
             val settings by app.user.settings.collectAsStateWithLifecycle()
@@ -39,6 +42,16 @@ class MainActivity : ComponentActivity() {
             }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        takeBayRequest(intent)
+    }
+
+    /** A charge alert or the widget asks for a bay to be shown. */
+    private fun takeBayRequest(intent: Intent?) {
+        intent?.getStringExtra(ChargeAlerts.EXTRA_BAY_ID)?.let { (application as MotoBayApplication).openBayRequest.value = it }
     }
 
     override fun onDestroy() {
