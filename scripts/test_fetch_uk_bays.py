@@ -155,5 +155,51 @@ class CouncilBaysTest(unittest.TestCase):
         self.assertEqual(data["attribution"], "© OpenStreetMap contributors, ODbL 1.0")
 
 
+class AreaPriceTest(unittest.TestCase):
+    # A 0.01-degree square around (51.515, -0.09), with a hole in its north-east corner.
+    SQUARE = [[-0.095, 51.51], [-0.085, 51.51], [-0.085, 51.52], [-0.095, 51.52], [-0.095, 51.51]]
+    HOLE = [[-0.088, 51.518], [-0.086, 51.518], [-0.086, 51.519], [-0.088, 51.519], [-0.088, 51.518]]
+    COUNCIL = {
+        "sources": {"city": {"name": "City statement", "feeConfirmed": True}},
+        "areas": [{"source": "city", "fee": "free", "exceptCovered": True,
+                   "geometry": {"type": "Polygon", "coordinates": [SQUARE, HOLE]}}],
+    }
+
+    def bay(self, id, lat, lon, **extra):
+        return {"id": id, "lat": lat, "lon": lon, "name": "Motorcycle parking", "fee": "unknown", **extra}
+
+    def test_unknown_bays_inside_the_area_take_its_price(self):
+        osm = [
+            self.bay("node/1", 51.515, -0.09),                      # inside
+            self.bay("node/2", 51.53, -0.09),                       # outside
+            self.bay("node/3", 51.5185, -0.087),                    # in the hole
+            self.bay("node/4", 51.512, -0.09, covered=True),        # covered: may be a private car park
+            self.bay("node/5", 51.513, -0.09, covered=False),       # uncovered
+            dict(self.bay("node/6", 51.514, -0.09), fee="paid"),    # OpenStreetMap already has a price
+        ]
+        bays = {b["id"]: b for b in with_council(osm, self.COUNCIL)["bays"]}
+        self.assertEqual(bays["node/1"]["fee"], "free")
+        self.assertEqual(bays["node/1"]["source"], "City statement")
+        self.assertNotIn("feeUnconfirmed", bays["node/1"])
+        self.assertEqual(bays["node/5"]["fee"], "free")
+        for id in ("node/2", "node/3", "node/4"):
+            self.assertEqual(bays[id]["fee"], "unknown", id)
+            self.assertNotIn("source", bays[id])
+        self.assertEqual(bays["node/6"]["fee"], "paid")
+
+    def test_area_prices_can_be_taken_off_again(self):
+        osm = [self.bay("node/1", 51.515, -0.09, capacity=4)]
+        original = [dict(b) for b in osm]
+        merged = with_council(osm, self.COUNCIL)["bays"]
+        self.assertEqual(without_council(merged), original)
+        self.assertEqual(with_council(without_council(merged), self.COUNCIL)["bays"], merged)
+
+    def test_multipolygon(self):
+        council = dict(self.COUNCIL, areas=[dict(self.COUNCIL["areas"][0],
+                       geometry={"type": "MultiPolygon", "coordinates": [[self.SQUARE]]})])
+        bays = with_council([self.bay("node/1", 51.515, -0.09)], council)["bays"]
+        self.assertEqual(bays[0]["fee"], "free")
+
+
 if __name__ == "__main__":
     unittest.main()

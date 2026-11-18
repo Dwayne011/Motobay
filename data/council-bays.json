@@ -1,5 +1,5 @@
 {
- "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions (and Enfield's, which the council gave as approximate coordinates) were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it.",
+ "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions (and Enfield's, which the council gave as approximate coordinates) were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it. 'areas' applies a council's statement about every bay in its area (a GeoJSON boundary file in data/) to the OpenStreetMap bays inside it whose price is unknown; 'exceptCovered' leaves covered bays alone, as they may be in private car parks.",
  "sources": {
   "hillingdon": {
    "name": "Hillingdon Council traffic orders (FOI 06397)",
@@ -25,8 +25,26 @@
    "name": "Enfield Council traffic orders (FOI 1772)",
    "feeConfirmed": true,
    "confirmation": "Enfield Council's response to FOI/EIR 1772 (November 2026): three free solo motorcycle bays, each 'Solo motorcycles only. Free parking', with 'No permit or payment required' stated for Russell Road and Church Street. Positions are from the response's second sheet, checked against OpenStreetMap addresses; the first sheet's coordinates and postcodes did not match the addresses and were not used, nor was its 'Approx. Spaces' column."
+  },
+  "cityoflondon": {
+   "name": "City of London Corporation (FOI response, November 2026)",
+   "feeConfirmed": true,
+   "confirmation": "The City of London Corporation's response to an FOI request of 26 October 2026: 'All motorcycle bays in the Square Mile of the CoL are free of charge.' Only this statement is used. The City's bay map layer is derived from Ordnance Survey data under a licence that does not allow reuse, so no positions come from it; the bays are OpenStreetMap's, and the boundary is OpenStreetMap's (data/city-of-london.geojson)."
+  },
+  "survey-col": {
+   "name": "MotoBays rider survey (City of London, November 2026)",
+   "feeConfirmed": true,
+   "confirmation": "Bays seen by a MotoBays rider walking the City of London in November 2026, positions recorded with a phone's GPS on a second visit to each bay. Tall buildings may have thrown some positions off, so new bays (ones OpenStreetMap doesn't have) are marked approximate until re-checked; bays OpenStreetMap already has keep its position. Spaces were not counted. Prices are from the City of London Corporation's FOI response (November 2026): 'All motorcycle bays in the Square Mile of the CoL are free of charge.' A point outside the City (High Holborn / Furnival Street) was left out."
   }
  },
+ "areas": [
+  {
+   "source": "cityoflondon",
+   "boundary": "city-of-london.geojson",
+   "fee": "free",
+   "exceptCovered": true
+  }
+ ],
  "bays": [
   {
    "id": "council/hillingdon/cowley-high-street",
@@ -6396,6 +6414,399 @@
    "lat": 51.374106,
    "lon": 0.09815,
    "lengthMetres": 11.2
+  },
+  {
+   "id": "council/city-of-london/southampton-buildings-staple-inn",
+   "source": "survey-col",
+   "lat": 51.51728,
+   "lon": -0.11285,
+   "note": "Near Southampton Buildings / Staple Inn. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/southampton-buildings-east",
+   "source": "survey-col",
+   "lat": 51.51724,
+   "lon": -0.11234,
+   "note": "Near Southampton Buildings (East). Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/chancery-lane-cursitor-street",
+   "source": "survey-col",
+   "lat": 51.51711,
+   "lon": -0.11099,
+   "note": "Near Chancery Lane / Cursitor Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/furnival-street-norwich-street",
+   "source": "survey-col",
+   "lat": 51.5174,
+   "lon": -0.10903,
+   "note": "Near Furnival Street / Norwich Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/breams-buildings-rolls-buildings",
+   "source": "survey-col",
+   "lat": 51.51542,
+   "lon": -0.10908,
+   "note": "Near Bream's Buildings / Rolls Buildings. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/temple-avenue-tudor-street",
+   "source": "survey-col",
+   "lat": 51.51264,
+   "lon": -0.1082,
+   "note": "Near Temple Avenue / Tudor Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/temple-avenue-south",
+   "source": "survey-col",
+   "lat": 51.51188,
+   "lon": -0.10794,
+   "note": "Near Temple Avenue (South). Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Temple Avenue"
+  },
+  {
+   "id": "council/city-of-london/new-fetter-lane-bartlett-buildings",
+   "source": "survey-col",
+   "lat": 51.51687,
+   "lon": -0.10742,
+   "note": "Near New Fetter Lane / Bartlett Buildings. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/whitefriars-street-ashentree-court",
+   "source": "survey-col",
+   "lat": 51.51333,
+   "lon": -0.10694,
+   "note": "Near Whitefriars Street / Ashentree Court. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Whitefriars Street"
+  },
+  {
+   "id": "council/city-of-london/carmelite-street-tudor-street",
+   "source": "survey-col",
+   "lat": 51.5126,
+   "lon": -0.10654,
+   "note": "Near Carmelite Street / Tudor Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/carmelite-street-south",
+   "source": "survey-col",
+   "lat": 51.51202,
+   "lon": -0.10646,
+   "note": "Near Carmelite Street (South). Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Carmelite Street"
+  },
+  {
+   "id": "council/city-of-london/john-carpenter-street-tallis-street",
+   "source": "survey-col",
+   "lat": 51.51317,
+   "lon": -0.10585,
+   "note": "Near John Carpenter Street / Tallis Street. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "John Carpenter Street"
+  },
+  {
+   "id": "council/city-of-london/john-carpenter-street-tudor-street",
+   "source": "survey-col",
+   "lat": 51.51281,
+   "lon": -0.10584,
+   "note": "Near John Carpenter Street / Tudor Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/giltspur-street-west-smithfield",
+   "source": "survey-col",
+   "lat": 51.51758,
+   "lon": -0.10358,
+   "note": "Near Giltspur Street / West Smithfield. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/west-smithfield-hosier-lane",
+   "source": "survey-col",
+   "lat": 51.51813,
+   "lon": -0.10334,
+   "note": "Near West Smithfield / Hosier Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/long-lane-west-smithfield",
+   "source": "survey-col",
+   "lat": 51.51856,
+   "lon": -0.10167,
+   "note": "Near Long Lane / West Smithfield. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/little-britain-bartholomew-close",
+   "source": "survey-col",
+   "lat": 51.5176,
+   "lon": -0.10151,
+   "note": "Near Little Britain / Bartholomew Close. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Little Britain"
+  },
+  {
+   "id": "council/city-of-london/queen-victoria-street-lambeth-hill",
+   "source": "survey-col",
+   "lat": 51.51237,
+   "lon": -0.09909,
+   "note": "Near Queen Victoria Street / Lambeth Hill. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/upper-thames-street-pauls-walk",
+   "source": "survey-col",
+   "lat": 51.51114,
+   "lon": -0.09707,
+   "note": "Near Upper Thames Street / Paul's Walk. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/gresham-street-noble-street",
+   "source": "survey-col",
+   "lat": 51.51599,
+   "lon": -0.09572,
+   "note": "Near Gresham Street / Noble Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/wood-street-cheapside",
+   "source": "survey-col",
+   "lat": 51.51468,
+   "lon": -0.09556,
+   "note": "Near Wood Street / Cheapside. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/wood-street-love-lane",
+   "source": "survey-col",
+   "lat": 51.51534,
+   "lon": -0.09541,
+   "note": "Near Wood Street / Love Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/queen-street-watling-street",
+   "source": "survey-col",
+   "lat": 51.51293,
+   "lon": -0.09503,
+   "note": "Near Queen Street / Watling Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/aldermanbury-addle-street",
+   "source": "survey-col",
+   "lat": 51.51637,
+   "lon": -0.09426,
+   "note": "Near Aldermanbury / Addle Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/basinghall-street-north",
+   "source": "survey-col",
+   "lat": 51.51655,
+   "lon": -0.09279,
+   "note": "Near Basinghall Street (North). Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/king-street-trump-street",
+   "source": "survey-col",
+   "lat": 51.51462,
+   "lon": -0.09271,
+   "note": "Near King Street / Trump Street. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "King Street"
+  },
+  {
+   "id": "council/city-of-london/gresham-street-king-street",
+   "source": "survey-col",
+   "lat": 51.51497,
+   "lon": -0.09259,
+   "note": "Near Gresham Street / King Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/cannon-street-college-hill",
+   "source": "survey-col",
+   "lat": 51.51111,
+   "lon": -0.09192,
+   "note": "Near Cannon Street / College Hill. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/coleman-street-london-wall",
+   "source": "survey-col",
+   "lat": 51.51658,
+   "lon": -0.09147,
+   "note": "Near Coleman Street / London Wall. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Coleman Street"
+  },
+  {
+   "id": "council/city-of-london/lothbury-coleman-street",
+   "source": "survey-col",
+   "lat": 51.51465,
+   "lon": -0.09081,
+   "note": "Near Lothbury / Coleman Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/cannon-street-bush-lane",
+   "source": "survey-col",
+   "lat": 51.5107,
+   "lon": -0.09012,
+   "note": "Near Cannon Street / Bush Lane. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Cannon Street"
+  },
+  {
+   "id": "council/city-of-london/finsbury-circus-west",
+   "source": "survey-col",
+   "lat": 51.51812,
+   "lon": -0.08725,
+   "note": "Near Finsbury Circus (West). Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/finsbury-circus-north-east",
+   "source": "survey-col",
+   "lat": 51.51782,
+   "lon": -0.08562,
+   "note": "Near Finsbury Circus (North & East). Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Finsbury Circus"
+  },
+  {
+   "id": "council/city-of-london/lower-thames-street-pudding-lane",
+   "source": "survey-col",
+   "lat": 51.50985,
+   "lon": -0.08495,
+   "note": "Near Lower Thames Street / Pudding Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/eastcheap-philpot-lane",
+   "source": "survey-col",
+   "lat": 51.51052,
+   "lon": -0.08452,
+   "note": "Near Eastcheap / Philpot Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/bishopsgate-great-st-helens",
+   "source": "survey-col",
+   "lat": 51.5139,
+   "lon": -0.08147,
+   "note": "Near Bishopsgate / Great St Helen's. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/rood-lane-eastcheap",
+   "source": "survey-col",
+   "lat": 51.51116,
+   "lon": -0.08153,
+   "note": "Near Rood Lane / Eastcheap. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/st-dunstans-hill-lower-thames-street",
+   "source": "survey-col",
+   "lat": 51.50984,
+   "lon": -0.08115,
+   "note": "Near St Dunstan's Hill / Lower Thames Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/fenchurch-avenue-lime-street",
+   "source": "survey-col",
+   "lat": 51.51287,
+   "lon": -0.08052,
+   "note": "Near Fenchurch Avenue / Lime Street. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Fenchurch Avenue"
+  },
+  {
+   "id": "council/city-of-london/mincing-lane-fenchurch-street",
+   "source": "survey-col",
+   "lat": 51.51157,
+   "lon": -0.07989,
+   "note": "Near Mincing Lane / Fenchurch Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/camomile-street-st-mary-axe",
+   "source": "survey-col",
+   "lat": 51.51637,
+   "lon": -0.07936,
+   "note": "Near Camomile Street / St Mary Axe. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Camomile Street"
+  },
+  {
+   "id": "council/city-of-london/st-mary-axe-bury-street",
+   "source": "survey-col",
+   "lat": 51.51415,
+   "lon": -0.07917,
+   "note": "Near St Mary Axe / Bury Street. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "St Mary Axe"
+  },
+  {
+   "id": "council/city-of-london/mark-lane-great-tower-street",
+   "source": "survey-col",
+   "lat": 51.51034,
+   "lon": -0.07928,
+   "note": "Near Mark Lane / Great Tower Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/hart-street-mark-lane",
+   "source": "survey-col",
+   "lat": 51.51073,
+   "lon": -0.07888,
+   "note": "Near Hart Street / Mark Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/primrose-street-appold-street",
+   "source": "survey-col",
+   "lat": 51.51891,
+   "lon": -0.07844,
+   "note": "Near Primrose Street / Appold Street. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Primrose Street"
+  },
+  {
+   "id": "council/city-of-london/byward-street-seething-lane",
+   "source": "survey-col",
+   "lat": 51.50999,
+   "lon": -0.07841,
+   "note": "Near Byward Street / Seething Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/bevis-marks-heneage-lane",
+   "source": "survey-col",
+   "lat": 51.5159,
+   "lon": -0.07795,
+   "note": "Near Bevis Marks / Heneage Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/crutched-friars-savage-gardens",
+   "source": "survey-col",
+   "lat": 51.51145,
+   "lon": -0.07776,
+   "note": "Near Crutched Friars / Savage Gardens. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/crutched-friars-jewry-street",
+   "source": "survey-col",
+   "lat": 51.51186,
+   "lon": -0.07769,
+   "note": "Near Crutched Friars / Jewry Street. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/fenchurch-street-lloyds-avenue",
+   "source": "survey-col",
+   "lat": 51.51264,
+   "lon": -0.07719,
+   "note": "Near Fenchurch Street / Lloyd's Avenue. Seen by a rider in November 2026 (phone GPS, to be re-checked); spaces not counted yet.",
+   "approximate": true,
+   "street": "Fenchurch Street"
+  },
+  {
+   "id": "council/city-of-london/bury-street-creechurch-lane",
+   "source": "survey-col",
+   "lat": 51.51522,
+   "lon": -0.07674,
+   "note": "Near Bury Street / Creechurch Lane. Seen by a rider in November 2026; spaces not counted yet."
+  },
+  {
+   "id": "council/city-of-london/trinity-square-minories",
+   "source": "survey-col",
+   "lat": 51.51057,
+   "lon": -0.07555,
+   "note": "Near Trinity Square / Minories. Seen by a rider in November 2026; spaces not counted yet. The bay here is covered and may be inside a car park, so its price is unknown until checked.",
+   "fee": "unknown"
   }
  ],
  "unplaced": [
