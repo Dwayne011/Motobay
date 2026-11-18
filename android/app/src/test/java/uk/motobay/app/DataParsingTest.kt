@@ -50,8 +50,12 @@ class DataParsingTest {
                 .all { it.fee == Fee.Free || it.id == "council/bromley/carlton-parade" && it.fee == Fee.Unknown },
         )
         // The City of London said all its bays are free; its covered bays are left alone (they may be private car parks).
-        val city = data.bays.filter { it.source?.contains("City of London") == true }
-        assertTrue(city.size > 40 && city.all { it.isOsm && it.fee == Fee.Free && it.covered != true })
+        val city = data.bays.filter { it.source?.contains("City of London Corporation") == true }
+        assertTrue(city.size > 10 && city.all { it.isOsm && it.fee == Fee.Free && it.covered != true })
+        // A rider's survey of the City: new bays are free and flagged approximate until re-checked.
+        val survey = data.bays.filter { it.source?.contains("rider survey") == true }
+        assertTrue(survey.size > 40 && survey.all { it.note != null && (it.fee == Fee.Free || it.covered == true && it.fee == Fee.Unknown) })
+        assertTrue(survey.filter { it.isCouncil }.let { new -> new.isNotEmpty() && new.all { it.approximate && it.fee == Fee.Free } })
         // Camden's open data: paid bays with the daily tariff, plus one bay whose price it doesn't give.
         val camden = data.bays.filter { it.source?.contains("Camden") == true }
         assertEquals(333, camden.size)
