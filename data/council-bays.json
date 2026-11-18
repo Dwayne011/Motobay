@@ -19,7 +19,7 @@
   "camden": {
    "name": "Camden Council Parking Bays open data (Open Government Licence v3.0)",
    "feeConfirmed": true,
-   "confirmation": "Camden's Parking Bays dataset on opendata.camden.gov.uk, downloaded 13 November 2026: restriction type, times of operation, tariff, cashless location, zone, bay length and coordinates for each bay. Contains public sector information licensed under the Open Government Licence v3.0."
+   "confirmation": "Camden's Parking Bays dataset on opendata.camden.gov.uk, downloaded 13 November 2026: restriction type, times of operation, tariff, cashless location, zone, bay length and coordinates for each bay. Contains public sector information licensed under the Open Government Licence v3.0. The dataset calls payment 'pay by phone'; Camden's cashless parking page (read November 2026) names RingGo as its only provider, so the rules say RingGo."
   },
   "enfield": {
    "name": "Enfield Council traffic orders (FOI 1772)",
@@ -2648,7 +2648,7 @@
    "street": "Abbot's Place",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051369. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051369. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2659,7 +2659,7 @@
    "street": "Ajax Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051368. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051368. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -2670,7 +2670,7 @@
    "street": "Aldred Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051305. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051305. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -2681,7 +2681,7 @@
    "street": "Alvanley Gardens",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051424. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051424. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2692,7 +2692,7 @@
    "street": "Alvanley Gardens",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051391. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051391. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2703,7 +2703,7 @@
    "street": "Ampton Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051133. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051133. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2714,7 +2714,7 @@
    "street": "Anglers Lane",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051230. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051230. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2725,7 +2725,7 @@
    "street": "Antrim Grove",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051114. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051114. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -2736,7 +2736,7 @@
    "street": "Argyle Square",
    "lengthMetres": 18.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2747,7 +2747,7 @@
    "street": "Argyle Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051217. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051217. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2758,7 +2758,7 @@
    "street": "Argyle Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051372. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051372. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2769,7 +2769,7 @@
    "street": "Ariel Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051264. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051264. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2780,7 +2780,7 @@
    "street": "Arlington Road",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051355. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051355. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -2791,7 +2791,7 @@
    "street": "Arlington Road",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051250. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051250. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -2802,7 +2802,7 @@
    "street": "Back Hill",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051128. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051128. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2813,7 +2813,7 @@
    "street": "Back Hill",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051278. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051278. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2824,7 +2824,7 @@
    "street": "Barter Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051313. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051313. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2835,7 +2835,7 @@
    "street": "Bartholomew Road",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051353. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051353. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2846,7 +2846,7 @@
    "street": "Bartholomew Villas",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051274. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051274. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2857,7 +2857,7 @@
    "street": "Bassett Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051385. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051385. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -2868,7 +2868,7 @@
    "street": "Bayham Place",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051419. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051419. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -2879,7 +2879,7 @@
    "street": "Bayley Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051188. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051188. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2890,7 +2890,7 @@
    "street": "Bedford Place",
    "lengthMetres": 24.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051148. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051148. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2901,7 +2901,7 @@
    "street": "Bedford Row",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051175. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051175. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -2912,7 +2912,7 @@
    "street": "Bedford Square",
    "lengthMetres": 25.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051309. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051309. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2923,7 +2923,7 @@
    "street": "Bedford Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051167. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051167. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -2934,7 +2934,7 @@
    "street": "Belmont Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051350. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051350. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -2945,7 +2945,7 @@
    "street": "Belsize Avenue",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051157. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051157. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -2956,7 +2956,7 @@
    "street": "Belsize Grove",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051267. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051267. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -2967,7 +2967,7 @@
    "street": "Belsize Lane",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051428. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051428. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -2978,7 +2978,7 @@
    "street": "Belsize Park",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051394. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051394. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -2989,7 +2989,7 @@
    "street": "Belsize Park",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051275. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051275. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3000,7 +3000,7 @@
    "street": "Belsize Square",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051234. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051234. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3011,7 +3011,7 @@
    "street": "Belsize Terrace",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051212. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051212. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3022,7 +3022,7 @@
    "street": "Berkley Road",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051246. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051246. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -3033,7 +3033,7 @@
    "street": "Bernard Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051282. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051282. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3044,7 +3044,7 @@
    "street": "Bidborough Street",
    "lengthMetres": 17.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051389. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051389. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3055,7 +3055,7 @@
    "street": "Bidborough Street",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051335. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051335. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3066,7 +3066,7 @@
    "street": "Bisham Gardens",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051106. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051106. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -3077,7 +3077,7 @@
    "street": "Blackburn Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051291. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051291. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3088,7 +3088,7 @@
    "street": "Bloomsbury Square",
    "lengthMetres": 14.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051434. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051434. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3099,7 +3099,7 @@
    "street": "Broadhurst Gardens",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051421. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051421. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
    "charged": "1-6 08:30-22:00"
   },
   {
@@ -3110,7 +3110,7 @@
    "street": "Brunswick Square",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051119. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051119. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3121,7 +3121,7 @@
    "street": "Buck Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051202. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051202. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -3132,7 +3132,7 @@
    "street": "Burrard Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051382. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051382. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3143,7 +3143,7 @@
    "street": "Burton Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051324. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051324. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3154,7 +3154,7 @@
    "street": "Camden Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051343. Controlled zone CA-N.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051343. Controlled zone CA-N.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3165,7 +3165,7 @@
    "street": "Cantelowes Road",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051364. Controlled zone CA-N.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051364. Controlled zone CA-N.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3176,7 +3176,7 @@
    "street": "Carol Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051412. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051412. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -3187,7 +3187,7 @@
    "street": "Cartwright Gardens",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051384. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051384. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3198,7 +3198,7 @@
    "street": "Castle Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051153. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051153. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -3209,7 +3209,7 @@
    "street": "Castlehaven Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051381. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051381. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -3221,7 +3221,7 @@
    "lengthMetres": 5.0,
    "maxStay": "2 hours",
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051359. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051359. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -3232,7 +3232,7 @@
    "street": "Chalton Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051206. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051206. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3243,7 +3243,7 @@
    "street": "Charlotte Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051402. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051402. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3254,7 +3254,7 @@
    "street": "Chenies Street",
    "lengthMetres": 15.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051108. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051108. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3265,7 +3265,7 @@
    "street": "Chesterford Gardens",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051322. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051322. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -3276,7 +3276,7 @@
    "street": "Chitty Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051131. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051131. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3287,7 +3287,7 @@
    "street": "Cleveland Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051409. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051409. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3298,7 +3298,7 @@
    "street": "Constantine Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051334. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051334. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3309,7 +3309,7 @@
    "street": "Constantine Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051225. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051225. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3320,7 +3320,7 @@
    "street": "Cotleigh Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051425. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051425. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3331,7 +3331,7 @@
    "street": "Courthope Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051398. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051398. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3342,7 +3342,7 @@
    "street": "Courthope Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051356. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051356. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3353,7 +3353,7 @@
    "street": "Crediton Hill",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051180. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051180. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3364,7 +3364,7 @@
    "street": "Cromer Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051302. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051302. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3375,7 +3375,7 @@
    "street": "Daleham Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051129. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051129. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3386,7 +3386,7 @@
    "street": "Dartmouth Park Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051366. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051366. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -3397,7 +3397,7 @@
    "street": "Dennington Park Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051383. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051383. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3408,7 +3408,7 @@
    "street": "Doric Way",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051378. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051378. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3419,7 +3419,7 @@
    "street": "Doughty Street",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051211. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051211. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3430,7 +3430,7 @@
    "street": "Doughty Street",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051214. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051214. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3441,7 +3441,7 @@
    "street": "Drummond Crescent",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051185. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051185. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3452,7 +3452,7 @@
    "street": "Drummond Crescent",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051171. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051171. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3463,7 +3463,7 @@
    "street": "Duke's Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051247. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051247. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3474,7 +3474,7 @@
    "street": "Elsworthy Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051163. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051163. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -3485,7 +3485,7 @@
    "street": "Endell Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051310. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051310. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3496,7 +3496,7 @@
    "street": "Endsleigh Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051141. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051141. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3507,7 +3507,7 @@
    "street": "England's Lane",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051374. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051374. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3518,7 +3518,7 @@
    "street": "Estelle Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051347. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051347. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3529,7 +3529,7 @@
    "street": "Eton Avenue",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051251. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051251. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3540,7 +3540,7 @@
    "street": "Eton Avenue",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051162. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051162. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3551,7 +3551,7 @@
    "street": "Eton Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051255. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051255. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3562,7 +3562,7 @@
    "street": "Eton Villas",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051194. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051194. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3573,7 +3573,7 @@
    "street": "Euston Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051147. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051147. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3584,7 +3584,7 @@
    "street": "Eyre Street Hill",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051390. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051390. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3595,7 +3595,7 @@
    "street": "Fairhazel Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051208. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051208. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
    "charged": "1-6 08:30-22:00"
   },
   {
@@ -3606,7 +3606,7 @@
    "street": "Falkland Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051388. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051388. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3617,7 +3617,7 @@
    "street": "Fawley Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051417. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051417. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3628,7 +3628,7 @@
    "street": "Fellows Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051371. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051371. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3639,7 +3639,7 @@
    "street": "Fellows Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051183. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051183. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3650,7 +3650,7 @@
    "street": "Fellows Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051121. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051121. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3661,7 +3661,7 @@
    "street": "Field Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051200. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051200. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3672,7 +3672,7 @@
    "street": "Fitzroy Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051386. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051386. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -3683,7 +3683,7 @@
    "street": "Fitzroy Street",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051435. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051435. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3694,7 +3694,7 @@
    "street": "Fitzroy Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051243. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051243. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3705,7 +3705,7 @@
    "street": "Fitzroy Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051112. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051112. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3716,7 +3716,7 @@
    "street": "Flask Walk",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051195. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051195. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -3727,7 +3727,7 @@
    "street": "Fordwych Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051130. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051130. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3738,7 +3738,7 @@
    "street": "Fordwych Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051263. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051263. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3749,7 +3749,7 @@
    "street": "Fortune Green Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051135. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051135. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3760,7 +3760,7 @@
    "street": "Frederick Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051431. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051431. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3771,7 +3771,7 @@
    "street": "Frognal",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051245. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051245. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3782,7 +3782,7 @@
    "street": "Garnett Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051261. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051261. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3793,7 +3793,7 @@
    "street": "Gascony Avenue",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051323. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051323. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3804,7 +3804,7 @@
    "street": "Gascony Avenue",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051290. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051290. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3815,7 +3815,7 @@
    "street": "Gate Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051125. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051125. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3826,7 +3826,7 @@
    "street": "Gate Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051365. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051365. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3837,7 +3837,7 @@
    "street": "Gate Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051224. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051224. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3848,7 +3848,7 @@
    "street": "Glenbrook Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051321. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051321. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3859,7 +3859,7 @@
    "street": "Glenilla Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051337. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051337. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -3870,7 +3870,7 @@
    "street": "Gloucester Avenue",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051199. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051199. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -3881,7 +3881,7 @@
    "street": "Gloucester Avenue",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051253. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051253. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -3892,7 +3892,7 @@
    "street": "Gondar Gardens",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051429. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051429. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -3903,7 +3903,7 @@
    "street": "Gondar Gardens",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051349. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051349. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -3914,7 +3914,7 @@
    "street": "Goodge Place",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051397. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051397. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3925,7 +3925,7 @@
    "street": "Gordon Square",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051380. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051380. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3936,7 +3936,7 @@
    "street": "Gough Street",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051300. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051300. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3947,7 +3947,7 @@
    "street": "Gower Place",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051363. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051363. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -3958,7 +3958,7 @@
    "street": "Grafton Terrace",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051216. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051216. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3969,7 +3969,7 @@
    "street": "Grangeway",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051345. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051345. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -3980,7 +3980,7 @@
    "street": "Great Russell Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051113. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051113. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -3991,7 +3991,7 @@
    "street": "Greencroft Gardens",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051281. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051281. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
    "charged": "1-6 08:30-22:00"
   },
   {
@@ -4002,7 +4002,7 @@
    "street": "Greenland Place",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051227. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051227. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -4013,7 +4013,7 @@
    "street": "Greenwood Place",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051166. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051166. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4024,7 +4024,7 @@
    "street": "Grenville Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051411. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051411. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4035,7 +4035,7 @@
    "street": "Gresse Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051422. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051422. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4046,7 +4046,7 @@
    "street": "Greville Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051244. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051244. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4057,7 +4057,7 @@
    "street": "Greville Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051103. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051103. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4068,7 +4068,7 @@
    "street": "Guilford Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051311. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051311. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4079,7 +4079,7 @@
    "street": "Hammond Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051127. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051127. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4090,7 +4090,7 @@
    "street": "Hampstead High Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051280. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051280. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -4101,7 +4101,7 @@
    "street": "Hampstead High Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051187. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051187. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -4112,7 +4112,7 @@
    "street": "Handel Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051221. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051221. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4123,7 +4123,7 @@
    "street": "Harrington Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051358. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051358. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -4134,7 +4134,7 @@
    "street": "Harrison Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051341. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051341. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4145,7 +4145,7 @@
    "street": "Hatton Garden",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051237. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051237. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4156,7 +4156,7 @@
    "street": "Hawley Crescent",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051178. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051178. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -4167,7 +4167,7 @@
    "street": "Healey Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051197. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051197. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -4178,7 +4178,7 @@
    "street": "Heath Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051248. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051248. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -4189,7 +4189,7 @@
    "street": "Hemstal Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051168. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051168. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4200,7 +4200,7 @@
    "street": "Hemstal Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051102. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051102. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4211,7 +4211,7 @@
    "street": "Hemstal Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051284. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051284. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4222,7 +4222,7 @@
    "street": "Herbrand Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051392. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051392. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4233,7 +4233,7 @@
    "street": "Herbrand Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051269. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051269. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4244,7 +4244,7 @@
    "street": "Hillfield Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051370. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051370. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4255,7 +4255,7 @@
    "street": "Hillfield Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051289. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051289. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4266,7 +4266,7 @@
    "street": "Hillfield Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051401. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051401. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4277,7 +4277,7 @@
    "street": "Hillfield Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051226. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051226. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4288,7 +4288,7 @@
    "street": "Hilltop Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051314. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051314. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4299,7 +4299,7 @@
    "street": "Holmdale Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051159. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051159. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4310,7 +4310,7 @@
    "street": "Holmdale Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051191. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051191. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4321,7 +4321,7 @@
    "street": "Holmdale Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051430. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051430. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4332,7 +4332,7 @@
    "street": "Honeybourne Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051361. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051361. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4343,7 +4343,7 @@
    "street": "Howitt Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051315. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051315. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4354,7 +4354,7 @@
    "street": "Howland Street",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051328. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051328. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4365,7 +4365,7 @@
    "street": "Huntley Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051272. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051272. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4376,7 +4376,7 @@
    "street": "Huntley Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051150. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051150. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4387,7 +4387,7 @@
    "street": "Inglewood Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051134. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051134. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4398,7 +4398,7 @@
    "street": "Iverson Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051254. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051254. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4409,7 +4409,7 @@
    "street": "Jockey's Fields",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051111. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051111. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4420,7 +4420,7 @@
    "street": "John Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051400. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051400. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4431,7 +4431,7 @@
    "street": "John Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051283. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051283. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4442,7 +4442,7 @@
    "street": "John's Mews",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051198. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051198. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4453,7 +4453,7 @@
    "street": "Kilburn Priory",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051204. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051204. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4464,7 +4464,7 @@
    "street": "Kilburn Vale",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051357. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051357. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4475,7 +4475,7 @@
    "street": "King's College Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051294. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051294. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4486,7 +4486,7 @@
    "street": "Kingdon Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051317. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051317. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4497,7 +4497,7 @@
    "street": "Kingdon Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051306. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051306. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4508,7 +4508,7 @@
    "street": "Kingsgate Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051354. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051354. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4519,7 +4519,7 @@
    "street": "Kingsgate Road",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051396. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051396. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4530,7 +4530,7 @@
    "street": "Kingsgate Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051232. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051232. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4541,7 +4541,7 @@
    "street": "Kingsgate Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051270. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051270. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4552,7 +4552,7 @@
    "street": "Kirby Street",
    "lengthMetres": 14.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051205. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051205. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4563,7 +4563,7 @@
    "street": "Kirby Street",
    "lengthMetres": 34.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051138. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051138. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4574,7 +4574,7 @@
    "street": "Lady Margaret Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051177. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051177. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4585,7 +4585,7 @@
    "street": "Lady Margaret Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051116. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051116. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4596,7 +4596,7 @@
    "street": "Lady Margaret Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051260. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051260. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4607,7 +4607,7 @@
    "street": "Lady Somerset Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051192. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051192. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4618,7 +4618,7 @@
    "street": "Lambolle Place",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051256. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051256. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4629,7 +4629,7 @@
    "street": "Lambolle Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051352. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051352. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4640,7 +4640,7 @@
    "street": "Lancaster Grove",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051207. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051207. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4651,7 +4651,7 @@
    "street": "Lansdowne Terrace",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051152. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051152. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4662,7 +4662,7 @@
    "street": "Lawford Road",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051426. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051426. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4673,7 +4673,7 @@
    "street": "Lawn Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051146. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051146. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4684,7 +4684,7 @@
    "street": "Leeke Street",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051406. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051406. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4695,7 +4695,7 @@
    "street": "Leigh Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051348. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051348. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4706,7 +4706,7 @@
    "street": "Lincoln's Inn Fields",
    "lengthMetres": 17.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051239. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051239. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4717,7 +4717,7 @@
    "street": "Lincoln's Inn Fields",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051105. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051105. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4728,7 +4728,7 @@
    "street": "Lindfield Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051413. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051413. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -4739,7 +4739,7 @@
    "street": "Lissenden Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051273. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051273. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4750,7 +4750,7 @@
    "street": "Lissenden Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051233. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051233. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -4761,7 +4761,7 @@
    "street": "Longford Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051172. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051172. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4772,7 +4772,7 @@
    "street": "Loudoun Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051132. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051132. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4783,7 +4783,7 @@
    "street": "Loveridge Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051336. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051336. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4794,7 +4794,7 @@
    "street": "Lowfield Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051161. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051161. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4805,7 +4805,7 @@
    "street": "Lowfield Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051351. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051351. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4816,7 +4816,7 @@
    "street": "Lymington Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051367. Controlled zone CA-P.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051367. Controlled zone CA-P.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4827,7 +4827,7 @@
    "street": "Maiden Lane",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid at all times. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone. Controlled zone CA-N.",
+   "rules": "Paid at all times. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo. Controlled zone CA-N.",
    "charged": "always"
   },
   {
@@ -4838,7 +4838,7 @@
    "street": "Malden Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051100. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051100. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4849,7 +4849,7 @@
    "street": "Malet Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051222. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051222. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4860,7 +4860,7 @@
    "street": "Malet Street",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051109. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051109. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4871,7 +4871,7 @@
    "street": "Manstone Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051174. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051174. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4882,7 +4882,7 @@
    "street": "Manstone Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051156. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051156. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4893,7 +4893,7 @@
    "street": "Maple Place",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051393. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051393. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -4904,7 +4904,7 @@
    "street": "Maresfield Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051117. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051117. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4915,7 +4915,7 @@
    "street": "Maygrove Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051298. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051298. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4926,7 +4926,7 @@
    "street": "Maygrove Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051325. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051325. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4937,7 +4937,7 @@
    "street": "Maygrove Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051293. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051293. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4948,7 +4948,7 @@
    "street": "Mecklenburgh Square",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051110. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051110. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4959,7 +4959,7 @@
    "street": "Mecklenburgh Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051308. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051308. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -4970,7 +4970,7 @@
    "street": "Merton Rise",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051326. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051326. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -4981,7 +4981,7 @@
    "street": "Messina Avenue",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051432. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051432. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -4992,7 +4992,7 @@
    "street": "Midhope Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051316. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051316. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5003,7 +5003,7 @@
    "street": "Mill Lane",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051124. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051124. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5014,7 +5014,7 @@
    "street": "Mill Lane",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051408. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051408. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5025,7 +5025,7 @@
    "street": "Miller Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051375. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051375. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -5036,7 +5036,7 @@
    "street": "Minster Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051414. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051414. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5047,7 +5047,7 @@
    "street": "Minster Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051210. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051210. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -5058,7 +5058,7 @@
    "street": "Mornington Crescent",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051433. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051433. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -5069,7 +5069,7 @@
    "street": "Mornington Terrace",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051249. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051249. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -5080,7 +5080,7 @@
    "street": "Mortimer Market",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051285. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051285. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5091,7 +5091,7 @@
    "street": "Mount Pleasant",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051252. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051252. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5102,7 +5102,7 @@
    "street": "Mount Pleasant",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051252. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051252. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5113,7 +5113,7 @@
    "street": "Nassington Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051118. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051118. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5124,7 +5124,7 @@
    "street": "Netherhall Gardens",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051437. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051437. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5135,7 +5135,7 @@
    "street": "Netherhall Gardens",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051265. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051265. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5146,7 +5146,7 @@
    "street": "New Compton Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051262. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051262. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5157,7 +5157,7 @@
    "street": "New Compton Street",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051423. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051423. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5168,7 +5168,7 @@
    "street": "New Oxford Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051144. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051144. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5179,7 +5179,7 @@
    "street": "New Oxford Street",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051160. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051160. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5190,7 +5190,7 @@
    "street": "Oakley Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051231. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 9.30am–5.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051231. Controlled zone CA-F.",
    "charged": "1-5 08:30-18:30;6 09:30-17:30"
   },
   {
@@ -5201,7 +5201,7 @@
    "street": "Ospringe Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051145. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051145. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5212,7 +5212,7 @@
    "street": "Ospringe Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051331. Controlled zone CA-M.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051331. Controlled zone CA-M.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5233,7 +5233,7 @@
    "street": "Park Village East",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051301. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051301. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5244,7 +5244,7 @@
    "street": "Parker Street",
    "lengthMetres": 14.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051271. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051271. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5255,7 +5255,7 @@
    "street": "Parliament Hill",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051436. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051436. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5266,7 +5266,7 @@
    "street": "Percy Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051235. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051235. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5277,7 +5277,7 @@
    "street": "Pilgrim's Lane",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051379. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051379. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5288,7 +5288,7 @@
    "street": "Polygon Road",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051184. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051184. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5299,7 +5299,7 @@
    "street": "Portpool Lane",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051142. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051142. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5310,7 +5310,7 @@
    "street": "Portpool Lane",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051139. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051139. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5321,7 +5321,7 @@
    "street": "Pratt Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051218. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051218. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -5332,7 +5332,7 @@
    "street": "Pratt Street",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051438. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051438. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5343,7 +5343,7 @@
    "street": "Prince Of Wales Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051320. Controlled zone CA-F.",
+   "rules": "Paid Mon–Fri 8.30am–11pm, Sat–Sun 9.30am–11pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051320. Controlled zone CA-F.",
    "charged": "1-5 08:30-23:00;6-7 09:30-23:00"
   },
   {
@@ -5354,7 +5354,7 @@
    "street": "Princess Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051123. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051123. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -5365,7 +5365,7 @@
    "street": "Provost Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051333. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051333. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5376,7 +5376,7 @@
    "street": "Queen Square",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051176. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051176. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5387,7 +5387,7 @@
    "street": "Queen Square",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051193. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051193. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5398,7 +5398,7 @@
    "street": "Queen Square",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051120. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051120. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5409,7 +5409,7 @@
    "street": "Queen's Crescent",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051339. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051339. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5420,7 +5420,7 @@
    "street": "Raglan Street",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051330. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051330. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5431,7 +5431,7 @@
    "street": "Raglan Street",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051259. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051259. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5442,7 +5442,7 @@
    "street": "Ravenshaw Street",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051327. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051327. Controlled zone CA-P.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -5453,7 +5453,7 @@
    "street": "Red Lion Square",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051376. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051376. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5464,7 +5464,7 @@
    "street": "Red Lion Square",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051173. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051173. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5475,7 +5475,7 @@
    "street": "Red Lion Square",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051136. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051136. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5486,7 +5486,7 @@
    "street": "Red Lion Square",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051307. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051307. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5497,7 +5497,7 @@
    "street": "Regent's Park Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051295. Controlled zone CA-J.",
+   "rules": "Paid Mon–Fri 8.30am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051295. Controlled zone CA-J.",
    "charged": "1-5 08:30-18:00"
   },
   {
@@ -5508,7 +5508,7 @@
    "street": "Regent's Park Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051158. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051158. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5519,7 +5519,7 @@
    "street": "Richborough Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051268. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051268. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5530,7 +5530,7 @@
    "street": "Ridgmount Street",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051416. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051416. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5541,7 +5541,7 @@
    "street": "Rochester Square",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051410. Controlled zone CA-N.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051410. Controlled zone CA-N.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5552,7 +5552,7 @@
    "street": "Roger Street",
    "lengthMetres": 10.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051140. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051140. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5563,7 +5563,7 @@
    "street": "Rona Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051241. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051241. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5574,7 +5574,7 @@
    "street": "Rondu Road",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051190. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051190. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5585,7 +5585,7 @@
    "street": "Rosemont Road",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051360. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
+   "rules": "Paid Mon–Sat 8.30am–10pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051360. Also valid with a CA-R or CA-K permit. Controlled zone CA-R.",
    "charged": "1-6 08:30-22:00"
   },
   {
@@ -5596,7 +5596,7 @@
    "street": "Royal College Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051101. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051101. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5607,7 +5607,7 @@
    "street": "Royal College Street",
    "lengthMetres": 19.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051287. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051287. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5618,7 +5618,7 @@
    "street": "Russell Square",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051344. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051344. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5629,7 +5629,7 @@
    "street": "Russell Square",
    "lengthMetres": 18.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051277. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051277. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5640,7 +5640,7 @@
    "street": "Russell Square",
    "lengthMetres": 22.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051143. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051143. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5651,7 +5651,7 @@
    "street": "Saffron Hill",
    "lengthMetres": 13.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051170. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051170. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5662,7 +5662,7 @@
    "street": "Saffron Street",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051304. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051304. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5673,7 +5673,7 @@
    "street": "Sandland Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051377. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051377. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5684,7 +5684,7 @@
    "street": "Sandwell Crescent",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051340. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051340. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5695,7 +5695,7 @@
    "street": "Savernake Road",
    "lengthMetres": 1.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051179. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051179. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5706,7 +5706,7 @@
    "street": "Shelton Street",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051122. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051122. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5717,7 +5717,7 @@
    "street": "Sherriff Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051154. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051154. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5728,7 +5728,7 @@
    "street": "Shirlock Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051387. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051387. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5739,7 +5739,7 @@
    "street": "Sidmouth Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051318. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051318. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5750,7 +5750,7 @@
    "street": "Skardu Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051228. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051228. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5761,7 +5761,7 @@
    "street": "Skardu Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051219. Controlled zone CA-Q.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051219. Controlled zone CA-Q.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5772,7 +5772,7 @@
    "street": "Solent Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051242. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051242. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5783,7 +5783,7 @@
    "street": "South Grove",
    "lengthMetres": 3.505,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051338. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051338. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -5794,7 +5794,7 @@
    "street": "South Hill Park",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051395. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051395. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5805,7 +5805,7 @@
    "street": "South Hill Park",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051137. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051137. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5816,7 +5816,7 @@
    "street": "South Hill Park",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051288. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051288. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5827,7 +5827,7 @@
    "street": "Southampton Road",
    "lengthMetres": 6.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051238. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051238. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5838,7 +5838,7 @@
    "street": "Southampton Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051203. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051203. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5849,7 +5849,7 @@
    "street": "Spring Place",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051276. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051276. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5860,7 +5860,7 @@
    "street": "St Cross Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051332. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051332. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5871,7 +5871,7 @@
    "street": "St Cross Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051196. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051196. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5882,7 +5882,7 @@
    "street": "Stanhope Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051292. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051292. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5893,7 +5893,7 @@
    "street": "Steele's Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051427. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051427. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -5904,7 +5904,7 @@
    "street": "Store Street",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051201. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051201. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5915,7 +5915,7 @@
    "street": "Store Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051319. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051319. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -5926,7 +5926,7 @@
    "street": "Sumatra Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051155. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051155. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5937,7 +5937,7 @@
    "street": "Sumatra Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051189. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051189. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -5948,7 +5948,7 @@
    "street": "Swain's Lane",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051286. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051286. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -5959,7 +5959,7 @@
    "street": "Tankerton Street",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051407. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051407. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5970,7 +5970,7 @@
    "street": "Tanza Road",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051362. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051362. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -5981,7 +5981,7 @@
    "street": "Tavistock Square",
    "lengthMetres": 12.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051209. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051209. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -5992,7 +5992,7 @@
    "street": "Taviton Street",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051169. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051169. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -6003,7 +6003,7 @@
    "street": "Templewood Avenue",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 12.30pm–2.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051303. Controlled zone CA-S.",
+   "rules": "Paid Mon–Fri 12.30pm–2.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051303. Controlled zone CA-S.",
    "charged": "1-5 12:30-14:30"
   },
   {
@@ -6014,7 +6014,7 @@
    "street": "Tottenham Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051115. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051115. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6025,7 +6025,7 @@
    "street": "Tower Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051104. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051104. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6036,7 +6036,7 @@
    "street": "Twisden Road",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051213. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051213. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {
@@ -6047,7 +6047,7 @@
    "street": "University Street",
    "lengthMetres": 19.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051220. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051220. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6058,7 +6058,7 @@
    "street": "Upper Park Road",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051240. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051240. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -6069,7 +6069,7 @@
    "street": "Vale Of Health",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051149. Controlled zone CA-H.",
+   "rules": "Paid Mon–Sat 9am–6pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051149. Controlled zone CA-H.",
    "charged": "1-6 09:00-18:00"
   },
   {
@@ -6080,7 +6080,7 @@
    "street": "Vicar's Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051297. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051297. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -6091,7 +6091,7 @@
    "street": "Warren Street",
    "lengthMetres": 9.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051403. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051403. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6102,7 +6102,7 @@
    "street": "Weedington Road",
    "lengthMetres": 8.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051257. Controlled zone CA-L.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051257. Controlled zone CA-L.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -6113,7 +6113,7 @@
    "street": "West End Lane",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051223. Controlled zone CA-K.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051223. Controlled zone CA-K.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -6124,7 +6124,7 @@
    "street": "West End Lane",
    "lengthMetres": 2.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051418. Controlled zone CA-P.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051418. Controlled zone CA-P.",
    "charged": "1-5 08:30-18:30"
   },
   {
@@ -6135,7 +6135,7 @@
    "street": "Whetstone Park",
    "lengthMetres": 3.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051415. Controlled zone CA-C.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051415. Controlled zone CA-C.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6146,7 +6146,7 @@
    "street": "Whitfield Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051236. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051236. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6157,7 +6157,7 @@
    "street": "Whitfield Street",
    "lengthMetres": 4.0,
    "fee": "paid",
-   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051266. Controlled zone CA-E.",
+   "rules": "Paid Mon–Sat 8.30am–6.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051266. Controlled zone CA-E.",
    "charged": "1-6 08:30-18:30"
   },
   {
@@ -6168,7 +6168,7 @@
    "street": "Wicklow Street",
    "lengthMetres": 7.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051164. Controlled zone CA-D.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051164. Controlled zone CA-D.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -6179,7 +6179,7 @@
    "street": "William Road",
    "lengthMetres": 11.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051151. Controlled zone CA-G.",
+   "rules": "Paid Mon–Fri 8.30am–6.30pm, Sat 8.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051151. Controlled zone CA-G.",
    "charged": "1-5 08:30-18:30;6 08:30-13:30"
   },
   {
@@ -6190,7 +6190,7 @@
    "street": "Winchester Road",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051296. Controlled zone CA-B.",
+   "rules": "Paid Mon–Fri 9am–6.30pm, Sat 9.30am–1.30pm; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051296. Controlled zone CA-B.",
    "charged": "1-5 09:00-18:30;6 09:30-13:30"
   },
   {
@@ -6201,7 +6201,7 @@
    "street": "York Rise",
    "lengthMetres": 5.0,
    "fee": "paid",
-   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by phone, location 6051346. Controlled zone CA-U.",
+   "rules": "Paid Mon–Fri 10am–Noon; free outside those hours. £1.30 a day, or £0.66 for electric motorcycles. Pay by RingGo, location 6051346. Controlled zone CA-U.",
    "charged": "1-5 10:00-12:00"
   },
   {

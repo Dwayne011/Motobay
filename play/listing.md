@@ -25,7 +25,7 @@ MotoBays shows motorcycle parking bays across the UK on one map, so you can find
 
 FIND A BAY
 • Thousands of motorcycle bays from OpenStreetMap, across the whole UK
-• Council details for Camden, Islington, Hillingdon, Bromley and Enfield: prices, charging hours, number of spaces and where exactly the bay is
+• Council details for Camden, Islington, Hillingdon, Bromley and Enfield, and free bays across the City of London: prices, charging hours, number of spaces and where exactly the bay is
 • Filter by Free, Paid or Unknown, or show only covered bays
 • Search any town, street or postcode
 • Bays cluster together when you zoom out, so the map stays readable
@@ -33,12 +33,22 @@ FIND A BAY
 ON EACH BAY
 • Price, spaces, length and whether it's covered
 • When it's charged and how to pay, where the council publishes it
+• Pay with RingGo in one tap: the location code is copied for you
+• "Space now" or "Full" reports from riders, with how long ago
+• Ground anchors, CCTV and lighting, as riders report them
+• Vehicle crime nearby, from police data
 • One tap for directions in your maps app
 • Star ratings, photos and comments from other riders
+
+PARKED? WE'LL REMIND YOU
+• Tap "I parked here" and MotoBays tells you if the bay is charged right now
+• If charging starts later, you get a reminder 15 minutes before
+• Where you parked stays on your phone
 
 SAVE YOUR REGULARS
 • Star the bays you use most and get to them in a tap
 • Saved bays are grouped by price
+• A home-screen widget shows the nearest free bay
 
 HELP OTHER RIDERS
 • Add a missing bay, or correct one that's wrong
@@ -93,7 +103,7 @@ Answers that match `docs/privacy.md`. In Play's terms, data that never leaves th
 | Personal info › Email address | Yes | No | Optional (only when signing in) | Account management |
 | Personal info › User IDs | Yes | No | Optional (only when signing in) | App functionality, Account management, Fraud prevention, security and compliance |
 | Photos and videos › Photos | Yes | No | Optional | App functionality |
-| App activity › Other user-generated content (comments, star ratings, bays and corrections, reports) | Yes | No | Optional | App functionality, Fraud prevention, security and compliance |
+| App activity › Other user-generated content (comments, star ratings, space and safety reports, bays and corrections, reports) | Yes | No | Optional | App functionality, Fraud prevention, security and compliance |
 | App info and performance › Crash logs | Yes | No | Optional (only if the rider emails a report) | Analytics: no. Choose App functionality |
 | App info and performance › Diagnostics (device model, Android version) | Yes | No | Optional (same email report) | App functionality |
 

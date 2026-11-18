@@ -27,6 +27,7 @@ Send an email to **dwayne.edwards89@googlemail.com** from the address you signed
 - Every photo you uploaded, including the image files
 - Every comment you posted
 - Every star rating you gave
+- Every space report ("space now" or "full") and safety answer (ground anchor, CCTV, lighting) you sent
 - Every bay you added and every correction you suggested, whether approved or not
 - Reports you made are kept but no longer linked to an account
 
@@ -34,7 +35,7 @@ Deletion is permanent and takes effect immediately in the app; Google's backups 
 
 ## What is kept
 
-- Saved bays, settings and blocked riders on your phone are not touched by account deletion. Uninstalling the app, or clearing its storage in Android settings, removes them.
+- Saved bays, settings, blocked riders and where you said you parked, all on your phone, are not touched by account deletion. Uninstalling the app, or clearing its storage in Android settings, removes them.
 - Nothing else: the app holds no other data about you. See the [privacy policy](privacy.html).
 
 ## Partial deletion
