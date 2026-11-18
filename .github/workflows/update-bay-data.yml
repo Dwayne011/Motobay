@@ -15,6 +15,7 @@ on:
       - scripts/enrich_bays.py
       - scripts/fetch_vehicle_crime.py
       - data/council-bays.json
+      - data/*.geojson
       - .github/workflows/update-bay-data.yml
 
 permissions:

@@ -44,7 +44,14 @@ class DataParsingTest {
         val council = data.bays.filter { it.isCouncil }
         assertTrue(council.isNotEmpty())
         assertTrue(council.all { it.source != null && !it.isOsm && (it.note != null || it.rules != null) })
-        assertTrue(council.filter { it.id.startsWith("council/hillingdon/") || it.id.startsWith("council/bromley/") }.all { it.fee == Fee.Free })
+        // Carlton Parade is in Bromley's traffic orders but not on its price page, so its price is unknown.
+        assertTrue(
+            council.filter { it.id.startsWith("council/hillingdon/") || it.id.startsWith("council/bromley/") }
+                .all { it.fee == Fee.Free || it.id == "council/bromley/carlton-parade" && it.fee == Fee.Unknown },
+        )
+        // The City of London said all its bays are free; its covered bays are left alone (they may be private car parks).
+        val city = data.bays.filter { it.source?.contains("City of London") == true }
+        assertTrue(city.size > 40 && city.all { it.isOsm && it.fee == Fee.Free && it.covered != true })
         // Camden's open data: paid bays with the daily tariff, plus one bay whose price it doesn't give.
         val camden = data.bays.filter { it.source?.contains("Camden") == true }
         assertEquals(333, camden.size)

@@ -1,5 +1,5 @@
 {
- "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions (and Enfield's, which the council gave as approximate coordinates) were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it.",
+ "about": "Motorcycle bays from councils, merged into uk-bays.json by scripts/fetch_uk_bays.py. A bay OpenStreetMap already has (within 25 m) keeps its OpenStreetMap id and position and takes the council's details; the rest are added. Hillingdon and Bromley positions (and Enfield's, which the council gave as approximate coordinates) were placed from descriptions using OpenStreetMap addresses and junctions ('approximate' marks those placed from a nearby address); Islington and Camden supplied coordinates. Fee defaults to 'free', marked unconfirmed unless the source's feeConfirmed is true. 'note' says where to look; 'rules' says when it is charged and how to pay. 'charged' is the same charging hours for the app to reason with: 'always', or day ranges (1 = Monday) with 24-hour times, e.g. '1-5 08:30-18:30;6 08:30-13:30'. Match-day and bank-holiday differences are not in it. 'areas' applies a council's statement about every bay in its area (a GeoJSON boundary file in data/) to the OpenStreetMap bays inside it whose price is unknown; 'exceptCovered' leaves covered bays alone, as they may be in private car parks.",
  "sources": {
   "hillingdon": {
    "name": "Hillingdon Council traffic orders (FOI 06397)",
@@ -25,8 +25,21 @@
    "name": "Enfield Council traffic orders (FOI 1772)",
    "feeConfirmed": true,
    "confirmation": "Enfield Council's response to FOI/EIR 1772 (November 2026): three free solo motorcycle bays, each 'Solo motorcycles only. Free parking', with 'No permit or payment required' stated for Russell Road and Church Street. Positions are from the response's second sheet, checked against OpenStreetMap addresses; the first sheet's coordinates and postcodes did not match the addresses and were not used, nor was its 'Approx. Spaces' column."
+  },
+  "cityoflondon": {
+   "name": "City of London Corporation (FOI response, November 2026)",
+   "feeConfirmed": true,
+   "confirmation": "The City of London Corporation's response to an FOI request of 26 October 2026: 'All motorcycle bays in the Square Mile of the CoL are free of charge.' Only this statement is used. The City's bay map layer is derived from Ordnance Survey data under a licence that does not allow reuse, so no positions come from it; the bays are OpenStreetMap's, and the boundary is OpenStreetMap's (data/city-of-london.geojson)."
   }
  },
+ "areas": [
+  {
+   "source": "cityoflondon",
+   "boundary": "city-of-london.geojson",
+   "fee": "free",
+   "exceptCovered": true
+  }
+ ],
  "bays": [
   {
    "id": "council/hillingdon/cowley-high-street",

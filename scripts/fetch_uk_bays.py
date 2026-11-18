@@ -190,6 +190,47 @@ def council_bays(council, osm_bays):
     return out
 
 
+def in_polygon(lon, lat, geometry):
+    """Whether a point is inside a GeoJSON Polygon or MultiPolygon (even-odd rule, so holes count)."""
+    polygons = geometry["coordinates"] if geometry["type"] == "MultiPolygon" else [geometry["coordinates"]]
+    for rings in polygons:
+        inside = False
+        for ring in rings:
+            j = len(ring) - 1
+            for i in range(len(ring)):
+                (xi, yi), (xj, yj) = ring[i], ring[j]
+                if (yi > lat) != (yj > lat) and lon < (xj - xi) * (lat - yi) / (yj - yi) + xi:
+                    inside = not inside
+                j = i
+        if inside:
+            return True
+    return False
+
+
+def apply_area_prices(bays, council):
+    """A council's statement about every bay in its area, such as "all motorcycle
+    bays in the City are free", sets the price of the OpenStreetMap bays inside
+    that area whose price is unknown. A price OpenStreetMap already has is kept,
+    and so are covered bays when the area says so (they may be in a private car park)."""
+    sources = council.get("sources", {})
+    for area in council.get("areas", []):
+        src = sources.get(area["source"], area["source"])
+        name = src if isinstance(src, str) else src["name"]
+        for b in bays:
+            if b["id"].startswith("council/") or b.get("fee", "unknown") != "unknown":
+                continue
+            if area.get("exceptCovered") and b.get("covered"):
+                continue
+            if not in_polygon(b["lon"], b["lat"], area["geometry"]):
+                continue
+            # Remember what OpenStreetMap said, so without_council can take this off again.
+            osm = b.setdefault("osm", {})
+            osm.setdefault("fee", b.get("fee"))
+            osm.setdefault("source", b.get("source"))
+            b["fee"] = area["fee"]
+            b["source"] = name
+
+
 def without_council(bays):
     """The OpenStreetMap bays of a published file, as they were before council details were merged in."""
     out = []
@@ -209,6 +250,8 @@ def without_council(bays):
 def with_council(osm_bays, council):
     """The published file: OpenStreetMap bays plus council bays, sorted by id."""
     extra = council_bays(council, osm_bays) if council else []
+    if council:
+        apply_area_prices(osm_bays, council)
     bays = sorted(osm_bays + extra, key=lambda b: b["id"])
     attribution = OSM_ATTRIBUTION
     credited = sorted(set(b["source"] for b in bays if b.get("source")))
@@ -238,9 +281,14 @@ def load_council(out):
     path = os.path.join(os.path.dirname(os.path.abspath(out)), "council-bays.json")
     try:
         with open(path, encoding="utf-8") as f:
-            return json.load(f)
+            council = json.load(f)
     except OSError:
         return None
+    # Each area's boundary is a GeoJSON file next to the council file.
+    for area in council.get("areas", []):
+        with open(os.path.join(os.path.dirname(path), area["boundary"]), encoding="utf-8") as f:
+            area["geometry"] = json.load(f)["features"][0]["geometry"]
+    return council
 
 
 def main():
