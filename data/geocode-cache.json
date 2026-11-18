@@ -1521,6 +1521,88 @@
 "area": "London Borough of Camden",
 "city": "London"
 },
+"council/city-of-london/camomile-street-st-mary-axe@51.51637,-0.07936": {
+"area": "Bishopsgate Without",
+"city": "London",
+"postcode": "E1",
+"street": "Devonshire Square"
+},
+"council/city-of-london/cannon-street-bush-lane@51.51070,-0.09012": {
+"area": "Leadenhall Market",
+"city": "London",
+"postcode": "EC4N",
+"street": "Bush Lane"
+},
+"council/city-of-london/carmelite-street-south@51.51202,-0.10646": {
+"area": "Blackfriars",
+"city": "London",
+"postcode": "EC4Y",
+"street": "Tallis Street"
+},
+"council/city-of-london/coleman-street-london-wall@51.51658,-0.09147": {
+"area": "Barbican",
+"city": "London",
+"postcode": "EC2V",
+"street": "Three Nun Court"
+},
+"council/city-of-london/fenchurch-avenue-lime-street@51.51287,-0.08052": {
+"area": "Leadenhall Market",
+"city": "London",
+"postcode": "EC3M",
+"street": "Billiter Street"
+},
+"council/city-of-london/fenchurch-street-lloyds-avenue@51.51264,-0.07719": {
+"area": "Leadenhall Market",
+"city": "London",
+"postcode": "EC3N",
+"street": "Carlisle Avenue"
+},
+"council/city-of-london/finsbury-circus-north-east@51.51782,-0.08562": {
+"area": "City of London",
+"city": "London"
+},
+"council/city-of-london/john-carpenter-street-tallis-street@51.51317,-0.10585": {
+"area": "Blackfriars",
+"city": "London",
+"postcode": "EC4Y",
+"street": "Dorset Buildings"
+},
+"council/city-of-london/king-street-trump-street@51.51462,-0.09271": {
+"area": "Bank",
+"city": "London",
+"postcode": "EC2V",
+"street": "Lawrence Lane"
+},
+"council/city-of-london/little-britain-bartholomew-close@51.51760,-0.10151": {
+"area": "West Smithfield",
+"city": "London",
+"postcode": "EC1A",
+"street": "West Smithfield"
+},
+"council/city-of-london/primrose-street-appold-street@51.51891,-0.07844": {
+"area": "Spitalfields",
+"city": "London",
+"postcode": "E1",
+"street": "Brushfield Street"
+},
+"council/city-of-london/st-mary-axe-bury-street@51.51415,-0.07917": {
+"area": "Leadenhall Market",
+"city": "London",
+"postcode": "EC3A",
+"street": "Heneage Lane"
+},
+"council/city-of-london/temple-avenue-south@51.51188,-0.10794": {
+"area": "Blackfriars",
+"city": "London",
+"postcode": "EC4Y",
+"street": "Temple Avenue"
+},
+"council/city-of-london/whitefriars-street-ashentree-court@51.51333,-0.10694": {
+"area": "West Smithfield",
+"city": "London",
+"postcode": "EC4Y",
+"street": "Whitefriars Street"
+},
 "council/enfield/church-street@51.65226,-0.08528": {
 "area": "Southbury",
 "city": "London",
