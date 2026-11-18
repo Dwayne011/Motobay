@@ -1,9 +1,38 @@
 {
+"council/bromley/beckenham-road@51.40890,-0.04054": {
+"area": "Elmers End",
+"city": "London",
+"postcode": "BR3",
+"street": "Beckenham Road"
+},
 "council/bromley/berwick-way@51.37575,0.09824": {
 "area": "Broom Hill",
 "city": "Orpington",
 "postcode": "BR6",
 "street": "Knoll Rise"
+},
+"council/bromley/berwick-way@51.37590,0.09839": {
+"area": "Broom Hill",
+"city": "London",
+"postcode": "BR6",
+"street": "Berwick Way"
+},
+"council/bromley/bloomfield-road@51.39309,0.03487": {
+"area": "Widmore",
+"city": "London",
+"postcode": "BR2"
+},
+"council/bromley/carlton-parade@51.38256,0.10748": {
+"area": "Broom Hill",
+"city": "London",
+"postcode": "BR6",
+"street": "Court Road"
+},
+"council/bromley/churchill-way@51.40265,0.01482": {
+"area": "Bromley Park",
+"city": "London",
+"postcode": "BR1",
+"street": "Churchill Way"
 },
 "council/bromley/churchill-way@51.40280,0.01478": {
 "area": "Greater London",
@@ -15,11 +44,47 @@
 "postcode": "BR2",
 "street": "St. Jame's Court"
 },
+"council/bromley/high-street@51.37411,0.09815": {
+"area": "Broom Hill",
+"city": "London",
+"postcode": "BR6",
+"street": "High Street"
+},
+"council/bromley/homefield-rise@51.37424,0.10395": {
+"area": "Broom Hill",
+"city": "London",
+"postcode": "BR6",
+"street": "Homefield Rise"
+},
+"council/bromley/park-road@51.40659,0.01898": {
+"area": "Bromley Park",
+"city": "London",
+"postcode": "BR1",
+"street": "Widmore Road"
+},
+"council/bromley/petts-wood-road@51.39022,0.07323": {
+"area": "Poverest",
+"city": "Orpington",
+"postcode": "BR5",
+"street": "Petts Wood Road"
+},
+"council/bromley/ravensbourne-road@51.40082,0.01643": {
+"area": "Bromley Park",
+"city": "London",
+"postcode": "BR1",
+"street": "Ravensbourne Road"
+},
 "council/bromley/ravensbourne-road@51.40096,0.01650": {
 "area": "Bromley Park",
 "city": "London Borough of Bromley",
 "postcode": "BR1",
 "street": "Ravensbourne Road"
+},
+"council/bromley/ringers-road@51.40175,0.01561": {
+"area": "Bromley Park",
+"city": "Bromley",
+"postcode": "BR1",
+"street": "High Street"
 },
 "council/bromley/ringers-road@51.40182,0.01568": {
 "area": "Bromley Park",
@@ -27,8 +92,30 @@
 "postcode": "BR1",
 "street": "Ringers Road"
 },
+"council/bromley/station-approach-2@51.37643,0.01109": {
+"area": "Pickhurst",
+"city": "Bromley",
+"postcode": "BR2",
+"street": "Station Approach"
+},
+"council/bromley/station-approach@51.37751,0.01062": {
+"area": "Pickhurst",
+"city": "Bromley",
+"postcode": "BR2",
+"street": "Station Approach"
+},
 "council/bromley/walnuts-road@51.37551,0.10361": {
 "area": "London Borough of Bromley"
+},
+"council/bromley/walnuts-road@51.37575,0.10371": {
+"area": "London Borough of Bromley",
+"city": "London"
+},
+"council/bromley/walpole-road@51.39244,0.03602": {
+"area": "Chatterton Village",
+"city": "Bromley",
+"postcode": "BR2",
+"street": "Chatterton Road"
 },
 "council/camden/abbot-s-place-46043513@51.54066,-0.19102": {
 "area": "South Hampstead",

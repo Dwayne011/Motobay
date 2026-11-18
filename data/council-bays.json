@@ -7,9 +7,9 @@
    "confirmation": "Hillingdon Council confirmed in its follow-up to FOI 06397 (November 2026) that no parking charges or permits apply to any designated on-street motorcycle parking place in the borough, and that it holds no record of how many motorcycles each place holds."
   },
   "bromley": {
-   "name": "Bromley Council motorcycle parking page",
+   "name": "Bromley Council traffic orders (EIR A28BXELZBH) and motorcycle parking page",
    "feeConfirmed": true,
-   "confirmation": "bromley.gov.uk/parking/motorcycle-parking (read November 2026): 'A number of free marked parking bays are available exclusively for motor scooter, moped and motorcycle riders.' Space counts are given for the town centre bays only."
+   "confirmation": "Positions, lengths and descriptions from Bromley Council's live traffic regulation orders for motorcycle parking (EIR A28BXELZBH, November 2026). Prices from bromley.gov.uk/parking/motorcycle-parking (read November 2026): 'A number of free marked parking bays are available exclusively for motor scooter, moped and motorcycle riders.' Carlton Parade, Orpington is in the traffic orders but not on that page, so its price is unknown. Space counts are given for the town centre bays only."
   },
   "islington": {
    "name": "Islington Council motorcycle bay list (FOI 8652875)",
@@ -189,48 +189,50 @@
   {
    "id": "council/bromley/churchill-way",
    "source": "bromley",
-   "lat": 51.4028,
-   "lon": 0.01478,
+   "lat": 51.402652,
+   "lon": 0.014824,
    "street": "Churchill Way",
-   "approximate": true,
    "capacity": 6,
-   "note": "Behind the Evans shop on the High Street. Room for 6 bikes."
+   "note": "South-west side, from a point 36m north west of the north western kerbline of Ethelbert Road north westwards, for 7 m. Behind the Evans shop on the High Street. Traffic order 2006-39.",
+   "lengthMetres": 7.0
   },
   {
    "id": "council/bromley/ringers-road",
    "source": "bromley",
-   "lat": 51.40182,
-   "lon": 0.01568,
+   "lat": 51.401752,
+   "lon": 0.015614,
    "street": "Ringers Road",
    "capacity": 12,
-   "note": "At the mouth of Ringers Road, where it meets the High Street. Room for 12 bikes."
+   "note": "South-east side, from a point 14m south west of the south western kerbline of High Street south westwards, for 9 m. At the mouth of Ringers Road, where it meets the High Street. Traffic order 2011-39.",
+   "lengthMetres": 9.0
   },
   {
    "id": "council/bromley/ravensbourne-road",
    "source": "bromley",
-   "lat": 51.40096,
-   "lon": 0.0165,
+   "lat": 51.40082,
+   "lon": 0.016431,
    "street": "Ravensbourne Road",
    "capacity": 12,
-   "note": "At the mouth of Ravensbourne Road, where it meets the High Street. Room for 12 bikes."
+   "note": "South-east side, from a point 10m south west of the south western kerbline of High Street south westwards, for 9 m. At the mouth of Ravensbourne Road, where it meets the High Street. Traffic order 2011-39.",
+   "lengthMetres": 9.0
   },
   {
    "id": "council/bromley/berwick-way",
    "source": "bromley",
-   "lat": 51.37575,
-   "lon": 0.09824,
+   "lat": 51.375902,
+   "lon": 0.098389,
    "street": "Berwick Way",
-   "approximate": true,
-   "note": "Somewhere on Berwick Way, Orpington; the council doesn't say exactly where."
+   "note": "North side, from a point 37 metres east of the eastern kerb line of Vinson Close eastwards, for 5 m. Traffic order 2003-52.",
+   "lengthMetres": 5.0
   },
   {
    "id": "council/bromley/walnuts-road",
    "source": "bromley",
-   "lat": 51.37551,
-   "lon": 0.10361,
+   "lat": 51.375745,
+   "lon": 0.103708,
    "street": "Walnuts Road",
-   "approximate": true,
-   "note": "Somewhere on Walnuts Road, Orpington; the council doesn't say exactly where."
+   "note": "West side, from the party wall of Nos. 27 & 29 northwards, for 5 m. Traffic order 2010-46.",
+   "lengthMetres": 5.0
   },
   {
    "id": "council/islington/aberdeen-road-54137",
@@ -6303,6 +6305,97 @@
    "lengthMetres": 12.0,
    "openingHours": "Any time",
    "note": "South side, 0.8 m east of Nos. 52–54 Church Street."
+  },
+  {
+   "id": "council/bromley/station-approach",
+   "source": "bromley",
+   "street": "Station Approach",
+   "note": "North-east side, from a point 4m north west of the party wall of Nos. 1 & 3 north westwards, for 5 m. Traffic order 2005-4 Am 13.",
+   "lat": 51.377514,
+   "lon": 0.010618,
+   "lengthMetres": 5.0
+  },
+  {
+   "id": "council/bromley/station-approach-2",
+   "source": "bromley",
+   "street": "Station Approach",
+   "note": "West side, from a point 2m south of the northern flank wall of No. 50 southwards, for 6 m. Traffic order 2005-4 Am 13.",
+   "lat": 51.376429,
+   "lon": 0.011094,
+   "lengthMetres": 6.0
+  },
+  {
+   "id": "council/bromley/park-road",
+   "source": "bromley",
+   "street": "Park Road",
+   "note": "At the south-western end of the road, across its whole width. Opposite the old police station. Traffic order 2006-39.",
+   "capacity": 6,
+   "lat": 51.406586,
+   "lon": 0.018984
+  },
+  {
+   "id": "council/bromley/beckenham-road",
+   "source": "bromley",
+   "street": "Beckenham Road",
+   "note": "North side, from the party wall of Nos. 58 & 60 eastwards, for 4 m. Traffic order 2007-5.",
+   "lat": 51.408899,
+   "lon": -0.040536,
+   "lengthMetres": 4.0
+  },
+  {
+   "id": "council/bromley/petts-wood-road",
+   "source": "bromley",
+   "street": "Petts Wood Road",
+   "note": "South-west side, from the north western corner nearest Petts Wood Railway Station south eastwards, for 5 m. Traffic order 2009-41.",
+   "lat": 51.390223,
+   "lon": 0.073228,
+   "lengthMetres": 5.0
+  },
+  {
+   "id": "council/bromley/homefield-rise",
+   "source": "bromley",
+   "street": "Homefield Rise",
+   "note": "North side, from the party wall of Nos. 51 & 53 eastwards, for 3 m. Traffic order 2010-46.",
+   "lat": 51.374238,
+   "lon": 0.103954,
+   "lengthMetres": 3.0
+  },
+  {
+   "id": "council/bromley/bloomfield-road",
+   "source": "bromley",
+   "street": "Bloomfield Road",
+   "note": "North-west side, from a point 7m north east of the north eastern kerbline of Chatterton Road north eastwards, for 7 m. Traffic order 2011-20.",
+   "lat": 51.39309,
+   "lon": 0.034874,
+   "lengthMetres": 7.0
+  },
+  {
+   "id": "council/bromley/walpole-road",
+   "source": "bromley",
+   "street": "Walpole Road",
+   "note": "South-east side, from a point 26m north east of the north eastern kerbline of Chatterton Road north eastwards, for 8 m. Traffic order 2011-20.",
+   "lat": 51.392438,
+   "lon": 0.036016,
+   "lengthMetres": 8.0
+  },
+  {
+   "id": "council/bromley/carlton-parade",
+   "source": "bromley",
+   "street": "Carlton Parade",
+   "note": "East side, from a point 0.5m north of a point opposite the party wall of Nos. 12 & 13 northwards, for 2 m. Traffic order 2018-12.",
+   "fee": "unknown",
+   "lat": 51.382558,
+   "lon": 0.107482,
+   "lengthMetres": 2.0
+  },
+  {
+   "id": "council/bromley/high-street",
+   "source": "bromley",
+   "street": "High Street",
+   "note": "South-east side, from a point opposite the party wall of Nos. 301 and 303 Orpington High Street, north eastwards for 11.2 m. Traffic order 2024-16.",
+   "lat": 51.374106,
+   "lon": 0.09815,
+   "lengthMetres": 11.2
   }
  ],
  "unplaced": [
@@ -6328,52 +6421,7 @@
   },
   {
    "source": "bromley",
-   "description": "Park Road, Bromley, opposite the old Police station (6 spaces).",
-   "why": "The old police station isn't in OpenStreetMap, and Park Road is about 480 m long."
-  },
-  {
-   "source": "bromley",
-   "description": "Beckenham Road, Beckenham",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Bloomfield Road, Bromley",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Walpole Road, Bromley",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
    "description": "Hayes Street, Hayes",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Station Approach, Hayes (first of two locations)",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Station Approach, Hayes (second of two locations)",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "High Street, Orpington",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Homefield Rise, Orpington",
-   "why": "The council gives only the street name, and the street is too long to place a pin from that."
-  },
-  {
-   "source": "bromley",
-   "description": "Petts Wood Road, Petts Wood",
    "why": "The council gives only the street name, and the street is too long to place a pin from that."
   }
  ]
