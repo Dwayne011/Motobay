@@ -1,5 +1,6 @@
 package uk.motobay.app.ui.bay
 
+import uk.motobay.app.data.BayCrime
 import android.content.Intent
 import uk.motobay.app.ui.components.feeText
 import androidx.compose.foundation.layout.FlowRow
@@ -243,6 +244,8 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 Text(note, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
             }
         }
+
+        VehicleCrimeCard(bay, palette)
 
         val unknowns = listOfNotNull(
             "free or paid".takeIf { bay.fee == Fee.Unknown || bay.feeUnconfirmed },
@@ -861,4 +864,52 @@ private fun CommentsSection(bay: Bay, moderator: Boolean, palette: AuroraPalette
             dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
         )
     }
+}
+
+/**
+ * Police-recorded vehicle crime near the bay, with a typical bay for comparison. Worded as
+ * reports nearby, never as a safety rating: the police move each crime to a nearby point.
+ */
+@Composable
+private fun VehicleCrimeCard(bay: Bay, palette: AuroraPalette) {
+    val app = LocalApp.current
+    LaunchedEffect(Unit) { app.vehicleCrime.load() }
+    val data by app.vehicleCrime.data.collectAsStateWithLifecycle()
+    val crime = data?.forBay(bay.id) ?: return
+    AuroraCard(palette, radius = 18, contentPadding = 14, modifier = Modifier.testTag("vehicle-crime")) {
+        Text("Vehicle crime nearby", style = auroraStyle(13.sp, FontWeight.ExtraBold, palette.accent))
+        VSpace(4)
+        when (crime) {
+            BayCrime.NoData -> Text(
+                "Police Scotland doesn't publish street-level crime data, so there's none for this bay.",
+                style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2),
+            )
+            is BayCrime.Count -> {
+                val reports = if (crime.count == 1) "1 vehicle crime" else "${crime.count} vehicle crimes"
+                Text(
+                    "$reports reported within ${crime.radiusMetres} m, ${crime.period}",
+                    style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText),
+                )
+                VSpace(2)
+                Text(
+                    "A typical bay has ${crime.typical}. ${comparison(crime.count, crime.typical)}",
+                    style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2),
+                )
+                VSpace(6)
+                Text(
+                    "Police data places each crime at a nearby point rather than the exact spot, and it includes thefts of and from all vehicles. It isn't a safety rating.",
+                    style = auroraStyle(11.sp, FontWeight.SemiBold, palette.cardSubtext),
+                )
+            }
+        }
+    }
+}
+
+/** How a bay compares with the typical bay, in plain words. */
+internal fun comparison(count: Int, typical: Int): String = when {
+    count == 0 -> "None were reported this close."
+    count > typical * 2 && count - typical >= 3 -> "This is well above most bays."
+    count > typical -> "This is above most bays."
+    count == typical -> "This is about average."
+    else -> "This is below most bays."
 }

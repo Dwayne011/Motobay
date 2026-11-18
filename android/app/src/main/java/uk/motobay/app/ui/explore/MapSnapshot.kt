@@ -10,6 +10,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -43,6 +45,7 @@ internal fun SnapshotMap(
     colors: PinColors,
     onViewportChange: (MapViewport) -> Unit,
     modifier: Modifier = Modifier,
+    crimePoints: List<List<Double>>? = null,
 ) {
     val context = LocalContext.current
     val images = remember(context, colors) { PinImages(context, colors) }
@@ -73,6 +76,20 @@ internal fun SnapshotMap(
                 ((x(lon) - cx + widthDp / 2) * density).toFloat(),
                 ((y(lat) - cy + heightDp / 2) * density).toFloat(),
             )
+            // A stand-in for MapLibre's heat layer: soft amber-to-red spots, stronger with more reports.
+            crimePoints?.forEach { p ->
+                val c = at(p[0], p[1])
+                if (c.x < -100 || c.y < -100 || c.x > size.width + 100 || c.y > size.height + 100) return@forEach
+                val strength = (p[2] / 6.0).coerceIn(0.15, 1.0).toFloat()
+                val radius = 26f * density
+                drawCircle(
+                    Brush.radialGradient(
+                        listOf(Color(0xFFE53946).copy(alpha = 0.55f * strength), Color(0xFFFFB040).copy(alpha = 0.25f * strength), Color.Transparent),
+                        center = c, radius = radius,
+                    ),
+                    radius = radius, center = c,
+                )
+            }
             for (n in nodes) {
                 if (selected != null && n.bay?.id == selected.id) continue
                 val img = images[images.key(n)]

@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.test.core.app.ApplicationProvider
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -48,6 +49,7 @@ class StoreScreenshotTest {
     fun seed() {
         // The real bay file from the repository (the app downloads the same file).
         app.bays.testDataset = File("../../data/uk-bays.json").readText()
+        app.vehicleCrime.testDataset = File("../../data/vehicle-crime.json").readText()
         runBlocking { app.bays.load() }
         app.user.updateSettings { it.copy(displayName = "Rider", themeMode = ThemeMode.Light, disclaimerAccepted = true) }
         // An ordinary rider, so there's no moderator tab.
@@ -103,6 +105,21 @@ class StoreScreenshotTest {
         compose.onAllNodesWithText("List", substring = true)[0].performClick()
         compose.waitForIdle()
         shot("5-explore-list")
+    }
+
+    /** The vehicle crime layer, and the bay page's crime section. */
+    @Test fun store_crime_layer() {
+        setApp(dark = true)
+        compose.onAllNodesWithText("Vehicle crime")[0].performScrollTo().performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("crime-legend").assertExists()
+        shot("6-crime-layer-dark")
+        pickRussellSquare()
+        compose.onNodeWithTag("bay-preview").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("vehicle-crime").performScrollTo()
+        compose.waitForIdle()
+        shot("7-bay-crime-dark")
     }
 
     private companion object {

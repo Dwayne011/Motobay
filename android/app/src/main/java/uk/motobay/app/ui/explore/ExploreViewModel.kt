@@ -65,6 +65,8 @@ private const val LIST_LIMIT = 200
 class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     val filters = MutableStateFlow(ExploreFilters())
     val compactView = MutableStateFlow(CompactView.Map)
+    /** Whether the vehicle crime heat layer is showing. */
+    val crimeLayer = MutableStateFlow(false)
     val viewport = MutableStateFlow<MapViewport?>(null)
     /** True while the map camera is in motion (a pan, zoom or fly); the UI calms down until it settles. */
     val mapMoving = MutableStateFlow(false)
@@ -283,5 +285,11 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     fun setPrice(p: PriceFilter) = filters.update { it.copy(price = p) }
     fun toggleCovered() = filters.update { it.copy(coveredOnly = !it.coveredOnly) }
+
+    /** Shows or hides the vehicle crime layer, fetching the data the first time it's needed. */
+    fun toggleCrimeLayer() {
+        crimeLayer.update { !it }
+        if (crimeLayer.value) viewModelScope.launch { app.vehicleCrime.load() }
+    }
     fun toggleFreeNow() = filters.update { it.copy(freeNow = !it.freeNow) }
 }

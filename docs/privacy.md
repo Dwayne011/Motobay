@@ -70,7 +70,7 @@ We do not sell personal data and we do not share it with advertisers. The app re
 | **OpenFreeMap** | The map tiles you request (which reveal the area you are looking at) and your IP address | Independent provider of map tiles: https://openfreemap.org |
 | **Photon by komoot** | The text you type into place search and your IP address | Independent provider of place search: https://photon.komoot.io |
 | **postcodes.io** | Postcodes you type and your IP address | Independent provider of postcode lookup: https://postcodes.io |
-| **GitHub** | A request for the bay data file and your IP address | Hosts the bay data file: https://docs.github.com/site-policy |
+| **GitHub** | Requests for the bay data and vehicle crime data files, and your IP address | Hosts the data files: https://docs.github.com/site-policy |
 
 Requests to these services carry the app's name and version so they can identify traffic. None of them receive your account details, your posts or your location fix.
 
