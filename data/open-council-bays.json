@@ -1,0 +1,1559 @@
+{
+ "about": "Motorcycle bays from councils' open data under the Open Government Licence v3.0, built by scripts/fetch_open_council_bays.py and merged into uk-bays.json like council-bays.json. No council here publishes prices, so fee is 'unknown'.",
+ "sources": {
+  "edinburgh": {
+   "name": "City of Edinburgh Council Parking Bays (Open Government Licence v3.0). Copyright City of Edinburgh Council, contains Ordnance Survey data © Crown copyright and database right 2026",
+   "url": "https://data.edinburghcouncilmaps.info/"
+  },
+  "leeds": {
+   "name": "Leeds City Council traffic orders, Data Mill North (Open Government Licence v3.0)",
+   "url": "https://datamillnorth.org/dataset/29r8o"
+  },
+  "nottingham": {
+   "name": "Nottingham City Council Motorcycle Bays (Open Government Licence v3.0). Contains OS data © Crown copyright and database right 2026",
+   "url": "https://services.arcgis.com/yvqphKcf9bBSnjX1/arcgis/rest/services/Motorcycle_Bays/FeatureServer"
+  }
+ },
+ "bays": [
+  {
+   "id": "council/edinburgh/17254364",
+   "source": "edinburgh",
+   "lat": 55.953812,
+   "lon": -3.192386,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17254393",
+   "source": "edinburgh",
+   "lat": 55.954632,
+   "lon": -3.193863,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17255873",
+   "source": "edinburgh",
+   "lat": 55.943317,
+   "lon": -3.197141,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17299307",
+   "source": "edinburgh",
+   "lat": 55.953196,
+   "lon": -3.209778,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17299333",
+   "source": "edinburgh",
+   "lat": 55.950106,
+   "lon": -3.210951,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299357",
+   "source": "edinburgh",
+   "lat": 55.950498,
+   "lon": -3.210138,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299378",
+   "source": "edinburgh",
+   "lat": 55.951978,
+   "lon": -3.215855,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299522",
+   "source": "edinburgh",
+   "lat": 55.946555,
+   "lon": -3.221491,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299804",
+   "source": "edinburgh",
+   "lat": 55.951096,
+   "lon": -3.215986,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299963",
+   "source": "edinburgh",
+   "lat": 55.951072,
+   "lon": -3.214126,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17299973",
+   "source": "edinburgh",
+   "lat": 55.948079,
+   "lon": -3.221476,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17300039",
+   "source": "edinburgh",
+   "lat": 55.949061,
+   "lon": -3.219595,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17301923",
+   "source": "edinburgh",
+   "lat": 55.948577,
+   "lon": -3.223868,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17302180",
+   "source": "edinburgh",
+   "lat": 55.949633,
+   "lon": -3.214337,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17302272",
+   "source": "edinburgh",
+   "lat": 55.949676,
+   "lon": -3.213529,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17302291",
+   "source": "edinburgh",
+   "lat": 55.950844,
+   "lon": -3.211579,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17321683",
+   "source": "edinburgh",
+   "lat": 55.946386,
+   "lon": -3.219168,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17326424",
+   "source": "edinburgh",
+   "lat": 55.949549,
+   "lon": -3.21202,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17326433",
+   "source": "edinburgh",
+   "lat": 55.95193,
+   "lon": -3.208756,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326671",
+   "source": "edinburgh",
+   "lat": 55.952816,
+   "lon": -3.209392,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326692",
+   "source": "edinburgh",
+   "lat": 55.95547,
+   "lon": -3.200916,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326704",
+   "source": "edinburgh",
+   "lat": 55.955479,
+   "lon": -3.208742,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326740",
+   "source": "edinburgh",
+   "lat": 55.954193,
+   "lon": -3.207606,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326761",
+   "source": "edinburgh",
+   "lat": 55.953668,
+   "lon": -3.204243,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326779",
+   "source": "edinburgh",
+   "lat": 55.954721,
+   "lon": -3.199027,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17326796",
+   "source": "edinburgh",
+   "lat": 55.951424,
+   "lon": -3.209869,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17326860",
+   "source": "edinburgh",
+   "lat": 55.956979,
+   "lon": -3.19292,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17326900",
+   "source": "edinburgh",
+   "lat": 55.954312,
+   "lon": -3.185965,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17326920",
+   "source": "edinburgh",
+   "lat": 55.957715,
+   "lon": -3.187784,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17327020",
+   "source": "edinburgh",
+   "lat": 55.955383,
+   "lon": -3.174217,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17327041",
+   "source": "edinburgh",
+   "lat": 55.954533,
+   "lon": -3.176339,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17327066",
+   "source": "edinburgh",
+   "lat": 55.953931,
+   "lon": -3.190508,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17327127",
+   "source": "edinburgh",
+   "lat": 55.953931,
+   "lon": -3.187484,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17327139",
+   "source": "edinburgh",
+   "lat": 55.949486,
+   "lon": -3.185865,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327155",
+   "source": "edinburgh",
+   "lat": 55.949538,
+   "lon": -3.187695,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327167",
+   "source": "edinburgh",
+   "lat": 55.942554,
+   "lon": -3.188296,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327174",
+   "source": "edinburgh",
+   "lat": 55.951285,
+   "lon": -3.180541,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327187",
+   "source": "edinburgh",
+   "lat": 55.952877,
+   "lon": -3.176751,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327219",
+   "source": "edinburgh",
+   "lat": 55.952879,
+   "lon": -3.186073,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327263",
+   "source": "edinburgh",
+   "lat": 55.947744,
+   "lon": -3.188278,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327298",
+   "source": "edinburgh",
+   "lat": 55.947888,
+   "lon": -3.187497,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327365",
+   "source": "edinburgh",
+   "lat": 55.943808,
+   "lon": -3.190355,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327380",
+   "source": "edinburgh",
+   "lat": 55.944037,
+   "lon": -3.190148,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327404",
+   "source": "edinburgh",
+   "lat": 55.944351,
+   "lon": -3.188116,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327412",
+   "source": "edinburgh",
+   "lat": 55.94428,
+   "lon": -3.187714,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327432",
+   "source": "edinburgh",
+   "lat": 55.946535,
+   "lon": -3.18415,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327447",
+   "source": "edinburgh",
+   "lat": 55.951314,
+   "lon": -3.186723,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327484",
+   "source": "edinburgh",
+   "lat": 55.946064,
+   "lon": -3.186328,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327501",
+   "source": "edinburgh",
+   "lat": 55.947316,
+   "lon": -3.184214,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327523",
+   "source": "edinburgh",
+   "lat": 55.94777,
+   "lon": -3.183549,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327538",
+   "source": "edinburgh",
+   "lat": 55.944927,
+   "lon": -3.182818,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327562",
+   "source": "edinburgh",
+   "lat": 55.947145,
+   "lon": -3.186566,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327579",
+   "source": "edinburgh",
+   "lat": 55.950842,
+   "lon": -3.181249,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327590",
+   "source": "edinburgh",
+   "lat": 55.950256,
+   "lon": -3.180641,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327633",
+   "source": "edinburgh",
+   "lat": 55.945373,
+   "lon": -3.183851,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17327692",
+   "source": "edinburgh",
+   "lat": 55.946592,
+   "lon": -3.211719,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327723",
+   "source": "edinburgh",
+   "lat": 55.942882,
+   "lon": -3.202623,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327776",
+   "source": "edinburgh",
+   "lat": 55.94771,
+   "lon": -3.194888,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327783",
+   "source": "edinburgh",
+   "lat": 55.945934,
+   "lon": -3.212879,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327808",
+   "source": "edinburgh",
+   "lat": 55.948522,
+   "lon": -3.195508,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327829",
+   "source": "edinburgh",
+   "lat": 55.945881,
+   "lon": -3.196585,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327842",
+   "source": "edinburgh",
+   "lat": 55.946739,
+   "lon": -3.202163,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327859",
+   "source": "edinburgh",
+   "lat": 55.942969,
+   "lon": -3.198989,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327884",
+   "source": "edinburgh",
+   "lat": 55.944051,
+   "lon": -3.201194,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327921",
+   "source": "edinburgh",
+   "lat": 55.942461,
+   "lon": -3.205286,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327942",
+   "source": "edinburgh",
+   "lat": 55.947618,
+   "lon": -3.192053,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327951",
+   "source": "edinburgh",
+   "lat": 55.949925,
+   "lon": -3.194428,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327965",
+   "source": "edinburgh",
+   "lat": 55.942987,
+   "lon": -3.200712,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17327993",
+   "source": "edinburgh",
+   "lat": 55.949049,
+   "lon": -3.208696,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17328022",
+   "source": "edinburgh",
+   "lat": 55.948916,
+   "lon": -3.20911,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17328049",
+   "source": "edinburgh",
+   "lat": 55.946609,
+   "lon": -3.202785,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17328070",
+   "source": "edinburgh",
+   "lat": 55.950103,
+   "lon": -3.192115,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17328096",
+   "source": "edinburgh",
+   "lat": 55.942303,
+   "lon": -3.20167,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17328118",
+   "source": "edinburgh",
+   "lat": 55.948597,
+   "lon": -3.192606,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17328162",
+   "source": "edinburgh",
+   "lat": 55.953646,
+   "lon": -3.215555,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5."
+  },
+  {
+   "id": "council/edinburgh/17328194",
+   "source": "edinburgh",
+   "lat": 55.957237,
+   "lon": -3.209808,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5."
+  },
+  {
+   "id": "council/edinburgh/17328211",
+   "source": "edinburgh",
+   "lat": 55.95394,
+   "lon": -3.214353,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5."
+  },
+  {
+   "id": "council/edinburgh/17328237",
+   "source": "edinburgh",
+   "lat": 55.955322,
+   "lon": -3.219823,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5."
+  },
+  {
+   "id": "council/edinburgh/17328290",
+   "source": "edinburgh",
+   "lat": 55.955443,
+   "lon": -3.217374,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5."
+  },
+  {
+   "id": "council/edinburgh/17328311",
+   "source": "edinburgh",
+   "lat": 55.959974,
+   "lon": -3.205496,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5A."
+  },
+  {
+   "id": "council/edinburgh/17328347",
+   "source": "edinburgh",
+   "lat": 55.960838,
+   "lon": -3.209395,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5A."
+  },
+  {
+   "id": "council/edinburgh/17328397",
+   "source": "edinburgh",
+   "lat": 55.958539,
+   "lon": -3.205432,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5A."
+  },
+  {
+   "id": "council/edinburgh/17328422",
+   "source": "edinburgh",
+   "lat": 55.958163,
+   "lon": -3.190244,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328480",
+   "source": "edinburgh",
+   "lat": 55.958412,
+   "lon": -3.189561,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328495",
+   "source": "edinburgh",
+   "lat": 55.960011,
+   "lon": -3.189783,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328529",
+   "source": "edinburgh",
+   "lat": 55.958773,
+   "lon": -3.193856,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328563",
+   "source": "edinburgh",
+   "lat": 55.958281,
+   "lon": -3.196275,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328584",
+   "source": "edinburgh",
+   "lat": 55.959677,
+   "lon": -3.188431,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328697",
+   "source": "edinburgh",
+   "lat": 55.961583,
+   "lon": -3.19952,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328732",
+   "source": "edinburgh",
+   "lat": 55.961272,
+   "lon": -3.198909,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328747",
+   "source": "edinburgh",
+   "lat": 55.959565,
+   "lon": -3.198934,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328801",
+   "source": "edinburgh",
+   "lat": 55.959299,
+   "lon": -3.185405,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328830",
+   "source": "edinburgh",
+   "lat": 55.959073,
+   "lon": -3.191853,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328861",
+   "source": "edinburgh",
+   "lat": 55.957356,
+   "lon": -3.196454,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328889",
+   "source": "edinburgh",
+   "lat": 55.956957,
+   "lon": -3.17779,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328922",
+   "source": "edinburgh",
+   "lat": 55.957091,
+   "lon": -3.181651,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17328947",
+   "source": "edinburgh",
+   "lat": 55.941476,
+   "lon": -3.178667,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17328967",
+   "source": "edinburgh",
+   "lat": 55.937604,
+   "lon": -3.172647,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329002",
+   "source": "edinburgh",
+   "lat": 55.938783,
+   "lon": -3.180572,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329020",
+   "source": "edinburgh",
+   "lat": 55.938992,
+   "lon": -3.18681,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329044",
+   "source": "edinburgh",
+   "lat": 55.940742,
+   "lon": -3.177354,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329063",
+   "source": "edinburgh",
+   "lat": 55.934725,
+   "lon": -3.173544,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329092",
+   "source": "edinburgh",
+   "lat": 55.939643,
+   "lon": -3.185468,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329113",
+   "source": "edinburgh",
+   "lat": 55.939217,
+   "lon": -3.18394,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329125",
+   "source": "edinburgh",
+   "lat": 55.940506,
+   "lon": -3.175259,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329177",
+   "source": "edinburgh",
+   "lat": 55.939377,
+   "lon": -3.189895,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329200",
+   "source": "edinburgh",
+   "lat": 55.939394,
+   "lon": -3.182681,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329225",
+   "source": "edinburgh",
+   "lat": 55.936641,
+   "lon": -3.184732,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329246",
+   "source": "edinburgh",
+   "lat": 55.939064,
+   "lon": -3.176648,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329260",
+   "source": "edinburgh",
+   "lat": 55.939625,
+   "lon": -3.181516,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329275",
+   "source": "edinburgh",
+   "lat": 55.938071,
+   "lon": -3.179146,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17329296",
+   "source": "edinburgh",
+   "lat": 55.940541,
+   "lon": -3.204181,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329325",
+   "source": "edinburgh",
+   "lat": 55.939381,
+   "lon": -3.208403,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329345",
+   "source": "edinburgh",
+   "lat": 55.938914,
+   "lon": -3.192437,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329368",
+   "source": "edinburgh",
+   "lat": 55.941056,
+   "lon": -3.208224,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329387",
+   "source": "edinburgh",
+   "lat": 55.94415,
+   "lon": -3.212305,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329410",
+   "source": "edinburgh",
+   "lat": 55.93912,
+   "lon": -3.19964,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329431",
+   "source": "edinburgh",
+   "lat": 55.939487,
+   "lon": -3.196551,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329442",
+   "source": "edinburgh",
+   "lat": 55.938072,
+   "lon": -3.198998,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329491",
+   "source": "edinburgh",
+   "lat": 55.937666,
+   "lon": -3.200652,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17329511",
+   "source": "edinburgh",
+   "lat": 55.938228,
+   "lon": -3.194523,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 8."
+  },
+  {
+   "id": "council/edinburgh/17445281",
+   "source": "edinburgh",
+   "lat": 55.956508,
+   "lon": -3.201415,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5A."
+  },
+  {
+   "id": "council/edinburgh/17474318",
+   "source": "edinburgh",
+   "lat": 55.944367,
+   "lon": -3.197533,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17509566",
+   "source": "edinburgh",
+   "lat": 55.943967,
+   "lon": -3.201723,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17536046",
+   "source": "edinburgh",
+   "lat": 55.94699,
+   "lon": -3.19748,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17547112",
+   "source": "edinburgh",
+   "lat": 55.947537,
+   "lon": -3.184938,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17561418",
+   "source": "edinburgh",
+   "lat": 55.94878,
+   "lon": -3.212734,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17561432",
+   "source": "edinburgh",
+   "lat": 55.950618,
+   "lon": -3.19004,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17561453",
+   "source": "edinburgh",
+   "lat": 55.941877,
+   "lon": -3.178216,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 7."
+  },
+  {
+   "id": "council/edinburgh/17587095",
+   "source": "edinburgh",
+   "lat": 55.948693,
+   "lon": -3.223792,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17590166",
+   "source": "edinburgh",
+   "lat": 55.964939,
+   "lon": -3.176462,
+   "fee": "unknown",
+   "note": "Motorcycle parking only."
+  },
+  {
+   "id": "council/edinburgh/17597628",
+   "source": "edinburgh",
+   "lat": 55.945175,
+   "lon": -3.199264,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17598720",
+   "source": "edinburgh",
+   "lat": 55.95145,
+   "lon": -3.185009,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17602730",
+   "source": "edinburgh",
+   "lat": 55.946717,
+   "lon": -3.217207,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17616069",
+   "source": "edinburgh",
+   "lat": 55.960336,
+   "lon": -3.193072,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 6."
+  },
+  {
+   "id": "council/edinburgh/17616348",
+   "source": "edinburgh",
+   "lat": 55.950181,
+   "lon": -3.218604,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17629439",
+   "source": "edinburgh",
+   "lat": 55.947963,
+   "lon": -3.217395,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17629478",
+   "source": "edinburgh",
+   "lat": 55.947827,
+   "lon": -3.216344,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/edinburgh/17630316",
+   "source": "edinburgh",
+   "lat": 55.956454,
+   "lon": -3.205766,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 5A."
+  },
+  {
+   "id": "council/edinburgh/17632530",
+   "source": "edinburgh",
+   "lat": 55.953394,
+   "lon": -3.197993,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632549",
+   "source": "edinburgh",
+   "lat": 55.953209,
+   "lon": -3.199079,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632573",
+   "source": "edinburgh",
+   "lat": 55.953093,
+   "lon": -3.199742,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632597",
+   "source": "edinburgh",
+   "lat": 55.952869,
+   "lon": -3.201126,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632619",
+   "source": "edinburgh",
+   "lat": 55.952775,
+   "lon": -3.201658,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632643",
+   "source": "edinburgh",
+   "lat": 55.952691,
+   "lon": -3.202179,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632658",
+   "source": "edinburgh",
+   "lat": 55.952602,
+   "lon": -3.202693,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632675",
+   "source": "edinburgh",
+   "lat": 55.952322,
+   "lon": -3.204359,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632699",
+   "source": "edinburgh",
+   "lat": 55.952239,
+   "lon": -3.204886,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632718",
+   "source": "edinburgh",
+   "lat": 55.952141,
+   "lon": -3.205402,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632736",
+   "source": "edinburgh",
+   "lat": 55.95207,
+   "lon": -3.205912,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17632757",
+   "source": "edinburgh",
+   "lat": 55.953662,
+   "lon": -3.196428,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17632786",
+   "source": "edinburgh",
+   "lat": 55.95375,
+   "lon": -3.195906,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17632814",
+   "source": "edinburgh",
+   "lat": 55.953846,
+   "lon": -3.195338,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17632836",
+   "source": "edinburgh",
+   "lat": 55.953945,
+   "lon": -3.194822,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 2."
+  },
+  {
+   "id": "council/edinburgh/17634678",
+   "source": "edinburgh",
+   "lat": 55.951038,
+   "lon": -3.190672,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17636665",
+   "source": "edinburgh",
+   "lat": 55.948191,
+   "lon": -3.211713,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 4."
+  },
+  {
+   "id": "council/edinburgh/17646154",
+   "source": "edinburgh",
+   "lat": 55.952784,
+   "lon": -3.206151,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1A."
+  },
+  {
+   "id": "council/edinburgh/17646680",
+   "source": "edinburgh",
+   "lat": 55.947601,
+   "lon": -3.189289,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 3."
+  },
+  {
+   "id": "council/edinburgh/17659555",
+   "source": "edinburgh",
+   "lat": 55.949008,
+   "lon": -3.215898,
+   "fee": "unknown",
+   "note": "Motorcycle parking only. Controlled parking zone 1."
+  },
+  {
+   "id": "council/leeds/11117",
+   "source": "leeds",
+   "lat": 53.795196,
+   "lon": -1.534744,
+   "fee": "unknown",
+   "street": "Maude Street",
+   "note": "North-west side, from a point 56.5 metres north west of its junction with the projected northern kerb line of Cross Maude Street, for a distance of 6 metres in a north easterly direction.",
+   "lengthMetres": 6.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/14431",
+   "source": "leeds",
+   "lat": 53.801057,
+   "lon": -1.540519,
+   "fee": "unknown",
+   "street": "Cross Belgrave Street",
+   "note": "East side, from its junction with the extended projected north-eastern kerb line of Belgrave Street for a distance of 6.5 metres in a south westerly direction.",
+   "lengthMetres": 6.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/14432",
+   "source": "leeds",
+   "lat": 53.80173,
+   "lon": -1.55309,
+   "fee": "unknown",
+   "street": "Thoresby Place",
+   "note": "South side, from its junction with projected south western kerb line of St Georges Road for a distance of 8 metres in an easterly direction.",
+   "lengthMetres": 8.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/18166",
+   "source": "leeds",
+   "lat": 53.744616,
+   "lon": -1.59978,
+   "fee": "unknown",
+   "street": "Peel Street",
+   "note": "North-west side, from a point 88.5 metres south west of its junction with the projected south western kerb line of Commercial Street in a south westerly direction for a distance of 6.5 metres.",
+   "lengthMetres": 6.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/2074",
+   "source": "leeds",
+   "lat": 53.799086,
+   "lon": -1.536385,
+   "fee": "unknown",
+   "street": "Bridge Street",
+   "note": "East side, from a point 22.5 metres north of its junction with the projected southern kerb line of Lady Lane, for distance of 9 metres in a northerly direction.",
+   "lengthMetres": 9.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/2297",
+   "source": "leeds",
+   "lat": 53.79526,
+   "lon": -1.540122,
+   "fee": "unknown",
+   "street": "Crown Street",
+   "note": "West side, from a point 12 metres north of its junction with the projected northern kerb line of The Calls, for a distance of 11 metres in a northerly direction.",
+   "lengthMetres": 11.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/30703",
+   "source": "leeds",
+   "lat": 53.798067,
+   "lon": -1.547423,
+   "fee": "unknown",
+   "street": "Russell Street",
+   "note": "North side, from a point 7 metres west of its junction with the projected western kerb line of Park Row for a distance of 25 metres in a westerly direction.",
+   "lengthMetres": 25.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/32788",
+   "source": "leeds",
+   "lat": 53.790853,
+   "lon": -1.547574,
+   "fee": "unknown",
+   "street": "Back Row",
+   "note": "Both sides, from a point 40 metres east of its intersection with the projected western kerb line of Stone Row up to its termination.",
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/33223",
+   "source": "leeds",
+   "lat": 53.790848,
+   "lon": -1.54757,
+   "fee": "unknown",
+   "street": "Back Row",
+   "note": "Both sides, from a point 40 metres east of its junction with the projected eastern kerb line of Stone Row in an easterly direction up to its termination.",
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/4718",
+   "source": "leeds",
+   "lat": 53.928131,
+   "lon": -1.386658,
+   "fee": "unknown",
+   "street": "Market Place",
+   "note": "South side, from a point 5 metres east of its junction with the projected eastern kerbline of Market Place in a north easterly direction for a distance of 2 metres.",
+   "lengthMetres": 2.0,
+   "maxStay": "30 minutes no return within 1 hour"
+  },
+  {
+   "id": "council/leeds/6895",
+   "source": "leeds",
+   "lat": 53.79934,
+   "lon": -1.552597,
+   "fee": "unknown",
+   "street": "Park Square West",
+   "note": "East side, from a point 2 metres north of its junction with the projected northern kerb line of Park Square North, for a distance of 12.5 metres in a northerly direction.",
+   "lengthMetres": 12.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/6928",
+   "source": "leeds",
+   "lat": 53.798294,
+   "lon": -1.551268,
+   "fee": "unknown",
+   "street": "Park Square East",
+   "note": "West side, from a point 2.5 metres south of its junction with the projected southern kerb line of Park Square South, for a distance of 16.5 metres in a southerly direction.",
+   "lengthMetres": 16.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/7126",
+   "source": "leeds",
+   "lat": 53.797638,
+   "lon": -1.552345,
+   "fee": "unknown",
+   "street": "Park Place",
+   "note": "South side, from a point 111.5 metres south east of its junction with the projected eastern kerb line of Queen Street, for a distance of 5 metres in a south easterly direction.",
+   "lengthMetres": 5.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/7228",
+   "source": "leeds",
+   "lat": 53.801921,
+   "lon": -1.54709,
+   "fee": "unknown",
+   "street": "Cookridge Street",
+   "note": "South-east side, from a point 4 metres north east of its junction with the extended projected north eastern kerb line of Portland Gate (Eastern Section) for a distance of 20.5 metres in a south westerly direction.",
+   "lengthMetres": 20.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/7287",
+   "source": "leeds",
+   "lat": 53.799871,
+   "lon": -1.547248,
+   "fee": "unknown",
+   "street": "Cookridge Street",
+   "note": "West side, from a point 19.5 metres north of its junction with the projected northern kerb line of The Headrow, for a distance of 13 metres in a northerly direction.",
+   "lengthMetres": 13.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/7443",
+   "source": "leeds",
+   "lat": 53.796492,
+   "lon": -1.538025,
+   "fee": "unknown",
+   "street": "New York Street",
+   "note": "Northern side, from a point 17.5 metres west of its junction with the extended projected north-western kerb line of Harper Street, for a distance of 9 metres in a westerly direction.",
+   "lengthMetres": 9.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/7629",
+   "source": "leeds",
+   "lat": 53.801094,
+   "lon": -1.5433,
+   "fee": "unknown",
+   "street": "Wade Lane",
+   "note": "West side, from a point 28 metres north of its junction with the projected northern kerb line of Merrion Street, for a distance of 12 metres in a northerly direction.",
+   "lengthMetres": 12.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/8027",
+   "source": "leeds",
+   "lat": 53.801796,
+   "lon": -1.55294,
+   "fee": "unknown",
+   "street": "Thoresby Place",
+   "note": "North side, from a point 6 metres east of its junction with the projected north eastern kerb line of St George's Road, for a distance of 7 metres in an easterly direction.",
+   "lengthMetres": 7.0,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/8923",
+   "source": "leeds",
+   "lat": 53.795523,
+   "lon": -1.542455,
+   "fee": "unknown",
+   "street": "Briggate",
+   "note": "East side, from a point 36 metres south of its junction with the projected southern kerb line of Duncan Street, for a distance of 15.5 metres in a southerly direction.",
+   "lengthMetres": 15.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/leeds/9982",
+   "source": "leeds",
+   "lat": 53.800887,
+   "lon": -1.547009,
+   "fee": "unknown",
+   "street": "Great George Street",
+   "note": "Northern side, from a point 13 metres east of its junction with the projected eastern kerb line of Cookridge Street, for a distance of 6.5 metres in an easterly direction.",
+   "lengthMetres": 6.5,
+   "maxStay": "24 hours"
+  },
+  {
+   "id": "council/nottingham/tro-7260-castle-road",
+   "source": "nottingham",
+   "lat": 52.950258,
+   "lon": -1.152882,
+   "fee": "unknown",
+   "street": "Castle Road",
+   "note": "West side of Castle Road, the lay-by situated from a point 30 metres south of the extended southern kerbline of Castle Gate in a southerly direction, for distance of 4 metres. Solo motorcycle at any time.",
+   "lengthMetres": 4.0
+  },
+  {
+   "id": "council/nottingham/tro-7260-hounds-gate",
+   "source": "nottingham",
+   "lat": 52.951322,
+   "lon": -1.151651,
+   "fee": "unknown",
+   "street": "Hounds Gate",
+   "note": "North side of Hounds Gate Adjacent Theosophical Hall, from a point at the south-eastern corner of the Hall in a westerly direction, for a distance of 5 metres. Solo motorcycle at any time.",
+   "lengthMetres": 5.0
+  },
+  {
+   "id": "council/nottingham/tro-7260-kent-street",
+   "source": "nottingham",
+   "lat": 52.956476,
+   "lon": -1.14423,
+   "fee": "unknown",
+   "street": "Kent Street",
+   "note": "South-east side of Kent Street, from a point 7.4 metres south-west of its junction with Huntingdon Street, for a distance of 5.6 metres. Solo motorcycle at any time.",
+   "lengthMetres": 5.6
+  },
+  {
+   "id": "council/nottingham/tro-7260-mount-street",
+   "source": "nottingham",
+   "lat": 52.952747,
+   "lon": -1.154492,
+   "fee": "unknown",
+   "street": "Mount Street",
+   "note": "South-east side of Mount Street, from a point 40 metres south-west of its junction with Maid Marian Way in a south-westerly direction, to a point 45 metres south-west of its junction with Maid Marian Way, a distance of 5 metres. Solo motorcycle at any time.",
+   "lengthMetres": 5.0
+  },
+  {
+   "id": "council/nottingham/tro-7260-wollaton-street",
+   "source": "nottingham",
+   "lat": 52.955226,
+   "lon": -1.154403,
+   "fee": "unknown",
+   "street": "Wollaton Street",
+   "note": "South side of Wollaton Street, from a point 48 metres west of the prolongation of the eastern builbing line of Parliament Terrace in a westerly direction, for a distance of 5.5 metres. Solo motorcycle at any time.",
+   "lengthMetres": 5.5
+  }
+ ]
+}
