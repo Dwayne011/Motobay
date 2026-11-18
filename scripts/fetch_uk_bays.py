@@ -277,13 +277,28 @@ def build(response, council=None):
     return with_council(bays, council)
 
 
+# Council bay files next to the published file: ones made by hand from councils' replies,
+# and ones built from councils' open data by fetch_open_council_bays.py.
+COUNCIL_FILES = ("council-bays.json", "open-council-bays.json")
+
+
 def load_council(out):
-    path = os.path.join(os.path.dirname(os.path.abspath(out)), "council-bays.json")
-    try:
-        with open(path, encoding="utf-8") as f:
-            council = json.load(f)
-    except OSError:
+    council = None
+    for name in COUNCIL_FILES:
+        path = os.path.join(os.path.dirname(os.path.abspath(out)), name)
+        try:
+            with open(path, encoding="utf-8") as f:
+                part = json.load(f)
+        except OSError:
+            continue
+        if council is None:
+            council = {"sources": {}, "bays": [], "areas": []}
+        council["sources"].update(part.get("sources", {}))
+        council["bays"] += part.get("bays", [])
+        council["areas"] += part.get("areas", [])
+    if council is None:
         return None
+    path = os.path.join(os.path.dirname(os.path.abspath(out)), COUNCIL_FILES[0])
     # Each area's boundary is a GeoJSON file next to the council file.
     for area in council.get("areas", []):
         with open(os.path.join(os.path.dirname(path), area["boundary"]), encoding="utf-8") as f:

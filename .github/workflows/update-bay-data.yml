@@ -14,6 +14,7 @@ on:
       - scripts/fetch_uk_bays.py
       - scripts/enrich_bays.py
       - scripts/fetch_vehicle_crime.py
+      - scripts/fetch_open_council_bays.py
       - data/council-bays.json
       - data/*.geojson
       - .github/workflows/update-bay-data.yml
@@ -34,9 +35,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install shapefile reader (Leeds traffic orders)
+        run: pip install pyshp==2.3.1
       - name: Test the parser
         working-directory: scripts
-        run: python -m unittest test_fetch_uk_bays.py test_enrich_bays.py test_fetch_vehicle_crime.py
+        run: python -m unittest test_fetch_uk_bays.py test_enrich_bays.py test_fetch_vehicle_crime.py test_fetch_open_council_bays.py
+      - name: Councils' open data (Edinburgh, Leeds, Nottingham)
+        # A council that's down keeps last week's bays, so this never fails the run.
+        run: python scripts/fetch_open_council_bays.py data/open-council-bays.json
       - name: Fetch UK bays from OpenStreetMap
         run: |
           mkdir -p data
@@ -49,13 +55,13 @@ jobs:
         run: python scripts/fetch_vehicle_crime.py data/uk-bays.json data/vehicle-crime.json
       - name: Commit if changed
         run: |
-          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json)" ]; then
             echo "No changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json
+          git add data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json
           git commit -m "Update UK bay data"
           git pull --rebase origin main
           git push origin HEAD:main

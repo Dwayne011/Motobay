@@ -331,7 +331,7 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     bay.source != null && bay.feeUnconfirmed -> "From ${bay.source}. The council hasn't confirmed charges or the number of spaces."
                     bay.source != null && bay.fee == Fee.Free -> "From ${bay.source}. The council says it's free" +
                         if (bay.capacity == null) ", but it doesn't say how many bikes it holds." else "."
-                    bay.source != null && bay.isOsm -> "Charges and spaces from ${bay.source}. Position \u00a9 OpenStreetMap contributors, under the Open Database Licence."
+                    bay.source != null && bay.isOsm -> "Details from ${bay.source}. Position \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                     bay.source != null -> "From ${bay.source}."
                     else -> "Bay data \u00a9 OpenStreetMap contributors, under the Open Database Licence."
                 },

@@ -1603,6 +1603,130 @@
 "postcode": "EC4Y",
 "street": "Whitefriars Street"
 },
+"council/edinburgh/17254364@55.95381,-3.19239": {
+"area": "New Town",
+"city": "Edinburgh",
+"postcode": "EH2",
+"street": "St Andrew Square"
+},
+"council/edinburgh/17299333@55.95011,-3.21095": {
+"area": "Haymarket",
+"city": "Edinburgh",
+"postcode": "EH2",
+"street": "Alva Street"
+},
+"council/edinburgh/17321683@55.94639,-3.21917": {
+"area": "West Coates",
+"city": "Edinburgh",
+"postcode": "EH12",
+"street": "Rosebery Crescent"
+},
+"council/edinburgh/17326433@55.95193,-3.20876": {
+"area": "New Town",
+"city": "Edinburgh",
+"postcode": "EH2",
+"street": "Charlotte Square"
+},
+"council/edinburgh/17326900@55.95431,-3.18596": {
+"area": "Greenside",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "Calton Hill"
+},
+"council/edinburgh/17327219@55.95288,-3.18607": {
+"area": "Greenside",
+"city": "Edinburgh",
+"postcode": "EH8",
+"street": "Calton Road"
+},
+"council/edinburgh/17327951@55.94993,-3.19443": {
+"area": "The Mound",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "North Bank Street"
+},
+"council/edinburgh/17328022@55.94892,-3.20911": {
+"area": "Haymarket",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "Rutland Square"
+},
+"council/edinburgh/17328118@55.94860,-3.19261": {
+"area": "Abbeyhill",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "India Buildings"
+},
+"council/edinburgh/17329345@55.93891,-3.19244": {
+"area": "Marchmont",
+"city": "Edinburgh",
+"postcode": "EH9",
+"street": "Roseneath Terrace"
+},
+"council/edinburgh/17329511@55.93823,-3.19452": {
+"area": "Marchmont",
+"city": "Edinburgh",
+"postcode": "EH9",
+"street": "Warrender Park Road"
+},
+"council/edinburgh/17474318@55.94437,-3.19753": {
+"area": "Tollcross",
+"city": "Edinburgh"
+},
+"council/edinburgh/17561418@55.94878,-3.21273": {
+"area": "Haymarket",
+"city": "Edinburgh",
+"postcode": "EH3",
+"street": "Walker Street"
+},
+"council/edinburgh/17561432@55.95062,-3.19004": {
+"area": "Abbeyhill",
+"city": "Edinburgh",
+"postcode": "EH1",
+"street": "Cockburn Street"
+},
+"council/edinburgh/17590166@55.96494,-3.17646": {
+"area": "Lorne",
+"city": "Edinburgh",
+"postcode": "EH6",
+"street": "Leith Walk"
+},
+"council/edinburgh/17597628@55.94517,-3.19926": {
+"area": "Lauriston",
+"city": "Edinburgh",
+"postcode": "EH3",
+"street": "Lady Lawson Street"
+},
+"council/edinburgh/17598720@55.95145,-3.18501": {
+"area": "Canongate",
+"city": "Edinburgh",
+"postcode": "EH8",
+"street": "East Market Street"
+},
+"council/edinburgh/17629478@55.94783,-3.21634": {
+"area": "Haymarket",
+"city": "Edinburgh",
+"postcode": "EH12",
+"street": "Palmerston Place"
+},
+"council/edinburgh/17630316@55.95645,-3.20577": {
+"area": "Silvermills",
+"city": "Edinburgh",
+"postcode": "EH3",
+"street": "Circus Gardens"
+},
+"council/edinburgh/17632658@55.95260,-3.20269": {
+"area": "New Town",
+"city": "Edinburgh",
+"postcode": "EH2",
+"street": "George Street"
+},
+"council/edinburgh/17659555@55.94901,-3.21590": {
+"area": "Haymarket",
+"city": "Edinburgh",
+"postcode": "EH3",
+"street": "Manor Place"
+},
 "council/enfield/church-street@51.65226,-0.08528": {
 "area": "Southbury",
 "city": "London",
@@ -2386,6 +2510,96 @@
 "council/islington/yerbury-road-54166@51.55903,-0.12607": {
 "area": "London Borough of Islington",
 "city": "London"
+},
+"council/leeds/11117@53.79520,-1.53474": {
+"area": "Warehouse Hill",
+"city": "Leeds",
+"postcode": "LS2",
+"street": "Maude Street"
+},
+"council/leeds/14431@53.80106,-1.54052": {
+"area": "Leylands",
+"city": "Leeds",
+"postcode": "LS2",
+"street": "Cross Belgrave Street"
+},
+"council/leeds/18166@53.74462,-1.59978": {
+"area": "City",
+"city": "Leeds",
+"postcode": "LS27",
+"street": "Hope Street"
+},
+"council/leeds/2297@53.79526,-1.54012": {
+"area": "Warehouse Hill",
+"city": "Leeds",
+"postcode": "LS2",
+"street": "Cherry Tree Walk"
+},
+"council/leeds/32788@53.79085,-1.54757": {
+"area": "Camp Field",
+"city": "Leeds",
+"postcode": "LS11",
+"street": "Back Row"
+},
+"council/leeds/33223@53.79085,-1.54757": {
+"area": "Camp Field",
+"city": "Leeds",
+"postcode": "LS11",
+"street": "Back Row"
+},
+"council/leeds/4718@53.92813,-1.38666": {
+"area": "Micklethwaite",
+"city": "Leeds",
+"postcode": "LS22",
+"street": "Cross Street"
+},
+"council/leeds/7287@53.79987,-1.54725": {
+"area": "Arena Quarter",
+"city": "Leeds",
+"postcode": "LS1",
+"street": "Victoria Gardens"
+},
+"council/leeds/8027@53.80180,-1.55294": {
+"area": "Little Woodhouse",
+"city": "Leeds",
+"postcode": "LS1",
+"street": "St George's Road"
+},
+"council/leeds/8923@53.79552,-1.54245": {
+"area": "Warehouse Hill",
+"city": "Leeds",
+"postcode": "LS1",
+"street": "Briggate"
+},
+"council/leeds/9982@53.80089,-1.54701": {
+"area": "Arena Quarter",
+"city": "Leeds",
+"postcode": "LS1",
+"street": "Great George Street"
+},
+"council/nottingham/tro-7260-castle-road@52.95026,-1.15288": {
+"area": "Broad Marsh",
+"city": "Nottingham",
+"postcode": "NG1",
+"street": "Castle Road"
+},
+"council/nottingham/tro-7260-hounds-gate@52.95132,-1.15165": {
+"area": "Broad Marsh",
+"city": "Nottingham",
+"postcode": "NG1",
+"street": "Maid Marian Way"
+},
+"council/nottingham/tro-7260-mount-street@52.95275,-1.15449": {
+"area": "Broad Marsh",
+"city": "Nottingham",
+"postcode": "NG1",
+"street": "Mount Street"
+},
+"council/nottingham/tro-7260-wollaton-street@52.95523,-1.15440": {
+"area": "Broad Marsh",
+"city": "Nottingham",
+"postcode": "NG1",
+"street": "Wollaton Street"
 },
 "node/10003989317@51.38058,-2.36223": {
 "area": "Kingsmead",
