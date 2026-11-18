@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Frost palette's light colours, for the home-screen widget. -->
+<resources>
+    <color name="widget_surface">#FFFBFCFE</color>
+    <color name="widget_accent">#FF3B5B92</color>
+    <color name="widget_on_accent">#FFFFFFFF</color>
+    <color name="widget_text">#FF141925</color>
+    <color name="widget_subtext">#FF545C6C</color>
+</resources>

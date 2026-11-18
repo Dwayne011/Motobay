@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import uk.motobay.app.data.AuthRepository
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
+import uk.motobay.app.data.BayStatusRepository
+import uk.motobay.app.data.FirestoreBayStatusRepository
 import uk.motobay.app.data.VehicleCrimeRepository
 import uk.motobay.app.data.combinedBays
 import uk.motobay.app.data.CommunityRepository
@@ -22,6 +24,16 @@ import uk.motobay.app.data.UserRepository
 import uk.motobay.app.location.LocationProvider
 import uk.motobay.app.util.CrashLog
 import java.time.LocalDateTime
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import uk.motobay.app.data.LastFix
+import uk.motobay.app.util.distanceMetres
+import uk.motobay.app.widget.NearestFreeWidget
 import java.time.ZoneId
 
 /** Holds the app's single instances (manual dependency injection). */
@@ -39,6 +51,9 @@ open class MotoBayApplication : Application() {
         private set
     lateinit var displayNames: DisplayNames
         private set
+    /** "Space now / full" and safety details from riders. */
+    lateinit var bayStatus: BayStatusRepository
+        private set
     lateinit var user: UserRepository
         private set
     lateinit var location: LocationProvider
@@ -54,6 +69,9 @@ open class MotoBayApplication : Application() {
     /** The map has already gone to the rider (or asked to) since the app was started; it happens once per launch. */
     var centredOnLaunch = false
 
+    /** A bay to open, from a notification or the widget; the app shows it and clears this. */
+    val openBayRequest = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
+
     /** Replaced with recorded responses in tests. */
     var placeSearch = PlaceSearch()
 
@@ -66,10 +84,33 @@ open class MotoBayApplication : Application() {
         auth = createAuth()
         community = createCommunity(auth)
         displayNames = createDisplayNames(auth)
+        bayStatus = createBayStatus(auth)
         user = UserRepository(filesDir, appScope)
         location = LocationProvider(this)
         allBays = combinedBays(bays.bays, community.data, appScope)
         supporter = createSupporter()
+        keepWidgetCurrent()
+    }
+
+    /**
+     * Saves where the rider is (only when they've moved 100 m or more, and only on the
+     * phone) and redraws the home-screen widget when that, the bays or Supporter change.
+     */
+    @OptIn(FlowPreview::class)
+    private fun keepWidgetCurrent() {
+        appScope.launch {
+            location.position.filterNotNull().collect { p ->
+                val last = user.settings.value.lastFix
+                if (last == null || distanceMetres(p, last.lat, last.lon) >= 100) {
+                    user.updateSettings { it.copy(lastFix = LastFix(p.lat, p.lon)) }
+                }
+            }
+        }
+        appScope.launch {
+            combine(user.settings.map { it.lastFix }.distinctUntilChanged(), allBays, supporter.state.map { it.isSupporter }) { _, _, _ -> }
+                .debounce(1_000)
+                .collect { runCatching { NearestFreeWidget.refresh(this@MotoBayApplication) } }
+        }
     }
 
     /** The time on the street: every bay is in the UK, wherever the phone's clock is set. Fixed in tests. */
@@ -95,4 +136,6 @@ open class MotoBayApplication : Application() {
         FirestoreCommunityRepository(this, auth, appScope)
 
     protected open fun createDisplayNames(auth: AuthRepository): DisplayNames = FirestoreDisplayNames(auth)
+
+    protected open fun createBayStatus(auth: AuthRepository): BayStatusRepository = FirestoreBayStatusRepository(auth)
 }

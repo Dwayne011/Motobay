@@ -67,24 +67,9 @@ fun Bay.chargeStatus(t: LocalDateTime): String? {
     if (fee != Fee.Paid) return null
     val hours = ChargedHours.parse(charged) ?: return null
     val charged = hours.chargedAt(t)
-    val change = hours.nextChange(t)?.let { whenText(t, it) }
+    val change = hours.nextChange(t)?.let { clockText(t, it) }
     return when {
         charged -> "Charged now" + (change?.let { " · free from $it" } ?: " · charged at all times")
         else -> "Free right now" + (change?.let { " · charged from $it" } ?: "")
-    }
-}
-
-private fun whenText(now: LocalDateTime, at: LocalDateTime): String {
-    val h = at.hour
-    val clock = when {
-        h == 0 && at.minute == 0 -> "midnight"
-        h == 12 && at.minute == 0 -> "noon"
-        else -> "${if (h % 12 == 0) 12 else h % 12}" + (if (at.minute == 0) "" else ".%02d".format(at.minute)) + if (h < 12) "am" else "pm"
-    }
-    val days = java.time.temporal.ChronoUnit.DAYS.between(now.toLocalDate(), at.toLocalDate())
-    return when (days) {
-        0L -> clock
-        1L -> "tomorrow $clock"
-        else -> at.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.UK) + " $clock"
     }
 }

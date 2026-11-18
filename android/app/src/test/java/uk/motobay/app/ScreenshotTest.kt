@@ -445,9 +445,9 @@ class ScreenshotTest {
         compose.setContent { DetailHost() }
         shot("phone-dark-bay-detail")
         val before = app.community.data.value.comments.size
-        compose.onNodeWithText("Add a comment").performClick()
+        compose.onNodeWithText("Add a comment").performScrollTo().performClick()
         compose.onNodeWithText("Add a comment").performTextInput("Two spaces free at lunchtime.")
-        compose.onNodeWithText("Post").performClick()
+        compose.onNodeWithText("Post").performScrollTo().performClick()
         compose.waitForIdle()
         val comments = app.community.data.value.comments
         assertEquals(before + 1, comments.size)

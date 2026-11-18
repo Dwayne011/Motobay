@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.semantics
 import uk.motobay.app.data.RatingSummary
 import uk.motobay.app.data.ratingBy
 import uk.motobay.app.data.chargeStatus
+import uk.motobay.app.data.payment
 import uk.motobay.app.data.ratingSummary
 import java.util.Locale
 import androidx.compose.foundation.BorderStroke
@@ -234,6 +235,10 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                 }
                 VSpace(4)
                 Text(rules, style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2))
+                bay.payment?.let {
+                    VSpace(10)
+                    PayButton(it, palette)
+                }
             }
         }
         // Where exactly, in the source's own words (a council traffic order, say).
@@ -305,6 +310,11 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
             ToolbarIcon(Icons.Outlined.Flag, "Report this bay", palette) { requireSignIn { reportingBay = true } }
             ToolbarIcon(Icons.Filled.Map, "Open in another maps app", palette) { menu = true }
         }
+
+        // Where the rider parked, and the reminder before charging starts.
+        if (!bay.isSample) ParkHereSection(bay, palette)
+        // Space now or full, and security details, from riders.
+        BayStatusSection(bay, palette)
 
         // Rating, photos and comments each sit in their own glass panel.
         AuroraCard(palette) { RateBay(bay, palette) }

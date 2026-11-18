@@ -2,4 +2,8 @@
 <resources>
     <!-- App name shown on the home screen. -->
     <string name="app_name">MotoBays</string>
+    <!-- Home-screen widget. -->
+    <string name="widget_overline">Nearest free bay</string>
+    <string name="widget_loading">Finding bays…</string>
+    <string name="widget_description">The nearest bay that\'s free right now, near where you last opened MotoBays</string>
 </resources>

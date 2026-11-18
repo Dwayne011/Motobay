@@ -1,11 +1,11 @@
 {
   "name": "motobays-functions",
   "private": true,
-  "description": "Keeps the public per-bay rating totals, so individual ratings can stay private.",
+  "description": "Keeps the public per-bay rating totals and rider report totals, so individual ratings and reports can stay private.",
   "main": "index.js",
   "engines": { "node": "22" },
   "scripts": {
-    "test": "node --test summary.test.js"
+    "test": "node --test summary.test.js status.test.js"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0",

@@ -6,6 +6,7 @@ const { onRequest } = require('firebase-functions/v2/https');
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { summarise, summaryId, validBayId } = require('./summary');
+const { summariseStatus } = require('./status');
 
 initializeApp(process.env.FIRESTORE_EMULATOR_HOST ? { projectId: process.env.GCLOUD_PROJECT || "motobays-rules-test" } : undefined);
 const db = getFirestore('motobays');
@@ -31,6 +32,38 @@ exports.onRatingWritten = onDocumentWritten(
     const after = validBayId(event.data?.after?.data()?.bayId);
     for (const bayId of new Set([before, after].filter(Boolean))) await recount(bayId);
   },
+);
+
+/** Rebuilds bayStatus/{bay} from the bay's space reports and safety answers. */
+async function recountStatus(bayId) {
+  const ref = db.collection('bayStatus').doc(summaryId(bayId));
+  await db.runTransaction(async (t) => {
+    const spaces = await t.get(db.collection('spaceReports').where('bayId', '==', bayId));
+    const features = await t.get(db.collection('bayFeatures').where('bayId', '==', bayId));
+    const status = summariseStatus(
+      bayId,
+      spaces.docs.map((d) => ({ full: d.get('full'), at: d.get('at')?.toDate?.() })),
+      features.docs.map((d) => d.data()),
+    );
+    if (status) t.set(ref, { ...status, updatedAt: FieldValue.serverTimestamp() });
+    else t.delete(ref);
+  });
+}
+
+async function onReportWritten(event) {
+  const before = validBayId(event.data?.before?.data()?.bayId);
+  const after = validBayId(event.data?.after?.data()?.bayId);
+  for (const bayId of new Set([before, after].filter(Boolean))) await recountStatus(bayId);
+}
+
+exports.onSpaceReportWritten = onDocumentWritten(
+  { document: 'spaceReports/{id}', database: 'motobays', region: REGION },
+  onReportWritten,
+);
+
+exports.onBayFeaturesWritten = onDocumentWritten(
+  { document: 'bayFeatures/{id}', database: 'motobays', region: REGION },
+  onReportWritten,
 );
 
 // One-off: builds the totals for ratings made before this function existed. Runs once;

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import uk.motobay.app.data.AuthRepository
+import uk.motobay.app.data.BayStatusRepository
 import java.time.LocalDateTime
 import uk.motobay.app.data.SupporterState
 import uk.motobay.app.data.Supporter
@@ -150,6 +151,7 @@ class TestMotoBayApplication : MotoBayApplication() {
     override fun createAuth(): AuthRepository = FakeAuthRepository()
     override fun createCommunity(auth: AuthRepository): CommunityRepository = FakeCommunityRepository(auth)
     override fun createSupporter(): Supporter = FakeSupporter()
+    override fun createBayStatus(auth: AuthRepository): BayStatusRepository = FakeBayStatusRepository(auth) { fixedNow }
 
     /** Tests set the time on the street; by default a Tuesday morning, inside most charging hours. */
     var fixedNow: LocalDateTime = LocalDateTime.of(2026, 11, 10, 10, 30)

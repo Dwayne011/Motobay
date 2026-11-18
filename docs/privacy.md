@@ -4,7 +4,7 @@ title: MotoBays Privacy Policy
 
 # MotoBays Privacy Policy
 
-**Effective date:** 13 November 2026
+**Effective date:** 18 November 2026
 
 **Applies to:** the MotoBays Android app (`uk.motobays.app`) and the pages on this site
 
@@ -19,8 +19,9 @@ If you are not satisfied with how we handle your personal data, you have the rig
 ## 2. Summary
 
 - You can use the app without an account. Browsing bays, searching and getting directions involve no account and no data about you other than what the services in section 6 receive to answer a request.
-- If you allow it, the app uses your location to find bays close to you. It never stores or uploads it.
-- If you sign in (Google or Apple) and post photos, comments, star ratings or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
+- If you allow it, the app uses your location to find bays close to you. It never uploads it.
+- If you sign in (Google or Apple) and post photos, comments, star ratings, bay reports or bay changes, we store those together with your account ID so they can be reviewed and shown to other riders.
+- If you tap "I parked here", the app remembers that bay on your phone only, to remind you before charging starts. It is never uploaded.
 - There are no adverts, no analytics and no tracking in the app.
 - MotoBays is free. An optional one-off "Supporter" purchase is handled entirely by Google Play; we never see your payment details.
 - You can delete your account and everything linked to it from inside the app at any time.
@@ -32,11 +33,12 @@ If you are not satisfied with how we handle your personal data, you have the rig
 | **Account** | A unique user ID, your email address, whether the address is verified, and which provider you used (Google or Apple) | When you sign in |
 | **Profile** | The display name you choose | When you save a display name |
 | **Content you post** | Photos, comments, star ratings, new bays and corrections to existing bays, each with the date, time and your user ID | When you submit them |
+| **Bay reports** | Whether a bay had space or was full (with the time), and whether it has a ground anchor, CCTV or lighting, each with your user ID | When you send them |
 | **Reports** | The item reported, the reason you pick, any note you add, and your user ID | When you report another rider's content |
-| **Location** | Your device's current position (precise or approximate, your choice) | Only if you allow it, to find bays close to you. It stays on the device and is never sent to us. |
+| **Location** | Your device's current position (precise or approximate, your choice) | Only if you allow it, to find bays close to you. It stays on the device and is never sent to us. The app is never given your location in the background. |
 | **Purchase** | Whether your Google account has bought the optional Supporter upgrade. Google Play tells the app yes or no; we receive no name, card or billing details, and the answer is kept on your phone only. | When you open the app or buy Supporter |
 | **Device data on request** | Device model, Android version, app version and a technical trace | Only if the app closes unexpectedly and you choose to send us the report by email |
-| **Stored on your phone only** | Saved bays, settings, blocked riders, recent searches, last map position | As you use the app. This data never leaves your device except through Android's own backup, if you have it enabled. |
+| **Stored on your phone only** | Saved bays, settings, blocked riders, recent searches, last map position, the bay you said you parked at, and your last position for the home-screen widget | As you use the app. This data never leaves your device except through Android's own backup, if you have it enabled. |
 
 We do not collect contacts, your photo library, your files, advertising identifiers, or any analytics about how you use the app. When you add a photo, Android's photo picker or camera hands us only the picture you chose, and we re-encode it before upload, which removes location and camera metadata.
 
@@ -44,6 +46,7 @@ We do not collect contacts, your photo library, your files, advertising identifi
 
 | Purpose | Data | Legal basis (UK GDPR Article 6) |
 |---|---|---|
+| Remind you before charging starts where you parked | The bay you parked at (on your phone only) | Your consent, given through the Android notification prompt. You can turn the reminder off in Android settings, or tap "I've left". |
 | Show you the map near you and distances to bays | Location | Your consent, given through the Android permission prompt. You can withdraw it in Android settings at any time. |
 | Run your account and show your posts with your display name | Account, profile, content | Performance of a contract (providing the service you asked for) |
 | Review posts before they are published, act on reports, and let riders block each other | Content, reports, account | Our legitimate interest in keeping the service safe and accurate, and in meeting Google Play's content policies |
@@ -56,6 +59,7 @@ We do not collect contacts, your photo library, your files, advertising identifi
 - **Approved** photos, comments and bay changes are public: anyone using the app can see them, with your display name (or "Anonymous rider" if you have not set one).
 - **Pending and rejected** items are visible only to you and the moderator.
 - **Star ratings** count towards a bay's average straight away, as there is no text to check. Other riders see only each bay's average and how many riders rated it. Your individual ratings are private: only you and the moderator can see which bays you rated. Each rating is stored with your account ID, a random code that is not your name or email.
+- **Space and safety reports** show straight away. Other riders see only the latest space report for a bay ("reported full 20 min ago") and how many riders said yes or no to each safety detail, never who sent them. Your own reports are private: only you and the moderator can see them, since a report says where you were and when.
 - Your **email address** is never shown to other riders. Only the moderator can see it.
 - **Reports** are seen only by the moderator. The person you report is not told who reported them.
 
@@ -85,9 +89,9 @@ Google may process Firebase data outside the UK, including in the United States.
 | Data | Retention |
 |---|---|
 | Account and profile | Until you delete your account |
-| Posts and ratings | Until you delete them, the moderator removes them, or you delete your account |
+| Posts, ratings and bay reports | Until you delete them, the moderator removes them, or you delete your account |
 | Reports | Up to 12 months after they are resolved, then deleted; unlinked from your account immediately if you delete it |
-| Location | Never stored |
+| Location | Never uploaded. Your last position is kept on your phone for the home-screen widget, and goes when you uninstall the app or clear its data |
 | Purchase | Held by Google Play under your Google account; the yes/no copy on your phone goes when you uninstall the app or clear its data |
 | Crash reports you email us | Until the bug is fixed, then deleted |
 | Google backups of Firebase data | Purged within 180 days of deletion |
@@ -111,7 +115,7 @@ You can do most of this yourself: **Settings › My submissions** shows everythi
 
 ## 11. Deleting your account
 
-Open **Settings › Account › Delete account & data** in the app, or follow the instructions at [Delete your MotoBays account](delete-account.html). Deletion removes your sign-in, your display name, and every photo, comment, star rating and bay change you submitted. It is immediate and cannot be undone.
+Open **Settings › Account › Delete account & data** in the app, or follow the instructions at [Delete your MotoBays account](delete-account.html). Deletion removes your sign-in, your display name, and every photo, comment, star rating, bay report and bay change you submitted. It is immediate and cannot be undone.
 
 ## 12. Children
 

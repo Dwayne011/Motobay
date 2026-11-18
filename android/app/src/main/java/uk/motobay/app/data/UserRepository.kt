@@ -3,6 +3,7 @@ package uk.motobay.app.data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 import java.io.File
 
@@ -26,6 +27,8 @@ data class Settings(
     val recentPlaces: List<RecentPlace> = emptyList(),
     /** Riders whose photos and comments this device hides. Kept locally; the admin still sees everything. */
     val blocked: List<BlockedUser> = emptyList(),
+    /** The rider's last known position, for the home-screen widget. Only on the phone. */
+    val lastFix: LastFix? = null,
 ) {
     companion object {
         const val DEFAULT_SOURCE_COLOR = 0xFF0B6E99
@@ -35,6 +38,9 @@ data class Settings(
 
 @Serializable
 data class CameraSnapshot(val lat: Double, val lon: Double, val zoom: Double)
+
+@Serializable
+data class LastFix(val lat: Double, val lon: Double)
 
 @Serializable
 data class BlockedUser(val uid: String, val name: String)
@@ -52,7 +58,14 @@ class UserRepository(dir: File, scope: CoroutineScope) {
         scope,
     )
 
+    private val parkedStore = JsonFileStore(File(dir, "parked.json"), Parked.serializer().nullable, null, scope)
+
     val settings = settingsStore.state
+
+    /** Where the rider says they parked, or null. Only ever on the phone. */
+    val parked = parkedStore.state
+
+    fun setParked(parked: Parked?) = parkedStore.update { parked }
     /** Saved bays, stored as snapshots so the Saved list works offline. */
     val favourites = favouritesStore.state
 
