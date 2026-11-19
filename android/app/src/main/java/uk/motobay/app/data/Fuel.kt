@@ -46,9 +46,31 @@ data class FuelStation(
         FuelGrade.E5 -> e5
     }
 
-    /** "Shell Euston Road" or the brand and name, without saying the brand twice. */
+    /**
+     * "Tesco Harrogate" from Fuel Finder's "TESCO" and "HARROGATE - PETROL FILLING STATION":
+     * the brand once, the place, in normal capitals, without "petrol filling station".
+     */
     val title: String
-        get() = if (brand == null || name.contains(brand, ignoreCase = true)) name else "$brand $name"
+        get() {
+            val place = tidyName(name).replace(Regex("""\s*-?\s*(Petrol Filling Station|Filling Station|Petrol Station|PFS)$""", RegexOption.IGNORE_CASE), "").trim()
+            val b = brand?.let(::tidyName)
+            return when {
+                b == null -> place.ifEmpty { "Petrol station" }
+                place.isEmpty() -> b
+                place.contains(b, ignoreCase = true) -> place
+                else -> "$b $place"
+            }
+        }
+}
+
+/** Names that come in capitals ("ASDA HANDBRIDGE EXPRESS") read better as "Asda Handbridge Express". */
+internal fun tidyName(s: String): String {
+    val t = s.trim().replace(Regex("""\s+"""), " ")
+    if (t != t.uppercase()) return t
+    val keep = setOf("BP", "JET", "MFG", "EG", "UK", "BWOC")
+    return t.split(" ").joinToString(" ") { w ->
+        if (w in keep) w else w.lowercase().replaceFirstChar { it.titlecase() }
+    }
 }
 
 data class FuelData(val generated: String, val stations: List<FuelStation>)

@@ -131,6 +131,11 @@ class NewFeaturesTest {
         // Only one sells super unleaded nearby; the cheaper one far away isn't shown.
         assertEquals(listOf("a"), cheapestNear(data.stations, soho, FuelGrade.E5).map { it.station.id })
         assertEquals("ACME Cheap Fuel", data.stations[0].title)
+        // Fuel Finder's names come in capitals.
+        val tesco = data.stations[0].copy(name = "HARROGATE - PETROL FILLING STATION", brand = "TESCO")
+        assertEquals("Tesco Harrogate", tesco.title)
+        assertEquals("BP Kings Cross", tesco.copy(name = "BP KINGS CROSS", brand = "BP").title)
+        assertEquals("Asda Handbridge Express Petrol", tesco.copy(name = "ASDA HANDBRIDGE EXPRESS PETROL", brand = "ASDA HANDBRIDGE EXPRESS PETROL").title)
     }
 
     @Test fun the_fuel_chip_shows_the_cheapest_forecourts() {
