@@ -74,6 +74,16 @@ const val DESTINATION_RADIUS_METRES = 1_000.0
  */
 fun walkingMinutes(metres: Double): Int = kotlin.math.max(1, kotlin.math.ceil(metres * 1.3 / 80.0).toInt())
 
+/** The [DESTINATION_LIMIT] bays nearest [at] within [DESTINATION_RADIUS_METRES], nearest first. */
+fun nearestTo(bays: List<Bay>, at: LatLon): List<BayWithDistance> =
+    bays.asSequence()
+        .map { it to distanceMetres(at, it) }
+        .filter { it.second <= DESTINATION_RADIUS_METRES }
+        .sortedBy { it.second }
+        .take(DESTINATION_LIMIT)
+        .map { (bay, m) -> BayWithDistance(bay, m) }
+        .toList()
+
 /** The list shows at most this many of the nearest bays in view. */
 private const val LIST_LIMIT = 200
 
@@ -126,15 +136,7 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     /** The bays nearest [destination] that match the filters, with walking time. */
     val nearDestination: StateFlow<List<BayWithDistance>> = combine(mapBays, destination) { bays, d ->
-        if (d == null) return@combine emptyList()
-        val at = LatLon(d.lat, d.lon)
-        bays.asSequence()
-            .map { it to distanceMetres(at, it) }
-            .filter { it.second <= DESTINATION_RADIUS_METRES }
-            .sortedBy { it.second }
-            .take(DESTINATION_LIMIT)
-            .map { (bay, m) -> BayWithDistance(bay, m) }
-            .toList()
+        if (d == null) emptyList() else nearestTo(bays, LatLon(d.lat, d.lon))
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /** Bays inside the map view, nearest first, for the list. */
@@ -344,7 +346,8 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     /** The cheapest forecourts for the chosen grade near the rider, or near the map centre. */
     val cheapestFuel: StateFlow<List<FuelNearby>> =
         combine(app.fuel.data, fuelLayer, fuelGrade, viewport, userPosition) { data, on, grade, vp, pos ->
-            val at = pos ?: vp?.center
+            // Near the rider, else the map centre, else where the map was last left.
+            val at = pos ?: vp?.center ?: app.user.settings.value.lastMap?.let { LatLon(it.lat, it.lon) }
             if (!on || data == null || at == null) emptyList() else cheapestNear(data.stations, at, grade)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 }

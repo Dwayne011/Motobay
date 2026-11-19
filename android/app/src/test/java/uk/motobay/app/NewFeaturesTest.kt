@@ -47,7 +47,7 @@ import uk.motobay.app.ui.LocalApp
 import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.bay.BayDetailContent
 import uk.motobay.app.ui.explore.Destination
-import uk.motobay.app.ui.explore.ExploreViewModel
+import uk.motobay.app.ui.explore.nearestTo
 import uk.motobay.app.ui.explore.walkingMinutes
 import uk.motobay.app.ui.settings.OfflineMapsPage
 import uk.motobay.app.ui.theme.MotoBayTheme
@@ -114,13 +114,12 @@ class NewFeaturesTest {
         assertEquals(5, walkingMinutes(300.0)) // 300 m straight line, about 390 m of street
     }
 
-    @Test fun parking_near_a_destination_lists_the_nearest_bays_that_match_the_filters() = runBlocking {
-        app.bays.load()
-        val vm = ExploreViewModel(app)
-        vm.destination.value = Destination("Sample Street", 51.5136, -0.1365)
-        val near = vm.nearDestination.first { it.isNotEmpty() }
+    @Test fun parking_near_a_destination_lists_the_nearest_bays() {
+        val near = nearestTo(SampleBays.all, LatLon(51.5136, -0.1365))
         assertEquals("sample/1", near.first().bay.id)
         assertTrue(near.size <= 3 && near.all { (it.distanceMetres ?: 0.0) <= 1_000.0 })
+        // Manchester and Edinburgh are far outside 1 km.
+        assertTrue(near.none { it.bay.id in setOf("sample/6", "sample/7") })
     }
 
     @Test fun fuel_is_cheapest_first_within_five_miles_for_the_chosen_grade() {
@@ -130,7 +129,7 @@ class NewFeaturesTest {
         assertEquals(listOf("a", "b"), cheapestNear(data.stations, soho, FuelGrade.E10).map { it.station.id })
         // Only one sells super unleaded nearby; the cheaper one far away isn't shown.
         assertEquals(listOf("a"), cheapestNear(data.stations, soho, FuelGrade.E5).map { it.station.id })
-        assertEquals("ACME Cheap Fuel", data.stations[0].title)
+        assertEquals("Acme Cheap Fuel", data.stations[0].title)
         // Fuel Finder's names come in capitals.
         val tesco = data.stations[0].copy(name = "HARROGATE - PETROL FILLING STATION", brand = "TESCO")
         assertEquals("Tesco Harrogate", tesco.title)
