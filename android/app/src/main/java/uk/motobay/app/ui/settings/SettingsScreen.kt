@@ -2,6 +2,7 @@ package uk.motobay.app.ui.settings
 
 import uk.motobay.app.BuildConfig
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Inventory2
@@ -105,7 +106,7 @@ import uk.motobay.app.ui.LocalSnackbar
 import uk.motobay.app.ui.account.SignInButtons
 
 /** The pages the Settings menu opens. */
-enum class SettingsPage(val title: String) { Appearance("Appearance"), Profile("Profile"), Account("Account"), Blocked("Blocked riders") }
+enum class SettingsPage(val title: String) { Appearance("Appearance"), Profile("Profile"), Account("Account"), Blocked("Blocked riders"), Offline("Offline maps") }
 
 /**
  * The first Settings page: a menu, as in Frost apps. One glass card per group, each row a
@@ -145,6 +146,11 @@ fun SettingsScreen(
         AuroraCard(palette, contentPadding = 4) {
             val theme = when (settings.themeMode) { ThemeMode.Light -> "Light"; ThemeMode.Dark -> "Dark"; ThemeMode.System -> "Same as your phone" }
             FrostMenuRow(Icons.Outlined.Palette, palette.toneBlue, "Appearance", theme, palette, onClick = { onOpenPage(SettingsPage.Appearance) })
+            FrostDivider(palette)
+            FrostMenuRow(
+                Icons.Outlined.CloudDownload, palette.toneFree, "Offline maps", "Save the map of an area for when there's no signal",
+                palette, onClick = { onOpenPage(SettingsPage.Offline) },
+            )
             FrostDivider(palette)
             FrostMenuRow(
                 Icons.Outlined.Badge, palette.toneFree, "Profile",
@@ -209,6 +215,7 @@ fun SettingsPageScreen(page: SettingsPage, onBack: () -> Unit) {
             }
             SettingsPage.Account -> AccountPage(palette)
             SettingsPage.Blocked -> BlockedPage(palette)
+            SettingsPage.Offline -> OfflineMapsPage(palette)
         }
     }
 }

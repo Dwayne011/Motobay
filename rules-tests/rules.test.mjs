@@ -305,6 +305,10 @@ describe('space reports and safety details', () => {
     await assertSucceeds(setDoc(doc(rider().firestore(), spacePath()), space()));
     await assertFails(setDoc(doc(anon().firestore(), spacePath()), space()));
   });
+  test('a rider can report a bay suspended; suspended must be true or false', async () => {
+    await assertSucceeds(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { suspended: true })));
+    await assertFails(setDoc(doc(rider('rider2').firestore(), spacePath('rider2')), space('rider2', { suspended: 'yes' })));
+  });
   test('a new report replaces the old one, but at most once a minute', async () => {
     await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), spacePath()), { bayId: 'node/1', authorUid: 'rider1', full: true, at: new Date(Date.now() - 5 * 60_000) }));
     await assertSucceeds(setDoc(doc(rider().firestore(), spacePath()), space('rider1', { full: false })));

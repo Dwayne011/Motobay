@@ -55,6 +55,12 @@ data class Bay(
     /** From a council's traffic orders rather than OpenStreetMap. */
     val isCouncil: Boolean get() = id.startsWith("council/")
 
+    /**
+     * The bay is in a council's own records (traffic orders, an FOI reply or open data),
+     * not just OpenStreetMap or a rider's report: shown as "Council-checked".
+     */
+    val isCouncilChecked: Boolean get() = source != null && !source.contains("rider survey", ignoreCase = true)
+
     /** An OpenStreetMap element ("node/1", "way/2"), so it can be edited there. */
     val isOsm: Boolean get() = id.startsWith("node/") || id.startsWith("way/") || id.startsWith("relation/")
 

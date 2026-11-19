@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 /** In-memory stand-in for the reports and the Cloud Function's totals. */
 class FakeBayStatusRepository(private val auth: AuthRepository, private val now: () -> LocalDateTime) : BayStatusRepository {
-    private data class Space(val bayId: String, val uid: String, val full: Boolean, val at: Long)
+    private data class Space(val bayId: String, val uid: String, val full: Boolean, val at: Long, val suspended: Boolean = false)
     private data class Features(val bayId: String, val uid: String, val values: Map<BayFeature, Boolean>)
 
     private val spaces = MutableStateFlow(listOf<Space>())
@@ -27,7 +27,7 @@ class FakeBayStatusRepository(private val auth: AuthRepository, private val now:
     private fun uid() = auth.user.value?.uid ?: throw IllegalStateException("Sign in to report")
 
     override fun status(bayId: String): Flow<BayStatus?> = combine(spaces, features) { s, f ->
-        val latest = s.filter { it.bayId == bayId }.maxByOrNull { it.at }?.let { SpaceReport(it.full, it.at) }
+        val latest = s.filter { it.bayId == bayId }.maxByOrNull { it.at }?.let { SpaceReport(it.full, it.at, it.suspended) }
         val votes = BayFeature.entries.mapNotNull { feature ->
             val answers = f.filter { it.bayId == bayId }.mapNotNull { it.values[feature] }
             Votes(answers.count { it }, answers.count { !it }).takeIf { it.total > 0 }?.let { feature to it }
@@ -39,13 +39,18 @@ class FakeBayStatusRepository(private val auth: AuthRepository, private val now:
         val me = auth.user.value?.uid ?: return MutableStateFlow(null)
         return combine(spaces, features) { s, f ->
             val space = s.firstOrNull { it.bayId == bayId && it.uid == me }
-            MyBayReport(space?.full, space?.at, f.firstOrNull { it.bayId == bayId && it.uid == me }?.values.orEmpty())
+            MyBayReport(space?.full, space?.at, f.firstOrNull { it.bayId == bayId && it.uid == me }?.values.orEmpty(), space?.suspended == true)
         }
     }
 
     override suspend fun reportSpace(bay: Bay, full: Boolean) {
         val me = uid()
         spaces.update { l -> l.filterNot { it.bayId == bay.id && it.uid == me } + Space(bay.id, me, full, now().epochMillis()) }
+    }
+
+    override suspend fun reportSuspended(bay: Bay) {
+        val me = uid()
+        spaces.update { l -> l.filterNot { it.bayId == bay.id && it.uid == me } + Space(bay.id, me, true, now().epochMillis(), suspended = true) }
     }
 
     override suspend fun setFeature(bay: Bay, feature: BayFeature, value: Boolean?) {

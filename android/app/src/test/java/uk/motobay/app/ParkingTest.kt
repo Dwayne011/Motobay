@@ -69,6 +69,9 @@ class ParkingTest {
         assertEquals("Reported full 20 min ago", SpaceReport(true, now - 20 * 60_000).text(now))
         assertEquals("Space reported 2 hr ago", SpaceReport(false, now - 130 * 60_000).text(now))
         assertNull(SpaceReport(true, now - 4 * 60 * 60_000).text(now))
+        // Suspensions stay up for two days.
+        assertEquals("Reported suspended 1 day ago", SpaceReport(true, now - 30 * 60 * 60_000, suspended = true).text(now))
+        assertNull(SpaceReport(true, now - 49 * 60 * 60_000, suspended = true).text(now))
     }
 
     @Test fun `safety votes read naturally`() {

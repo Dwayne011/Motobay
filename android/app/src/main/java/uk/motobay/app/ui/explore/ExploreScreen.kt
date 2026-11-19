@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import uk.motobay.app.util.openDirections
 import uk.motobay.app.data.Fee
 import uk.motobay.app.ui.components.RatingBadge
+import uk.motobay.app.ui.components.CouncilCheckedLabel
 import uk.motobay.app.ui.components.auroraStyle
 import uk.motobay.app.ui.components.frostOverline
 import uk.motobay.app.ui.theme.FrostFont
@@ -89,6 +90,12 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import uk.motobay.app.ui.components.AuroraChip
+import uk.motobay.app.data.formatPence
+import uk.motobay.app.data.FuelStation
+import uk.motobay.app.data.FuelNearby
+import uk.motobay.app.data.FuelGrade
+import androidx.compose.material.icons.outlined.LocalGasStation
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
@@ -200,6 +207,12 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
     val locating by vm.locating.collectAsStateWithLifecycle()
     val command by vm.command.collectAsStateWithLifecycle()
     val compactView by vm.compactView.collectAsStateWithLifecycle()
+    val destination by vm.destination.collectAsStateWithLifecycle()
+    val fuelOn by vm.fuelLayer.collectAsStateWithLifecycle()
+    val fuelGrade by vm.fuelGrade.collectAsStateWithLifecycle()
+    val cheapestFuel by vm.cheapestFuel.collectAsStateWithLifecycle()
+    val fuelData by app.fuel.data.collectAsStateWithLifecycle()
+    val nearDestination by vm.nearDestination.collectAsStateWithLifecycle()
     val selectedId by vm.selectedId.collectAsStateWithLifecycle()
     val userPosition by vm.userPosition.collectAsStateWithLifecycle()
     val allBays by vm.allBays.collectAsStateWithLifecycle()
@@ -280,6 +293,9 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                     onLongPress = { requireSignIn { vm.startAddingBay(it) } },
                     modifier = Modifier.fillMaxSize(),
                     crimePoints = if (crimeOn) crimeData?.points else null,
+                    fuelPrices = remember(fuelOn, fuelData, fuelGrade) {
+                        if (!fuelOn) null else fuelData?.stations?.mapNotNull { s -> s.price(fuelGrade)?.let { s to it } }
+                    },
                 )
                 if (loadState == BayLoadState.Loading) {
                     LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter))
@@ -404,7 +420,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer, fuelOn, vm::toggleFuelLayer)
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -465,7 +481,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer, fuelOn, vm::toggleFuelLayer)
                                 }
                                 if (crimeOn && !mapMoving) CrimeLegend(crimeData, palette, Modifier.padding(horizontal = 16.dp))
                             }
@@ -493,6 +509,33 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                             onGo = { openDirections(context, bay) },
                                             onOpen = { onOpenBay(bay.id) },
                                             onClose = vm::clearSelection,
+                                        )
+                                        Spacer(Modifier.height(10.dp))
+                                    }
+                                }
+                                // "Park near my destination": after searching a street, postcode or place.
+                                AnimatedVisibility(
+                                    visible = selectedBay == null && destination != null && compactView == CompactView.Map && !mapMoving,
+                                    enter = fadeIn(),
+                                    exit = fadeOut(),
+                                ) {
+                                    val d = destination ?: return@AnimatedVisibility
+                                    Column {
+                                        DestinationCard(d, nearDestination, palette, onPick = { vm.select(it) }, onClose = vm::clearDestination)
+                                        Spacer(Modifier.height(10.dp))
+                                    }
+                                }
+                                // The cheapest fuel near the rider, while the fuel layer is on.
+                                AnimatedVisibility(
+                                    visible = fuelOn && selectedBay == null && destination == null && compactView == CompactView.Map && !mapMoving,
+                                    enter = fadeIn(),
+                                    exit = fadeOut(),
+                                ) {
+                                    Column {
+                                        FuelCard(
+                                            fuelGrade, cheapestFuel, loaded = fuelData != null, palette,
+                                            onGrade = { vm.fuelGrade.value = it },
+                                            onGo = { s -> openDirections(context, s.lat, s.lon, s.title) },
                                         )
                                         Spacer(Modifier.height(10.dp))
                                     }
@@ -952,6 +995,8 @@ private fun Filters(
     onFreeNow: () -> Unit,
     crimeOn: Boolean = false,
     onCrime: () -> Unit = {},
+    fuelOn: Boolean = false,
+    onFuel: () -> Unit = {},
 ) {
     AnimatedContent(
         targetState = mapMoving,
@@ -1036,6 +1081,17 @@ private fun Filters(
                     palette = palette,
                     leading = {
                         Icon(Icons.Outlined.LocalPolice, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
+                    },
+                )
+                // Fuel prices from the government's Fuel Finder scheme, with the cheapest nearby.
+                Pill(
+                    selected = fuelOn,
+                    onClick = onFuel,
+                    label = "Fuel",
+                    count = null,
+                    palette = palette,
+                    leading = {
+                        Icon(Icons.Outlined.LocalGasStation, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
                     },
                 )
             }
@@ -1218,6 +1274,7 @@ private fun SelectedBayPreviewCard(
                     }
                     Text(bay.title, style = auroraStyle(22.sp, FontWeight.ExtraBold, palette.cardTitleText).copy(lineHeight = 26.sp), maxLines = 2, overflow = TextOverflow.Ellipsis)
                     subtitle?.let { Text(it, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext).copy(lineHeight = 16.sp), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    if (bay.isCouncilChecked) CouncilCheckedLabel(palette)
                 }
                 Spacer(Modifier.width(12.dp))
                 RatingBadge(rating, palette, compact = true)
@@ -1278,5 +1335,111 @@ private fun Hint(text: String, modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
+    }
+}
+
+
+/** The bays nearest a searched place, with walking time; tap one to see it. */
+@Composable
+private fun DestinationCard(
+    destination: Destination,
+    bays: List<BayWithDistance>,
+    palette: AuroraPalette,
+    onPick: (Bay) -> Unit,
+    onClose: () -> Unit,
+) {
+    Surface(
+        shape = RoundedCornerShape(28.dp),
+        color = palette.searchSurface,
+        border = frostEdge(palette),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("destination-card"),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text("PARKING NEAR", style = frostOverline(palette.cardSubtext))
+                    Text(destination.title, style = auroraStyle(17.sp, FontWeight.ExtraBold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+                IconButton(onClick = onClose) { Icon(Icons.Filled.Close, contentDescription = "Close", tint = palette.text2) }
+            }
+            if (bays.isEmpty()) {
+                Text(
+                    "No bays within 1 km that match your filters.",
+                    style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext),
+                )
+            }
+            bays.forEach { (bay, metres) ->
+                val dot = when (bay.fee) {
+                    Fee.Free -> palette.free
+                    Fee.Paid -> palette.paid
+                    Fee.Unknown -> palette.unknown
+                }
+                Row(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).clickable { onPick(bay) }.padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
+                    Column(Modifier.weight(1f)) {
+                        Text(bay.title, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(bay.feeText, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext), maxLines = 1)
+                    }
+                    Text(
+                        "${walkingMinutes(metres ?: 0.0)} min walk",
+                        style = auroraStyle(13.sp, FontWeight.ExtraBold, palette.accent),
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * The cheapest forecourts for the chosen grade near the rider: price and distance only,
+ * every brand treated alike, as the Fuel Finder scheme asks.
+ */
+@Composable
+private fun FuelCard(
+    grade: FuelGrade,
+    nearby: List<FuelNearby>,
+    loaded: Boolean,
+    palette: AuroraPalette,
+    onGrade: (FuelGrade) -> Unit,
+    onGo: (FuelStation) -> Unit,
+) {
+    Surface(
+        shape = RoundedCornerShape(28.dp),
+        color = palette.searchSurface,
+        border = frostEdge(palette),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("fuel-card"),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("CHEAPEST NEARBY", style = frostOverline(palette.cardSubtext), modifier = Modifier.weight(1f))
+                FuelGrade.entries.forEach { g ->
+                    AuroraChip(g.short, g == grade, palette, onClick = { onGrade(g) })
+                }
+            }
+            when {
+                !loaded -> Text("Loading fuel prices\u2026", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext))
+                nearby.isEmpty() -> Text("No ${grade.short} prices within 5 miles.", style = auroraStyle(13.sp, FontWeight.SemiBold, palette.cardSubtext))
+            }
+            nearby.forEach { n ->
+                Row(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).clickable { onGo(n.station) }.padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Text(formatPence(n.price), style = auroraStyle(16.sp, FontWeight.ExtraBold, palette.accent))
+                    Column(Modifier.weight(1f)) {
+                        Text(n.station.title, style = auroraStyle(14.sp, FontWeight.Bold, palette.cardTitleText), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(formatDistance(n.metres) + (n.station.postcode?.let { " \u00b7 $it" } ?: ""), style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext), maxLines = 1)
+                    }
+                    Icon(Icons.Filled.Navigation, contentDescription = "Directions to ${n.station.title}", tint = palette.text2, modifier = Modifier.size(18.dp))
+                }
+            }
+            Text("Prices from the government's Fuel Finder scheme.", style = auroraStyle(10.sp, color = palette.cardSubtext))
+        }
     }
 }

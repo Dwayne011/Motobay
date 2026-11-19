@@ -37,6 +37,7 @@ class FirestoreBayStatusRepository(
             MyBayReport(
                 full = space?.get("full") as? Boolean,
                 spaceAt = (space?.get("at") as? Timestamp)?.toDate()?.time,
+                suspended = space?.get("suspended") == true,
                 features = BayFeature.entries.mapNotNull { f -> (features?.get(f.key) as? Boolean)?.let { f to it } }.toMap(),
             )
         }
@@ -46,6 +47,13 @@ class FirestoreBayStatusRepository(
         val uid = requireUid()
         db.collection(SPACE).document(reportId(uid, bay.id)).set(
             mapOf("bayId" to bay.id, "authorUid" to uid, "full" to full, "at" to FieldValue.serverTimestamp()),
+        ).awaitQueued()
+    }
+
+    override suspend fun reportSuspended(bay: Bay) {
+        val uid = requireUid()
+        db.collection(SPACE).document(reportId(uid, bay.id)).set(
+            mapOf("bayId" to bay.id, "authorUid" to uid, "full" to true, "suspended" to true, "at" to FieldValue.serverTimestamp()),
         ).awaitQueued()
     }
 
@@ -102,7 +110,7 @@ class FirestoreBayStatusRepository(
             val space = (m["space"] as? Map<String, Any?>)?.let { s ->
                 val at = (s["at"] as? Timestamp)?.toDate()?.time
                 val full = s["full"] as? Boolean
-                if (at != null && full != null) SpaceReport(full, at) else null
+                if (at != null && full != null) SpaceReport(full, at, s["suspended"] == true) else null
             }
             val features = (m["features"] as? Map<String, Any?>).orEmpty().let { f ->
                 BayFeature.entries.mapNotNull { feature ->

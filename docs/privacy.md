@@ -69,12 +69,12 @@ We do not sell personal data and we do not share it with advertisers. The app re
 
 | Provider | What they process | Role and location |
 |---|---|---|
-| **Google LLC – Firebase** (Authentication, Cloud Firestore, Cloud Storage, Cloud Functions, App Check) | Account, profile, content, reports, attestation tokens | Our processor. Firestore data is stored in Google's EU multi-region (`eur3`); Firebase Authentication is a global service. Google's commitments: https://firebase.google.com/support/privacy |
+| **Google LLC – Firebase** (Authentication, Cloud Firestore, Cloud Storage, Cloud Functions, App Check) | Account, profile, content, reports, attestation tokens, and the request for the fuel price file | Our processor. Firestore data is stored in Google's EU multi-region (`eur3`); Firebase Authentication is a global service. Google's commitments: https://firebase.google.com/support/privacy |
 | **Google Play** (Google Play Billing) | Your Supporter purchase and payment, under your Google account | Independent controller for payments; Google's privacy policy: https://policies.google.com/privacy |
 | **OpenFreeMap** | The map tiles you request (which reveal the area you are looking at) and your IP address | Independent provider of map tiles: https://openfreemap.org |
 | **Photon by komoot** | The text you type into place search and your IP address | Independent provider of place search: https://photon.komoot.io |
 | **postcodes.io** | Postcodes you type and your IP address | Independent provider of postcode lookup: https://postcodes.io |
-| **GitHub** | Requests for the bay data and vehicle crime data files, and your IP address | Hosts the data files: https://docs.github.com/site-policy |
+| **GitHub** | Requests for the bay data, vehicle crime and garage data files, and your IP address | Hosts the data files: https://docs.github.com/site-policy |
 
 Requests to these services carry the app's name and version so they can identify traffic. None of them receive your account details, your posts or your location fix.
 

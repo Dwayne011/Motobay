@@ -1,5 +1,5 @@
-// Builds a bay's public status from riders' private reports: the latest "space now" or
-// "full" report (no rider id), and yes/no totals for each safety feature.
+// Builds a bay's public status from riders' private reports: the latest "space now",
+// "full" or "suspended" report (no rider id), and yes/no totals for each safety feature.
 
 const FEATURES = ['anchor', 'cctv', 'lit'];
 
@@ -12,7 +12,7 @@ function summariseStatus(bayId, spaceReports, featureDocs) {
   let space = null;
   for (const r of spaceReports) {
     if (typeof r.full !== 'boolean' || !(r.at instanceof Date)) continue;
-    if (!space || r.at > space.at) space = { full: r.full, at: r.at };
+    if (!space || r.at > space.at) space = { full: r.full, at: r.at, ...(r.suspended === true ? { suspended: true } : {}) };
   }
   const features = {};
   for (const key of FEATURES) {

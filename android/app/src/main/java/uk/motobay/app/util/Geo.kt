@@ -48,6 +48,17 @@ fun openDirections(context: Context, bay: Bay) {
     }
 }
 
+/** Directions to any point, e.g. a petrol station. */
+fun openDirections(context: Context, lat: Double, lon: Double, label: String) {
+    val nav = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=$lat,$lon")).setPackage("com.google.android.apps.maps")
+    try {
+        context.startActivity(nav)
+    } catch (_: ActivityNotFoundException) {
+        val geo = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$lat,$lon?q=$lat,$lon(${Uri.encode(label)})"))
+        runCatching { context.startActivity(Intent.createChooser(geo, "Open with")) }
+    }
+}
+
 /** Shows the bay in any installed maps app, via the standard geo: link. */
 fun openInMapsApp(context: Context, bay: Bay) {
     val geo = Intent(Intent.ACTION_VIEW, Uri.parse("geo:${bay.lat},${bay.lon}?q=${bay.lat},${bay.lon}(${Uri.encode(bay.name)})"))

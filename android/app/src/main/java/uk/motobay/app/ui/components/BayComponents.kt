@@ -31,6 +31,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import uk.motobay.app.ui.theme.AuroraPalette
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.testTag
+import androidx.compose.material.icons.filled.Verified
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.Fee
 import uk.motobay.app.ui.theme.MotoBayColors
@@ -144,4 +149,18 @@ fun BayListItem(bay: Bay, distance: String?, selected: Boolean = false, onClick:
         },
         trailingContent = distance?.let { { Text(it, style = MaterialTheme.typography.bodyMedium) } },
     )
+}
+
+
+/** "Council-checked": the bay is in a council's own records. Small and quiet, next to the other facts. */
+@Composable
+fun CouncilCheckedLabel(palette: AuroraPalette, modifier: Modifier = Modifier) {
+    Row(
+        modifier.testTag("council-checked"),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Icon(Icons.Filled.Verified, contentDescription = null, tint = palette.accent, modifier = Modifier.size(13.dp))
+        Text("Council-checked", style = auroraStyle(11.sp, FontWeight.Bold, palette.accent))
+    }
 }

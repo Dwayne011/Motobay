@@ -29,6 +29,13 @@ service firebase.storage {
       allow update: if false;
     }
 
+    // Fuel prices, published by the refreshFuelPrices Cloud Function from the government's
+    // Fuel Finder open data. Anyone can read them; only the function (admin SDK) writes.
+    match /fuel/prices.json.gz {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

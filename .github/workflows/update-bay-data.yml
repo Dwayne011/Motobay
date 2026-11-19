@@ -15,6 +15,7 @@ on:
       - scripts/enrich_bays.py
       - scripts/fetch_vehicle_crime.py
       - scripts/fetch_open_council_bays.py
+      - scripts/fetch_garages.py
       - data/council-bays.json
       - data/*.geojson
       - .github/workflows/update-bay-data.yml
@@ -49,19 +50,24 @@ jobs:
           python scripts/fetch_uk_bays.py data/uk-bays.json
       - name: Add streets and areas (Photon reverse geocoding, cached)
         run: python scripts/enrich_bays.py data/uk-bays.json data/geocode-cache.json
+      - name: Motorcycle repair garages (OpenStreetMap)
+        # Map places only; if Overpass is down, last week's file stays.
+        continue-on-error: true
+        working-directory: scripts
+        run: python fetch_garages.py ../data/motorcycle-garages.geojson
       - name: Vehicle crime near the bays (data.police.uk)
         # If the police API is down, still publish the bays; the crime file is refreshed next week.
         continue-on-error: true
         run: python scripts/fetch_vehicle_crime.py data/uk-bays.json data/vehicle-crime.json
       - name: Commit if changed
         run: |
-          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json data/motorcycle-garages.geojson)" ]; then
             echo "No changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json
+          git add data/uk-bays.json data/geocode-cache.json data/vehicle-crime.json data/open-council-bays.json data/motorcycle-garages.geojson
           git commit -m "Update UK bay data"
           git pull --rebase origin main
           git push origin HEAD:main

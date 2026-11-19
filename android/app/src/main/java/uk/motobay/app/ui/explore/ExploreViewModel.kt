@@ -23,6 +23,9 @@ import uk.motobay.app.data.CameraSnapshot
 import uk.motobay.app.data.BaySubmission
 import uk.motobay.app.data.Fee
 import uk.motobay.app.data.LatLon
+import uk.motobay.app.data.FuelGrade
+import uk.motobay.app.data.FuelNearby
+import uk.motobay.app.data.cheapestNear
 import uk.motobay.app.data.RecentPlace
 import uk.motobay.app.data.PlaceSuggestion
 import uk.motobay.app.data.friendlyMessage
@@ -58,6 +61,19 @@ val PriceFilter.fee: Fee?
         PriceFilter.Unknown -> Fee.Unknown
     }
 
+/** Where the rider is going, from a search. */
+data class Destination(val title: String, val lat: Double, val lon: Double)
+
+/** "Park near my destination" lists up to this many bays within this distance. */
+const val DESTINATION_LIMIT = 3
+const val DESTINATION_RADIUS_METRES = 1_000.0
+
+/**
+ * Walking minutes for a straight-line distance: streets add about a third, at 4.8 km/h
+ * (80 m a minute). At least a minute.
+ */
+fun walkingMinutes(metres: Double): Int = kotlin.math.max(1, kotlin.math.ceil(metres * 1.3 / 80.0).toInt())
+
 /** The list shows at most this many of the nearest bays in view. */
 private const val LIST_LIMIT = 200
 
@@ -73,6 +89,11 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     val command = MutableStateFlow<MapCommand?>(null)
     val locating = MutableStateFlow(false)
     val search = MutableStateFlow(SearchUiState())
+
+    /** A searched place the rider is heading to; its nearest bays are listed with walking times. */
+    val destination = MutableStateFlow<Destination?>(null)
+
+    fun clearDestination() { destination.value = null }
 
     /** Bay shown in the side pane on expanded layouts. */
     val selectedId = MutableStateFlow<String?>(null)
@@ -101,6 +122,19 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
                 (!f.coveredOnly || bay.covered == true) &&
                 (!f.freeNow || bay.isFreeAt(now))
         }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** The bays nearest [destination] that match the filters, with walking time. */
+    val nearDestination: StateFlow<List<BayWithDistance>> = combine(mapBays, destination) { bays, d ->
+        if (d == null) return@combine emptyList()
+        val at = LatLon(d.lat, d.lon)
+        bays.asSequence()
+            .map { it to distanceMetres(at, it) }
+            .filter { it.second <= DESTINATION_RADIUS_METRES }
+            .sortedBy { it.second }
+            .take(DESTINATION_LIMIT)
+            .map { (bay, m) -> BayWithDistance(bay, m) }
+            .toList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /** Bays inside the map view, nearest first, for the list. */
@@ -163,7 +197,9 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
 
     fun onViewportChange(vp: MapViewport) {
         viewport.value = vp
-        app.user.updateSettings { it.copy(lastMap = CameraSnapshot(vp.center.lat, vp.center.lon, vp.zoom)) }
+        app.user.updateSettings {
+            it.copy(lastMap = CameraSnapshot(vp.center.lat, vp.center.lon, vp.zoom, vp.box.south, vp.box.west, vp.box.north, vp.box.east))
+        }
     }
 
     fun onQueryChange(q: String) = search.update { it.copy(query = q) }
@@ -175,6 +211,8 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         viewModelScope.launch {
             val point = s.point ?: runCatching { app.placeSearch.resolvePostcode(s.title) }.getOrNull()
             point?.let { app.user.addRecentPlace(RecentPlace(s.title, s.subtitle, it.lat, it.lon)) }
+            // A street, postcode or place (not a whole town): list the bays nearest to it.
+            destination.value = point?.takeIf { s.kind != PlaceSuggestion.Kind.Town && s.bbox == null }?.let { Destination(s.title, it.lat, it.lon) }
             when {
                 s.bbox != null -> command.value = MapCommand.Fit(s.bbox)
                 point != null -> command.value = MapCommand.Fly(point.lat, point.lon, zoom = if (s.kind == PlaceSuggestion.Kind.Town) 13.0 else 16.0)
@@ -186,6 +224,7 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     fun onRecentClick(place: RecentPlace) {
         search.update { it.copy(query = place.title, expanded = false) }
         app.user.addRecentPlace(place)
+        destination.value = Destination(place.title, place.lat, place.lon)
         command.value = MapCommand.Fly(place.lat, place.lon, zoom = 15.0)
     }
 
@@ -292,4 +331,20 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
         if (crimeLayer.value) viewModelScope.launch { app.vehicleCrime.load() }
     }
     fun toggleFreeNow() = filters.update { it.copy(freeNow = !it.freeNow) }
+
+    /** Whether fuel prices are showing, and for which grade. */
+    val fuelLayer = MutableStateFlow(false)
+    val fuelGrade = MutableStateFlow(FuelGrade.E10)
+
+    fun toggleFuelLayer() {
+        fuelLayer.update { !it }
+        if (fuelLayer.value) viewModelScope.launch { app.fuel.load() }
+    }
+
+    /** The cheapest forecourts for the chosen grade near the rider, or near the map centre. */
+    val cheapestFuel: StateFlow<List<FuelNearby>> =
+        combine(app.fuel.data, fuelLayer, fuelGrade, viewport, userPosition) { data, on, grade, vp, pos ->
+            val at = pos ?: vp?.center
+            if (!on || data == null || at == null) emptyList() else cheapestNear(data.stations, at, grade)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 }

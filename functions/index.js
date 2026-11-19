@@ -42,7 +42,7 @@ async function recountStatus(bayId) {
     const features = await t.get(db.collection('bayFeatures').where('bayId', '==', bayId));
     const status = summariseStatus(
       bayId,
-      spaces.docs.map((d) => ({ full: d.get('full'), at: d.get('at')?.toDate?.() })),
+      spaces.docs.map((d) => ({ full: d.get('full'), suspended: d.get('suspended'), at: d.get('at')?.toDate?.() })),
       features.docs.map((d) => d.data()),
     );
     if (status) t.set(ref, { ...status, updatedAt: FieldValue.serverTimestamp() });
@@ -83,3 +83,28 @@ exports.backfillRatingSummaries = onRequest({ region: REGION }, async (req, res)
   await marker.set({ backfilledAt: FieldValue.serverTimestamp(), bays: byBay.size });
   res.status(200).send(`Built totals for ${byBay.size} bays.`);
 });
+
+// Fuel prices: every 30 minutes from Fuel Finder, run in London because the service only
+// answers UK requests. Writes fuel/prices.json.gz (gzipped JSON) to the default Storage bucket.
+const { onSchedule } = require('firebase-functions/v2/scheduler');
+const { defineSecret } = require('firebase-functions/params');
+const { getStorage } = require('firebase-admin/storage');
+const { gzipSync } = require('node:zlib');
+const { fetchFuel } = require('./fuel');
+
+const FUEL_ID = defineSecret('FUEL_FINDER_CLIENT_ID');
+const FUEL_SECRET = defineSecret('FUEL_FINDER_CLIENT_SECRET');
+
+exports.refreshFuelPrices = onSchedule(
+  { schedule: 'every 30 minutes', region: 'europe-west2', timeZone: 'Europe/London', secrets: [FUEL_ID, FUEL_SECRET], timeoutSeconds: 300, memory: '512MiB', retryCount: 0 },
+  async () => {
+    const file = await fetchFuel(FUEL_ID.value(), FUEL_SECRET.value(), (m) => console.log(m));
+    if (file.stations.length < 1000) throw new Error(`Only ${file.stations.length} stations; not publishing.`);
+    // Plain gzip (no Content-Encoding), so every client gets the same bytes and unzips them itself.
+    await getStorage().bucket().file('fuel/prices.json.gz').save(gzipSync(JSON.stringify(file)), {
+      contentType: 'application/gzip',
+      metadata: { cacheControl: 'public, max-age=900' },
+    });
+    console.log(`Published ${file.stations.length} stations`);
+  },
+);

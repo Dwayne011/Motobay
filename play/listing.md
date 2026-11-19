@@ -27,7 +27,10 @@ FIND A BAY
 • Thousands of motorcycle bays from OpenStreetMap, across the whole UK
 • Council details for Camden, Islington, Hillingdon, Bromley, Enfield and Barnet, and free bays across the City of London: prices, charging hours, number of spaces and where exactly the bay is
 • Filter by Free, Paid or Unknown, or show only covered bays
-• Search any town, street or postcode
+• Search any town, street or postcode, and see the nearest bays with walking time
+• Fuel prices: the cheapest unleaded and super unleaded near you
+• Save a map area for when there's no signal
+• Motorcycle garages on the map
 • Bays cluster together when you zoom out, so the map stays readable
 
 ON EACH BAY
@@ -37,6 +40,8 @@ ON EACH BAY
 • "Space now" or "Full" reports from riders, with how long ago
 • Ground anchors, CCTV and lighting, as riders report them
 • Vehicle crime nearby, from police data
+• Riders can report a bay suspended, as well as full or with space
+• "Council-checked" on bays from councils' own records
 • One tap for directions in your maps app
 • Star ratings, photos and comments from other riders
 

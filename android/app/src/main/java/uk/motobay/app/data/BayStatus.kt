@@ -9,8 +9,11 @@ enum class BayFeature(val key: String, val label: String) {
     Lit("lit", "Lit at night"),
 }
 
-/** The latest "space now" or "full" report for a bay. [at] is epoch millis. */
-data class SpaceReport(val full: Boolean, val at: Long)
+/**
+ * The latest "space now", "full" or "suspended" report for a bay. [at] is epoch millis.
+ * A suspended bay (coned off for works, say) is reported as [suspended], with [full] true.
+ */
+data class SpaceReport(val full: Boolean, val at: Long, val suspended: Boolean = false)
 
 /** How many riders said yes and no to a feature. */
 data class Votes(val yes: Int, val no: Int) {
@@ -24,7 +27,7 @@ data class Votes(val yes: Int, val no: Int) {
 data class BayStatus(val space: SpaceReport?, val features: Map<BayFeature, Votes>)
 
 /** What the signed-in rider has said about one bay, so the buttons show their answers. */
-data class MyBayReport(val full: Boolean?, val spaceAt: Long?, val features: Map<BayFeature, Boolean>)
+data class MyBayReport(val full: Boolean?, val spaceAt: Long?, val features: Map<BayFeature, Boolean>, val suspended: Boolean = false)
 
 /**
  * Live reports from signed-in riders: "space now" or "full", and safety details.
@@ -34,6 +37,9 @@ interface BayStatusRepository {
     fun status(bayId: String): Flow<BayStatus?>
     fun mine(bayId: String): Flow<MyBayReport?>
     suspend fun reportSpace(bay: Bay, full: Boolean)
+
+    /** The bay is suspended (coned off or signed out of use). */
+    suspend fun reportSuspended(bay: Bay)
 
     /** [value] null takes the rider's answer back. */
     suspend fun setFeature(bay: Bay, feature: BayFeature, value: Boolean?)
@@ -45,17 +51,28 @@ interface BayStatusRepository {
 /** Reports older than this aren't shown: a bay that was full this morning may not be now. */
 const val SPACE_REPORT_FRESH_MS = 3 * 60 * 60 * 1000L
 
-/** "Space reported 20 min ago" or "Reported full 2 hr ago", or null when there's no fresh report. */
+/** Suspensions usually last days, so a suspended report stays up longer. */
+const val SUSPENDED_REPORT_FRESH_MS = 48 * 60 * 60 * 1000L
+
+/** How long this report stays visible. */
+val SpaceReport.freshFor: Long get() = if (suspended) SUSPENDED_REPORT_FRESH_MS else SPACE_REPORT_FRESH_MS
+
+/** "Space reported 20 min ago", "Reported full 2 hr ago" or "Reported suspended 1 day ago", or null when there's no fresh report. */
 fun SpaceReport.text(nowMillis: Long): String? {
     val age = nowMillis - at
-    if (age > SPACE_REPORT_FRESH_MS || age < -60_000) return null
+    if (age > freshFor || age < -60_000) return null
     val minutes = (age / 60_000).coerceAtLeast(0)
     val ago = when {
         minutes < 1 -> "just now"
         minutes < 60 -> "$minutes min ago"
-        else -> "${minutes / 60} hr ago"
+        minutes < 24 * 60 -> "${minutes / 60} hr ago"
+        else -> "${minutes / (24 * 60)} day ago"
     }
-    return if (full) "Reported full $ago" else "Space reported $ago"
+    return when {
+        suspended -> "Reported suspended $ago"
+        full -> "Reported full $ago"
+        else -> "Space reported $ago"
+    }
 }
 
 /** "3 riders say yes", "1 rider says no", or "Riders disagree (2 yes, 1 no)". */
