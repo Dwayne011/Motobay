@@ -37,7 +37,18 @@ data class Settings(
 }
 
 @Serializable
-data class CameraSnapshot(val lat: Double, val lon: Double, val zoom: Double)
+data class CameraSnapshot(
+    val lat: Double,
+    val lon: Double,
+    val zoom: Double,
+    /** The visible area's edges, for "download this area" (null in older saved settings). */
+    val south: Double? = null,
+    val west: Double? = null,
+    val north: Double? = null,
+    val east: Double? = null,
+) {
+    val box: BBox? get() = if (south != null && west != null && north != null && east != null) BBox(south, west, north, east) else null
+}
 
 @Serializable
 data class LastFix(val lat: Double, val lon: Double)

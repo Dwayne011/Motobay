@@ -121,6 +121,31 @@ private const val SELECTED_PIN = "selected-pin"
 private const val USER_SOURCE = "user"
 private const val USER_LAYER = "user-dot"
 private const val CRIME_SOURCE = "vehicle-crime"
+private const val GARAGE_SOURCE = "motorcycle-garages"
+private const val FUEL_SOURCE = "fuel-prices"
+private const val FUEL_LAYER = "fuel-prices"
+private const val GARAGE_LAYER = "motorcycle-garages"
+
+/** The base map's own layer for mid-ranking places (shops and the like), which garages copy. */
+private const val BASE_POI_LAYER = "poi_r7"
+
+/**
+ * Motorcycle repair garages from OpenStreetMap, which the base map's tiles leave out (they
+ * keep motorcycle dealers and car garages). They copy the base map's place style (font,
+ * size, colours, halo, zoom) and its car-repair icon, so they look like any other place.
+ */
+private fun addGarages(style: Style) {
+    val base = style.getLayerAs<SymbolLayer>(BASE_POI_LAYER) ?: return
+    style.addSource(GeoJsonSource(GARAGE_SOURCE, java.net.URI(BuildConfig.GARAGES_URL)))
+    val copied = listOf(
+        base.textFont, base.textSize, base.textColor, base.textHaloColor, base.textHaloWidth, base.textHaloBlur,
+        base.textAnchor, base.textOffset, base.textMaxWidth, base.textOptional, base.iconSize,
+    ).filter { it.value != null }
+    val layer = SymbolLayer(GARAGE_LAYER, GARAGE_SOURCE)
+        .withProperties(*copied.toTypedArray(), iconImage("car"), org.maplibre.android.style.layers.PropertyFactory.textField(get("name")))
+    layer.minZoom = base.minZoom
+    style.addLayerAbove(layer, BASE_POI_LAYER)
+}
 private const val CRIME_LAYER = "vehicle-crime-heat"
 
 /**
@@ -147,7 +172,7 @@ private fun crimeHeatLayer() = HeatmapLayer(CRIME_LAYER, CRIME_SOURCE).withPrope
  * Map styles (OpenStreetMap data, no API key). Light uses OpenFreeMap's
  * Liberty; dark uses our Graphite style, a lightened copy of their dark style.
  */
-private fun styleUrl(dark: Boolean) =
+internal fun styleUrl(dark: Boolean) =
     if (dark) BuildConfig.DARK_MAP_STYLE_URL else "https://tiles.openfreemap.org/styles/liberty"
 
 /** Used if the Graphite style can't be fetched. */
@@ -249,6 +274,8 @@ fun BayMap(
     modifier: Modifier = Modifier,
     /** Vehicle crime reports as [lat, lon, count], drawn as a heat layer under the pins; null hides it. */
     crimePoints: List<List<Double>>? = null,
+    /** Forecourts and the price to show on each (fuel layer), or null when it's off. */
+    fuelPrices: List<Pair<uk.motobay.app.data.FuelStation, Double>>? = null,
 ) {
     // Previews and JVM screenshot tests can't load MapLibre's native code.
     if (LocalInspectionMode.current) {
@@ -399,6 +426,23 @@ fun BayMap(
             // Vehicle crime heat, under every pin; empty until the rider turns the layer on.
             loaded.addSource(GeoJsonSource(CRIME_SOURCE))
             loaded.addLayer(crimeHeatLayer())
+            // Motorcycle repair garages: ordinary map places, drawn exactly like the base map's own.
+            addGarages(loaded)
+            // Fuel prices: the map's fuel icon with the price under it, below the bay pins.
+            loaded.addSource(GeoJsonSource(FUEL_SOURCE))
+            loaded.addLayer(
+                SymbolLayer(FUEL_LAYER, FUEL_SOURCE).withProperties(
+                    iconImage("fuel"),
+                    org.maplibre.android.style.layers.PropertyFactory.textField(get("price")),
+                    org.maplibre.android.style.layers.PropertyFactory.textSize(12f),
+                    org.maplibre.android.style.layers.PropertyFactory.textFont(arrayOf("Noto Sans Bold")),
+                    org.maplibre.android.style.layers.PropertyFactory.textOffset(arrayOf(0f, 0.9f)),
+                    org.maplibre.android.style.layers.PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP),
+                    org.maplibre.android.style.layers.PropertyFactory.textColor(if (dark) "#F2F4F8" else "#141925"),
+                    org.maplibre.android.style.layers.PropertyFactory.textHaloColor(if (dark) "#141414" else "#FFFFFF"),
+                    org.maplibre.android.style.layers.PropertyFactory.textHaloWidth(1.5f),
+                ).also { it.minZoom = 11f },
+            )
             loaded.addLayer(
                 SymbolLayer(CLUSTERS, BAY_SOURCE).withFilter(has("point_count")).withProperties(
                     iconImage(get("icon")),
@@ -446,6 +490,18 @@ fun BayMap(
         s.getLayerAs<CircleLayer>(USER_LAYER)?.setProperties(
             circleColor(colors.user.toArgb()), circleStrokeColor(colors.stroke.toArgb()),
         )
+    }
+
+    LaunchedEffect(style, fuelPrices) {
+        val s = style ?: return@LaunchedEffect
+        val features = withContext(Dispatchers.Default) {
+            fuelPrices.orEmpty().map { (station, price) ->
+                Feature.fromGeometry(Point.fromLngLat(station.lon, station.lat)).apply {
+                    addStringProperty("price", uk.motobay.app.data.formatPence(price))
+                }
+            }
+        }
+        s.getSourceAs<GeoJsonSource>(FUEL_SOURCE)?.setGeoJson(FeatureCollection.fromFeatures(features))
     }
 
     LaunchedEffect(style, crimePoints) {

@@ -17,3 +17,7 @@ test('feature answers are counted yes and no; missing answers are ignored', () =
 test('bad reports are skipped, and nothing left means no status', () => {
   assert.equal(summariseStatus('node/1', [{ full: 'yes', at: new Date() }, { full: true, at: null }], [{}]), null);
 });
+test('a suspended report is passed on as suspended', () => {
+  const s = summariseStatus('node/1', [{ full: true, suspended: true, at: new Date('2026-11-19T09:00:00Z') }], []);
+  assert.deepEqual(s.space, { full: true, suspended: true, at: new Date('2026-11-19T09:00:00Z') });
+});

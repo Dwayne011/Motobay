@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayFeature
 import uk.motobay.app.data.SPACE_REPORT_FRESH_MS
+import uk.motobay.app.data.SUSPENDED_REPORT_FRESH_MS
 import uk.motobay.app.data.epochMillis
 import uk.motobay.app.data.text
 import uk.motobay.app.ui.LocalApp
@@ -59,19 +60,24 @@ fun BayStatusSection(bay: Bay, palette: AuroraPalette) {
         Text("Is there space?", style = auroraStyle(15.sp, FontWeight.ExtraBold, palette.cardTitleText))
         VSpace(2)
         Text(
-            status?.space?.text(nowMillis) ?: "No reports in the last 3 hours.",
+            status?.space?.text(nowMillis) ?: "No recent reports.",
             style = auroraStyle(13.sp, FontWeight.SemiBold, palette.text2),
             modifier = Modifier.testTag("space-status"),
         )
         VSpace(8)
         // The rider's own report stays lit while it's fresh.
-        val myFull = mine?.full?.takeIf { (mine?.spaceAt ?: 0) > nowMillis - SPACE_REPORT_FRESH_MS }
+        val mySpaceAt = mine?.spaceAt ?: 0
+        val mySuspended = mine?.suspended == true && mySpaceAt > nowMillis - SUSPENDED_REPORT_FRESH_MS
+        val myFull = mine?.full?.takeIf { !mySuspended && mySpaceAt > nowMillis - SPACE_REPORT_FRESH_MS }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             AuroraChip("Space now", myFull == false, palette, onClick = {
                 send("Thanks! Riders can see there's space.") { app.bayStatus.reportSpace(bay, full = false) }
             })
             AuroraChip("Full", myFull == true, palette, onClick = {
                 send("Thanks! Riders can see it's full.") { app.bayStatus.reportSpace(bay, full = true) }
+            })
+            AuroraChip("Suspended", mySuspended, palette, onClick = {
+                send("Thanks! Riders can see it's suspended.") { app.bayStatus.reportSuspended(bay) }
             })
         }
 

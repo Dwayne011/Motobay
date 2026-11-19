@@ -207,6 +207,10 @@ fun BayDetailContent(bay: Bay, onDeleted: (() -> Unit)? = null, onBack: (() -> U
                     position?.let { "${formatDistance(distanceMetres(it, bay))} away" },
                 ).joinToString(" \u2022 ")
                 if (subtitle.isNotEmpty()) Text(subtitle, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext))
+                if (bay.isCouncilChecked) {
+                    VSpace(4)
+                    uk.motobay.app.ui.components.CouncilCheckedLabel(palette)
+                }
             }
             // The bay's average star rating, top right.
             RatingBadge(community.ratingSummary(bay.id), palette)

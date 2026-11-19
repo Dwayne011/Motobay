@@ -143,7 +143,7 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Live reports from signed-in riders: "space now" or "full" for a bay. One per rider per
+    // Live reports from signed-in riders: "space now", "full" or "suspended" for a bay. One per rider per
     // bay (the id is the rider's uid and the bay id); a new report replaces the old one, at
     // most once a minute. Private to the rider, since it says where they were and when;
     // everyone sees only the latest report per bay in bayStatus, kept by the Cloud Function.
@@ -153,13 +153,14 @@ service cloud.firestore {
         && (resource == null
             || (resource.data.authorUid == request.auth.uid
                 && request.time > resource.data.at + duration.value(1, 'm')))
-        && request.resource.data.keys().hasOnly(['bayId', 'authorUid', 'full', 'at'])
+        && request.resource.data.keys().hasOnly(['bayId', 'authorUid', 'full', 'at', 'suspended'])
         && request.resource.data.keys().hasAll(['bayId', 'authorUid', 'full', 'at'])
         && request.resource.data.authorUid == request.auth.uid
         && isText(request.resource.data.bayId, 100)
         && request.resource.data.bayId.size() > 0
         && id == request.auth.uid + '_' + request.resource.data.bayId.replace('/', '_')
         && request.resource.data.full is bool
+        && (!('suspended' in request.resource.data) || request.resource.data.suspended is bool)
         && request.resource.data.at == request.time;
       allow delete: if isAdmin() || isAuthor();
     }

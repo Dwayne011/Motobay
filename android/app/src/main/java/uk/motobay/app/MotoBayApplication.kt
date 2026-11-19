@@ -9,6 +9,9 @@ import uk.motobay.app.data.AuthRepository
 import uk.motobay.app.data.Bay
 import uk.motobay.app.data.BayRepository
 import uk.motobay.app.data.BayStatusRepository
+import uk.motobay.app.data.MapLibreOfflineAreas
+import uk.motobay.app.data.FuelRepository
+import uk.motobay.app.data.OfflineAreas
 import uk.motobay.app.data.FirestoreBayStatusRepository
 import uk.motobay.app.data.VehicleCrimeRepository
 import uk.motobay.app.data.combinedBays
@@ -51,6 +54,12 @@ open class MotoBayApplication : Application() {
         private set
     lateinit var displayNames: DisplayNames
         private set
+    /** Fuel prices from the government's Fuel Finder scheme, for the fuel layer. */
+    val fuel: FuelRepository by lazy { FuelRepository(filesDir) }
+
+    /** Map areas saved for use without signal. */
+    val offlineAreas: OfflineAreas by lazy { createOfflineAreas() }
+
     /** "Space now / full" and safety details from riders. */
     lateinit var bayStatus: BayStatusRepository
         private set
@@ -138,4 +147,6 @@ open class MotoBayApplication : Application() {
     protected open fun createDisplayNames(auth: AuthRepository): DisplayNames = FirestoreDisplayNames(auth)
 
     protected open fun createBayStatus(auth: AuthRepository): BayStatusRepository = FirestoreBayStatusRepository(auth)
+
+    protected open fun createOfflineAreas(): OfflineAreas = MapLibreOfflineAreas(this)
 }

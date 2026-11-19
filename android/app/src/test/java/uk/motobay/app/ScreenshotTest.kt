@@ -359,8 +359,8 @@ class ScreenshotTest {
         setApp(dark = true)
         shot("phone-explore-large-text-dark")
         val bar = compose.onNodeWithText("Search a town, street or postcode").fetchSemanticsNode().boundsInRoot
-        // "All" is always on screen; the pill row scrolls sideways, so later pills may be clipped.
-        val chip = compose.onNodeWithText("All").fetchSemanticsNode().boundsInRoot
+        // The Filters button starts the chip row.
+        val chip = compose.onNodeWithTag("filters-button").fetchSemanticsNode().boundsInRoot
         assertTrue("filters overlap the search bar", chip.top >= bar.bottom)
     }
 

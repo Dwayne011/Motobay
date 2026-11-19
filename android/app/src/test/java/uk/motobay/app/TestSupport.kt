@@ -152,6 +152,7 @@ class TestMotoBayApplication : MotoBayApplication() {
     override fun createCommunity(auth: AuthRepository): CommunityRepository = FakeCommunityRepository(auth)
     override fun createSupporter(): Supporter = FakeSupporter()
     override fun createBayStatus(auth: AuthRepository): BayStatusRepository = FakeBayStatusRepository(auth) { fixedNow }
+    override fun createOfflineAreas(): uk.motobay.app.data.OfflineAreas = FakeOfflineAreas()
 
     /** Tests set the time on the street; by default a Tuesday morning, inside most charging hours. */
     var fixedNow: LocalDateTime = LocalDateTime.of(2026, 11, 10, 10, 30)
