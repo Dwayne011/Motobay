@@ -334,6 +334,9 @@ class ExploreViewModel(private val app: MotoBayApplication) : ViewModel() {
     }
     fun toggleFreeNow() = filters.update { it.copy(freeNow = !it.freeNow) }
 
+    /** "Clear all" in the Filters sheet: every bay again. */
+    fun clearFilters() { filters.value = ExploreFilters() }
+
     /** Whether fuel prices are showing, and for which grade. */
     val fuelLayer = MutableStateFlow(false)
     val fuelGrade = MutableStateFlow(FuelGrade.E10)

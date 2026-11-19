@@ -90,6 +90,14 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import uk.motobay.app.ui.components.VSpace
+import uk.motobay.app.ui.components.AuroraTag
+import uk.motobay.app.ui.components.AuroraPrimaryButton
+import uk.motobay.app.ui.components.AuroraOutlinedButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Switch
+import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.Tune
 import uk.motobay.app.ui.components.AuroraChip
 import uk.motobay.app.data.formatPence
 import uk.motobay.app.data.FuelStation
@@ -199,6 +207,8 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
     val supporter by app.supporter.state.collectAsStateWithLifecycle()
     // "Free now" is a Supporter extra: without it the chip explains what it is instead of filtering.
     val onFreeNow = { if (supporter.isSupporter) vm.toggleFreeNow() else onOpenSupporter() }
+    var showFilters by rememberSaveable { mutableStateOf(false) }
+    var showLayers by rememberSaveable { mutableStateOf(false) }
     val community by app.community.data.collectAsStateWithLifecycle()
     val counts by vm.counts.collectAsStateWithLifecycle()
     val filters by vm.filters.collectAsStateWithLifecycle()
@@ -316,6 +326,19 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         if (!expanded && selectedId != null) return@Column
+                        // Map layers (fuel prices, vehicle crime): the same 44dp round glass button as Locate.
+                        Surface(
+                            onClick = { showLayers = true },
+                            shape = CircleShape,
+                            color = if (fuelOn || crimeOn) palette.selected else palette.locateFabBg,
+                            contentColor = palette.locateFabIcon,
+                            border = frostEdge(palette, if (fuelOn || crimeOn) palette.selectedBorder else palette.locateFabBorder),
+                            modifier = Modifier.size(44.dp).testTag("layers-button"),
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.Layers, contentDescription = "Map layers", Modifier.size(20.dp))
+                            }
+                        }
                         // Locate: a 44dp round glass button with a 20dp icon.
                         Surface(
                             onClick = onLocate,
@@ -420,7 +443,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                                     content = suggestions,
                                 )
                                 if (!search.expanded) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer, fuelOn, vm::toggleFuelLayer)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, onFreeNow, onOpenFilters = { showFilters = true })
                                     Text(
                                         "$countLabel ${if (visible.size == 1) "bay" else "bays"} in view",
                                         style = MaterialTheme.typography.labelLarge,
@@ -481,7 +504,7 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                             )
                             if (!search.expanded) {
                                 Box(Modifier.padding(horizontal = 16.dp).widthIn(max = 560.dp)) {
-                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, vm::toggleCovered, onFreeNow, crimeOn, vm::toggleCrimeLayer, fuelOn, vm::toggleFuelLayer)
+                                    Filters(filters, counts, mapMoving, palette, supporter.isSupporter, vm::setPrice, onFreeNow, onOpenFilters = { showFilters = true })
                                 }
                                 if (crimeOn && !mapMoving) CrimeLegend(crimeData, palette, Modifier.padding(horizontal = 16.dp))
                             }
@@ -553,6 +576,23 @@ fun ExploreScreen(onOpenBay: (String) -> Unit, onOpenSupporter: () -> Unit = {})
                 }
             }
         }
+    }
+
+    if (showFilters) {
+        FiltersSheet(
+            filters, counts, supporter.isSupporter, palette,
+            onPrice = vm::setPrice, onCovered = vm::toggleCovered,
+            onFreeNow = { if (supporter.isSupporter) vm.toggleFreeNow() else { showFilters = false; onOpenSupporter() } },
+            onClear = vm::clearFilters,
+            onDismiss = { showFilters = false },
+        )
+    }
+    if (showLayers) {
+        LayersSheet(
+            fuelOn, fuelGrade, crimeOn, palette,
+            onFuel = vm::toggleFuelLayer, onGrade = { vm.fuelGrade.value = it }, onCrime = vm::toggleCrimeLayer,
+            onDismiss = { showLayers = false },
+        )
     }
 
     newBayAt?.let { at ->
@@ -991,12 +1031,8 @@ private fun Filters(
     palette: AuroraPalette,
     supporter: Boolean,
     onPrice: (PriceFilter) -> Unit,
-    onCovered: () -> Unit,
     onFreeNow: () -> Unit,
-    crimeOn: Boolean = false,
-    onCrime: () -> Unit = {},
-    fuelOn: Boolean = false,
-    onFuel: () -> Unit = {},
+    onOpenFilters: () -> Unit,
 ) {
     AnimatedContent(
         targetState = mapMoving,
@@ -1028,22 +1064,39 @@ private fun Filters(
                 }
             }
         } else {
+            // Filters (with a count of the ones set inside it), then the quick chips. Everything else,
+            // and the map layers, live in the Filters and Layers sheets, so the row never scrolls.
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                PriceFilter.entries.forEach { p ->
-                    val selected = filters.price == p
+                val hidden = filters.hiddenCount
+                Surface(
+                    onClick = onOpenFilters,
+                    shape = CircleShape,
+                    color = if (hidden > 0) palette.chipSelectedBg else palette.chipUnselectedBg,
+                    border = if (hidden > 0) null else frostEdge(palette, palette.chipUnselectedBorder),
+                    modifier = Modifier.heightIn(min = 36.dp).testTag("filters-button")
+                        .semantics { contentDescription = if (hidden > 0) "Filters, $hidden on" else "Filters" },
+                ) {
+                    Row(Modifier.padding(horizontal = 11.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Icon(Icons.Filled.Tune, contentDescription = null, tint = if (hidden > 0) palette.chipSelectedText else palette.chipUnselectedText, modifier = Modifier.size(18.dp))
+                        if (hidden > 0) {
+                            Box(Modifier.size(18.dp).clip(CircleShape).background(if (hidden > 0) palette.chipSelectedText else palette.accent), contentAlignment = Alignment.Center) {
+                                Text("$hidden", style = auroraStyle(11.sp, FontWeight.ExtraBold, palette.chipSelectedBg))
+                            }
+                        }
+                    }
+                }
+                // Free and Paid: tap to show only those, tap again for all bays.
+                listOf(PriceFilter.Free, PriceFilter.Paid).forEach { p ->
                     Pill(
-                        selected = selected,
-                        onClick = { onPrice(p) },
+                        selected = filters.price == p,
+                        onClick = { onPrice(if (filters.price == p) PriceFilter.All else p) },
                         label = p.label,
-                        count = counts[p] ?: 0,
+                        count = null,
                         palette = palette,
-                        leading = {
-                            val dot = p.dot(palette)
-                            if (dot != null) Box(Modifier.size(8.dp).clip(CircleShape).background(dot))
-                        },
+                        leading = { p.dot(palette)?.let { Box(Modifier.size(8.dp).clip(CircleShape).background(it)) } },
                     )
                 }
                 // Supporter extra: free to park in right now, counting paid bays outside their charged hours.
@@ -1062,40 +1115,131 @@ private fun Filters(
                         )
                     },
                 )
-                Pill(
-                    selected = filters.coveredOnly,
-                    onClick = onCovered,
-                    label = "Covered",
-                    count = null,
-                    palette = palette,
-                    leading = {
-                        Icon(Icons.Outlined.Roofing, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
-                    },
-                )
-                // A map layer rather than a filter: shows reported vehicle crime as heat under the pins.
-                Pill(
-                    selected = crimeOn,
-                    onClick = onCrime,
-                    label = "Vehicle crime",
-                    count = null,
-                    palette = palette,
-                    leading = {
-                        Icon(Icons.Outlined.LocalPolice, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
-                    },
-                )
-                // Fuel prices from the government's Fuel Finder scheme, with the cheapest nearby.
-                Pill(
-                    selected = fuelOn,
-                    onClick = onFuel,
-                    label = "Fuel",
-                    count = null,
-                    palette = palette,
-                    leading = {
-                        Icon(Icons.Outlined.LocalGasStation, contentDescription = null, tint = palette.chipUnselectedText, modifier = Modifier.size(15.dp))
-                    },
+            }
+        }
+    }
+}
+
+/** How many filters are set inside the Filters sheet but not visible as a chip: Unknown price and Covered only. */
+private val ExploreFilters.hiddenCount: Int
+    get() = (if (price == PriceFilter.Unknown) 1 else 0) + (if (coveredOnly) 1 else 0)
+
+/** Every bay filter: price, covered and Free now, with how many bays match. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FiltersSheet(
+    filters: ExploreFilters,
+    counts: Map<PriceFilter, Int>,
+    supporter: Boolean,
+    palette: AuroraPalette,
+    onPrice: (PriceFilter) -> Unit,
+    onCovered: () -> Unit,
+    onFreeNow: () -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = palette.searchSurface) {
+        Column(Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp).testTag("filters-sheet")) {
+            Text("Filters", style = auroraStyle(20.sp, FontWeight.ExtraBold, palette.cardTitleText))
+            VSpace(14)
+            Text("PRICE", style = frostOverline(palette.accent))
+            VSpace(8)
+            @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+            androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                PriceFilter.entries.forEach { p ->
+                    Pill(
+                        selected = filters.price == p,
+                        onClick = { onPrice(p) },
+                        label = p.label,
+                        count = null,
+                        palette = palette,
+                        leading = { p.dot(palette)?.let { Box(Modifier.size(8.dp).clip(CircleShape).background(it)) } },
+                    )
+                }
+            }
+            VSpace(16)
+            Text("OPTIONS", style = frostOverline(palette.accent))
+            SheetSwitchRow("Covered only", "Bays with a roof or shelter", filters.coveredOnly, palette, onCovered)
+            HorizontalDivider(color = palette.divider)
+            SheetSwitchRow(
+                "Free now", "Includes paid bays outside their charging hours", supporter && filters.freeNow, palette, onFreeNow,
+                badge = if (supporter) null else "SUPPORTER",
+            )
+            VSpace(18)
+            val count = counts[filters.price] ?: 0
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                AuroraOutlinedButton("Clear all", palette, onClick = onClear, modifier = Modifier.weight(1f).height(46.dp))
+                AuroraPrimaryButton(
+                    if (count == 1) "Show 1 bay" else "Show $count bays", palette, onClick = onDismiss,
+                    modifier = Modifier.weight(1f).height(46.dp).testTag("filters-show"),
                 )
             }
         }
+    }
+}
+
+/** Fuel prices and vehicle crime, laid over the map; motorcycle garages are always shown. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LayersSheet(
+    fuelOn: Boolean,
+    fuelGrade: FuelGrade,
+    crimeOn: Boolean,
+    palette: AuroraPalette,
+    onFuel: () -> Unit,
+    onGrade: (FuelGrade) -> Unit,
+    onCrime: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss, containerColor = palette.searchSurface) {
+        Column(Modifier.padding(horizontal = 20.dp).padding(bottom = 24.dp).testTag("layers-sheet")) {
+            Text("Map layers", style = auroraStyle(20.sp, FontWeight.ExtraBold, palette.cardTitleText))
+            VSpace(6)
+            SheetSwitchRow("Fuel prices", "The cheapest forecourts near you", fuelOn, palette, onFuel, icon = Icons.Outlined.LocalGasStation)
+            if (fuelOn) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(bottom = 8.dp)) {
+                    FuelGrade.entries.forEach { g -> AuroraChip(g.label, g == fuelGrade, palette, onClick = { onGrade(g) }) }
+                }
+            }
+            HorizontalDivider(color = palette.divider)
+            SheetSwitchRow("Vehicle crime", "Police-recorded, last 3 months", crimeOn, palette, onCrime, icon = Icons.Outlined.LocalPolice)
+            VSpace(14)
+            Text("ALWAYS ON", style = frostOverline(palette.accent))
+            VSpace(8)
+            Text("Motorcycle garages", style = auroraStyle(15.sp, FontWeight.Bold, palette.cardTitleText))
+            Text("Shown like other places on the map", style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext))
+            VSpace(18)
+            AuroraPrimaryButton("Done", palette, onClick = onDismiss, modifier = Modifier.fillMaxWidth().height(46.dp))
+        }
+    }
+}
+
+/** A label, a line of explanation and a switch; the whole row is the touch target. */
+@Composable
+private fun SheetSwitchRow(
+    title: String,
+    caption: String,
+    checked: Boolean,
+    palette: AuroraPalette,
+    onToggle: () -> Unit,
+    badge: String? = null,
+    icon: ImageVector? = null,
+) {
+    Row(
+        Modifier.fillMaxWidth().clickable(role = Role.Switch, onClick = onToggle).padding(vertical = 12.dp)
+            .semantics(mergeDescendants = true) {},
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        icon?.let { Icon(it, contentDescription = null, tint = palette.text2, modifier = Modifier.size(20.dp)) }
+        Column(Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(title, style = auroraStyle(15.sp, FontWeight.Bold, palette.cardTitleText))
+                badge?.let { AuroraTag(it, palette) }
+            }
+            Text(caption, style = auroraStyle(12.sp, FontWeight.SemiBold, palette.cardSubtext))
+        }
+        Switch(checked = checked, onCheckedChange = null)
     }
 }
 

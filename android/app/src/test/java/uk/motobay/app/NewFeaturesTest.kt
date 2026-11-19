@@ -15,6 +15,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -144,7 +147,10 @@ class NewFeaturesTest {
             val settings by app.user.settings.collectAsStateWithLifecycle()
             CompositionLocalProvider(LocalInspectionMode provides true) { MotoBayTheme(settings) { uk.motobay.app.ui.MotoBayApp(app) } }
         }
-        compose.onNodeWithText("Fuel").performScrollTo().performClick()
+        compose.onNodeWithTag("layers-button").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Fuel prices").performClick()
+        compose.onNodeWithText("Done").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("fuel-card").assertExists()
         compose.onNodeWithText("139.9p").assertExists()
@@ -170,5 +176,65 @@ class NewFeaturesTest {
         app.user.updateSettings { it.copy(lastMap = CameraSnapshot(52.5, -2.0, 6.0, 50.0, -5.0, 55.0, 1.0)) }
         compose.waitForIdle()
         compose.onNodeWithTag("offline-download").assertIsNotEnabled()
+    }
+
+    @Test fun the_filter_row_fits_on_screen_and_the_rest_are_in_the_sheet() {
+        org.robolectric.RuntimeEnvironment.setFontScale(1.3f)
+        compose.setContent {
+            val settings by app.user.settings.collectAsStateWithLifecycle()
+            CompositionLocalProvider(LocalInspectionMode provides true) { MotoBayTheme(settings) { uk.motobay.app.ui.MotoBayApp(app) } }
+        }
+        // Filters, Free, Paid and Free now all fit across the screen, even with large text.
+        val width = compose.onRoot().fetchSemanticsNode().boundsInRoot.right
+        for (n in listOf(compose.onNodeWithTag("filters-button"), compose.onNodeWithText("Free"), compose.onNodeWithText("Paid"), compose.onNodeWithText("Free now"))) {
+            assertTrue(n.fetchSemanticsNode().boundsInRoot.right <= width)
+        }
+        compose.onNodeWithText("Vehicle crime").assertDoesNotExist()
+        compose.onNodeWithText("Covered").assertDoesNotExist()
+
+        // Tapping Free filters; tapping it again goes back to every bay.
+        compose.onNodeWithText("Free").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Free").assertIsSelected()
+        compose.onNodeWithText("Free").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Free").assertIsNotSelected()
+
+        // Hidden filters live in the sheet, and the button counts them.
+        compose.onNodeWithTag("filters-button").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("filters-sheet").assertExists()
+        compose.onNodeWithText("Covered only").performClick()
+        compose.onNodeWithText("Unknown").performClick()
+        compose.waitForIdle()
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/phone-filters-sheet.png")
+        compose.onNodeWithTag("filters-show").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription("Filters, 2 on").assertExists()
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/phone-filter-row.png")
+
+        // Clear all puts everything back.
+        compose.onNodeWithTag("filters-button").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Clear all").performClick()
+        compose.onNodeWithTag("filters-show").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription("Filters").assertExists()
+        org.robolectric.RuntimeEnvironment.setFontScale(1f)
+    }
+
+    @Test fun the_layers_button_opens_fuel_and_crime() {
+        compose.setContent {
+            val settings by app.user.settings.collectAsStateWithLifecycle()
+            CompositionLocalProvider(LocalInspectionMode provides true) { MotoBayTheme(settings) { uk.motobay.app.ui.MotoBayApp(app) } }
+        }
+        compose.onNodeWithTag("layers-button").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("layers-sheet").assertExists()
+        compose.onNodeWithText("Motorcycle garages").assertExists()
+        compose.onNodeWithText("Fuel prices").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Super unleaded (E5)").assertExists()
+        compose.onRoot().captureRoboImage("build/outputs/roborazzi/phone-layers-sheet.png")
     }
 }

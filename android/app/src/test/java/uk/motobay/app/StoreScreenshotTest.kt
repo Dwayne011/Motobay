@@ -110,7 +110,10 @@ class StoreScreenshotTest {
     /** The vehicle crime layer, and the bay page's crime section. */
     @Test fun store_crime_layer() {
         setApp(dark = true)
-        compose.onAllNodesWithText("Vehicle crime")[0].performScrollTo().performClick()
+        compose.onNodeWithTag("layers-button").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText("Vehicle crime").performClick()
+        compose.onNodeWithText("Done").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("crime-legend").assertExists()
         shot("6-crime-layer-dark")
